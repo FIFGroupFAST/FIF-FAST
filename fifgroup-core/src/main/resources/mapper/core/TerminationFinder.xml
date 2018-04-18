@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.TerminationFinder">
+
+	<resultMap type="co.id.fifgroup.core.dto.PersonTransferWithinGroupDTO" id="baseResult">
+		<result column="REQUEST_ID" jdbcType="DECIMAL" property="requestId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="ORIGIN_COMPANY" jdbcType="VARCHAR" property="originCompany" />
+		<result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+		<result column="FULL_NAME" jdbcType="VARCHAR" property="fullName" />
+		<result column="PHOTO_FILE_PATH" jdbcType="VARCHAR" property="photoFilePath" />
+		<result column="TERMINATION_TYPE_ID" jdbcType="DECIMAL" property="terminationTypeId" />
+		<result column="TERMINATION_REASON" jdbcType="VARCHAR" property="terminationReason" />
+		<result column="TERMINATION_DATE" jdbcType="TIMESTAMP" property="terminationDate" />
+		<result column="DESTINATION_COMPANY_ID" jdbcType="DECIMAL" property="destinationCompanyId" />
+		<result column="APPROVAL_STATUS" jdbcType="VARCHAR" property="approvalStatus" />
+		<result column="TRANSACTION_STATUS" jdbcType="VARCHAR" property="transactionStatus" />
+		<result column="TRANSFER_STATUS" jdbcType="VARCHAR" property="transferStatus" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+		<result column="COMMENTS" jdbcType="VARCHAR" property="comments"/>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue"
+		id="keyValueResultMap">
+		<id column="key" jdbcType="VARCHAR" property="key" />
+		<result column="value" jdbcType="VARCHAR" property="value" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+	</resultMap>
+
+	<select id="selectByExample" resultMap="baseResult" parameterType="co.id.fifgroup.core.dto.PersonTransferWithinGroupDTO">
+		SELECT tr.request_id,
+		  tr.company_id,
+		  bc.company_name origin_company,
+		  tr.person_id,
+		  ppi.employee_number,		  
+		  ppi.full_name,
+		  ppi.photo_file_path,
+		  tr.termination_type_id,
+		  tt.termination_reason,
+		  tr.termination_date,
+		  tr.destination_company_id,
+		  tr.approval_status,
+		  tr.transaction_status,
+		  tr.transfer_status,
+		  tr.created_by,
+		  tr.creation_date,
+		  tr.last_updated_by,
+		  tr.last_update_date,
+		  su.user_name,
+		  tr.comments
+		FROM TER_REQUESTS tr
+		JOIN TER_TYPES tt
+		ON tt.type_id = tr.termination_type_id
+		JOIN BSE_COMPANIES bc
+		ON bc.company_id = tr.company_id
+		AND TRUNC(tr.creation_date) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		JOIN pea_personal_informations ppi
+		ON ppi.person_id = tr.person_id
+		AND TRUNC(tr.creation_date) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+		AND ppi.company_id = tr.company_id
+		LEFT JOIN sam_users su
+		ON su.user_id = tr.last_updated_by
+		WHERE tr.approval_status  = 'APPROVED'
+		AND UPPER(tt.termination_reason) = UPPER('TRANSFER OUT WITHIN GROUP')
+		<if test="employeeNumber != null">
+			AND ppi.employee_number like #{employeeNumber}
+		</if>
+		<if test="fullName != null">
+			AND ppi.full_name like #{fullName}
+		</if>
+		<if test="transferStatus != null">
+			AND tr.transfer_status = #{transferStatus}
+		</if>
+		<if test="terminationDateFrom != null">
+			AND tr.termination_date &gt;= #{terminationDateFrom}
+		</if>
+		<if test="terminationDateTo != null">
+			AND tr.termination_date &lt;= #{terminationDateTo}
+		</if>
+		<if test="requestId != null">
+			AND tr.request_id = #{requestId}
+		</if>
+		<if test="transactionStatus != null">
+			AND tr.transaction_status = #{transactionStatus}
+		</if>
+		<if test="companyId != null">
+			AND tr.company_id = #{companyId}
+		</if>
+		<if test="personId != null">
+			AND tr.person_id = #{personId}
+		</if>
+		<if test="destinationCompanyId != null">
+			AND tr.destination_company_id = #{destinationCompanyId}
+		</if>
+		<!-- Add by RIM - Ticket Modifikasi Menu Termination -->
+		<if test="notEqualTransactionStatus != null">
+			AND tr.transaction_status &lt;&gt; #{notEqualTransactionStatus}
+		</if>
+		<!-- End add by RIM - Ticket Modifikasi Menu Termination -->		
+	</select>	
+	
+	<resultMap id="terminationTypeResult" type="co.id.fifgroup.core.ui.lookup.KeyValue">
+		<result column="TYPE_ID" jdbcType="DECIMAL" property="key" javaType="Long"/>
+		<result column="TERMINATION_REASON" jdbcType="VARCHAR" property="description"/>
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="value"/>
+	</resultMap>
+	
+	<select id="getTerminationType" parameterType="map" resultMap="terminationTypeResult">
+		select
+			TYPE_ID,
+			TERMINATION_REASON,
+			DESCRIPTION
+		from TER_TYPES
+		where
+			company_id = #{companyId}
+	</select>
+	
+	<resultMap type="co.id.fifgroup.core.domain.TerminationDocument" id="terminationDocument">
+		<result column="REQUEST_ID" jdbcType="DECIMAL" property="requestId"/>
+		<result column="TYPE_DOCUMENT_ID" jdbcType="DECIMAL" property="typeDocumentId"/>
+		<result column="REQUEST_DOCUMENT_ID" jdbcType="DECIMAL" property="requestDocumentId"/>
+		<result column="DOCUMENT_CODE" jdbcType="VARCHAR" property="documentCode"/>
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+		<result column="DONE" jdbcType="DECIMAL" property="done"/>
+	</resultMap>
+	
+	<select id="getTerminationDocument" parameterType="map" resultMap="terminationDocument">
+		SELECT tr.request_id,
+		  trd.type_document_id,
+		  trd.request_document_id,
+		  doc.document_code,
+		  doc.description,
+		  trd.done
+		FROM ter_requests tr
+		LEFT JOIN ter_request_documents trd
+		ON trd.request_id = tr.request_id
+		LEFT JOIN ter_type_documents doc
+		ON doc.type_document_id = trd.type_document_id
+		WHERE trd.request_id    = #{requestId}
+	</select>
+	
+	<select id="countTransactionTermination" resultType="Integer" parameterType="map">
+		select count(*)
+		from ter_requests
+		where person_id = #{personId}
+		and ((approval_status = 'IN_PROGRESS' and transaction_status = 'OPEN') OR
+		(approval_status = 'APPROVED' and transaction_status &lt;&gt; 'REVERSED')) 
+		and company_id = #{companyId}
+	</select>
+	
+	<resultMap type="co.id.fifgroup.core.domain.ExitInterviewDocument" id="exitInterviewMap">
+		<result column="QUESTION_SET_ID" jdbcType="DECIMAL" property="questionSetId"/>
+		<result column="UPLOADED_FILE_NAME" jdbcType="DECIMAL" property="uploadedFileName"/>
+		<result column="EXIT_INTERVIEW_DATE" jdbcType="DECIMAL" property="exitInterviewDate"/>
+	</resultMap>
+	
+	<select id="getExitInterviewDocument" parameterType="map" resultMap="exitInterviewMap">
+		SELECT ttv.question_set_id,
+		  tei.uploaded_file_name,
+		  tei.exit_interview_date
+		FROM ter_requests tr
+		JOIN ter_type_version ttv
+		ON ttv.type_id = tr.termination_type_id
+		AND TRUNC(tr.creation_date) BETWEEN ttv.date_from AND ttv.date_to
+		LEFT JOIN ter_exit_interviews tei
+		ON tei.request_id   = tr.request_id
+		WHERE tr.request_id = #{requestId}
+	</select>
+	
+	<update id="updateStatusTermination" parameterType="map">
+		UPDATE ter_requests
+		<set>
+			<if test="transferStatus != null">
+				transfer_status = #{transferStatus} ,
+			</if>
+			<if test="terminationStatus != null">
+				transaction_status = #{terminationStatus} ,
+			</if>
+			last_updated_by = #{lastUpdatedBy} ,
+			last_update_date = sysdate
+		</set>
+		where request_id = #{requestId}
+	</update>
+	
+	<select id="getSourceDestinationTerminationCompanyByPersonAndCompanyId" parameterType="map" resultMap="keyValueResultMap">
+		Select 
+			Request_Id key, 
+			Destination_Company_Id value,
+			Company_Id description 
+		From Ter_Requests
+		Where Destination_Company_Id Is Not Null
+		and person_id = #{personId, jdbcType=DECIMAL} and Destination_Company_Id = #{destinationCompanyId, jdbcType=DECIMAL}
+	</select>
+	
+	<select id="countValidReverseTermination" parameterType="map" resultType="Integer">
+		select count(*) from ter_requests
+		where APPROVAL_STATUS = 'APPROVED'
+		and TRANSACTION_STATUS = 'OPEN'
+		and (TRANSFER_STATUS = 'SUBMITTED' OR TRANSFER_STATUS IS NULL)
+		and REQUEST_ID = #{requestId}
+	</select>
+	
+	<select id="getTerminationDateById" parameterType="long" resultType="java.util.Date">
+		SELECT
+			TERMINATION_DATE
+		FROM
+			TER_REQUESTS
+		WHERE
+			REQUEST_ID = #{requestId, jdbcType=DECIMAL}
+	</select>
+</mapper>

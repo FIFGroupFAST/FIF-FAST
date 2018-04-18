@@ -1,0 +1,43 @@
+<?page title="System Property"?>
+<window id="winSystemPropertyAdd" apply="co.id.fifgroup.ssoa.controller.SystemPropertyAddComposer">
+<!-- <style src="/styles/css/lat.css" /> -->
+	<groupbox id="gbSystemPropertyAdd" closable="false" mold="3d">
+		<caption label="${labels.soc.systemPropertyAdd} System Property - Add" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="150px" align="right" />
+				<column/>
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.soc.systemPropertyCode} System Property Code" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtSystemPropertyCode" width="300px" maxlength="64" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.soc.systemPropertyName} System Property Name" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtSystemPropertyName" width="300px" maxlength="64" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.soc.systemPropertyValue} System Property Value" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtSystemPropertyValue" width="300px" maxlength="128" />
+				</row>
+				<row>
+					<label/>
+					<button id="btnSave" label="${labels.common.save}" mold="trendy" 
+					image="${labels.image.link.save}" style="margin-left:15px;" />
+					<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" 
+					image="${labels.image.link.cancel}" style="float:right;" />		
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+</window>

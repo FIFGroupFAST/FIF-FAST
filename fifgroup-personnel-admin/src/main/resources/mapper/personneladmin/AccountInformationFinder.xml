@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AccountInformationFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.AccountInformationDTO">
+		<id column="ACCOUNT_INFO_ID" property="accountInfoId" jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="NATIONAL_ID_NUMBER" property="nationalIdNumber" jdbcType="VARCHAR" />
+	    <result column="NATIONAL_ID_FILE" property="nationalIdFile" jdbcType="VARCHAR" />
+	    <result column="NATIONAL_ID_FILE_NAME" property="nationalIdFileName" jdbcType="VARCHAR" />
+	    <result column="NATIONAL_ID_VALID_UNTIL" property="nationalIdValidUntil" jdbcType="TIMESTAMP" />
+	    <result column="NPWP" property="npwp" jdbcType="VARCHAR" />
+	    <result column="KPJ_NUMBER" property="kpjNumber" jdbcType="VARCHAR" />
+	    <result column="KPJ_FILE" property="kpjFile" jdbcType="VARCHAR" />
+	    <result column="KPJ_FILE_NAME" property="kpjFileName" jdbcType="VARCHAR" />
+	    <result column="DPA_NUMBER" property="dpaNumber" jdbcType="VARCHAR" />
+	    <result column="DPA_JOINT_DATE" property="dpaJointDate" jdbcType="TIMESTAMP" />
+	    <result column="INSURANCE_NUMBER" property="insuranceNumber" jdbcType="VARCHAR" />
+	    <result column="PASSPORT_NUMBER" property="passportNumber" jdbcType="VARCHAR" />
+	    <result column="PASSPORT_VALID_UNTIL" property="passportValidUntil" jdbcType="TIMESTAMP" />
+	    <result column="PASSPORT_FILE" property="passportFile" jdbcType="VARCHAR" />
+	    <result column="PASSPORT_FILE_NAME" property="passportFileName" jdbcType="VARCHAR" />
+	    <result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="TIMESTAMP" />
+	    <result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="TIMESTAMP" />
+	    <collection property="drivingLicenses" ofType="co.id.fifgroup.personneladmin.domain.DrivingLicense" javaType="java.util.List" >
+			<id column="DRIVING_LICENSE_ID" property="drivingLicenseId" jdbcType="DECIMAL" />
+		    <result column="LICENSE_TYPE" property="licenseType" jdbcType="VARCHAR" />
+		    <result column="LICENSE_NUMBER" property="licenseNumber" jdbcType="VARCHAR" />
+		    <result column="VALID_UNTIL" property="validUntil" jdbcType="TIMESTAMP" />
+		</collection>
+	</resultMap>
+	
+	<select id="getAccountInformationByEffectiveOnDate" parameterType="map" resultMap="baseResult">
+		select
+			pai.ACCOUNT_INFO_ID, 
+			pai.PERSON_ID, 
+			pai.COMPANY_ID, 
+			pai.NATIONAL_ID_NUMBER, 
+			pai.NATIONAL_ID_FILE,
+			pai.NATIONAL_ID_FILE_NAME, 
+			pai.NATIONAL_ID_VALID_UNTIL, 
+    		pai.NPWP, 
+    		pai.KPJ_NUMBER, 
+    		pai.KPJ_FILE,
+    		pai.KPJ_FILE_NAME, 
+    		pai.DPA_NUMBER, 
+    		pai.DPA_JOINT_DATE, 
+    		pai.INSURANCE_NUMBER, 
+    		pai.PASSPORT_NUMBER, 
+    		pai.PASSPORT_VALID_UNTIL, 
+    		pai.PASSPORT_FILE,
+    		pai.PASSPORT_FILE_NAME, 
+    		pai.EFFECTIVE_START_DATE, 
+    		pai.EFFECTIVE_END_DATE,
+    		pdl.DRIVING_LICENSE_ID,
+    		pdl.LICENSE_TYPE,
+    		pdl.LICENSE_NUMBER,
+    		pdl.VALID_UNTIL
+		from PEA_ACCOUNT_INFORMATIONS pai
+		left join PEA_DRIVING_LICENSES pdl on pdl.ACCOUNT_INFO_ID = pai.ACCOUNT_INFO_ID
+		where 1 = 1
+		<if test="personId != null">
+			AND pai.PERSON_ID = #{personId}
+		</if>
+		<if test="companyId != null">
+			AND pai.COMPANY_ID = #{companyId}
+		</if>
+		<if test="effectiveOnDate != null">
+			AND #{effectiveOnDate} between pai.EFFECTIVE_START_DATE and pai.EFFECTIVE_END_DATE
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,53 @@
+<window border="none" id="winApprovalModelDetail"
+	apply="co.id.fifgroup.systemworkflow.controller.ApprovalModelDetailComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption
+					label="${labels.swf.approvalModel}">
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column label="" width="180px"/>
+						<column label="" />						
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.approvalModelName}" />
+							<label id="lblAVMName" />							
+						</row>
+						<row>
+							<label value="${labels.common.version}" />
+							<label id="lblVersion" />
+						</row>
+						<row>
+							<label value="${labels.common.effectiveDateFrom}" />
+							<label id="lblEffectiveFrom" />		
+						</row>
+						<row>
+							<label value="${labels.common.effectiveDateTo}" />
+							<label id="lblEffectiveTo" />		
+						</row>						
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxApprovalLevel" >
+					<listhead>
+						<listheader label="${labels.swf.sequence}" align="center" />
+						<listheader label="${labels.swf.levelName}" align="center" />
+						<listheader label="${labels.swf.method}" align="center" />
+						<listheader label="${labels.swf.rule}" align="center" />
+						<listheader label="${labels.swf.listApprover}" align="center" />
+					</listhead>
+				</listbox>						
+			</groupbox>
+			<separator />
+			<hbox pack="end" align="center" style="width:100%;">
+				<button id="btnClose"
+					label="${labels.swf.close}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</hbox>	
+			
+		</panelchildren>
+	</panel>
+</window>

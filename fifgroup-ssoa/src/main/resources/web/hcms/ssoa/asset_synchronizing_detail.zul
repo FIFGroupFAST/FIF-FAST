@@ -1,0 +1,80 @@
+<?page title="SSOA" contentType="text/html;charset=UTF-8"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssetSynchronizingDetail" border="none"
+	apply="co.id.fifgroup.ssoa.controller.AssetSynchronizingDetailComposer">
+	
+	<groupbox closable="false" mold="3d">
+		<caption label="Asset Synchronizing Detail" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Synchronized Date"  />
+					<datebox id="dtProcessDate"  width="200px" format="dd-MMM-yyyy"  />
+				</row>
+				<row>
+					<label value="Synchronized Type"  />
+					<textbox id="txtSynchconizedType"  width="200px" disabled="true"/>
+				</row>
+				<row>
+					<label value="Description" />
+					<textbox id="txtDescription"  width="200px" cols="20" rows="3"  />		
+				</row>	
+			</rows>
+		</grid>
+		<separator />
+		
+		<listbox id="assetSynchronizingDetailListbox" height="auto"  emptyMessage="No Data Found"
+		mold="paging" pageSize="20" pagingPosition="both">
+			<listhead style="text-align:left;">						
+				<listheader label="Asset Number" sort="auto(assetNumber)" width="130px" />
+				<listheader label="Asset Type" sort="auto(assetType)" width="100px" />
+				<listheader label="Transaction Type" sort="auto(transactionType)" width="160px" />	
+				<listheader label="Retirement Status EBS" sort="auto(ebsRetireStatus)" width="200px" />	
+				<listheader label="Branch Code" sort="auto(branchCode)" width="130px" />
+				<listheader label="Branch Name" sort="auto(branchName)" width="160px" />
+				<listheader label="Kode Outlet" sort="auto(locationCode)" width="150px" />
+				<listheader label="Nama Outlet" sort="auto(locationName)" width="200px" />
+				<listheader label="Asset Category" sort="auto(categoryName)" width="150px" />	
+				<listheader label="Tanggal Perolehan" sort="auto(datePlacedInService)" width="150px" />			
+				<listheader label="Description" sort="auto(description)" width="300px" />	
+				<listheader label="Serial Number" sort="auto(serialNumber)" width="150px" />	
+				<listheader label="Harga Perolehan" sort="auto(originalCost)" width="150px" />	
+				<listheader label="Nilai Buku" sort="auto(unrevaluedCost)" width="150px" />	
+				<listheader label="Last update by" sort="auto(updatedBy)" width="120px" />
+				<listheader label="Last update date" sort="auto(lastUpdateDate)" width="130px" />
+			</listhead>
+
+
+			<template name="model">
+				<listitem>					
+					<listcell label="${each.assetNumber}"></listcell>
+					<listcell label="${each.assetType}"></listcell>
+					<listcell label="${each.transactionType}"></listcell>
+					<listcell label="${each.ebsRetireStatus}"></listcell>
+					<listcell label="${each.branchCode}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${each.locationCode}"></listcell>
+					<listcell label="${each.locationName}"></listcell>
+					<listcell label="${each.categoryName}"></listcell>
+					<listcell label="${date:format(each.datePlacedInService,'dd MMM yyyy HH:mm')}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.serialNumber}"></listcell>
+					<listcell label="${each.originalCost}"></listcell>
+					<listcell label="${each.unrevaluedCost}"></listcell>											
+					<listcell label="System"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="assetSynchronizingDetailListbox" />
+		<separator />
+		
+  		<button id="backButton" style="float:right;" label="Back" image="/styles/images/btn_back.png" />
+	</groupbox>
+</window>	

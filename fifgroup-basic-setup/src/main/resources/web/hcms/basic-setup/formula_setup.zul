@@ -1,0 +1,107 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winFormulaSetup"
+	apply="co.id.fifgroup.basicsetup.controller.FormulaSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.formulaSetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.formulaName}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<textbox id="txtFormulaName" width="200px" maxlength="30" />
+					<hbox>
+						<label value="${labels.common.version}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<listbox id="lstFormulaVersion" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.formulaReturnType}" />
+						<label value="${labels.common.required}"
+							style="color : red" />
+					</hbox>
+					<listbox id="lstReturnType" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+					<hbox>
+						<label
+							value="${labels.common.effectiveDateFrom}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<datebox id="dtbDateFrom"
+						use="co.id.fifgroup.core.ui.DateBoxFrom" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.description}" />
+					</hbox>
+					<textbox id="txtDescription" width="200px" maxlength="255" />
+					<hbox>
+						<label value="${labels.common.effectiveDateTo}" />
+					</hbox>
+					<datebox id="dtbDateTo"
+						use="co.id.fifgroup.core.ui.DateBoxMax" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.formula}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<cell colspan="3">
+						<textbox id="txtFormula" rows="10"
+							width="800px" style="font-family:'Consolas', monospace"/>
+					</cell>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnGetParameter"
+							label="${labels.bse.formulaGetParameter}" mold="trendy" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+				<button id="btnDelete" label="${labels.common.delete}"
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}"
+					mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

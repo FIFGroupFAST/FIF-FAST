@@ -1,0 +1,68 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<?component name="dateboxmax" class="co.id.fifgroup.core.ui.DateBoxMax" ?>
+<window id="winTaskRunnerDetail" apply="co.id.fifgroup.systemadmin.controller.TaskRunnerDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.taskRunnerDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<formlabel value="${labels.common.name}" required="true" />
+					<textbox id="txtName" maxlength="50"  width="250px" />
+					<vbox align="end">
+						<formlabel value="${labels.sam.dateFrom}" required="true" />
+						<formlabel value="${labels.sam.dateTo}" />
+					</vbox>
+					<vbox>
+						<datebox id="dtbDateFrom" />
+						<dateboxmax id="dtbDateTo" />
+					</vbox>
+				</row>
+				<row>
+					<formlabel value="${labels.common.description}" required="true" />
+					<textbox id="txtDesc" rows="5" width="250px"  maxlength="255" />
+					<label />
+					<label />			
+				</row>
+				<row>
+					<formlabel value="${labels.common.type}" required="true" />
+					<radiogroup id="rdType">
+						<radio label="${labels.sam.sequence}" checked="true"/>
+						<radio label="${labels.sam.parallel}" />
+					</radiogroup>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<label id="lblErrorTaskRunner" style="color:red" />
+		<listbox id="taskRunnerDetail" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+			<listhead>
+				<listheader label="" width="35px" />
+				<listheader label="${labels.sam.sequence}" width="10%" />
+				<listheader label="${labels.common.name}" />
+				<listheader label="${labels.common.description}" />
+				<listheader label="${labels.sam.success}" />
+				<listheader label="${labels.sam.error}" />
+			</listhead>
+		</listbox>
+		<hbox>
+			<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+			<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+		</hbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

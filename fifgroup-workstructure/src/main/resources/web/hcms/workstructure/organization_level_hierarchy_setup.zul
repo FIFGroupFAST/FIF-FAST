@@ -1,0 +1,73 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winOrgLevelHierSetup"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationLevelHierarchySetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.organizationLevelHierarchySetup}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="250px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationLevelHierarchyName}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtLevelHierName" width="300px" maxlength="100"/>
+					<label value="${labels.common.version}" />
+					<listbox id="lstVersion" mold="select" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationLevelHierarchyDescription}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtOrgLevelHierDesc" width="300px" maxlength="250" rows="2"/>
+					<vbox>
+						<hbox>
+							<label value="${labels.common.effectiveDateFrom}" />
+							<label value="${labels.common.required}" style="color:red;" />
+						</hbox>
+						<label value="${labels.common.effectiveDateTo}" />
+					</vbox> 
+					<vbox>
+						<datebox id="dtbFrom" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+						<datebox id="dtbTo" use="co.id.fifgroup.core.ui.DateBoxMax"/>
+					</vbox>					
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox id="grbLevelHierarchy" mold="default">
+			<caption label="${labels.wos.organizationLevelHierarchy}" />
+			<listbox id="lstLevelHier" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="" width="30px"/>
+					<listheader label="${labels.wos.hierarchySequence}" align="center"/>
+					<listheader label="${labels.wos.organizationLevel}" align="center"/>
+				</listhead>
+			</listbox>
+			<hbox>
+				<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowHier" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDeleteHier" />
+			</hbox>			
+		</groupbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" 
+					mold="trendy" image="${labels.image.link.save}" />
+				<space width="20px" />
+				<button id="btnDelete" label="${labels.common.delete}" 
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

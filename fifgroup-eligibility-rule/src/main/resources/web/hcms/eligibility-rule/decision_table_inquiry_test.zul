@@ -1,0 +1,22 @@
+<window id="winDecisionTableModelInquiry"
+	apply="co.id.fifgroup.eligibility.controller.DecisionTableInquiryTestComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Decision Table List" />
+		<button label="Refresh" id="btnRefresh" />
+		<button label="Create new Decision Table" id="btnCreate"/>
+	</groupbox>
+	<listbox>
+		<listhead>
+			<listheader label="Decision Table ID"/>
+			<listheader label="Action"/>
+		</listhead>
+		<template name="model">
+		<listitem value="${each }">
+			<listcell label="${each.id }" />
+			<listcell>
+				<button label="Detail" forward="onDecisionTableDetail"/>
+			</listcell>
+		</listitem>
+		</template>
+	</listbox>
+</window>

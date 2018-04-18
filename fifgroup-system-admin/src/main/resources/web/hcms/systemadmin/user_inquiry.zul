@@ -1,0 +1,65 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winUserInquiry" apply="co.id.fifgroup.systemadmin.controller.UserInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.users}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.sam.userName}" />
+					<searchtextbox id="txtUserName" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label value="${labels.sam.employeeName}" />
+					<searchtextbox id="txtEmployeeName" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+<!-- 		<paging id="pgUserTop" forward="onPaging" autohide="true" detailed="true"/> -->
+		<listbox id="userListbox" mold="paging" pagingPosition="both" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader sort="auto(userName)" label="${labels.sam.userName}" align="center" />
+				<listheader sort="auto(employeeName)" label="${labels.sam.employeeName}" align="center" />
+				<listheader sort="auto(dateFrom)" label="${labels.sam.dateFrom}" align="center" />
+				<listheader sort="auto(dateTo)" label="${labels.sam.dateTo}" align="center" />
+				<listheader sort="auto(lastUpdateDate)" label="${labels.common.lastUpdateDate}" align="center" />
+				<listheader sort="auto(name)" label="${labels.common.lastUpdatedBy}" align="center" />
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell value="${each}" label="${each.userName}"></listcell>
+					<listcell value="${each}" label="${each.employeeName}"></listcell>
+					<listcell label="${date:format(each.dateFrom,'dd MMM yyyy')}"></listcell>
+					<listcell label="${date:format(each.dateTo,'dd MMM yyyy')}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell value="${each}" label="${each.name}"></listcell>
+					<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+				</listitem>
+			</template>
+		</listbox>
+<!-- 		<paging id="pgUser" forward="onPaging" autohide="true" detailed="true"/> -->
+		<exporter referenceId="userListbox" />	
+	</groupbox>
+</window>

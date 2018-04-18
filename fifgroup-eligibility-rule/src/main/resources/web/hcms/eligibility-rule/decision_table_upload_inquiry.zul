@@ -1,0 +1,71 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winDecisionTableUploadInquiry" apply="co.id.fifgroup.eligibility.controller.DecisionTableUploadInquiryComposer">
+<groupbox closable="false" mold="3d">
+		<caption label="${labels.elr.upload}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.upload.processDate}" />
+					<hbox>
+						<datebox id="dtbDateFrom" width="100px" />
+						<label value="${labels.common.to}" />
+						<datebox id="dtbDateTo" width="100px" />
+					</hbox>
+				</row>
+				<row>
+					<label value="${labels.upload.batchNumber}" />
+					<hbox>
+						<textbox id="txtBatchNumberFrom" />
+						<label value="${labels.common.to}" />
+						<textbox id="txtBatchNumberTo" />
+					</hbox>
+				</row>
+				<row>
+					<label />
+					<hbox>
+						<button label="${labels.common.find}"
+							mold="trendy" id="btnFind" image="${labels.image.link.search }" />
+						<space />
+						<button label="${labels.common.create}"
+							id="btnNew" mold="trendy" image="${labels.image.link.add }" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstBatchUpload" emptyMessage="${labels.common.err.noDataFound }" mold="paging">
+			<listhead menupopup="auto">
+				<listheader label="${labels.upload.batchNumber}" align="center" />
+				<listheader label="${labels.upload.processDate}" align="center" />
+				<listheader label="${labels.common.status}" align="center" />
+				<listheader label="${labels.common.lastUpdateDate}" align="center" />
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" />
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.batchNumber }"/>
+					<listcell label="${date:formatDate(each.minUploadDate)} - ${date:formatDate(each.maxUploadDate)}"/>
+					<listcell label="${each.status }"/>
+					<listcell label="${date:formatDate(each.lastUpdateDate) }"/>
+					<listcell label="${each.updatedBy }"/>
+					<listcell>
+						<a label="${labels.common.detail }" forward="onDetail(${each})"/> 
+						<a if="${each.status == 'OPEN' }" label=" ${labels.upload.closeBatch}" forward="onCloseBatch(${each })"/> 
+						<a if="${each.status == 'OPEN' }" label=" ${labels.common.cancel }" forward="onCancelBatch(${each })"/>
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstBatchUpload" />
+	</groupbox>
+
+</window>

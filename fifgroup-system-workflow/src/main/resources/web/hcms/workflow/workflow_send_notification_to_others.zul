@@ -1,0 +1,53 @@
+<window border="none" id="winWorkflowSendNotificationToOthers" width="98%"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowSendNotificationToOthersComposer">
+	<style>
+		.z-checkbox-content{color:#555555};
+		.z-checkbox-content:hover{color:#555555};
+		#chkSendToApprovalPath{color:#555555};
+		#chkSendToApprovalPath:hover{color:#555555};
+	</style>
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption
+					label="${labels.swf.sendNotificationMessageToOthers}">
+				</caption>
+				<grid>
+					<rows>
+						<row style="color:#555">
+							<checkbox id="chkSendToApprovalPath" label="${labels.swf.sendToApprovalPath}"/>
+						</row>
+						<row>
+							<label value="${labels.swf.listReceiverNotification}" />
+						</row>
+						<row>
+							<panel>
+								<panelchildren>
+								<separator />
+								<listbox id="lbxEmployee" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+									<listhead>
+										<listheader label="" width="30px"/>
+										<listheader label="${labels.swf.employeeName}" />
+									</listhead>
+								</listbox>
+								<hbox>
+									<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+									<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRow" />
+								</hbox>
+								</panelchildren>
+							</panel>
+						</row>
+					</rows>
+				</grid>
+				<hbox>
+					<cell align="center" style="width:1250px;">
+						<button id="btnSend"
+							label="${labels.swf.send}" mold="trendy" />
+						<button id="btnClose"
+							label="${labels.swf.close}" mold="trendy" />
+					</cell>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

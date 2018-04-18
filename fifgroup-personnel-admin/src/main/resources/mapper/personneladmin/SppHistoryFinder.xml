@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.SppHistoryFinder">
+	<resultMap type="co.id.fifgroup.personneladmin.dto.SPPHistoryDTO" id="baseResult">
+	    <result column="IS_DEV_ORGANIZER_HO" jdbcType="BOOLEAN" property="isdevelopmentOrganizerHO" />
+	    <result column="DEVELOPMENT_CATEGORY" jdbcType="VARCHAR" property="developmentCategory" />
+	    <result column="DEVELOPMENT_TYPE" jdbcType="VARCHAR" property="developmentType" />
+	    <result column="DEVELOPMENT_NAME" jdbcType="VARCHAR" property="developmentName" />
+	    <result column="COE_NAME" jdbcType="VARCHAR" property="coeName" />
+	    <result column="SPP_START_DATE" jdbcType="TIMESTAMP" property="startDate" />
+	    <result column="SPP_END_DATE" jdbcType="TIMESTAMP" property="endDate" />
+	    <result column="DEVELOPMENT_START_DATE" jdbcType="TIMESTAMP" property="developmentStartDate" />
+	    <result column="DEVELOPMENT_END_DATE" jdbcType="TIMESTAMP" property="developmentEndDate" />
+	    <result column="CONTRACT_PERIOD" jdbcType="DECIMAL" property="contractPeriod" />
+	    <result column="PENALTY_AMOUNT" jdbcType="DECIMAL" property="penaltyAmount" />    
+	    <result column="FAILED_DEVELOPMENT" jdbcType="VARCHAR" property="faileddevelopment" />
+	    <result column="DOCUMENT_SPP_URL" jdbcType="VARCHAR" property="documentSppUrl" />
+	</resultMap>
+	
+	<!-- added by danny -->
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.SPPHistoryDTO" id="baseResultmap">
+		<result column="EMPLOYEE_NUMBER" jdbcType="DECIMAL" property="employeeNumber"/>
+		<result column="FULL_NAME" jdbcType="VARCHAR" property="fullName" />
+		<result column="JOB_NAME" jdbcType="VARCHAR" property= "jobName"/>
+	    <result column="DEVELOPMENT_NAME" jdbcType="VARCHAR" property="developmentName" />
+	    <result column="COE_NAME" jdbcType="VARCHAR" property="coeName" />
+	    <result column="SPP_START_DATE" jdbcType="TIMESTAMP" property="startDate" />
+	    <result column="SPP_END_DATE" jdbcType="TIMESTAMP" property="endDate" />
+	    <result column="DEVELOPMENT_START_DATE" jdbcType="TIMESTAMP" property="developmentStartDate" />
+	    <result column="DEVELOPMENT_END_DATE" jdbcType="TIMESTAMP" property="developmentEndDate" />
+	    <result column="CONTRACT_PERIOD" jdbcType="DECIMAL" property="contractPeriod" />
+	    <result column="PENALTY_AMOUNT" jdbcType="DECIMAL" property="penaltyAmount" />    
+	    <result column="FAILED_DEVELOPMENT" jdbcType="VARCHAR" property="faileddevelopment" />
+	    <result column="DOCUMENT_SPP_URL" jdbcType="VARCHAR" property="documentSppUrl" />
+	</resultMap>
+	
+	<select id="getInquiryDataSppDashboard" parameterType="map" resultMap="baseResultmap">
+		
+		SELECT DISTINCT 
+		    PPI.EMPLOYEE_NUMBER,
+		    PPI.FULL_NAME, 
+		    JOBS.JOB_NAME,
+		    TD.DEVELOPMENT_NAME, 
+		    TCE.COE_NAME,
+		    TCE.DEVELOPMENT_START_DATE,
+		    TCE.DEVELOPMENT_END_DATE,
+		    TDS.SPP_START_DATE, 
+		    TDS.SPP_END_DATE, 
+		    TDS.CONTRACT_PERIOD, 
+		    TDS.PENALTY_AMOUNT, 
+		    LFAIL.DESCRIPTION FAILED_DEVELOPMENT, 
+		    TDS.DOCUMENT_SPP_URL
+		FROM 
+		    TRA_DEVELOPMENT_SPP TDS
+		    JOIN TRA_DEVELOPMENT_PARTICIPANTS TDPA ON TDPA.DEVELOPMENT_PARTICIPANT_ID = TDS.DEVELOPMENT_PARTICIPANT_ID
+		    JOIN TRA_DEVELOPMENT_PROPOSALS TDP ON TDP.DEVELOPMENT_PROPOSAL_ID = TDPA.DEVELOPMENT_PROPOSAL_ID 
+		    JOIN TRA_CALENDAR_EVENTS TCE ON TCE.COE_ID = TDP.COE_ID
+		    JOIN TRA_DEVELOPMENTS TD ON TD.DEVELOPMENT_ID = TCE.DEVELOPMENT_ID
+		    JOIN PEA_PRIMARY_ASSIGNMENTS_V PPA ON PPA.PERSON_ID = TDPA.PERSON_ID
+		        AND TRUNC(TDPA.CREATION_DATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+		    JOIN PEA_PEOPLE_TYPES PPT ON PPT.PERSON_ID = PPA.PERSON_ID AND PPT.COMPANY_ID = PPA.COMPANY_ID AND PPT.PEOPLE_TYPE &lt;&gt; 'EX_EMPLOYEE'
+		        AND TRUNC(TDPA.CREATION_DATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+		    JOIN WOS_JOBS JOBS ON JOBS.JOB_ID = PPA.JOB_ID
+		    JOIN PEA_PERSONAL_INFORMATIONS PPI ON PPI.PERSON_ID = TDPA.PERSON_ID AND PPI.COMPANY_ID = PPA.COMPANY_ID
+		        AND TRUNC(TDPA.CREATION_DATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+		    JOIN TRA_DEVELOPMENT_VERSIONS TDV ON TDV.DEVELOPMENT_ID = TCE.DEVELOPMENT_ID
+		        AND TRUNC(TCE.CREATION_DATE) BETWEEN TDV.DATE_FROM AND TDV.DATE_TO
+		    LEFT JOIN (SELECT BLD.* 
+		        FROM BSE_LOOKUP_DEPENDENTS BLD
+		            JOIN BSE_LOOKUP_HDR BLH ON BLH.LOOKUP_ID = BLD.LOOKUP_ID
+		        WHERE NAME = 'TRA_DEVELOPMENT_CATEGORY') LCAT ON LCAT.DETAIL_CODE = TDV.DEVELOPMENT_CATEGORY
+		    LEFT JOIN (SELECT BLD.* 
+		        FROM BSE_LOOKUP_DEPENDENTS BLD
+		            JOIN BSE_LOOKUP_HDR BLH ON BLH.LOOKUP_ID = BLD.LOOKUP_ID
+		        WHERE NAME = 'TRA_DEVELOPMENT_TYPE') LTYPE ON LTYPE.DETAIL_CODE = TDV.DEVELOPMENT_TYPE
+		    LEFT JOIN (SELECT BLD.* 
+		        FROM BSE_LOOKUP_DEPENDENTS BLD
+		            JOIN BSE_LOOKUP_HDR BLH ON BLH.LOOKUP_ID = BLD.LOOKUP_ID
+		        WHERE NAME = 'TRA_FAILED_DEVELOPMENT_IMPACT') LFAIL ON LFAIL.DETAIL_CODE = TDS.FAILED_DEVELOPMENT
+		<where>
+			<if test="criteria.fullName != null">
+			    PPI.FULL_NAME = #{criteria.fullName}
+			</if>
+			<if test="criteria.jobName != null">
+				AND JOBS.JOB_NAME = #{criteria.jobName}
+			</if>
+			<if test="criteria.developmentName != null">
+				AND TD.DEVELOPMENT_NAME = #{criteria.developmentName}
+			</if>
+			<if test="criteria.coeName != null">
+				AND TCE.COE_NAME = #{criteria.coeName}
+			</if>
+			 AND TDPA.ENROLLMENT_STATUS = 'VALIDATED'
+	   		 AND TDP.APPROVAL_STATUS = 'APPROVED'
+    		 AND TDPA.SPP_STATUS = 'AGREE'
+		</where>
+		ORDER BY UPPER(PPI.FULL_NAME)
+	</select>
+	
+	<!-- until here added by danny -->
+	
+	
+	
+	
+	<select id="getInquiryData" parameterType="map" resultMap="baseResult">
+		SELECT 
+		    TDV.IS_DEV_ORGANIZER_HO, 
+		    LCAT.DESCRIPTION DEVELOPMENT_CATEGORY, 
+		    LTYPE.DESCRIPTION DEVELOPMENT_TYPE, 
+		    TD.DEVELOPMENT_NAME, 
+		    TCE.COE_NAME,
+		    TCE.DEVELOPMENT_START_DATE,
+		    TCE.DEVELOPMENT_END_DATE,
+		    TDS.SPP_START_DATE, 
+		    TDS.SPP_END_DATE, 
+		    TDS.CONTRACT_PERIOD, 
+		    TDS.PENALTY_AMOUNT, 
+		    LFAIL.DESCRIPTION FAILED_DEVELOPMENT, 
+		    TDS.DOCUMENT_SPP_URL
+		FROM 
+		    TRA_DEVELOPMENT_SPP TDS
+		    JOIN TRA_DEVELOPMENT_PARTICIPANTS TDPA ON TDPA.DEVELOPMENT_PARTICIPANT_ID = TDS.DEVELOPMENT_PARTICIPANT_ID
+		    JOIN TRA_DEVELOPMENT_PROPOSALS TDP ON TDP.DEVELOPMENT_PROPOSAL_ID = TDPA.DEVELOPMENT_PROPOSAL_ID 
+		    JOIN TRA_CALENDAR_EVENTS TCE ON TCE.COE_ID = TDP.COE_ID 
+		    JOIN TRA_DEVELOPMENTS TD ON TD.DEVELOPMENT_ID = TCE.DEVELOPMENT_ID
+		    JOIN TRA_DEVELOPMENT_VERSIONS TDV ON TDV.DEVELOPMENT_ID = TCE.DEVELOPMENT_ID
+		        AND TRUNC(TCE.CREATION_DATE) BETWEEN TDV.DATE_FROM AND TDV.DATE_TO
+		    LEFT JOIN (SELECT BLD.* 
+		        FROM BSE_LOOKUP_DEPENDENTS BLD
+		            JOIN BSE_LOOKUP_HDR BLH ON BLH.LOOKUP_ID = BLD.LOOKUP_ID
+		        WHERE NAME = 'TRA_DEVELOPMENT_CATEGORY') LCAT ON LCAT.DETAIL_CODE = TDV.DEVELOPMENT_CATEGORY
+		    LEFT JOIN (SELECT BLD.* 
+		        FROM BSE_LOOKUP_DEPENDENTS BLD
+		            JOIN BSE_LOOKUP_HDR BLH ON BLH.LOOKUP_ID = BLD.LOOKUP_ID
+		        WHERE NAME = 'TRA_DEVELOPMENT_TYPE') LTYPE ON LTYPE.DETAIL_CODE = TDV.DEVELOPMENT_TYPE
+		    LEFT JOIN (SELECT BLD.* 
+		        FROM BSE_LOOKUP_DEPENDENTS BLD
+		            JOIN BSE_LOOKUP_HDR BLH ON BLH.LOOKUP_ID = BLD.LOOKUP_ID
+		        WHERE NAME = 'TRA_FAILED_DEVELOPMENT_IMPACT') LFAIL ON LFAIL.DETAIL_CODE = TDS.FAILED_DEVELOPMENT
+		WHERE 
+		    TDPA.PERSON_ID = #{personId}
+		    AND TDPA.ENROLLMENT_STATUS = 'VALIDATED'
+		    AND TDP.APPROVAL_STATUS = 'APPROVED'
+	    	AND TDPA.SPP_STATUS = 'AGREE'
+	</select>
+
+</mapper>

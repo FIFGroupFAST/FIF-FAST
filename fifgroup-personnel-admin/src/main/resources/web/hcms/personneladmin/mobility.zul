@@ -1,0 +1,64 @@
+<window id="winMobility" border="none" apply="co.id.fifgroup.personneladmin.controller.MobilityEmployeeComposer">
+	<groupbox closable="false">
+		<grid>
+			<columns>
+				<column width="150px" align="right"></column>
+				<column></column>
+				<column align="right"></column>
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					<label value="${labels.pea.mobilityStatus}" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<hbox>
+					<listbox id="cmbMobilityStatus" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description}"/>
+						</listitem>
+					</template>
+					</listbox>
+					<textbox id="cmbMobilityStatusError" visible="false" 	/>
+				</hbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.mobilityNotes}" />
+				</hbox>
+				<textbox id="txtNotes" rows="5" width="500px" maxlength="300"/>
+			</row>
+		</rows>
+		</grid>
+		<separator height="20px"></separator>
+		<groupbox id="gbZone" closable="false">
+			<caption label = "${labels.pea.mobilityZone}"></caption>
+			<textbox id="txtZoneError" visible="false" />
+			<listbox id="lstZone" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" mold="paging" pagingPosition="both" checkmark="true">
+				<listhead>
+					<listheader width="30px"></listheader>
+					<listheader label="${labels.pea.mobilityZone}"></listheader>
+				</listhead>
+			</listbox>
+			<hbox>
+				<button id="btnAddRow" mold="trendy"
+						label="${labels.common.addRow}">
+					</button>
+					<button id="btnDeleteRow" mold="trendy"
+						label="${labels.common.delete}">
+					</button>
+			</hbox>
+		</groupbox>
+		<separator height="20px"></separator>
+		<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>	
+	</groupbox>
+</window>

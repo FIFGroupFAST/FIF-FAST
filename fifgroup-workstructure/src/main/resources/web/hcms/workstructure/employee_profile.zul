@@ -1,0 +1,61 @@
+<window id="winEmployeeProfile"
+	apply="co.id.fifgroup.workstructure.controller.EmployeeProfileComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.employeeProfile}" />
+		<div>
+			<hbox>
+			<div width="150px" height="130px" style="border:1px #000 solid;overflow:hidden">
+				<image id="imgPhoto" width="150px" height="auto" style="position:relative; top:-5px"></image>
+			</div>
+			<div>
+				<grid sclass="form-entry">
+					<columns>
+						<column align="left" />
+					</columns>
+					<rows>
+						<row>
+							<label id="lblEmployee" />
+						</row>
+						<row>
+							<label id="lblPeopleType" />
+						</row>
+						<row>
+							<label id="lblOrg" />
+						</row>
+						<row>
+							<label id="lblLocation" />
+						</row>
+						<row>
+							<label id="lblJob" />
+						</row>
+						<row>
+							<label id="lblJobGroup" />
+						</row>
+						<row>
+							<label id="lblPersonalGrade" />
+						</row>
+					</rows>
+				</grid>
+			</div>
+			</hbox>
+		</div>
+		<separator />
+		<listbox id="lstCommunication" mold="paging" pageSize="10">
+			<listhead>
+				<listheader label="${labels.wos.communicationType}" align="center" />
+				<listheader label="${labels.title.information}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell value="${each}" label="${each.type}" />
+					<listcell value="${each}" label="${each.information}" />
+				</listitem>
+			</template>
+		</listbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnBack" label="${labels.common.back}"
+				mold="trendy" image="${labels.image.link.back}" />
+		</hbox>
+	</groupbox>
+</window>

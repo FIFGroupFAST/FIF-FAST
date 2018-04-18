@@ -1,0 +1,22 @@
+<window id="winStatusPopup" title="Approval Flow" border="normal" width="500px" height="auto"
+closable="true" position="center,center" action="show: slideDown;hide: slideUp"
+apply="co.id.fifgroup.ssoa.ui.StockOpnamePopupStatusComposer">
+	<groupbox>
+		<listbox id="lstStatusAsset" mold="paging" pageSize="3" pagingPosition="both" height="auto" emptyMessage="No data found">
+			<listhead>
+				<listheader label="Approver Name" sort="auto(approverName)" width="" />
+				<listheader label="Remarks" sort="auto(remarks)" width="100px" />
+				<listheader label="Approved Time" sort="auto(approvedTime)" width="200px" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.approverName}" />
+					<listcell label="${each.remarks}" />
+					<listcell label="${each.approvedTime}" />
+				</listitem>
+			</template>
+		</listbox>
+		<separator/>
+		<button id="btnClose" label="Close" style="float:right;" />
+	</groupbox>
+</window>

@@ -1,0 +1,76 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<?component name="dateboxmax" class="co.id.fifgroup.core.ui.DateBoxMax" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssetLabelingDetail" apply="co.id.fifgroup.ssoa.controller.AssetLabelingDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Asset Labeling Detail" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="210px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<div>
+						<label>Labeling Date</label>
+						<span style="color:red;">*</span>
+					</div>
+					<datebox id="labelingDateDetail" format="dd-MMM-yyyy" disabled="true"></datebox>
+				</row>
+				<row>
+					<label value="Branch" />
+					<textbox style="background-color:#fff;"
+						disabled="true" id="branchOwnerDetail" width="270px" />
+				</row>
+				<row>
+					<label value="Description" />
+					<textbox rows="4" cols="50" width="200px"
+						style="background-color:#fff;" id="descriptionDetail" disabled="true" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<label id="lblErrorParameter" style="color:red" />
+		<listbox id="lstAssetdetail" emptyMessage="${labels.common.noDataFound}">
+			<listhead>
+				<listheader label="Asset Number" width="120px" />
+				<listheader label="Print Count" width="100px" />
+				<listheader label="Reprinting Reason" width="160px" />
+				<listheader label="Asset Type" width="100px" />
+				<listheader label="Branch Code" width="160px" />
+				<listheader label="Branch Name" width="160px" />
+				<listheader label="Kode Outlet" width="120px" />
+				<listheader label="Nama Outlet" width="160px" />
+				<listheader label="Asset Category" width="150px" />
+				<listheader label="Tanggal Perolehan" width="160px" />
+				<listheader label="Description" width="300px" />
+				<listheader label="Serial Number" width="150px" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.assetNumber}" />
+					<listcell label="${each.printedCount}" />
+					<listcell label="${each.lookupDesc}"/>
+					<listcell label="${each.assetTypeName}" />
+					<listcell label="${each.branchCode}" />
+					<listcell label="${each.branchName}" />
+					<listcell label="${each.locationCode}" />
+					<listcell label="${each.locationName}" />
+					<listcell label="${each.categoryName}" />
+					<listcell label="${date:format(each.datePlacedInService,'dd-MMM-yyyy')}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.serialNumber}" />
+			</listitem>
+		</template>
+		</listbox>
+		<separator></separator>
+		<exporter referenceId="lstAssetdetail" />
+		<hbox style="float:right;">
+			<button id="btnBack" label="back" style="float:right;"
+				image="${labels.image.link.back}" />
+		</hbox>
+		<separator />
+		
+	</groupbox>
+</window>

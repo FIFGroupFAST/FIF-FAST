@@ -1,0 +1,101 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winDecisionTableUploadCreate"
+	apply="co.id.fifgroup.eligibility.controller.DecisionTableUploadCreateComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.elr.upload}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Decision Table Id"/>
+					<hlayout>
+						<longbox id="txtDecisionTableId" />
+						<button id="btnCheck" label="Check Open Batch" />
+					</hlayout>
+				</row>
+				<row>
+					<span />
+					<button id="btnDownloadTemplate" 
+						label="${labels.upload.downloadTemplate}" mold="trendy" image="${labels.image.link.save}" />
+				</row>
+				<row>
+					<label value="${labels.upload.batchNumber}" />
+					<label id="lblBatchNumber" />
+				</row>
+				<row>
+					<label value="${labels.common.file}" />
+					<hlayout valign="middle">
+						<textbox id="txtFile" />
+						<button id="btnBrowse" upload="true"
+							label="${labels.upload.browse}" mold="trendy" />	
+					</hlayout>
+				</row>
+				<row>
+					<label />
+					<button id="btnProcess"
+						label="${labels.upload.process}" mold="trendy" />
+				</row>
+				<row>
+					<label />
+					<grid sclass="form-entry" style="border:0px">
+						<columns>
+							<column width="180px" align="right" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="${labels.upload.totalRecord}" />
+								<label id="lblTotalRecord" />
+							</row>
+							<row>
+								<label value="${labels.upload.totalSucceedRecord}" />
+								<label id="lblTotalSucceed" />
+							</row>
+							<row>
+								<label value="${labels.upload.totalFailedRecord}" />
+								<label id="lblTotalFailed" />
+							</row>
+						</rows>
+					</grid>
+				</row>
+				<row>
+					<label />
+					<groupbox>
+						<caption label="${labels.upload.failedRows}" />
+						<listbox id="lstFailedRow" mold="paging">
+							<listhead>
+								<listheader label="${labels.upload.rowNumber}" align="center" width="100px"/>
+								<listheader label="${labels.upload.errorMessage}" align="center" sort="auto(rowNumber)" />
+							</listhead>
+							<template name="model">
+								<listitem>
+									<listcell value="${each}" label="${each.rowNumber}"></listcell>
+									<listcell value="${each}" label="${each.errorMessage}"></listcell>
+								</listitem>
+							</template>
+						</listbox>
+						<separator />
+						<hbox pack="end" align="center" style="width:100%;">
+							<button id="btnDownloadFailed" label="${labels.upload.download}" 
+								mold="trendy" />
+						</hbox>
+					</groupbox>
+				</row>
+				<row>
+					<label />
+					<button id="btnCloseBatch"
+						label="${labels.upload.closeBatch}" mold="trendy" />
+				</row>
+			</rows>
+		</grid>
+		
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnCancel" label="${labels.common.cancel}" 
+				mold="trendy" image="${labels.image.link.cancel}"/>
+		</hbox>
+	</groupbox>
+</window>

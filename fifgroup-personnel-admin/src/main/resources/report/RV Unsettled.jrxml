@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RV Unsettled" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="196c2963-3d24-4a36-9ec6-bd76a9d3486e">
+	<property name="ireport.zoom" value="5.054470284992953"/>
+	<property name="ireport.x" value="3265"/>
+	<property name="ireport.y" value="82"/>
+	<parameter name="CREATION_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CREATION_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BRANCH_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AUTHORIZED_ORGANIZATIONS" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STATIC_PARAM_EMPLOYEE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT bh.branch_name branch_name,
+  ppi.employee_number,
+  ppi.full_name,
+  unsettled.trx,
+  unsettled.rv_no,
+  unsettled.trans_date,
+  unsettled.description,
+  unsettled.received_amount
+FROM
+  (SELECT 'Benefit' trx,
+    bst.person_id,
+    bst.company_id,
+    rv.rv_no,
+    rv.trans_date,
+    rv.description,
+    rv.received_amount
+  FROM ben_settlement_trn bst
+  JOIN ap.rv_trn_interface@FIFAPPS.US.ORACLE.COM rv
+  ON bst.rv_number = rv.rv_no
+  WHERE
+  UPPER(bst.transaction_status) = 'SETTLED'
+  UNION
+  SELECT 'Loan' trx,
+    llt.person_id,
+    llt.company_id,
+    rv.rv_no,
+    rv.trans_date,
+    rv.description,
+    rv.received_amount
+  FROM loa_loan_trn llt
+  JOIN ap.rv_trn_interface@FIFAPPS.US.ORACLE.COM rv
+  ON llt.rv_number = rv.rv_no
+  WHERE
+  UPPER(llt.loan_status) = 'SETTLEMENT_IN_PROGRESS'
+  UNION
+  SELECT 'Business Trip' trx,
+    brt.person_id,
+    brg.company_id,
+    rv.rv_no,
+    rv.trans_date,
+    rv.description,
+    rv.received_amount
+  FROM btr_request_trn brt
+  JOIN btr_request_groups brg
+  ON brg.request_group_id = brt.request_group_id
+  JOIN btr_settlement_trn bst
+  ON bst.request_trn_id = brt.request_trn_id
+  JOIN ap.rv_trn_interface@FIFAPPS.US.ORACLE.COM rv
+  ON bst.rv_number = rv.rv_no
+  WHERE
+  UPPER(brt.transaction_status) = 'SETTLED'
+  ) unsettled
+JOIN pea_personal_informations ppi
+ON ppi.person_id   = unsettled.person_id
+AND ppi.company_id = unsettled.company_id
+AND TRUNC(unsettled.trans_date) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+JOIN pea_primary_assignments ppa
+ON ppa.person_id   = unsettled.person_id
+AND ppa.company_id = unsettled.company_id
+AND TRUNC(unsettled.trans_date) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+LEFT JOIN EWS.wos_organization_hier hier on hier.company_id = ppi.company_id AND upper(org_hier_type) = upper('STRUCTURAL')
+LEFT JOIN EWS.BRANCH_HIERARCHY_V bh ON bh.org_hier_id = hier.org_hier_id AND bh.organization_id = ppa.organization_id
+WHERE
+(unsettled.company_id = $P{COMPANY_ID} OR $P{COMPANY_ID} is null)
+AND (TRUNC(unsettled.trans_date) >= TRUNC(TO_DATE($P{CREATION_DATE_FROM},'DD-MON-YYYY')) OR $P{CREATION_DATE_FROM} is null)
+AND (TRUNC(unsettled.trans_date) <= TRUNC(TO_DATE($P{CREATION_DATE_TO},'DD-MON-YYYY')) OR $P{CREATION_DATE_TO} is null)
+AND (bh.branch_id = $P{BRANCH_ID} OR $P{BRANCH_ID} is null)
+AND (ppi.employee_number = $P{STATIC_PARAM_EMPLOYEE} OR $P{STATIC_PARAM_EMPLOYEE} is null)
+AND $X{IN, ppa.organization_id, AUTHORIZED_ORGANIZATIONS}
+ORDER BY bh.branch_name ASC, ppi.full_name ASC]]>
+	</queryString>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_NUMBER" class="java.lang.String"/>
+	<field name="FULL_NAME" class="java.lang.String"/>
+	<field name="TRX" class="java.lang.String"/>
+	<field name="RV_NO" class="java.lang.String"/>
+	<field name="TRANS_DATE" class="java.sql.Timestamp"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="RECEIVED_AMOUNT" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="bd618fa4-f31e-4a32-a686-8fb2fd6f275e" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="95f85fae-efcf-4a96-a821-e38531aa17b0" x="100" y="0" width="159" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Employee Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d3d77cdb-b28f-48cc-9932-35eaee62d1a8" x="359" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[RV Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="46196e3a-a176-4e62-993c-4694bc6f3dc9" x="559" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a9565ac0-e913-48fb-bc49-fdff37fb8618" x="659" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[RV Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9fd9ff9-edb0-43c6-b2bf-1510732ad4a7" x="259" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Transaction]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="21f18960-1cb0-4ba0-b9c2-b10cf5bd0975" x="459" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[RV Creation Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="1ec37d41-5080-478a-bfca-a23b225e4dd2" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8976974f-3b02-468c-b9bc-5edfb0cd9e72" stretchType="RelativeToTallestObject" x="100" y="0" width="159" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NUMBER} + " - " + $F{FULL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d7dd631d-cfb6-4fda-89cb-0fe123d0db7b" stretchType="RelativeToTallestObject" x="359" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{RV_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="04adc7b7-ae7d-45bb-8406-09dd33392b80" stretchType="RelativeToTallestObject" x="259" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TRX}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy">
+				<reportElement uuid="300b4840-8481-4519-98dd-8a70c1b07957" stretchType="RelativeToTallestObject" x="459" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TRANS_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="fb0a60b4-87b2-41a5-9f12-5ef51afeef72" stretchType="RelativeToTallestObject" x="559" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.##">
+				<reportElement uuid="8be448fc-95a4-4333-ad9c-2f8a59a97efd" stretchType="RelativeToTallestObject" x="659" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{RECEIVED_AMOUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

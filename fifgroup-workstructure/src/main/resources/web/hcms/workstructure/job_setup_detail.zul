@@ -1,0 +1,357 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winJobSetup"
+	apply="co.id.fifgroup.workstructure.controller.JobSetupDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.jobSetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="150px" align="right" />
+				<column />
+				<column width="150px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.wos.jobCode}" />
+						<label value="${labels.common.required}"
+							style="color:red;" />
+					</hbox>
+					<div>
+						<textbox id="txtJobCode" width="300px"
+							maxlength="30" />
+						<textbox id="txtJobCodeError" visible="false" />
+					</div>
+					<label value="${labels.common.version}" />
+					<listbox id="lstVersion" mold="select" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.jobName}" />
+						<label value="${labels.common.required}"
+							style="color:red;" />
+					</hbox>
+					<div>
+						<textbox id="txtJobName" width="300px"
+							maxlength="100" />
+						<textbox id="txtJobNameError" visible="false" />
+					</div>
+
+					<hbox>
+						<label
+							value="${labels.common.effectiveDateFrom}" />
+						<label value="${labels.common.required}"
+							style="color:red;" />
+					</hbox>
+					<datebox id="dtbFrom"
+						use="co.id.fifgroup.core.ui.DateBoxFrom" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label value="${labels.wos.jobDescription}" />
+					<textbox id="txtJobDesc" width="300px" rows="2"
+						maxlength="250" />
+					<label value="${labels.common.effectiveDateTo}" />
+					<datebox id="dtbTo"
+						use="co.id.fifgroup.core.ui.DateBoxMax" format="dd-MMM-yyyy" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<panel border="normal">
+			<panelchildren>
+				<tabbox>
+					<tabs>
+						<tab label="${labels.wos.jobInfo}" />
+						<tab label="${labels.common.grade}" />
+						<tab label="${labels.wos.competency}" />
+						<tab label="${labels.wos.recruitment}" />
+						<tab label="${labels.wos.timeManagement}" />
+						<tab label="${labels.wos.docRequirement}" />
+						<tab label="${labels.wos.otherInfo}" />
+					</tabs>
+					<tabpanels>
+						<tabpanel id="tpJobInfo">
+							<groupbox id="grbJobCategory"
+								mold="default">
+								<caption
+									label="${labels.wos.jobCategory}" />
+								<grid sclass="form-entry">
+									<columns>
+										<column width="180px"
+											align="right" />
+										<column />
+									</columns>
+									<rows>
+										<row>
+											<hbox>
+												<label
+													value="${labels.wos.jobFor}" />
+												<label
+													value="${labels.common.required}" style="color:red;" />
+											</hbox>
+											<listbox id="lstJobFor"
+												mold="select">
+												<template
+													name="model">
+													<listitem>
+														<listcell
+															value="${each}" label="${each.desc}">
+														</listcell>
+													</listitem>
+												</template>
+											</listbox>
+										</row>
+										<row>
+											<hbox>
+												<label
+													value="${labels.wos.jobType}" />
+												<label
+													value="${labels.common.required}" style="color:red;" />
+											</hbox>
+											<listbox id="lstJobType"
+												mold="select">
+												<template
+													name="model">
+													<listitem>
+														<listcell
+															value="${each}" label="${each.desc}">
+														</listcell>
+													</listitem>
+												</template>
+											</listbox>
+										</row>
+										<row>
+											<hbox>
+												<label
+													value="${labels.wos.peopleCategory}" />
+												<label
+													value="${labels.common.required}" style="color:red;" />
+											</hbox>
+											<listbox
+												id="lstPeopleCategory" mold="select">
+												<template
+													name="model">
+													<listitem>
+														<listcell
+															value="${each}" label="${each.desc}">
+														</listcell>
+													</listitem>
+												</template>
+											</listbox>
+										</row>
+										<row>
+											<hbox>
+												<label
+													value="${labels.wos.jobGroup}" />
+												<label
+													value="${labels.common.required}" style="color:red;" />
+											</hbox>
+											<listbox id="lstJobGroup"
+												mold="select" />
+										</row>
+										<row>
+											<label
+												value="${labels.wos.keyJob}" />
+											<checkbox id="chkKeyJob" />
+										</row>
+										<row>
+											<label
+												value="${labels.wos.isManager}" />
+											<checkbox id="chkManager" />
+										</row>
+									</rows>
+								</grid>
+							</groupbox>
+							<separator />
+							<groupbox>
+								<caption label="${labels.wos.role}" />
+								<listbox id="lstRole" checkmark="true"
+									use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+									<listhead>
+										<listheader label=""
+											width="30px" />
+										<listheader
+											label="${labels.wos.typeHcManagement}" />
+									</listhead>
+								</listbox>
+								<hbox>
+									<button
+										label="${labels.common.addRow}" mold="trendy"
+										id="btnAddRowRole" />
+									<button
+										label="${labels.common.delete}" mold="trendy"
+										id="btnDeleteRole" />
+								</hbox>
+							</groupbox>
+							<separator />
+							<grid sclass="form-entry">
+								<columns>
+									<column width="25%" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label
+											value="${labels.wos.mainResponsibility}" />
+										<textbox id="txtResponsibility"
+											width="400px" maxlength="1000" rows="5" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.jobFile}" />
+										<hbox>
+											<textbox id="txtJobFile"
+												disabled="true" />
+											<button id="btnUpload"
+												label="${labels.upload.browse}" mold="trendy"
+												image="${labels.image.link.browse}"
+												upload="true, maxsize=-1" />
+										</hbox>
+									</row>
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpGrade">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<hbox>
+											<label
+												value="${labels.wos.gradeSetName}" />
+											<label
+												value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<listbox id="lstGradeSet"
+											mold="select" />
+									</row>
+								</rows>
+							</grid>
+							<separator />
+							<groupbox>
+								<caption
+									label="${labels.wos.jobValidGrade}" />
+								<listbox id="lstGrade" checkmark="true"
+									use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+									<listhead>
+										<listheader label=""
+											width="30px" />
+										<listheader
+											label="${labels.wos.gradeName}" />
+									</listhead>
+									<template name="model">
+										<listitem>
+											<listcell />
+											<listcell value="${each}"
+												label="${each.grade}">
+											</listcell>
+										</listitem>
+									</template>
+								</listbox>
+								<hbox>
+									<button
+										label="${labels.common.addRow}" mold="trendy"
+										id="btnAddRowGrade" />
+									<button
+										label="${labels.common.delete}" mold="trendy"
+										id="btnDeleteGrade" />
+								</hbox>
+							</groupbox>
+						</tabpanel>
+						<tabpanel id="tpCompetency"></tabpanel>
+						<tabpanel id="tpRecruitment">
+							<groupbox id="grbSpecification"
+								mold="default">
+								<caption
+									label="${labels.wos.specification}" />
+								<listbox id="lstSpec" checkmark="true"
+									use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+									<listhead>
+										<listheader label=""
+											width="30px" />
+										<listheader
+											label="${labels.wos.qualification}" />
+										<listheader
+											label="${labels.wos.condition}" />
+										<listheader
+											label="${labels.wos.value1}" />
+										<listheader
+											label="${labels.wos.value2}" />
+									</listhead>
+								</listbox>
+								<hbox>
+									<button
+										label="${labels.common.addRow}" mold="trendy"
+										id="btnAddRowSpec" />
+									<button
+										label="${labels.common.delete}" mold="trendy"
+										id="btnDeleteSpec" />
+								</hbox>
+							</groupbox>
+						</tabpanel>
+						<tabpanel id="tpTimeManagement">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="25%" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label
+											value="${labels.wos.workingSchedule}" />
+										<listbox id="lstWorkingSchedule"
+											mold="select" />
+									</row>
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpDocRequirement">
+							<groupbox>
+							<caption
+									label="${labels.wos.docRequirement}" />
+								<listbox id="lstDocumentList"
+									checkmark="true"
+									use="co.id.fifgroup.core.ui.tabularentry.TabularEntry"
+									pagingPosition="both" mold="paging">
+									<listhead>
+										<listheader
+											label="${labels.wos.documentList}">
+										</listheader>
+									</listhead>
+								</listbox>
+								<hbox>
+									<button
+										label="${labels.common.addRow}" mold="trendy"
+										id="btnAddDoc">
+									</button>
+									<button
+										label="${labels.common.delete}" mold="trendy"
+										id="btnDeleteDoc">
+									</button>
+								</hbox>
+							</groupbox>
+						</tabpanel>
+						<tabpanel id="tpOtherInfo"></tabpanel>
+					</tabpanels>
+				</tabbox>
+			</panelchildren>
+		</panel>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+				<space width="20px" />
+				<button id="btnDelete" label="${labels.common.delete}"
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}"
+					mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

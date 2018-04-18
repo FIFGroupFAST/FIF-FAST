@@ -1,0 +1,97 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?page contentType="text/html;charset=UTF-8"?>
+<window id="winSetupQuestionSetForProbationReview" border="none" apply="co.id.fifgroup.personneladmin.controller.SetupQuestionSetForProbationReviewComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.searchQuestionSetup}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top"  />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.jobName}" />
+					<bandbox id="bnbJob" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfJob}" searchText1="${labels.pea.jobCode}" searchText2="${labels.pea.jobName}" headerLabel1="${labels.pea.jobCode}" headerLabel2="${labels.pea.jobName}"></bandbox>
+				</row>
+				<row>
+					<label value="${labels.pea.jobFor}" />
+					<listbox id="cmbJobFor" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.pea.jobType}" /> 
+					<listbox id="cmbJobType" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.pea.peopleCategory}" />
+					<listbox id="cmbPeopleCategory" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.pea.keyJob}" />
+					<listbox id="cmbKeyJob" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.description}" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew" label="${labels.common.create}" mold="trendy" image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstQuestionSetup" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.pea.jobCode}" align="center" sort="auto(jobCode)"/>
+				<listheader label="${labels.pea.jobName}" align="center" sort="auto(jobName)"/>
+				<listheader label="${labels.pea.questionSetName}" align="center" sort="auto(questionSetName)"/>
+				<listheader label="${labels.common.startDate}" align="center" sort="auto(startDate)"/>
+				<listheader label="${labels.common.endDate}" align="center" sort="auto(endDate)"/>
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.jobCode}"></listcell>
+					<listcell label="${each.jobName}"></listcell>
+					<listcell label="${each.questionSetName}"></listcell>
+					<listcell label="${date:format(each.startDate,'dd MMM yyyy')}"></listcell>
+					<listcell label="${date:format(each.endDate,'dd MMM yyyy')}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell label="${each.userName}"></listcell>
+					<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstQuestionSetup" />
+	</groupbox>	
+</window>

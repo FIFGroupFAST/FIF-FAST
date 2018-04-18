@@ -1,0 +1,57 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<zk>
+<window id="winFormulaUsage" title="" border="none" apply="co.id.fifgroup.basicsetup.controller.FormulaUsageComposer">
+<groupbox closable="false" mold="3d">
+	<caption label="${labels.bse.formulaUsage}"></caption>
+	<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" />
+			<column />
+		</columns>
+		<rows>
+			 <row>
+			 	<label value="${labels.bse.formulaName}"></label>
+			 	<textbox id="txtFormulaName" use="co.id.fifgroup.core.ui.Searchtextbox" maxlength="30" width="200px"></textbox>
+			 </row>
+			 <row>
+			 	<label></label>
+			 	<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}"></button>
+			 </row>
+		</rows>
+	</grid>
+	<separator></separator>
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.formulaUsage}"></caption>
+		<listbox id="lstFormulaUsage" emptyMessage="${labels.notif.emptyMessage }" mold="paging" pagingPosition="both">
+			<!-- <auxhead>
+				<auxheader rowspan="2" label="${labels.bse.formulaName}" align="center"></auxheader>
+				<auxheader colspan="4" label="${labels.bse.usedBy}" align="center"></auxheader>
+			</auxhead>
+			<auxhead>
+				<auxheader label="${labels.common.name}" align="center"></auxheader>
+				<auxheader label="${labels.common.version}" align="center"></auxheader>
+				<auxheader label="${labels.common.effectiveDateFrom}" align="center"></auxheader>
+				<auxheader label="${labels.common.effectiveDateTo}" align="center"></auxheader>
+			</auxhead> -->
+			<listhead>
+				<listheader label="${labels.bse.formulaName}" sort="auto(formula.formulaName)"></listheader>
+				<listheader label="${labels.common.name}" sort="auto(moduleType)"></listheader>
+				<listheader label="${labels.common.version}" sort="auto(setupVersion)"></listheader>
+				<listheader label="${labels.common.effectiveDateFrom}" sort="auto(dateFrom)"></listheader>
+				<listheader label="${labels.common.effectiveDateTo}" sort="auto(dateTo)"></listheader>
+			</listhead>
+			<template name="model">
+				<listitem value="${each}">
+					<listcell label="${each.formula.formulaName}"></listcell>
+					<listcell label="${each.moduleType}"></listcell>
+					<listcell label="${each.setupVersion}"></listcell>
+					<listcell label="${date:formatDate(each.dateFrom)}"></listcell>
+					<listcell label="${date:formatDate(each.dateTo)}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstFormulaUsage" />
+	</groupbox>
+</groupbox>
+</window>
+</zk>

@@ -1,0 +1,346 @@
+<window id="winPeopleInformation" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.PeopleInformationComposer">
+	
+	<tabbox>
+		<tabs>
+			<tab id="tabPersonalData" label="${labels.pea.personalData }" selected="true" />
+			<tab id="tabMaritalInformation" label="${labels.pea.maritalInformation }" disabled="true" />
+			<tab id="tabTimeManagement" label="${labels.pea.timeManagement }" disabled="true" />
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" valign="top"  />
+						<column />
+					</columns>
+					<rows>
+						<row id="rowEffectiveDateFrom">
+							<hbox>
+								<label value="${labels.pea.effectiveDateFrom }" />  
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<hbox>
+								<datebox id="dtbEffectiveStartDate" width="100px" />
+								<label value="to"/>
+								<datebox id="dtbEffectiveEndDate" width="100px" />
+							</hbox>							
+						</row>
+						<row>
+							<hbox>
+								<label id="lblNumber" value="${labels.pea.employeeNumber }" /> 								
+							</hbox>
+							<label id="lblEmployeeNumber" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.fullName }" />  
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<textbox id="txtFullName" maxlength="240" width="350px" style="text-transform:uppercase"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.birthPlace }" />   
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<textbox id="txtBirthPlace" maxlength="150" width="350px" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.birthDate }" /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<datebox  id="dtbBirthDate" width="100px" constraint="no future"/>	
+						</row>
+						<row>
+							<label value="${labels.pea.age }"  /> 
+							<label id="lblAge" />
+						</row>
+						<row id="rowPhotoFile">
+							<hbox>
+								<label value="${labels.pea.photo }"/>
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<hbox>
+								<textbox id="txtPhotoFile" maxlength="255" width="250px" readonly="true" />
+								<button id="btnBrowse" label="${labels.common.browse}"
+									mold="trendy" upload="true" />								
+							</hbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.gender }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<radiogroup id="rdgGender">
+							</radiogroup>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.nationality }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<bandbox id="bnbNationality" readonly="true" width="350px"  use="co.id.fifgroup.basicsetup.common.LookupWindowBasicSetup" title="${labels.pea.listOfNationality}" searchText="${labels.pea.nationalityName}" headerLabel="${labels.pea.listOfNationality}"></bandbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.religion }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<listbox id="cmbReligion" mold="select" >
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.bloodType }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<listbox id="cmbBloodType" mold="select" >
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.bloodTypeRhesus }"  />								
+							</hbox>	
+							<listbox id="cmbBloodTypeRhesus" mold="select" >
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.motherName }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<textbox id="txtMotherName" maxlength="240" width="350px" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.disability }"  /> 
+							</hbox>	
+							<listbox id="cmbDisability" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<label value="${labels.pea.disabilityRemark }"/> 
+							<textbox id="txtDisabilityRemark" rows="5" width="350px"  maxlength="300" disabled="true"/>
+						</row>
+						<row>
+							<label value="${labels.pea.hobby }"  /> 
+							<listbox id="cmbHobby" mold="select" >
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<label value="${labels.pea.pilgrimageFlag }" /> 
+							<checkbox id="chkPilgrimageFlag" />
+						</row>
+						<row>
+							<label value="${labels.pea.smoker }"  />
+							<checkbox id="chkSmooker" />
+						</row>
+						<row>
+							<label value="${labels.pea.peopleType }"  />
+							<a id="linkPeopleType" disabled="true"></a>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.astraJoinDate }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<datebox id="dtbAstraJoinDate" width="100px" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.hireDate }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<label id="lblHireDate" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.homeBaseCode }"  />  
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<bandbox id="bnbHomeBaseCode" readonly="true" width="350px"  use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfLocation}" searchText1="${labels.pea.locationCode }" searchText2="${labels.pea.locationName}" headerLabel1="${labels.pea.locationCode }" headerLabel2="${labels.pea.locationName}"></bandbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.employmentCategory }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<listbox id="cmbEmploymentCategory" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template> 
+							</listbox>
+						</row>
+						<row>
+							<label value="${labels.pea.probationEndDate }"  /> 
+							<label id="lblProbationEndDate" />
+						</row>
+						<row>
+							<label value="${labels.pea.trainingEndDate }"  /> 
+							<label id="lblTrainingEndDate" />
+						</row>
+					</rows>
+				</grid>
+				<hbox pack="center" align="center">
+					<cell align="center" style="width:1250px;">
+						<button id="btnNextMaritalInformation"
+						label="${labels.common.next}" mold="trendy"
+						image="${labels.image.link.next}" />
+					</cell>
+					<cell align="right"> 
+						<button id="btnCancelPersonalInformation" visible="false"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+		 			</cell>
+				</hbox>
+			</tabpanel>
+			<tabpanel>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" valign="top"  />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.pea.maritalStatus }" />  
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<listbox id="cmbMaritalStatus" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.marriedDate }" />   
+								<label id="lblMandatoryMarriedDate" value="${labels.common.required}" style="color:red" visible="false"/>
+							</hbox>							
+							<datebox id="dtbMarriedDate" width="100px" disabled="true"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.internalMarriedWith  }" /> 
+							</hbox>
+							<bandbox id="bnbInternalMarriedWith" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" disabled="true" title="${labels.pea.employee}" searchText1="${labels.pea.employeeNumber}" searchText2="${labels.pea.employeeName}" headerLabel1="${labels.pea.employeeNumber}" headerLabel2="${labels.pea.employeeName}"></bandbox>	
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.ptkpStatus }"  /> 
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<listbox id="cmbPtkpStatus" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>								
+						</row>
+					</rows>
+				</grid>
+				<hbox pack="center" align="center">
+					<cell align="center" style="width:1250px;">
+						<hbox>
+							<button id="btnBackPersonalData"
+								label="${labels.common.back}" mold="trendy"
+								image="${labels.image.link.back}" />
+							<space width="10px"></space>
+							<button id="btnNextTimeManagement"
+								label="${labels.common.next}" mold="trendy"
+							image="${labels.image.link.next}" />
+						</hbox>
+					</cell>
+					<cell align="right"> 
+						<button id="btnCancelMaritalInformation" visible="false"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+		 			</cell>
+				</hbox>
+			</tabpanel>
+			<tabpanel>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" valign="top"  />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.pea.workingSchedule }" />  
+							</hbox>							
+							<listbox id="cmbWorkingSchedule" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.value }"/>
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+					</rows>
+				</grid>
+				<hbox pack="center" align="center">
+					<cell align="center" style="width:1250px;">
+					<hbox>
+						<hbox id="hboxNavigation">
+							<button id="btnBackMaritalInformation"
+								label="${labels.common.back}" mold="trendy"
+								image="${labels.image.link.back}" />
+							<space width="10px"></space>
+							<button id="btnNextAccountInformation"
+								label="${labels.common.next}" mold="trendy"
+								image="${labels.image.link.next}" />
+						</hbox>
+						<hbox id="hboxSaveDelete">
+							<button id="btnSave"
+								label="${labels.common.save}" mold="trendy"
+								image="${labels.image.link.save}" />
+							<space width="10px"></space>
+							<button id="btnDelete"
+								label="${labels.common.delete}" mold="trendy"
+								image="${labels.image.link.delete}" />
+						</hbox>
+					</hbox>			
+					</cell>
+					<cell align="right"> 
+						<button id="btnCancelTimeManagement" visible="false"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+		 			</cell>
+				</hbox>				
+			</tabpanel>
+		</tabpanels>
+	</tabbox>	
+</window>

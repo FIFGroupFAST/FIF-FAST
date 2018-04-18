@@ -1,0 +1,51 @@
+<window id="winGenericDoubleLov" title="${labels.common.listOfZipCode}" border="normal" width="600px" height="650px" closable="true"
+apply="co.id.fifgroup.core.controller.ListOfValueTripleComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<row id="rowSearch1">
+				<label id="lblSearchText1" />
+				<textbox id="txtCode" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row id="rowSearch2">
+				<label id="lblSearchText2" />
+				<textbox id="txtName" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row id="rowSearch3">
+				<label id="lblSearchText3" />
+				<textbox id="txtCompany" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hlayout>
+				<button id="btnFind" label="Find" mold="trendy" />
+				<button id="btnDeselect" label="${labels.common.deselect}" mold="trendy" />
+				</hlayout>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel1" width="150px" />
+			<listheader id="listHeadLabel2" width="150px"/>
+			<listheader id="listHeadLabel3" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.value}"></listcell>
+				<listcell label="${each.description}"></listcell>
+				<listcell label="${each.description2}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue"></paging>
+</groupbox>
+</window>

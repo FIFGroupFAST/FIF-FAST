@@ -1,0 +1,138 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winGradeSetup"
+	apply="co.id.fifgroup.workstructure.controller.GradeSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.gradeSetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="100px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.wos.gradeCode}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtGradeCode" width="300px" maxlength="10"/>
+					<label value="${labels.common.version}" />
+					<listbox id="lstVersion" mold="select" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.gradeName}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<hbox>
+						<textbox id="txtGrade" maxlength="15" />
+						<label value="-" />
+						<textbox id="txtSubGrade" maxlength="15" />
+					</hbox>
+					<hbox>
+						<label
+							value="${labels.common.effectiveDateFrom}" />
+						<label value="${labels.common.required}"
+							style="color:red;" />
+					</hbox>
+					<datebox id="dtbFrom" use="co.id.fifgroup.core.ui.DateBoxFrom" format="dd-MMM-yyyy" />				
+				</row>
+				<row>
+					<label/><label />
+					<label value="${labels.common.effectiveDateTo}" />
+					<datebox id="dtbTo" use="co.id.fifgroup.core.ui.DateBoxMax" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label value="${labels.wos.gradeDescription}" />
+					<textbox id="txtGradeDesc" width="95%" maxlength="100" rows="2"/>
+					<label /><label />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<panel border="normal">
+			<panelchildren>
+				<space height="25px" />
+				<tabbox>
+					<tabs>
+						<tab label="${labels.wos.gradeInfo}" />
+						<tab label="${labels.wos.gradeRate}" />
+						<tab label="${labels.wos.competency}" />
+						<tab label="${labels.wos.timeManagement}" />
+						<tab label="${labels.wos.otherInfo}" />
+					</tabs>
+					<tabpanels>
+						<tabpanel id="tpGradeInfo">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<hbox>
+											<label value="${labels.wos.personalGrade}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<listbox id="lstPersonalGrade" mold="select" width="220px"/>
+									</row>
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpGradeRate">
+							<groupbox id="grbGradeRate" mold="default">
+								<caption label="${labels.wos.gradeRate}" />
+								<listbox id="lstGradeRates" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+									<listhead>
+										<listheader label="" width="30px"></listheader>
+										<listheader label="${labels.common.branch}"></listheader>
+										<listheader label="${labels.wos.minimumSalary}"></listheader>
+										<listheader label="${labels.wos.maximumSalary}"></listheader>
+									</listhead>
+								</listbox>
+								<hbox>
+									<button label="${labels.common.addRow}" mold="trendy" id="btnAddGradeRate" />
+									<button label="${labels.common.delete}" mold="trendy" id="btnDeleteGradeRate" />
+								</hbox>
+							</groupbox>
+						</tabpanel>
+						<tabpanel id="tpCompetency">
+						</tabpanel>
+						<tabpanel id="tpTms">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label value="${labels.wos.workingSchedule}" />
+										<listbox id="lstWorkingSchedule" mold="select" />
+									</row>
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpOtherInfo">
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</panelchildren>
+		</panel>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" 
+					mold="trendy" image="${labels.image.link.save}" />
+				<space width="20px" />
+				<button id="btnDelete" label="${labels.common.delete}" 
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

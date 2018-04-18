@@ -1,0 +1,11 @@
+<window id="winSalaryHistory" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.SalaryHistoryComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.salaryHistoryList }" />
+		<listbox id="lbxSalaryHistory" emptyMessage="${labels.common.err.noDataFound}">			
+		</listbox>		
+	</groupbox>
+	<separator />
+	<button id="btnAdjustSalary"
+		label="${labels.pea.adjustSalary}" mold="trendy" />
+</window>

@@ -1,0 +1,52 @@
+<window id="winAddress" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.ContactComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.contactList }" />
+<!-- 		<vbox> -->
+			<label id="errContacts" value="" style="color:red" />
+			<listbox id="lbxContacts" checkmark="true" emptyMessage="${labels.common.err.noDataFound}"> 
+				<listhead>
+					<listheader label="" width="30px"/>
+					<listheader label="${labels.common.startDate }" width="150px"/>
+					<listheader label="${labels.common.endDate }" width="150px"/>
+					<listheader label="${labels.pea.relationship }" width="150px"/>
+					<listheader label="${labels.pea.fullName }" width="250px"/>
+					<listheader label="${labels.pea.ageDetail}" width="150px"/>
+					<listheader label="${labels.pea.gender}" width="100px"/>
+					<listheader label="${labels.pea.maritalStatus}" width="100px"/>
+					<listheader label="${labels.pea.familyMemberPriority}" width="200px"/>
+					<listheader label="${labels.common.action}" width="80px"/>
+				</listhead>				
+			</listbox>
+			<separator></separator>
+			<hbox>
+				<button label="${labels.common.addRow}"
+					id="btnAdd" mold="trendy" image="${labels.image.link.add}"/>
+				<button label="${labels.common.delete}"
+					id="btnDelete" mold="trendy" image="${labels.image.link.delete}"/>		
+			</hbox>
+<!-- 		</vbox>		 -->
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox>
+				<hbox id="hboxNavigation">
+					<button id="btnBackEducation"
+						label="${labels.common.back}" mold="trendy"
+						image="${labels.image.link.back}" />
+				</hbox>
+				<space width="10px"></space>
+				<hbox id="hboxSave">
+					<button id="btnSave"
+						label="${labels.common.save}" mold="trendy"
+						image="${labels.image.link.save}" />
+				</hbox>
+			</hbox>			
+		</cell>
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>				
+</window>

@@ -1,0 +1,24 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+
+<window id="winCompetencyManagement" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.CompetencyManagementComposer">
+	<groupbox id="groupSoftComptency">
+		<caption label="${labels.com.softCompetency }" />
+		<listbox id="lstCompetencySoft" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			
+		</listbox>
+		<exporter referenceId="lstCompetencySoft" />
+	</groupbox>
+	<space />
+	<groupbox>
+		<caption label="${labels.com.technicalCompetency }" />
+		<listbox id="lstCompetencyTech" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			
+		</listbox>
+		<exporter referenceId="lstCompetencyTech" />
+	</groupbox>
+	<space />
+	<div><a label="Competency History" id="compHistory"></a></div>
+</window>
+

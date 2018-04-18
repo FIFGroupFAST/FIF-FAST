@@ -1,0 +1,154 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winBranchSplitGenerator" apply="co.id.fifgroup.workstructure.controller.BranchSplitGeneratorComposer">
+
+	<groupbox closable="false" mold="3d">
+		<caption label="Organization Generator" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="Type" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					
+					<listbox id="lsType" mold="select">
+						<template name="model">
+							<listitem value="${each}" label="${each.description}" />
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="Effective Start Date" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<datebox id="dbEffectiveStartDate" />
+				</row>
+				<row>
+					<hbox>
+						<label value="Name" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtName" width="400px" />		
+				</row>
+				<row>
+					<hbox>
+						<label value="Location" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<bandbox id="bnbLocation" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfLocation}" searchText1="${labels.wos.locationCode}" searchText2="${labels.wos.locationName}" headerLabel1="${labels.wos.locationCode}" headerLabel2="${labels.wos.locationName}" />
+				</row>
+				<row>
+					<label value="Parent Organization" />
+					<bandbox id="bnbParentOrg" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganization}" searchText1="${labels.wos.companyName}" searchText2="${labels.wos.organizationName}" headerLabel1="${labels.wos.companyName}" headerLabel2="${labels.wos.organizationName}" />
+				</row>
+				<row>
+					<hbox>
+						<label value="Branch Code" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<hbox>
+						<bandbox id="bnbBranchCode" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" width="400px" title="${labels.wos.listOfBranchCode}" searchText="${labels.wos.branchCode}" headerLabel="${labels.wos.branchCode}" />
+						<label value="Other" />
+						<textbox id="txtOther" width="200px" />
+					</hbox>
+					
+				</row>
+				<row>
+					<label value="Kecamatan" />
+					<bandbox id="bnbKecamatan" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfKecamatan}" searchText="${labels.address.kecamatan}" headerLabel="${labels.address.kecamatan}" />
+				</row>
+				<row>
+					<label value="Kelurahan" />
+					<bandbox id="bnbKelurahan" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfKelurahan}" searchText="${labels.address.kelurahan}" headerLabel="${labels.address.kelurahan}" />
+				</row>
+				<row>
+					<hbox>
+						<label value="Zip Code" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<bandbox id="bnbZipCode" width="400px" readonly="true" use="co.id.fifgroup.core.ui.CommonPopupZipCodeBandbox" />
+				</row>
+				<row>
+					<hbox>
+						<label value="Address" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtAddress" cols="3" width="400px" />
+				</row>
+				<row>
+					<label value="NPWP" />
+					<textbox id="txtNpwp" width="400px" />
+				</row>
+				<row>
+					<hbox>
+						<label value="KPP" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<bandbox id="bnbKpp" width="400px" use="co.id.fifgroup.core.ui.lookup.LookupWindow"/>
+				</row>
+				<row>
+					<label value="Other Info" />
+					<hbox id="hboxOtherinfo">
+						
+					</hbox>
+				</row>
+				<row>
+					<label />
+					<button id="btnGenerate" label="Generate" mold="trendy" image="${labels.image.link.save}" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox>
+			<caption label="Organization Detail" />
+			<listbox id="lstOrganizationDetail">
+				<listhead menupopup="auto">
+					<listheader label="Action" align="center" sort="auto(lower(organizationCode))" />
+					<listheader label="Organization Code" align="center" sort="auto(lower(organizationCode))" />
+					<listheader label="Organization Name" align="center" sort="auto(lower(organizationCode))" />
+					<listheader label="Level" align="center" sort="auto(lower(organizationName))" />
+					<listheader label="Head Of Organization" align="center" sort="auto(size)" />
+					<listheader label="Cost Center" align="center" sort="auto(effectiveStartDate)" />
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell>
+							<a forward="onAdvanced(${each})" style="color:blue" >Advanced</a>
+						</listcell>
+						<listcell label="${each.code}" />
+						<listcell label="${each.name}" />
+						<listcell label="${each.levelName}" />
+						<listcell label="${each.organizationHead}" />
+						<listcell label="${each.costCenterCode} - ${each.costCenterName}" />
+						</listitem>
+				</template>
+			</listbox>
+		</groupbox>		
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnProcess" label="Process" 
+					mold="trendy" image="${labels.image.link.save}" />
+				<space />
+				<button id="btnDownload" label="Download" 
+					mold="trendy" image="${labels.image.link.download}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+		</groupbox>
+</window>

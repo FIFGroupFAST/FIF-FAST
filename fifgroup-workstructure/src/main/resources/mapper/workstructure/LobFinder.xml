@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.LobFinder">
+	
+	<resultMap type="co.id.fifgroup.workstructure.dto.LobDTO" id="lobDtoResult">
+		<id column="LOB_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="JOB_ID" property="jobId" javaType="Long" jdbcType="NUMERIC"/>
+		<result column="JOB_CODE" property="jobCode" jdbcType="VARCHAR"/>
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR"/>
+		<result column="ORGANIZATION_ID" property="organizationId" javaType="Long" jdbcType="NUMERIC"/>
+		<result column="ORGANIZATION_CODE" property="organizationCode" jdbcType="VARCHAR"/>
+		<result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR"/>
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="DATE"/>
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="DATE"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="NUMERIC"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="NUMERIC"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+		<collection property="lobElements" ofType="co.id.fifgroup.workstructure.dto.LobElementDTO">
+			<result column="LOB_ID" property="id"/>
+			<result column="PRODUCT_CODE" property="productCode"/>
+			<result column="PERCENTAGE" property="percentage"/>
+			<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+			<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		</collection>
+	</resultMap>
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.LobDTO" resultMap="lobDtoResult">
+		SELECT 
+			L.LOB_ID,
+			L.JOB_ID,
+			L.ORGANIZATION_ID,
+			L.EFFECTIVE_START_DATE,
+			L.EFFECTIVE_END_DATE,
+			L.LAST_UPDATED_BY,
+			L.LAST_UPDATE_DATE,
+			ele.product_code,
+  			ele.percentage,
+			org.organization_code,
+			org.organization_name,
+			job.job_code,
+  			job.job_name,
+			us.user_name
+		FROM WOS_LOBS L
+		join wos_lob_elements ele on ele.lob_id = L.lob_id
+		join wos_organizations org on org.organization_id = L.organization_id
+		join wos_jobs job on job.job_id = L.job_id
+		left join branch_hierarchy_v bhv on bhv.organization_id = L.organization_id
+		join sam_users us on us.user_id = L.LAST_UPDATED_BY
+ 			<where>
+				<if test="organizationId != null">
+					AND (L.ORGANIZATION_ID) = (#{organizationId, jdbcType=DECIMAL})
+				</if>
+				<if test="jobId != null">
+					AND (L.JOB_ID) = (#{jobId, jdbcType=DECIMAL})
+				</if>
+				<if test="branchId != null">
+					AND (bhv.branch_id) = (#{branchId, jdbcType=DECIMAL})
+				</if>
+				<if test="effectiveOnDate != null">
+					AND TRUNC(#{effectiveOnDate, jdbcType=DATE}) BETWEEN L.EFFECTIVE_START_DATE AND L.EFFECTIVE_END_DATE
+				</if>
+			</where>
+			ORDER BY L.EFFECTIVE_START_DATE
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="lobDtoResult">
+		select
+			l.lob_id,
+			l.job_id,
+			l.organization_id,
+			l.effective_start_date,
+			l.effective_end_date,
+			l.last_updated_by,
+			l.last_update_date,
+			le.product_code,
+			le.percentage
+		  from wos_lobs l
+		  join wos_lob_elements le
+		  on l.lob_id = le.lob_id
+		  where l.lob_id = #{id, jdbcType=NUMERIC}
+	</select>
+
+	<select id="findCurrentHistoryById" parameterType="Long" resultMap="lobDtoResult">
+		SELECT 
+			L.LOB_ID,
+			L.JOB_ID,
+			L.ORGANIZATION_ID,
+			L.EFFECTIVE_START_DATE,
+			L.EFFECTIVE_END_DATE,
+			L.LAST_UPDATED_BY,
+			L.LAST_UPDATE_DATE
+		FROM WOS_LOBS L
+			WHERE L.JOB_ID = (#{jobId, jdbcType=DECIMAL})
+			AND L.ORGANIZATION_ID = (#{organizationId, jdbcType=DECIMAL})
+			AND TRUNC(SYSDATE) BETWEEN L.EFFECTIVE_START_DATE AND L.EFFECTIVE_END_DATE
+	</select>
+	
+	<select id="findByIdAndHistroyId" parameterType="Long" resultMap="lobDtoResult">
+		SELECT 
+			L.LOB_ID,
+			L.JOB_ID,
+			L.ORGANIZATION_ID,
+			L.EFFECTIVE_START_DATE,
+			L.EFFECTIVE_END_DATE,
+			L.LAST_UPDATED_BY,
+			L.LAST_UPDATE_DATE
+		FROM WOS_LOBS L
+			WHERE L.LOB_ID = (#{id, jdbcType=DECIMAL})
+			AND L.JOB_ID = (#{jobId, jdbcType=DECIMAL})
+			AND L.ORGANIZATION_ID = (#{organizationId, jdbcType=DECIMAL})
+	</select>
+	
+	<select id="findHistoriesById" parameterType="Long" resultType="Long">
+		SELECT
+			L.LOB_ID
+		FROM WOS_LOBS L
+		WHERE
+			L.JOB_ID = #{jobId, jdbcType=NUMERIC}
+			AND L.ORGANIZATION_ID = #{organizationId, jdbcType=NUMERIC}
+		ORDER BY L.LOB_ID
+	</select>
+	
+	<select id="isFutureExist" parameterType="map" resultType="Integer">
+		select count(*) from wos_lobs 
+		where organization_id = #{organizationId} 
+			and job_id = #{jobId} 
+			and effective_start_date > sysdate
+	</select>
+</mapper>

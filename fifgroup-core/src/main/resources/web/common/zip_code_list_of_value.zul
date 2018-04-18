@@ -1,0 +1,51 @@
+<window id="winZipCodeLov" title="${labels.common.listOfZipCode}" border="normal" width="500px" height="650px" closable="true"
+apply="co.id.fifgroup.core.controller.ListOfValueZipCodeComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.address.kecamatan}"/>
+				<textbox id="txtKecamatan" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label value="${labels.address.kelurahan}"></label>
+				<textbox id="txtKelurahan" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label value="${labels.address.zipcode}"></label>
+				<textbox id="txtZipCode" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hlayout>
+					<button id="btnFind" label="find" mold="trendy" />
+					<button id="btnDeselect" label="${labels.common.deselect}" mold="trendy" />
+				</hlayout>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader label="${labels.address.kecamatan}"></listheader>
+			<listheader label="${labels.address.kelurahan}"></listheader>
+			<listheader label="${labels.address.zipcode}"></listheader>
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.kecamatan.kecamatan}"></listcell>
+				<listcell label="${each.kelurahan.kelurahan}"></listcell>
+				<listcell label="${each.zipCode.zipCode}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue"></paging>
+</groupbox>
+</window>

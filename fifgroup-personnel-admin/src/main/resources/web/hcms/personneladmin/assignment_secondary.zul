@@ -1,0 +1,125 @@
+<window id="winAssignmentSecondary" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AssignmentSecondaryComposer">
+	<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"/>
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					<label value="${labels.pea.assignmentSecondaryType }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<listbox id="cmbAssignmentSecondaryType" mold="select">
+					<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.description }"/>
+							</listitem>
+						</template>
+				</listbox>
+			</row>
+			<row>
+				<label value="${labels.pea.assignmentType }" />
+				<label id="lblAssignmentType" />
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.organization }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<bandbox id="bnbOrganization" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfOrganization}" searchText1="${labels.pea.organizationCode}" searchText2="${labels.pea.organizationName}" headerLabel1="${labels.pea.organizationCode}" headerLabel2="${labels.pea.organizationName}"></bandbox>
+			</row>
+			<row>
+				<label value="${labels.pea.location }" />
+				<label id="lblLocation" />
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.job }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<bandbox id="bnbJob" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfJob}" searchText1="${labels.pea.jobCode}" searchText2="${labels.pea.jobName}" headerLabel1="${labels.pea.jobCode}" headerLabel2="${labels.pea.jobName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.transferedBy }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<listbox id="cmbTransferedBy" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description }" />
+						</listitem>
+					</template>
+				</listbox>
+			</row>
+			<row>
+				<cell rowspan="2" valign="top">
+					<label value="${labels.pea.firstSupervisor }" />
+				</cell>
+				<hbox>
+					<label id="lblJobNameSPV1" />
+					<label value=" - " />
+					<label id="lblOrganizationNameSPV1" />				
+				</hbox>
+			</row>
+			<row>
+				<cell align="left">
+					<hbox>
+						<label id="lblEmployeeNumberSPV1" />
+					</hbox>
+				</cell>
+			</row>
+			<row>
+				<cell rowspan="2" valign="top">
+					<label value="${labels.pea.secondSupervisor }" />
+				</cell>
+				<hbox>
+					<label id="lblJobNameSPV2" />
+					<label value=" - " />
+					<label id="lblOrganizationNameSPV2" />
+				</hbox>
+			</row>
+			<row>
+				<cell align="left">
+					<hbox>
+						<label id="lblEmployeeNumberSPV2" />
+					</hbox>
+				</cell>
+			</row>
+			<row>
+				<label value="${labels.pea.fifappsAccess }" />
+				<checkbox id="chkFifappsAccess" />
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.common.startDate }" />  
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<datebox id="dtbStartDate" width="100px" />
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.common.endDate }" />  
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<datebox id="dtbEndDate" width="100px" use="co.id.fifgroup.core.ui.DateBoxMax" />
+			</row>
+		</rows>				
+	</grid>
+	<hbox pack="center" align="center">			
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />				
+			</hbox>			
+		</cell>
+		<cell align="right">
+			<button id="btnCancel"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>
+</window>

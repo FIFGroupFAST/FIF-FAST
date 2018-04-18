@@ -1,0 +1,101 @@
+<?xel-method prefix="global" name="formatNumber" class="co.id.fifgroup.core.ui.GlobalVariable" signature="java.lang.String formatNumber(java.lang.Number)" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winPerformanceReview" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.PerformanceReviewComposer">
+	<hbox id="hboxChart" pack="center" align="center" >
+		<cell align="center" style="width:1250px;">
+			<hbox>
+<!-- 				<image id="imgChartPerformance" /> -->
+				<chart id="chart" type="line" title="Performance Review"></chart>
+				<separator height="50px"/>
+				<listbox id="lbxLegend" width="300px">
+					<listhead>
+						<listheader label="${labels.pea.performanceRating }" />
+						<listheader label="${labels.pea.Description }"/>
+					</listhead>	
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.value}" />
+							<listcell label="${each.description }" />
+						</listitem>
+					</template>
+				</listbox>
+			</hbox>
+		</cell>
+	</hbox>
+	<separator />
+<!-- 	<listbox id="lbxPerformanceReview"> -->
+<!-- 		<listhead> -->
+<!-- 			<listheader label="${labels.pea.reviewDate }"/> -->
+<!-- 			<listheader label="${labels.pea.result }"/> -->
+<!-- 		</listhead>	 -->
+<!-- 		<template name="model"> -->
+<!-- 			<listitem value="${each }"> -->
+<!-- 				<listcell label="${date:formatDate(each.reviewDate)}" /> -->
+<!-- 				<listcell label="${each.meaning }" /> -->
+<!-- 			</listitem> -->
+<!-- 		</template> -->
+<!-- 	</listbox> -->
+	<separator />
+	<listbox id="lstPerformanceAppraisalInquiryPersonnel" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				
+				
+				<listheader label="${labels.pem.period}" align="center" sort="auto(period)"/>
+				<listheader label="${labels.cm.grade}" align="center" sort="auto(performanceGrade)"/>
+				<listheader label="${labels.pem.multiplierAmount}" align="center" sort="auto(multiplierAmount)"/>		
+				<listheader label="${labels.pem.bonusAmount}" align="center" sort="auto(bonusAmount)"/>
+				
+			</listhead>
+			
+			<template name="model">
+				<listitem value="${each} }">
+					
+				
+					<listcell label="${each.period}"></listcell>
+					<listcell label="${each.performanceGrade}"></listcell>
+					<listcell label="${global:formatNumber(each.multiplierAmount)}"></listcell>
+					<listcell label="${global:formatNumber(each.bonusAmount)}"></listcell>					
+					
+					
+				</listitem>
+			</template>
+			
+	</listbox>
+	
+	<groupbox id="groupAddPerformance" closable="false">
+		<panel>
+			<panelchildren>
+				<listbox id="lbxPerformance" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.pea.reviewDate}" />
+						<listheader label="${labels.pea.result}" />
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+				</hbox>
+			</panelchildren>
+		</panel>
+		<separator />
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxNavigation">
+				<button id="btnBackAssignment"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.back}" />
+				<button id="btnNextLeaveEntitlement"
+					label="${labels.common.next}" mold="trendy"
+					image="${labels.image.link.next}" />
+			</hbox>
+		</cell>	
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>	
+</window>

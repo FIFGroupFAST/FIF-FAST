@@ -1,0 +1,92 @@
+<window id="winPeopleSearch" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.PeopleSearchComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.peopleSearch }" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid>
+			<columns>
+				<column width="125px" align="right" valign="top" />
+				<column />
+				<column width="125px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row id="rowBranch">
+					<label value="${labels.pea.branch }"/>
+					<bandbox id="bnbBranch" readonly="true" width="95%" use="co.id.fifgroup.workstructure.ui.CommonBranchBandbox" title="${labels.pea.branch}" searchText1="${labels.pea.branchCode}" searchText2="${labels.pea.branchName}" headerLabel1="${labels.pea.branchCode}" headerLabel2="${labels.pea.branchName}"></bandbox>
+					<label />
+					<label />					
+				</row>
+				<row>
+					<label
+						value="${labels.pea.organization }" />
+					<bandbox id="bnbOrganization" readonly="true" width="95%" use="co.id.fifgroup.workstructure.ui.CommonOrganizationBandbox" title="${labels.pea.organization}" searchText1="${labels.pea.organizationCode}" searchText2="${labels.pea.organizationName}" headerLabel1="${labels.pea.organizationCode}" headerLabel2="${labels.pea.organizationName}"></bandbox>
+					<label value="${labels.pea.number }"/>
+					<bandbox id="bnbEmployee" readonly="true" width="95%" use="co.id.fifgroup.personneladmin.ui.CommonEmployeeBandbox" title="${labels.pea.employee}" searchText1="${labels.pea.employeeNumber}" searchText2="${labels.pea.employeeName}" headerLabel1="${labels.pea.employeeNumber}" headerLabel2="${labels.pea.employeeName}"></bandbox>					
+				</row>
+				<row>
+					<label value="${labels.pea.job }" />
+					<bandbox id="bnbJob" readonly="true" width="95%" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.job}" searchText1="${labels.pea.jobCode}" searchText2="${labels.pea.jobName}" headerLabel1="${labels.pea.jobCode}" headerLabel2="${labels.pea.jobName}"></bandbox>
+					<label value="${labels.pea.employmentCategory }" />
+					<listbox id="cmbEmploymentCategory" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.description }"/>
+							</listitem>
+						</template>
+					</listbox>					
+				</row>
+				<row>
+					<label value="${labels.pea.peopleType }" />
+					<listbox id="cmbPeopleType" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.description }"/>
+							</listitem>
+						</template>
+					</listbox>
+					<label value="${labels.pea.effectiveOnDate }" />
+					<datebox id="dtbEffectiveOnDate" width="100px" />
+				</row>				
+				<row>
+					<label />
+					<cell colspan="3">
+						<hbox>
+							<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+								image="${labels.image.link.search}"/>
+							<button label="${labels.common.update}" id="btnNew" mold="trendy" 
+								image="${labels.image.link.add}"/>
+							<button label="${labels.pea.addNewPeople}" id="btnAddNewPeople" mold="trendy" 
+								image="${labels.image.link.add}" visible="false"/>
+						</hbox>
+					</cell>
+					
+				</row>
+			</rows>
+		</grid>
+		<separator />
+<!-- 		<paging id="pgTop" forward="pgTop.onPagingTop" autohide="true" detailed="true"/> -->
+		<listbox id="lbxPeople" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.pea.number }" sort="auto(castEmployeeNumber)" width="150px"/>
+				<listheader label="${labels.pea.name }" sort="auto(fullName)" width="150px"/>
+				<listheader label="${labels.pea.branch }" sort="auto(primaryAssignmentDTO.branchName)" width="200px"/>
+				<listheader label="${labels.pea.organization }" sort="auto(primaryAssignmentDTO.organizationName)" width="200px"/>
+				<listheader label="${labels.pea.job }" sort="auto(primaryAssignmentDTO.jobName)" width="200px"/>
+				<listheader label="${labels.pea.gender }" sort="auto(genderCode)" width="100px"/>
+				<listheader label="${labels.pea.birthPlace }" sort="auto(birthPlace)" width="150px"/>
+				<listheader label="${labels.pea.birthDate }" sort="auto(birthDate)" width="150px"/>
+				<listheader label="${labels.pea.peopleType }" sort="auto(peopleType)" width="150px"/>
+				<listheader label="${labels.pea.employmentCategory }" sort="auto(employmentCategory)" width="150px"/>
+				<listheader label="${labels.common.lastUpdateDate }" width="150px" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy }" width="150px" sort="auto(userName)"/>
+				<listheader label="${labels.common.action }" width="200px"/>
+			</listhead>			
+		</listbox>
+<!-- 		<paging id="pgBottom" forward="pgBottom.onPagingBottom" autohide="true" detailed="true" /> -->
+		<exporter referenceId="lbxPeople" />
+	</groupbox>	
+</window>

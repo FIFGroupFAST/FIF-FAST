@@ -1,0 +1,30 @@
+<window id="winDecisionTableShowTest"
+	apply="co.id.fifgroup.eligibility.controller.DecisionTableShowTestComposer">
+	
+	<grid>
+		<columns>
+			<column/>
+			<column/>
+		</columns>
+		<rows>
+			<row>
+				<label value="Module" />
+				<textbox id="txtModule"/>
+			</row>
+			<row>
+				<label value="Decision Table ID" />
+				<longbox id="txtDecisionTableId"/>
+			</row>
+			<row>
+				<span />
+				<button id="btnRender" label="Render" />
+			</row>
+			<row>
+				<span />
+				<button id="btnSave" label="Save" />
+			</row>
+		</rows>
+	</grid>
+	<separator/>
+	<grid id="dtWrapper" use="co.id.fifgroup.eligibility.ui.DecisionTableWrapper" />
+</window>

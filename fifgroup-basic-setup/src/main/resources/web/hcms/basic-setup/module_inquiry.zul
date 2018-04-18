@@ -1,0 +1,55 @@
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winModuleInquiry" 
+	apply="co.id.fifgroup.basicsetup.controller.ModuleInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.module}" >
+		<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.bse.moduleName}" />
+					<textbox id="txtModuleName" maxlength="50" use="co.id.fifgroup.core.ui.Searchtextbox" width="200px"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstModule" emptyMessage="${labels.common.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.bse.moduleCode}" align="center" sort="auto(lower(moduleCode))"/>
+				<listheader label="${labels.bse.moduleName}" align="center" sort="auto(lower(moduleName))" />
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(lower(lastUpdateUserName))"/>
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each}">
+					<listcell label="${each.moduleCode}"></listcell>
+					<listcell label="${each.moduleName}"></listcell>	
+					<listcell label="${date:formatDateTime(each.lastUpdateDate)}"></listcell>
+					<listcell label="${each.lastUpdateUserName}"></listcell>
+					<listcell> <a label="${labels.common.detail}" style="text-decoration:underline ;color:blue"  forward="lstModule.onDetail(${each})"></a></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstModule" />	
+	</groupbox>
+</window>

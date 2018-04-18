@@ -1,0 +1,46 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winOrganizationDiagramInquiry"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationDiagramInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.organizationDiagram}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.effectiveOnDate}" />
+					<datebox id="dtbEffectiveOnDate" />
+				</row>
+				<row>
+					<label value="${labels.wos.organizationHierarchyName}" />
+					<listbox id="lstOrgHierarchyName" mold="select" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.wos.organizationHierarchy}" />
+			<listbox id="lstOrganization">
+				<listhead menupopup="auto">
+					<listheader label="${labels.wos.organizationHierarchyName}" align="center"/>
+					<listheader label="${labels.wos.organizationHierarchyDescription}" align="center"/>
+					<listheader label="${labels.common.effectiveDateFrom}" align="center"/>
+					<listheader label="${labels.common.effectiveDateTo}" align="center"/>
+					<listheader label="${labels.common.action}" align="center"/>
+				</listhead>
+			</listbox>
+			<paging />
+			<exporter referenceId="lstOrganization" />
+		</groupbox>		
+	</groupbox>
+</window>

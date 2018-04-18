@@ -1,0 +1,326 @@
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<window title="Task Schedule" border="normal" closable="true" width="800px" height="550px"
+apply="co.id.fifgroup.systemadmin.controller.TaskScheduleComposer" style="overflow:auto">
+<groupbox style="padding:10px;">
+	<caption label="${labels.sam.runTheTask }" />
+	<radiogroup id="runTheTask">
+		<hbox>
+			<radio label="${labels.sam.immediately}" checked="true" />
+			<radio label="${labels.sam.daily}" />
+			<radio label="${labels.sam.weekly}" />
+			<radio label="${labels.sam.monthly}" />
+			<radio label="${labels.sam.yearly}" />
+		</hbox>
+	</radiogroup>
+</groupbox>
+<groupbox id="dailyGroup" visible="false" style="padding:10px;">
+	<caption label="${labels.sam.daily}" />
+	<grid sclass="form-entry">
+		<columns>
+			<column width="100px" align="right" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label />
+				<radiogroup id="rdgDailyPeriod">
+				<hbox>
+				<radio label="${labels.sam.every}" checked="true" />
+					<space />
+					<intbox id="txtDailyTotalDay" maxlength="2"/>
+					<space />
+					<label value="${labels.sam.days}" id="lblDailyTotalDay"/>
+				</hbox>
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<radio label="${labels.sam.everyWeekday}" radiogroup="rdgDailyPeriod" />
+			</row>
+			<row>
+				<formlabel value="${labels.sam.start}" />
+				<datebox id="dtbDailyStart" use="co.id.fifgroup.core.ui.DateBoxFrom" />
+			</row>
+			<row>
+				<formlabel value="${labels.sam.executionTime}" />
+				<timebox id="tmbDailyExecutionTime" format="HH:mm"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.end}" />
+				<radiogroup id="rdgDailyEndDate">
+					<radio label="${labels.sam.noEndDate}" checked="true" />
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endAfter}" radiogroup="rdgDailyEndDate"/>
+					<space />
+					<intbox id="dailyEndAfterOccurence" maxlength="2" />
+					<space />
+					<label value="${labels.sam.occurences}" id="lblDailyEndAfterOccurence"/>
+				</hbox>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endBy}"  radiogroup="rdgDailyEndDate" />
+					<space />
+					<datebox id="dtbDailyEnd" format="dd-MMM-yyyy"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox id="weeklyGroup" visible="false" style="padding:10px;">
+	<caption label="${labels.sam.weekly}" />
+	<grid sclass="form-entry">
+		<columns>
+			<column width="100px" align="right" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<formlabel value="${labels.sam.recurEvery}"/>
+				<hbox>
+					<intbox id="txtWeeklyRecurEvery" maxlength="5"/>
+					<label value="${labels.sam.weeks}" id="lblWeeklyRecurEvery"/>
+				</hbox>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.recurOn}"/>
+				<radiogroup id="rdgWeeklyRecurOn" >
+				<grid width="75%">
+					<columns>
+						<column />
+						<column />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<radio label="${labels.sam.sunday}" checked="true" />
+							<radio label="${labels.sam.monday}" />
+							<radio label="${labels.sam.tuesday}" />	
+						</row>
+						<row>
+							<radio label="${labels.sam.wednesday}" radiogroup="rdgWeeklyRecurOn"/>
+							<radio label="${labels.sam.thursday}" radiogroup="rdgWeeklyRecurOn"/>
+							<radio label="${labels.sam.friday}" radiogroup="rdgWeeklyRecurOn"/>
+						</row>
+						<row>
+							<radio label="${labels.sam.saturday}" radiogroup="rdgWeeklyRecurOn"/>
+							<label />
+							<label />
+						</row>
+					</rows>
+				</grid>
+				</radiogroup>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.start}" />
+				<datebox id="dtbWeeklyStart" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.executionTime}" />
+				<timebox id="tmbWeeklyExecutionTime" format="HH:mm"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.end}" />
+				<radiogroup id="rdgWeeklyEndDate">
+					<radio label="${labels.sam.noEndDate}" checked="true" />
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endAfter}" radiogroup="rdgWeeklyEndDate"/>
+					<space />
+					<intbox id="weeklyEndAfterOccurnce" maxlength="2"/>
+					<space />
+					<label value="${labels.sam.occurences}" id="lblWeeklyEndAfterOccurnce"/>
+				</hbox>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endBy}" radiogroup="rdgWeeklyEndDate" />
+					<space />
+					<datebox id="dtbWeeklyEnd" format="dd-MMM-yyyy"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox id="monthlyGroup" visible="false" style="padding:10px;">
+	<caption label="${labels.sam.monthly}" />
+	<grid sclass="form-entry">
+		<columns>
+			<column width="100px" align="right" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label />
+				<radiogroup id="rdgMonthlyPeriod">
+					<hbox>
+					<radio label="${labels.sam.day}" checked="true" />
+					<space />
+					<intbox id="monthlyDayNum" maxlength="2" />
+					<space />
+					<label value="${labels.sam.ofEvery}" />
+					<space />
+					<intbox id="monthlyMonthNum"  maxlength="5"/>
+					<space />
+					<label value="${labels.sam.months}"  id="lblMonthlyMonthNum"/>		
+					</hbox>
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.the}" radiogroup="rdgMonthlyPeriod" />
+					<listbox mold="select" id="lbMonthlyDayCount" >
+						<!-- <listitem label="First" selected="true" value="First" />
+						<listitem label="Second" value="Second" />
+						<listitem label="Third" value="Third" />
+						<listitem label="Fourth" value="Fourth"/> -->
+						<template name="model">
+							<listitem label="${each.description }" value="${each.key }" />
+						</template>
+					</listbox>
+					<listbox mold="select"  id="lbDayName">
+						<template name="model">
+							<listitem label="${each.description}" value="${each.value}" />
+						</template>
+					</listbox>
+					<label value="${labels.sam.ofEvery}" />
+					<intbox id="monthlyTotalMonth"  />
+					<label value="${labels.sam.months}" id="lblMonthlyTotalMonth"/>				
+				</hbox>				
+			</row>
+			<row>
+				<formlabel value="${labels.sam.start}" />
+				<datebox id="dtbMonthlyStart" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.executionTime}" />
+				<timebox id="tmbMonthlyExecutionTime" format="HH:mm"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.end}" />
+				<radiogroup id="rdgMonthlyEndDate">
+					<radio label="${labels.sam.noEndDate}" checked="true" />
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endAfter}" radiogroup="rdgMonthlyEndDate"/>
+					<space />
+					<intbox id="monthlyAfterOccurence" maxlength="2" />
+					<space />
+					<label value="${labels.sam.occurences}" id="lblMonthlyAfterOccurence"/>
+				</hbox>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endBy}" radiogroup="rdgMonthlyEndDate" />
+					<space />
+					<datebox id="dtbMonthlyEnd" format="dd-MMM-yyyy"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox id="yearlyGroup" visible="false" style="padding:10px;">
+	<caption label="${labels.sam.yearly}" />
+	<grid sclass="form-entry">
+		<columns>
+			<column width="100px" align="right" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<formlabel value="${labels.sam.recurEvery}" />
+				<hbox>
+					<intbox id="yearlyRecurEvery" maxlength="5"/>
+					<label value="${labels.sam.years}" id="lblYearlyRecurEvery"/>
+				</hbox>
+			</row>
+			<row>
+				<label />
+				<radiogroup id="rdgYearlyPeriod">
+					<radio label="${labels.sam.on}" checked="true" />
+					<space />
+					<hbox spacing="5px">
+						<intbox id="intDayOfMonth"/>
+						<listbox mold="select" id="lbMonthName">
+							<template name="model">
+								<listitem label="${each.description }" value="${each.value}" />
+							</template>
+						</listbox>
+					</hbox>
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.onThe}" radiogroup="rdgYearlyPeriod" />
+					<listbox mold="select" id="lbYearlySeq" >
+						<template name="model">
+							<listitem label="${each.description}" value="${each.value}" />
+						</template>
+					</listbox>
+					<listbox mold="select" id="lbYearDayName" >
+						<template name="model">
+							<listitem label="${each.description}" value="${each.value}" />
+						</template>
+					</listbox>
+					<label value="${labels.sam.of}" />
+					<listbox mold="select" id="lbYearMonthName" >
+						<template name="model">
+							<listitem label="${each.description}" value="${each.value}" />
+						</template>
+					</listbox>
+				</hbox>				
+			</row>
+			<row>
+				<formlabel value="${labels.sam.start}" />
+				<datebox id="dtbYearlyStart" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.executionTime}"/>
+				<timebox id="tmbYearlyExecutionTime" format="HH:mm"/>
+			</row>
+			<row>
+				<formlabel value="${labels.sam.end}" />
+				<radiogroup id="rdgYearlyEndDate" >
+					<radio label="${labels.sam.noEndDate}" checked="true" />
+				</radiogroup>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endAfter}" radiogroup="rdgYearlyEndDate"/>
+					<space />
+					<intbox id="yearAfterOccurence" maxlength="2"/>
+					<space />
+					<label value="${labels.sam.occurences}" id="lblYearAfterOccurence"/>
+				</hbox>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<radio label="${labels.sam.endBy}" radiogroup="rdgYearlyEndDate"/>
+					<space />
+					<datebox id="dtbYearlyEnd" format="dd-MMM-yyyy"/>
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<div align="center">
+	<button id="btnOk" label="${labels.common.ok}" mold="trendy" image="${labels.image.link.save}" />
+</div>
+</window>

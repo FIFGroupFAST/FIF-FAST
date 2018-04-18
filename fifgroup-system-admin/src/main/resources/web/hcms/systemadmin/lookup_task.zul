@@ -1,0 +1,36 @@
+<window id="winGenericLov" title="new page title" border="normal" width="400px" height="600px" closable="true"
+apply="co.id.fifgroup.systemadmin.controller.LookupTaskComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column width="100px" align="right"/>
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label id="lblSearchText" />
+				<textbox id="txtSearchCriteria" width="90%" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<button id="btnFind" label="find" mold="trendy" image="${labels.image.link.search}" />
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px">
+		<listhead>
+			<listheader id="listHeadLabel" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.value}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue"></paging>
+</groupbox>
+</window>

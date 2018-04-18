@@ -1,0 +1,57 @@
+<window id="winGenericLov" title="new page title" border="normal" width="400px" height="600px" closable="true"
+apply="co.id.fifgroup.ssoa.common.SSOAListOfValueComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column align="right" hflex="min" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label id="lblSearchTextCode" />
+				<textbox id="txtSearchCriteriaCode"  width="90%" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label id="lblSearchTextName" />
+				<textbox id="txtSearchCriteriaName"  width="90%" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hlayout>
+				<button id="btnFind" label="Find" mold="trendy" image="${labels.image.link.search}"  />
+				<button id="btnDeselect" label="${labels.common.deselect }" mold="trendy" image="${labels.image.link.cancel}" />
+				</hlayout>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="290px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel" />
+			<listheader id="listDescLabel" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+			    <listcell label="${each.description}"></listcell>
+				<listcell label="${each.value}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<listbox id="listbox2" height="290px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel2" />
+			<listheader id="listDescLabel2" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+			    <listcell label="${each.value}"></listcell>
+				<listcell label="${each.description}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue" />
+</groupbox>
+</window>

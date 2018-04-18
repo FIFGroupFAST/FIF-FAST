@@ -1,0 +1,50 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winJobRespDetail" apply="co.id.fifgroup.systemadmin.controller.JobResponsibilityDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.jobResponsibility}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.sam.jobName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<bandbox id="txtJobName" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" width="250px"/>
+				</row>
+			</rows>
+		</grid>
+			<groupbox closable="true">
+				<label id="lblError" style="color:red" />
+				<listbox id="tbnJobResponsibilityDetail" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.sam.responsibilityName}" />
+						<listheader label="${labels.sam.dateFrom}" width="15%"/>
+						<listheader label="${labels.sam.dateTo}" width="15%"/>
+					</listhead>
+				</listbox>
+				<separator/>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddJobResponsibility" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteJobResponsibility" />
+				</hbox>
+			</groupbox>								
+			
+			<separator />
+			<hbox pack="center" align="center">
+				<cell align="center" style="width:1250px;">
+					<button id="btnSave" label="${labels.common.save}"
+						mold="trendy" image="${labels.image.link.save}" />
+				</cell>
+				<cell align="right">
+					<button id="btnCancel"
+						label="${labels.common.cancel}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+	</groupbox>
+</window>

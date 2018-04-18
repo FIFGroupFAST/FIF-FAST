@@ -1,0 +1,212 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>co.id.fifgroup</groupId>
+		<artifactId>fifgroup-project</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<name>FIF Main Web Module</name>
+	<artifactId>fifgroup-main</artifactId>
+	<packaging>war</packaging>
+
+	<!-- <properties> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+		<junit.disableXmlReport>true</junit.disableXmlReport> <junit.skipTests>true</junit.skipTests> 
+		<maven.compiler.source>1.7</maven.compiler.source> <maven.compiler.target>1.7</maven.compiler.target> 
+		<jetty.port>8080</jetty.port> </properties> -->
+
+	<dependencies>
+		<!-- Project Dependencies -->
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-avm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-notification</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-audit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-system-admin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-basic-setup</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-workstructure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-system-workflow</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-personnel-admin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-eligibility-rule</artifactId>
+		</dependency>
+		<!--  <dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-sandbox</artifactId>
+		</dependency>-->
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-ssoa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-fast</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-biro-jasa</artifactId>
+		</dependency>
+		
+		<!-- Spring Dependencies -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Zkoss dependencies -->
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zk</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zul</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkplus</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkbind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.theme</groupId>
+			<artifactId>atlantic</artifactId>
+		</dependency>
+		<!-- <dependency>
+			<groupId>org.zkoss.addons</groupId>
+			<artifactId>zk-bootstrap</artifactId>
+		</dependency>  -->
+		<!-- <dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zuti</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zhtml</artifactId>
+		</dependency>
+		<!--<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkmax</artifactId>
+		</dependency>
+		 <dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkex</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.zkoss.common</groupId>
+			<artifactId>zweb</artifactId>
+		</dependency>
+
+		<!-- ckeditor -->
+		<dependency>
+			<groupId>org.zkoss.zkforge</groupId>
+			<artifactId>ckez</artifactId>
+		</dependency>
+		
+		<!-- ZKoss Calendar -->
+		<dependency>
+			<groupId>org.zkoss.calendar</groupId>
+			<artifactId>calendar</artifactId>
+		</dependency>
+		
+		<!-- ZKoss Timeline -->
+		<dependency>
+			<groupId>org.zkoss.zkforge</groupId>
+			<artifactId>timelinez</artifactId>
+		</dependency>
+		
+		<!-- ZKoss Timeplot -->
+		<dependency>
+			<groupId>org.zkoss.zkforge</groupId>
+			<artifactId>timeplotz</artifactId>
+		</dependency>
+		
+		<!-- ZKoss Chart -->
+		<dependency>
+			<groupId>org.zkoss.chart</groupId>
+			<artifactId>zkcharts</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<!-- JUnit Dependency -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<!-- Java Class Loader -->
+		<dependency>
+			<groupId>org.xeustechnologies</groupId>
+			<artifactId>jcl-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jodreports</groupId>
+			<artifactId>jodreports</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.artofsolving</groupId>
+			<artifactId>jodconverter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>net.sourceforge.barbecue</groupId>
+                <artifactId>barbecue</artifactId>
+                <version>1.0.0</version>
+		</dependency>
+		<dependency>
+            <groupId>net.sf.barcode4j</groupId>
+                <artifactId>barcode4j</artifactId>
+                <version>2.1</version>
+		</dependency>
+	</dependencies>
+
+</project>

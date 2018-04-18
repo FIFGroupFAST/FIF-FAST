@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.CompanyFinder">
+	
+	<resultMap type="co.id.fifgroup.basicsetup.dto.CompanyDTO" id="resultCompaniesByEffectiveOnDateAndCompanyName">
+		<id column="COMPANY_SEQ_NUM" property="companySeqNum" jdbcType="DECIMAL"/>
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL"/>
+		<result column="COMPANY_CODE" property="companyCode" jdbcType="VARCHAR"/>
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="GL_CODE" property="glCode" jdbcType="VARCHAR"/>
+		<result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR"/>
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="TIMESTAMP"/>
+		<result column="EFFECTIVE_DATE" property="effectiveStartDate" jdbcType="TIMESTAMP"/>
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.basicsetup.dto.CompanyDTO" id="resultDetailCompany">
+		<id column="COMPANY_SEQ_NUM" property="companySeqNum" jdbcType="DECIMAL"/>
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL"/>
+		<result column="GROUP_ID" property="groupId" jdbcType="DECIMAL"/>
+		<result column="COMPANY_CODE" property="companyCode" jdbcType="VARCHAR"/>
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="TIMESTAMP"/>
+		<result column="EFFECTIVE_DATE" property="effectiveStartDate" jdbcType="TIMESTAMP"/>
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="TIMESTAMP"/>
+		<result column="ABSOLUTE_PATH_LOGO" property="absolutePathLogo" jdbcType="VARCHAR"/>
+		<result column="COMPANY_LOGO" property="companyLogo" jdbcType="VARCHAR"/>
+		<result column="NPWP" property="npwp" jdbcType="VARCHAR"/>
+		<result column="KPP" property="kpp" jdbcType="VARCHAR"/>
+		<result column="KPJ_NUMBER" property="kpjNumber" jdbcType="VARCHAR"/>
+		<result column="GL_CODE" property="glCode" jdbcType="VARCHAR"/>
+		<result column="CURRENCY_CODE" property="currencyCode" jdbcType="VARCHAR"/>
+		<result column="COUNTRY" property="country" jdbcType="VARCHAR"/>
+		<result column="ADDRESS_LINE" property="addressLine" jdbcType="VARCHAR"/>
+		<result column="WORKING_SCHEDULE_ID" property="workingScheduleId" jdbcType="DECIMAL"/>
+		<result column="RESPONSIBILITY_ID" property="responsibilityId" jdbcType="DECIMAL"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="TIMESTAMP"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<association property="provinceObject" javaType="co.id.fifgroup.core.domain.Province">
+			<result column="PROV_CODE" property="provinsiCode" jdbcType="VARCHAR"/>
+			<result column="PROVINSI" property="provinsi" jdbcType="VARCHAR"/>
+		</association>
+		<association property="cityObject" javaType="co.id.fifgroup.core.domain.City">
+			<result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR"/>
+			<result column="CITY" property="city" jdbcType="VARCHAR"/>
+		</association>
+		<association property="kecamatanObject" javaType="co.id.fifgroup.core.domain.Kecamatan">
+			<result column="KEC_CODE" property="kecamatanCode" jdbcType="VARCHAR"/>
+			<result column="KECAMATAN" property="kecamatan" jdbcType="VARCHAR"/>
+		</association>
+		<association property="kelurahanObject" javaType="co.id.fifgroup.core.domain.Kelurahan">
+			<result column="KEL_CODE" property="kelurahanCode" jdbcType="VARCHAR"/>
+			<result column="KELURAHAN" property="kelurahan" jdbcType="VARCHAR"/>
+		</association>
+		<association property="zipCodeObject" javaType="co.id.fifgroup.core.domain.ZipCode">
+			<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR"/>
+			<result column="SUB_ZIP_CODE" property="subZipCode" jdbcType="VARCHAR"/>
+			<result column="ZIP_DESC" property="zipDesc" jdbcType="VARCHAR"/>
+		</association>
+		<collection property="companyContact" javaType="ArrayList" ofType="co.id.fifgroup.basicsetup.domain.CompanyContact">
+			<id column="CONTACT_ID" property="contactId" jdbcType="DECIMAL"/>
+			<result column="CONTACT_TYPE" property="contactType" jdbcType="VARCHAR"/>
+			<result column="CONTACT_INFORMATION" property="contactInformation" jdbcType="VARCHAR"/>
+			<result column="CREATED_BY_CONTACT" property="createdBy" jdbcType="DECIMAL"/>
+			<result column="CREATION_DATE_CONTACT" property="creationDate" jdbcType="TIMESTAMP"/>
+			<result column="LAST_UPDATED_BY_CONTACT" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+			<result column="LAST_UPDATE_DATE_CONTACT" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		</collection>
+		<collection property="companyOtherInfoValues" javaType="ArrayList" ofType="co.id.fifgroup.basicsetup.domain.CompanyOtherInfoValue">
+			<id column="OTHER_INFO_DTL_ID" property="otherInfoDtlId" jdbcType="DECIMAL"/>
+			<result column="VALUE" property="value" jdbcType="VARCHAR"/>
+			<result column="CREATED_BY_OTHER_INFO" property="createdBy" jdbcType="DECIMAL"/>
+			<result column="CREATION_DATE_OTHER_INFO" property="creationDate" jdbcType="TIMESTAMP"/>
+			<result column="LAST_UPDATED_BY_OTHER_INFO" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+			<result column="LAST_UPDATE_DATE_OTHER_INFO" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getCompanyId" resultType="long">
+		SELECT BSE_COMPANIES_S.NEXTVAL FROM DUAL
+	</select>
+
+	<select id="getCompaniesByEffectiveOnDateAndCompanyName" parameterType="map" resultMap="resultCompaniesByEffectiveOnDateAndCompanyName">
+		SELECT
+			BC.COMPANY_SEQ_NUM,
+			BC.COMPANY_ID,
+			BC.COMPANY_CODE,
+			BC.COMPANY_NAME,
+			BC.DESCRIPTION,
+			BC.GL_CODE,
+			BC.CURRENCY_CODE,
+			BC.EFFECTIVE_START_DATE,
+			BC.EFFECTIVE_END_DATE,
+			BC.LAST_UPDATE_DATE,
+			BC.LAST_UPDATED_BY,
+			SU.USER_NAME
+		FROM
+			BSE_COMPANIES BC LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BC.LAST_UPDATED_BY)
+		<where>
+			<if test="effectiveOnDate == null">
+			AND TRUNC(SYSDATE) BETWEEN TRUNC(BC.EFFECTIVE_START_DATE) AND TRUNC(BC.EFFECTIVE_END_DATE)
+			</if>
+			<if test="effectiveOnDate != null">
+			AND TRUNC(#{effectiveOnDate, jdbcType=TIMESTAMP}) BETWEEN TRUNC(BC.EFFECTIVE_START_DATE) AND TRUNC(BC.EFFECTIVE_END_DATE)
+			</if>
+			<if test="companyName != null">
+				<if test="companyName != ''">
+					AND UPPER(BC.COMPANY_NAME) LIKE UPPER(#{companyName, jdbcType=VARCHAR})
+				</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="getCountCompaniesByEffectiveOnDateAndCompanyName" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_COMPANIES BC LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BC.LAST_UPDATED_BY)
+		<where>
+			<if test="effectiveOnDate == null">
+			AND TRUNC(SYSDATE) BETWEEN TRUNC(BC.EFFECTIVE_START_DATE) AND TRUNC(BC.EFFECTIVE_END_DATE)
+			</if>
+			<if test="effectiveOnDate != null">
+			AND TRUNC(#{effectiveOnDate, jdbcType=TIMESTAMP}) BETWEEN TRUNC(BC.EFFECTIVE_START_DATE) AND TRUNC(BC.EFFECTIVE_END_DATE)
+		</if>
+			<if test="companyName != null">
+				<if test="companyName != ''">
+					AND UPPER(BC.COMPANY_NAME) LIKE UPPER(#{companyName, jdbcType=VARCHAR})
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<select id="getDetailCompany" parameterType="co.id.fifgroup.basicsetup.dto.CompanyDTO" resultMap="resultDetailCompany">
+		SELECT
+			BC.COMPANY_SEQ_NUM,
+			BC.COMPANY_ID,
+			BC.GROUP_ID,
+			BC.COMPANY_CODE,
+			BC.COMPANY_NAME,
+			BC.DESCRIPTION,
+			BC.EFFECTIVE_START_DATE,
+			BC.EFFECTIVE_END_DATE,
+			BC.ABSOLUTE_PATH_LOGO,
+			BC.COMPANY_LOGO,
+			BC.NPWP,
+			BC.KPP,
+			BC.KPJ_NUMBER,
+			BC.GL_CODE,
+			BC.CURRENCY_CODE,
+			BC.ADDRESS_LINE,
+			BC.COUNTRY,
+			FMP.PROV_CODE,
+			FMP.PROVINSI,
+			FMC.CITY_CODE,
+			FMC.CITY,
+			FMK.KEC_CODE,
+			FMK.KECAMATAN,
+			FMKL.KEL_CODE,
+			FMKL.KELURAHAN,
+			FMZ.ZIP_CODE,
+			FMZ.SUB_ZIP_CODE,
+			FMZ.ZIP_DESC,
+			BC.WORKING_SCHEDULE_ID,
+			BC.RESPONSIBILITY_ID,
+			BC.CREATED_BY,
+			BC.CREATION_DATE,
+			BC.LAST_UPDATED_BY,
+			BC.LAST_UPDATE_DATE,
+			BCT.CONTACT_ID,
+			BCT.CONTACT_TYPE,
+			BCT.CONTACT_INFORMATION,
+			BCT.CREATED_BY AS CREATED_BY_CONTACT,
+			BCT.CREATION_DATE AS CREATION_DATE_CONTACT,
+			BCT.LAST_UPDATED_BY AS LAST_UPDATED_BY_CONTACT,
+			BCT.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_CONTACT,
+			BCO.OTHER_INFO_DTL_ID,
+			BCO.VALUE,
+			BCO.CREATED_BY AS CREATED_BY_OTHER_INFO,
+			BCO.CREATION_DATE AS CREATION_DATE_OTHER_INFO,
+			BCO.LAST_UPDATED_BY AS LAST_UPDATED_BY_OTHER_INFO,
+			BCO.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_OTHER_INFO
+		FROM
+			BSE_COMPANIES BC LEFT JOIN FS_MST_PROVINSI FMP ON(BC.PROVINCE = FMP.PROV_CODE)
+			LEFT JOIN FS_MST_CITIES FMC ON(BC.CITY = FMC.CITY_CODE)
+			LEFT JOIN FS_MST_KECAMATAN FMK ON(BC.KECAMATAN = FMK.KEC_CODE)
+			LEFT JOIN FS_MST_KELURAHAN FMKL ON(BC.KELURAHAN = FMKL.KEL_CODE)
+			LEFT JOIN FS_MST_ZIP FMZ ON(BC.ZIPCODE = FMZ.ZIP_CODE AND BC.SUB_ZIP_CODE = FMZ.SUB_ZIP_CODE)
+			LEFT JOIN BSE_COY_CONTACTS BCT ON(BC.COMPANY_SEQ_NUM = BCT.COMPANY_SEQ_NUM)
+			LEFT JOIN BSE_COY_OTHER_INFO_VAL BCO ON(BC.COMPANY_SEQ_NUM = BCO.COMPANY_SEQ_NUM)
+		WHERE
+			BC.COMPANY_ID = #{companyId, jdbcType=DECIMAL} AND
+			BC.COMPANY_CODE = #{companyCode, jdbcType=VARCHAR} AND
+			BC.EFFECTIVE_START_DATE = #{effectiveStartDate, jdbcType=TIMESTAMP} AND
+			BC.EFFECTIVE_END_DATE = #{effectiveEndDate, jdbcType=TIMESTAMP}
+	</select>
+	
+	<select id="getBusinessGroupIdByCompany" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select group_id from bse_companies where (trunc(sysdate) between effective_start_date and effective_end_date) and company_id = #{companyId, jdbcType=DECIMAL}
+	</select>
+	
+	<select id="getOtherInfoValueCompany" parameterType="map" resultType="java.lang.String">
+		select oiv.value from bse_coy_other_info_val oiv
+		join bse_companies coy on oiv.company_seq_num = coy.company_seq_num
+		where coy.company_id = #{companyId, , jdbcType=NUMERIC}
+		and oiv.other_info_dtl_id = #{infoId, jdbcType=NUMERIC}
+		and trunc(#{effectiveDate, jdbcType=DATE}) between coy.effective_start_date and coy.effective_end_date
+	</select>
+	
+	<select id="getCompanyCodeById" parameterType="java.lang.Long" resultType="String">
+		select company_code from bse_companies where company_id = #{id} and (trunc(sysdate) between effective_start_date and effective_end_date)
+	</select>
+	
+	<select id="getCompanyNameById" parameterType="java.lang.Long" resultType="String">
+		select company_name from bse_companies where company_id = #{id} and (trunc(sysdate) between effective_start_date and effective_end_date)
+	</select>
+	
+	<select id="getCompanyGlCodeById" parameterType="java.lang.Long" resultType="String">
+		select gl_code from bse_companies where company_id = #{id} and (trunc(sysdate) between effective_start_date and effective_end_date)
+	</select>
+	
+	<select id="getCompanyInBusinessGroup" parameterType="map" resultType="Long">
+		select bc.company_id from bse_companies bc
+	      join bse_companies bg on bc.group_id = bg.group_id and trunc(sysdate) between bg.effective_start_date and bg.effective_end_date
+	      where trunc(sysdate) between bc.effective_start_date and bc.effective_end_date
+	      and bg.company_id = #{companyId}
+	</select>
+	
+	<select id="getCompanySeqNumAndBusinessGroupId" parameterType="map" resultMap="resultDetailCompany">
+		select
+			COMPANY_SEQ_NUM,
+			GROUP_ID
+		from
+			bse_companies
+		where
+			company_id = #{companyId, jdbcType=DECIMAL}
+			and #{effectiveOnDate, jdbcType=TIMESTAMP} between effective_start_date and effective_end_date
+	</select>
+	
+	<select id="getCompanyById" parameterType="map" resultMap="resultCompaniesByEffectiveOnDateAndCompanyName">
+		select * from bse_companies where company_id = #{companyId, jdbcType=NUMERIC}
+		and #{effectiveDate, jdbcType=DATE} between effective_start_date and effective_end_date
+	</select>
+	
+	<select id="findCompanyCommon" resultMap="resultCompaniesByEffectiveOnDateAndCompanyName" parameterType="co.id.fifgroup.basicsetup.dto.CompanyDTO">
+	SELECT company_id company_id,
+  		company_code company_code,
+  		company_name company_name
+	FROM bse_companies                                        
+	<where>
+	<if test="companyCode != null">
+		AND upper(company_code) LIKE upper(#{companyCode, jdbcType=VARCHAR}) 
+		</if>
+		<if test="companyName!=null">
+		AND upper(company_name) LIKE upper(#{companyName, jdbcType=VARCHAR}) 
+		</if>
+		<if test="effectiveDate!=null">
+		and TRUNC(#{effectiveDate}) between effective_start_date and effective_end_date
+		</if>
+		ORDER BY UPPER(company_code) ASC
+	</where>
+	</select>
+	
+	 <select id="countCompanyCommon" parameterType="co.id.fifgroup.basicsetup.dto.CompanyDTO" resultType="int">
+        select count(*)
+        from bse_companies
+       <where>
+	<if test="companyCode != null">
+		AND upper(company_code) LIKE upper(#{companyCode, jdbcType=VARCHAR}) 
+		</if>
+		<if test="companyName!=null">
+		AND upper(company_name) LIKE upper(#{companyName, jdbcType=VARCHAR}) 
+		</if>
+		<if test="effectiveDate!=null">
+		and TRUNC(#{effectiveDate}) between effective_start_date and effective_end_date
+		</if>
+		ORDER BY UPPER(company_name) ASC
+	</where>
+    </select>
+</mapper>

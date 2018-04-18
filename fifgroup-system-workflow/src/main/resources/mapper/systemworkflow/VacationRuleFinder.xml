@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemworkflow.dao.VacationRuleFinder">
+
+	<resultMap id="vacationRuleResultMap" type="co.id.fifgroup.systemworkflow.domain.VacationRule">
+	    <id column="VACATION_RULE_ID" jdbcType="DECIMAL" property="vacationRuleId" />
+	    <result column="APPROVER_ID" jdbcType="VARBINARY" property="approverId" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	   	<result column="SUBSTITUTE_APPROVER_ID" jdbcType="VARBINARY" property="substituteApproverId" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	    <result column="EFFECTIVE_DATE_FROM" jdbcType="TIMESTAMP" property="effectiveDateFrom" />
+	    <result column="EFFECTIVE_DATE_TO" jdbcType="TIMESTAMP" property="effectiveDateTo" />
+    </resultMap>
+    
+    <resultMap id="vacationRuleDtoResultMap" type="co.id.fifgroup.systemworkflow.dto.VacationRuleDTO">
+    	<id column="VACATION_RULE_ID" jdbcType="DECIMAL" property="vacationRuleId" />
+	    <result column="APPROVER_ID" jdbcType="VARBINARY" property="approverId" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	    <result column="APP_FULL_NAME" jdbcType="VARCHAR" property="approverFullName" />
+    	<result column="SUBSTITUTE_APPROVER_ID" jdbcType="VARBINARY" property="substituteId" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	    <result column="SUB_FULL_NAME" jdbcType="VARCHAR" property="substituteFullName" />
+	    <result column="EFFECTIVE_DATE_FROM" jdbcType="TIMESTAMP" property="effectiveDateFrom" />
+	    <result column="EFFECTIVE_DATE_TO" jdbcType="TIMESTAMP" property="effectiveDateTo" />
+	    <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="LAST_UPDATED_DATE" jdbcType="TIMESTAMP" property="lastUpdatedDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	  </resultMap>
+
+  <select id="countActiveVacationRule" parameterType="map" resultType="java.lang.Integer">
+  		select count(*) from SWF_VACATION_RULE
+  		where APPROVER_ID = #{approverId, jdbcType=VARBINARY, typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+  		AND (EFFECTIVE_DATE_FROM, EFFECTIVE_DATE_TO) overlaps (#{dateFrom, jdbcType=DATE}, #{dateTo, jdbcType=DATE})
+  </select>
+  
+  <select id="getActiveVacationRuleByApproverId" parameterType="map" resultMap="vacationRuleResultMap">
+  		select * from SWF_VACATION_RULE
+  		where APPROVER_ID = #{approverId, jdbcType=VARBINARY, typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+  		and trunc(#{effectiveOnDate}) between trunc(EFFECTIVE_DATE_FROM) and trunc(EFFECTIVE_DATE_TO)
+  </select>
+  
+  <select id="getVacationRule" parameterType="map" resultMap="vacationRuleDtoResultMap">
+  	select v.vacation_rule_id, v.approver_id, appinfo.full_name app_full_name, v.substitute_approver_id, subinfo.full_name sub_full_name, v.effective_date_from, v.effective_date_to, v.created_by, v.created_date, v.last_updated_by, v.last_updated_date, su.user_name 
+  	from swf_vacation_rule v
+	join pea_people apppeople on v.approver_id = apppeople.person_uuid
+	join pea_personal_informations appinfo on apppeople.person_id = appinfo.person_id and UPPER(appinfo.full_name) like UPPER(#{approverName})
+	AND TRUNC(sysdate) between appinfo.effective_start_date and appinfo.effective_end_date
+	join pea_people subpeople on v.substitute_approver_id = subpeople.person_uuid
+	join pea_personal_informations subinfo on subpeople.person_id = subinfo.person_id and UPPER(subinfo.full_name) like UPPER(#{substituteName})
+	AND TRUNC(sysdate) between subinfo.effective_start_date and subinfo.effective_end_date
+	LEFT JOIN SAM_USERS su
+	ON su.USER_ID = v.LAST_UPDATED_BY
+	where v.effective_date_from between #{dateFrom} and #{dateTo} 
+		or v.effective_date_to between #{dateFrom} and #{dateTo}  	
+  </select>
+  
+  <select id="getVacationRuleByApproverId" parameterType="map" resultMap="vacationRuleDtoResultMap">
+  	select v.vacation_rule_id, v.approver_id, appinfo.full_name app_full_name, v.substitute_approver_id, subinfo.full_name sub_full_name, v.effective_date_from, v.effective_date_to, v.created_by, v.created_date, v.last_updated_by, v.last_updated_date, su.user_name 
+  	from swf_vacation_rule v
+  	join pea_people apppeople on v.approver_id = apppeople.person_uuid
+	join pea_personal_informations appinfo on apppeople.person_id = appinfo.person_id
+	AND TRUNC(sysdate) between appinfo.effective_start_date and appinfo.effective_end_date
+	join pea_people subpeople on v.substitute_approver_id = subpeople.person_uuid
+	join pea_personal_informations subinfo on subpeople.person_id = subinfo.person_id and UPPER(subinfo.full_name) like UPPER(#{substituteName})
+	AND TRUNC(sysdate) between subinfo.effective_start_date and subinfo.effective_end_date
+	LEFT JOIN SAM_USERS su
+	ON su.USER_ID = v.LAST_UPDATED_BY
+	where 
+		v.approver_id = #{approverId, jdbcType=VARBINARY, typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+		and (v.effective_date_from between #{dateFrom} and #{dateTo} 
+		or v.effective_date_to between #{dateFrom} and #{dateTo})  	
+  </select>  
+  
+</mapper>

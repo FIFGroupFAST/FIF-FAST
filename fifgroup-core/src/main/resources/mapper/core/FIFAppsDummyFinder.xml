@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.FIFAppsDummyFinder">
+
+	<resultMap id="supplierOpexInfoResult" type="co.id.fifgroup.core.domain.interfacing.SupplierOpexInfo">
+		<result property="opexCode" column="employee_number" jdbcType="VARCHAR" />
+		<result property="opexBankCode" column="bank_code" jdbcType="VARCHAR" />
+		<result property="opexAccountNumber" column="account_number" jdbcType="VARCHAR" />
+		<result property="opexAccountName" column="account_name" jdbcType="VARCHAR" />
+		<result property="opexBankName" column="bank_name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="bankOdInfoResult" type="co.id.fifgroup.core.domain.interfacing.BankOdInfo">
+		<result property="cpCode" column="employee_number" jdbcType="VARCHAR" />
+		<result property="accountNumber" column="bank_code" jdbcType="VARCHAR" />
+		<result property="accountName" column="account_number" jdbcType="VARCHAR" />
+		<result property="bankId" column="account_name" jdbcType="VARCHAR" />
+		<result property="branch" column="bank_name" jdbcType="VARCHAR" />
+		<result property="currencyCode" column="bank_name" jdbcType="VARCHAR" />
+		<result property="segment1" column="bank_name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="prepaymentResult" type="co.id.fifgroup.core.domain.interfacing.Prepayment">
+		<result property="invoiceNumber" column="ap_invoice_no" jdbcType="VARCHAR" />
+		<result property="invoiceSequenceNumber" column="ap_invoice_seqn_no" jdbcType="DECIMAL" />
+		<result property="supplierCode" column="ap_suppl_code" jdbcType="VARCHAR" />
+		<result property="supplierType" column="ap_suppl_type" jdbcType="VARCHAR" />
+		<result property="supplierSubType" column="ap_suppl_subtype" jdbcType="VARCHAR" />
+		<result property="prepaymentDate" column="ap_prepayment_date" jdbcType="VARCHAR" />
+		<result property="referenceNumber" column="ap_reff_no" jdbcType="VARCHAR" />
+		<result property="prepyamentDescription" column="ap_prepay_desc" jdbcType="VARCHAR" />
+		<result property="currency" column="ap_currency" jdbcType="VARCHAR" />
+		<result property="segment1" column="ap_segment1" jdbcType="VARCHAR" />
+		<result property="segment2" column="ap_segment2" jdbcType="VARCHAR" />
+		<result property="segment3" column="ap_segment3" jdbcType="VARCHAR" />
+		<result property="segment4" column="ap_segment4" jdbcType="VARCHAR" />
+		<result property="segment5" column="ap_segment5" jdbcType="VARCHAR" />
+		<result property="segment6" column="ap_segment6" jdbcType="VARCHAR" />
+		<result property="segment7" column="ap_segment7" jdbcType="VARCHAR" />
+		<result property="segment8" column="ap_segment8" jdbcType="VARCHAR" />
+		<result property="amountDebet" column="ap_amt_debet" jdbcType="VARCHAR" />
+		<result property="amountCredit" column="ap_amt_kredit" jdbcType="VARCHAR" />
+		<result property="createdBy" column="ap_created_by" jdbcType="VARCHAR" />
+		<result property="createdDate" column="ap_created_date" jdbcType="VARCHAR" />
+		<result property="companyCode" column="coy_id" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.interfacing.IuranKoperasi" id="iuranKoperasi">
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId"/>
+		<result column="PAYCODE_ID" jdbcType="NUMERIC" property="paycodeId"/>
+		<result column="PAYCODE" jdbcType="VARCHAR" property="paycode"/>
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber"/>
+		<result column="AMOUNT" jdbcType="NUMERIC" property="amount"/>
+		<result column="SAV_PROD_TYPE_ID" jdbcType="VARCHAR" property="savProdTypeId"/>		
+		<result column="MODULE_ID" jdbcType="NUMERIC" property="moduleId"/>
+		<result column="SAV_SEQ" jdbcType="NUMERIC" property="savSequence"/>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.interfacing.HutangKoperasi" id="hutangKoperasi">
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId"/>
+		<result column="NPK" jdbcType="VARCHAR" property="npk"/>
+		<result column="CONTRACT_NO" jdbcType="VARCHAR" property="contractNumber"/>
+		<result column="INV_NO" jdbcType="VARCHAR" property="invNo"/>
+		<result column="INV_AMOUNT" jdbcType="NUMERIC" property="invAmount"/>
+		<result column="RSP_AMOUNT" jdbcType="NUMERIC" property="rspAmount"/>
+		<result column="RSP_STS" jdbcType="VARCHAR" property="rspSts"/>
+		<result column="RSP_REMARKS" jdbcType="VARCHAR" property="rspRemark"/>
+		<result column="PROCESS_DATE" jdbcType="DATE" property="processDate"/>
+		<result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy"/>
+		<result column="CREATION_DATE" jdbcType="DATE" property="creationDate"/>
+		<result column="MODIFIED_BY" jdbcType="VARCHAR" property="modifiedBy"/>
+		<result column="MODIFIED_DATE" jdbcType="DATE" property="modifiedDate"/>
+		<result column="PAYCODE_ID" jdbcType="NUMERIC" property="paycodeId"/>
+		<result column="PAYCODE" jdbcType="VARCHAR" property="paycode"/>			
+		<result column="MODULE_ID" jdbcType="NUMERIC" property="moduleId"/>
+		<result column="INSTL_NO" jdbcType="VARCHAR" property="instlNo"/>
+	</resultMap>
+
+	<select id="getSupplierOpexByOpexCodeAndOpexType" parameterType="map" resultMap="supplierOpexInfoResult">
+		select 
+			pi.employee_number, 
+			bi.bank_name bank_code, 
+			bi.account_number, 
+			bi.account_name, 
+			bi.bank_name 
+		from pea_bank_informations bi join pea_personal_informations pi on bi.person_id = pi.person_id and pi.company_id = bi.company_id
+		where trunc(sysdate) between pi.effective_start_date and pi.effective_end_date and
+			trunc(sysdate) between bi.effective_start_date AND bi.effective_end_date
+			and pi.employee_number = #{opexCode}
+	</select>
+	
+	<select id="countApMstEmployeeByEmployeeCode" parameterType="map" resultType="Integer">
+		select count(*) from ap.ap_mst_employee@FIFAPPSREPL.US.ORACLE.COM where empl_code = #{employeeCode}
+	</select>
+	
+	<update id="updateApMstEmployeeByEmployeeCode" parameterType="co.id.fifgroup.core.domain.interfacing.EmployeeBankInfo">
+		update ap.ap_mst_employee@FIFAPPSREPL.US.ORACLE.COM 
+		set
+			empl_bank_id = #{bankId},
+			empl_account_no = #{accountNumber},
+			empl_account_name = #{accountName},
+			empl_bank_name = #{bankName}
+		where empl_code = #{employeeCode}
+	</update>
+	
+	<insert id="insertApMstEmployee" parameterType="co.id.fifgroup.core.domain.interfacing.EmployeeBankInfo">
+		insert into ap.ap_mst_employee@FIFAPPSREPL.US.ORACLE.COM (
+			empl_code,
+			empl_bank_id,
+			empl_account_desc,
+			empl_acc_status,
+			empl_acc_type,
+			empl_account_no,
+			empl_account_name,
+			empl_cost_centre,
+			empl_area_code,
+			empl_bank_name
+		) values(
+			#{employeeCode, jdbcType=VARCHAR},
+			#{bankId, jdbcType=VARCHAR},
+			#{accountDescription, jdbcType=VARCHAR},
+			#{accountStatus, jdbcType=VARCHAR},
+			#{accountType, jdbcType=VARCHAR},
+			#{accountNumber, jdbcType=VARCHAR},
+			#{accountName, jdbcType=VARCHAR},
+			#{costCenter, jdbcType=VARCHAR},
+			#{areaCode, jdbcType=VARCHAR},
+			#{bankName, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getBankOdInfoByBranchAndDivision" parameterType="map" resultMap="bankOdInfoResult">
+		select 
+			cp_code,
+			account_no,
+			account_name,
+			bank_id,
+			fif_branch,
+			currency_code,
+			segment1
+		from ap.ap_bank_od_branch_v@FIFAPPSREPL.US.ORACLE.COM
+		where fif_branch = #{branchCode} and segment1 = #{division}
+	</select>
+	
+	<select id="countSupplierAccount" parameterType="map" resultType="Integer">
+		select count(*) from fifapps.fs_mst_supplier_acct@FIFAPPSREPL.US.ORACLE.COM 
+		where 
+			supl_code = #{opexCode} and
+			supl_bank_id = #{bankId} and
+			supl_account_no = #{accountNumber}
+	</select>
+	
+	<select id="checkCvrGlNotNull" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=NUMERIC, mode=OUT} = call fifapps.fs_fif_process_pkg.check_cvr_gl_notnull@FIFAPPSREPL.US.ORACLE.COM 
+			(
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{message, javaType=String, jdbcType=VARCHAR, mode=OUT}
+			)
+		}
+	</select>
+	
+	<select id="getInvoiceNumber" statementType="CALLABLE">
+		{ #{invoiceNumber, jdbcType=VARCHAR, mode=OUT} = call ap.get_invoice_no@FIFAPPSREPL.US.ORACLE.COM 
+			(
+				#{branchCode, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="insertInvoiceInterface" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.INTERFACE.invoice_interface@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{invoiceNumber, mode=IN, jdbcType=VARCHAR},
+				#{branchCode, mode=IN, jdbcType=VARCHAR},
+				#{invoiceType, mode=IN, jdbcType=VARCHAR},
+				#{paidByHo, mode=IN, jdbcType=VARCHAR},
+				#{referenceNumber, mode=IN, jdbcType=VARCHAR},
+				#{transactionType, mode=IN, jdbcType=VARCHAR},
+				#{invoiceDate, mode=IN, jdbcType=DATE},
+				#{dueDate, mode=IN, jdbcType=DATE},
+				#{supplierCode, mode=IN, jdbcType=VARCHAR},
+				#{description, mode=IN, jdbcType=VARCHAR},
+				#{supplierBankCode, mode=IN, jdbcType=VARCHAR},
+				#{supplierAccountNumber, mode=IN, jdbcType=VARCHAR},
+				#{supplierAccountName, mode=IN, jdbcType=VARCHAR},
+				#{fakturPajakDate, mode=IN, jdbcType=DATE},
+				#{fakturPajakNumber, mode=IN, jdbcType=VARCHAR},
+				#{ppnTaxCode, mode=IN, jdbcType=VARCHAR},
+				#{ppnType, mode=IN, jdbcType=VARCHAR},
+				#{currencyCode, mode=IN, jdbcType=VARCHAR},
+				#{exchangeRate, mode=IN, jdbcType=NUMERIC},
+				#{createdBy, mode=IN, jdbcType=VARCHAR},
+				#{companyGlCode, mode=IN, jdbcType=VARCHAR},
+				#{branchDestination, mode=IN, jdbcType=VARCHAR},
+				#{scheduleDate, jdbcType=DATE, mode=IN},
+				#{classCode, mode=IN, jdbcType=VARCHAR},
+				#{costCenter, mode=IN, jdbcType=VARCHAR},
+				#{productCode, mode=IN, jdbcType=VARCHAR},
+				#{debetCredit, mode=IN, jdbcType=VARCHAR},
+				#{descriptionDetail, mode=IN, jdbcType=VARCHAR},
+				#{amount, mode=IN, jdbcType=NUMERIC},
+				#{usedPpn, mode=IN, jdbcType=VARCHAR},
+				#{includePpn, mode=IN, jdbcType=VARCHAR},
+				#{taxCode, mode=IN, jdbcType=VARCHAR},
+				#{taxAmount, mode=IN, jdbcType=NUMERIC},
+				#{journalType, mode=IN, jdbcType=VARCHAR},
+				#{moduleId, mode=IN, jdbcType=NUMERIC},
+				#{sequenceNumber, mode=IN, jdbcType=NUMERIC},
+				#{priority, mode=IN, jdbcType=NUMERIC},
+				#{paymentBankAccount, mode=IN, jdbcType=VARCHAR},
+				#{paymentBankCode, mode=IN, jdbcType=VARCHAR},
+				#{autoPayment, mode=IN, jdbcType=VARCHAR},
+				#{segmentBank, mode=IN, jdbcType=VARCHAR},
+				#{paymentViaBank, mode=IN, jdbcType=VARCHAR},
+				#{segmentIb, mode=IN, jdbcType=VARCHAR},
+				#{companyCode, mode=IN, jdbcType=VARCHAR},
+				#{procName, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="insertPreInvoiceInterface" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.INTERFACE.insert_perinvoice_interface@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{invoiceNumber, jdbcType=VARCHAR, mode=IN}
+				<if test="spsPrepayment != null">
+				, #{spsPrepayment, jdbcType=VARCHAR, mode=IN}
+				</if>
+				<if test="forceApprover != null">
+				, #{forceApprover, jdbcType=VARCHAR, mode=IN}
+				</if>
+			)
+		}
+	</select>
+	
+	<select id="insertApprover" statementType="CALLABLE">
+		{ call ap.ap_insert_approver@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{branchCode, mode=IN, jdbcType=VARCHAR},
+				#{invoiceNumber, mode=IN, jdbcType=VARCHAR},
+				#{sequenceApproverNumber, mode=IN, jdbcType=NUMERIC},
+				#{approver, mode=IN, jdbcType=VARCHAR},
+				#{approveDate, mode=IN, jdbcType=DATE}
+			)
+		}
+	</select>
+	
+	<select id="getPrepaymentTransaction" parameterType="map" resultMap="prepaymentResult">
+		select * from ap.ap_trn_spc_prepay@FIFAPPSREPL.US.ORACLE.COM where ap_invoice_no = #{invoiceNumber, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getPrepaymentTransactionByReferenceNumber" parameterType="map" resultMap="prepaymentResult">
+		select * from ap.ap_trn_spc_prepay@FIFAPPSREPL.US.ORACLE.COM where ap_reff_no = #{referenceNumber} and ap_suppl_code = #{employeeNumber}
+	</select>
+	
+	<select id="bookRvNumber" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.booking_rv_no@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{branchCode, mode=IN},
+				#{createdBy, mode=IN}
+			)
+		}
+	</select>
+	
+	<select id="createRv" statementType="CALLABLE">
+		{ call ap.ap_spc_prepay.create_rv@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{prepayment, mode=IN},
+				#{createdBy, mode=IN},
+				#{rvNumber, mode=OUT}
+			)
+		}
+	</select>
+
+	<select id="getGLBookId" resultType="java.lang.Long">
+		select value from fs_mst_param@FIFAPPSREPL.US.ORACLE.COM where key = 'GL_BOOK_ID'
+	</select>
+	
+	<insert id="insertGlInterface" parameterType="co.id.fifgroup.core.domain.interfacing.GlInterface">
+		insert into fifapps.gl_interface@FIFAPPSREPL.US.ORACLE.COM (
+			status,
+			set_of_books_id,
+			accounting_date,
+			transaction_date,
+			period_name,
+			currency_code,
+			date_created,
+			created_by,
+			actual_flag,
+			user_je_category_name,
+			user_je_source_name,
+			segment1,
+			segment2,
+			segment3,
+			segment4,
+			segment5,
+			segment6,
+			segment7,
+			segment8,
+			entered_dr,
+			entered_cr,
+			accounted_dr,
+			accounted_cr,
+			reference1,
+			reference4,
+			reference10,
+			attribute4,
+			attribute5
+		) values (
+			#{status, jdbcType=VARCHAR},
+			#{setOfBookId, jdbcType=DECIMAL},
+			#{accountingDate, jdbcType=DATE},
+			#{transactionDate, jdbcType=DATE},
+			#{periodName, jdbcType=VARCHAR},
+			#{currencyCode, jdbcType=VARCHAR},
+			#{dateCreated, jdbcType=TIMESTAMP},
+			#{createdBy, jdbcType=VARCHAR},
+			#{actualFlag, jdbcType=VARCHAR},
+			#{userJeCategoryName, jdbcType=VARCHAR},
+			#{userJeSourceName, jdbcType=VARCHAR},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{enteredDr, jdbcType=DECIMAL},
+			#{enteredCr, jdbcType=DECIMAL},
+			#{accountedDr, jdbcType=DECIMAL},
+			#{accountedCr, jdbcType=DECIMAL},
+			#{reference1, jdbcType=VARCHAR},
+			#{reference4, jdbcType=VARCHAR},
+			#{reference10, jdbcType=VARCHAR},
+			#{attribute4, jdbcType=VARCHAR},
+			#{attribute5, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="checkBalanceJurnal" statementType="CALLABLE">
+		{ 
+			#{resultValue, jdbcType=NUMERIC, mode=OUT} = call fifapps.fs_cek_bal_jurnal@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{invoiceNumber, mode=IN}
+			)
+		}
+	
+	</select>
+	
+	<update id="updateApTrnSpcPrepayment" parameterType="map">
+		update ap.ap_trn_spc_prepay@FIFAPPSREPL.US.ORACLE.COM
+		set
+			ap_segment2 = #{branchCodeNew},
+			ap_segment1 = #{companyCodeNew},
+			coy_id = #{companyId}
+		where ap_invoice_no = #{invoiceNumber}
+			
+	</update>
+	
+	<insert id="insertPrepayment" parameterType="co.id.fifgroup.core.domain.interfacing.Prepayment">
+		
+		Insert into ap.ap_trn_spc_prepay@FIFAPPSREPL.US.ORACLE.COM (
+			ap_invoice_no,
+			ap_invoice_seqn_no,
+			ap_suppl_code,
+			ap_suppl_type,
+			ap_suppl_subtype,
+			ap_prepayment_date,
+			ap_reff_no,
+			ap_prepay_desc,
+			ap_currency,
+			ap_segment1,
+			ap_segment2,
+			ap_segment3,
+			ap_segment4,
+			ap_segment5,
+			ap_segment6,
+			ap_segment7,
+			ap_segment8,
+			ap_amt_debet,
+			ap_amt_kredit,
+			ap_created_by,
+			ap_created_date,
+			coy_id
+		) values (
+			#{invoiceNumber, jdbcType=VARCHAR},
+			#{invoiceSequenceNumber, jdbcType=NUMERIC},
+			#{supplierCode, jdbcType=VARCHAR},
+			#{supplierType, jdbcType=VARCHAR},
+			#{supplierSubType, jdbcType=VARCHAR},
+			#{prepaymentDate, jdbcType=DATE},
+			#{referenceNumber, jdbcType=VARCHAR},
+			#{prepyamentDescription, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{amountDebet, jdbcType=DECIMAL},
+			#{amountCredit, jdbcType=DECIMAL},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdDate, jdbcType=DATE},
+			#{companyCode, jdbcType=VARCHAR}
+		)
+	
+	</insert>
+	
+	<update id="creditApTrnSpcPrepayByInvoiceNumber" parameterType="map">
+		Update ap.ap_trn_spc_prepay 
+		set 
+			ap_amt_credit = #{prepaymentAmount}, 
+			ap_updated_by = #{createdBy}, 
+			ap_created_date = #{createdDate} 
+		where ap_invoice_no = #{invoiceNumber}
+	</update>
+	
+	<select id="genRvInterface" statementType="CALLABLE">
+		{ 
+			#{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.rv_interface_pkg.gen_rv_interface@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{referenceNumber, mode=IN, jdbcType=NUMERIC},
+				#{SequenceNumber, mode=IN, jdbcType=NUMERIC},
+				#{transType, mode=IN, jdbcType=VARCHAR},
+				#{fromId, mode=IN, jdbcType=VARCHAR},
+				#{branchId, mode=IN, jdbcType=VARCHAR},
+				#{transDate, mode=IN, jdbcType=DATE},
+				#{documentNumber, mode=IN, jdbcType=VARCHAR},
+				#{description, mode=IN, jdbcType=VARCHAR},
+				#{receivedMethod, mode=IN, jdbcType=VARCHAR},
+				#{receivedBankId, mode=IN, jdbcType=VARCHAR},
+				#{receivedBankAccount, mode=IN, jdbcType=VARCHAR},
+				#{currency, mode=IN, jdbcType=VARCHAR},
+				#{exchangeRate, mode=IN, jdbcType=NUMERIC},
+				#{receivedAmount, mode=IN, jdbcType=DECIMAL},
+				#{fee, mode=IN, jdbcType=DECIMAL},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{procedureName, mode=IN, jdbcType=VARCHAR},
+				#{createdBy, mode=IN, jdbcType=VARCHAR},
+				#{createDate, mode=IN, jdbcType=DATE},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{segment9, mode=IN, jdbcType=VARCHAR},
+				#{segment10, mode=IN, jdbcType=VARCHAR},
+				#{bankId, mode=IN, jdbcType=VARCHAR},
+				#{companyId, mode=IN, jdbcType=VARCHAR},
+				#{contractNumber, mode=IN, jdbcType=VARCHAR},
+				#{rvNumber, mode=IN, jdbcType=VARCHAR},
+				#{roundRcv, mode=IN, jdbcType=VARCHAR},
+				#{source, mode=IN, jdbcType=VARCHAR},
+				#{referenceDetail, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="getSupplierTypeBySupplierCode" parameterType="map" resultType="String">
+		select supl_opex_type from mst_suppliers_v where supl_opex_code = #{supplierCode, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertApTrnPPH" parameterType="co.id.fifgroup.core.domain.interfacing.TaxInterface">
+		INSERT INTO ap.ap_trn_pph@FIFAPPSREPL.US.ORACLE.COM(
+			ap_branch_id, 
+			ap_refference_no, 
+			ap_invoice_no, 
+			ap_invoice_type,
+            ap_trans_type, 
+            ap_invoice_date,
+            ap_supplier_code, 
+            ap_supplier_type,
+            ap_supplier_name, 
+            ap_currency,
+            ap_exchange_rate, 
+            ap_sequence_no,
+            ap_branch_destination,
+            ap_sched_due_date, 
+            ap_classcode,
+            ap_debet_kredit,
+            ap_description,
+            ap_amount, 
+            ap_tax_code,
+            ap_tax_classcode, 
+            ap_tax_amount,
+            ap_tax_amount_in_rup, 
+            ap_status,
+            coy_id
+    	)  VALUES (
+    		#{branchCode, jdbcType=VARCHAR},
+    		#{refferenceNo, jdbcType=VARCHAR},
+    		#{invoiceNumber, jdbcType=VARCHAR},
+    		#{invoiceType, jdbcType=VARCHAR},
+    		#{transactionType, jdbcType=VARCHAR},
+			#{invoiceDate, jdbcType=DATE},
+			#{supplierCode, jdbcType=VARCHAR},
+			#{supplierType, jdbcType=NUMERIC},
+			#{supplierName, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{exchangeRate, jdbcType=NUMERIC},
+			#{sequence, jdbcType=NUMERIC},
+			#{branchDestination, jdbcType=VARCHAR},
+			#{scheduleDueDate, jdbcType=DATE},
+			#{classCode, jdbcType=VARCHAR},
+			#{debitCredit, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{amount, jdbcType=DECIMAL},
+			#{taxCode, jdbcType=VARCHAR},
+			#{taxClassCode, jdbcType=VARCHAR},
+			#{taxAmount, jdbcType=DECIMAL},
+			#{taxAmountInRup, jdbcType=DECIMAL},
+			#{status, jdbcType=VARCHAR},
+			#{companyCode, jdbcType=VARCHAR}
+    	)
+	</insert>
+	
+	<update id="updateTrnInvoiceDtl" parameterType="co.id.fifgroup.core.domain.interfacing.InvoiceDetail">
+		
+		UPDATE 
+			ap_trn_invoice_dtl@FIFAPPSREPL.US.ORACLE.COM aptd
+        SET 
+        	aptd.ap_tax_code = #{taxCode},
+        	aptd.ap_tax_amount = #{taxAmount}
+		WHERE 
+			aptd.ap_invoice_no = #{invoiceNumber} 
+			AND aptd.ap_refference_no =#{refferenceNumber}
+			AND aptd.ap_branch_destination = #{branchCode}
+	
+	</update>
+	
+	<select id="getDepositNumber" parameterType="map" resultType="String">
+		
+		select ap.get_deposit_no@FIFAPPSREPL.US.ORACLE.COM (#{branchCode}, #{moduleId}) from dual
+		
+	</select>
+	
+	<select id="getDepositNumberFunction" statementType="CALLABLE">
+		{ #{depositNumber, jdbcType=VARCHAR, mode=OUT} = call ap.get_deposit_no@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{branchCode, mode=IN, jdbcType=VARCHAR},
+				#{moduleId, mode=IN, jdbcType=NUMERIC}
+			)
+		}
+	</select>
+	
+	<update id="updateCifnEmplLoan" parameterType="map">
+		 UPDATE 
+		 	cifn_empl_loan@FIFAPPSREPL.US.ORACLE.COM
+         SET 
+         	emploan_paid_status = 'P',
+            emploan_process_date = TRUNC (SYSDATE),
+            emploan_last_upd_date = SYSDATE,
+            emploan_last_upd_by = #{username}		
+         WHERE 
+            emploan_empl_code = #{employeeNumber}                                 	
+            AND EMPLOAN_APPL_ID = #{contractNumber}
+            AND emploan_paid_status = 'U'
+	</update>
+	
+	<update id="updateIntensifByEmployeeNumber" parameterType="map">
+		UPDATE 
+			arec_insentif_temp@FIFAPPSREPL.US.ORACLE.COM
+		SET 
+			payroll_process_date = #{processDate,jdbcType=DATE},
+			instf_last_update_date = sysdate
+		WHERE 
+			instf_npk = #{employeeNumber} 
+			AND instf_flag = 'U'
+	</update>
+	
+	<select id="getInsentifByEmployeeNumber" parameterType="map" resultType="java.math.BigDecimal">
+		select SUM (NVL (INSTF_AMOUNT, 0))
+		from AREC_INSENTIF_TEMP@FIFAPPSREPL.US.ORACLE.COM
+		WHERE instf_npk = #{employeeNumber,jdbcType=VARCHAR} 
+		AND instf_flag = 'U'
+	</select>
+	
+	<select id="selectIuranKoperasiByCompanyId" parameterType="map" resultMap="iuranKoperasi" >
+		select PAPF.PERSON_ID,papf.employee_number,tsr.sav_prod_type_id,pmd.module_id,
+				pp.paycode_id,pp.paycode,TSR.SAV_AMOUNT amount, TSR.SAV_SEQ
+		from 
+				SP.TRN_SAVINGS_RSP@SYSKOP.US.ORACLE.COM TSR, PEA_PERSONAL_INFORMATIONS PAPF,PAY_PAYCODES PP,
+	            PAY_MAD_VERSION PMV,
+	            pay_mad_dtl pmd
+	    WHERE tsr.sav_status = 'Y'  
+		AND tsr.sav_flagfif = 'N'
+		AND tsr.sav_prod_id = 'PD02'
+		and TSR.SAV_PROD_TYPE_ID in ('03', '04')
+		and PAPF.EMPLOYEE_NUMBER = TSR.SAV_MEMBER_ID
+		and TRUNC(sysdate) between PAPF.EFFECTIVE_START_DATE and PAPF.EFFECTIVE_END_DATE
+		and PAPF.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+		and pp.paycode=DECODE (tsr.sav_prod_type_id,
+				'03', 'SD016',
+				'04', 'SD017'      
+				)
+		and  pp.company_id = papf.company_id
+	    and  PMV.COMPANY_ID = PAPF.COMPANY_ID
+	    and  TRUNC(sysdate) between pmv.DATE_FROM and pmv.DATE_TO
+	    and  PMD.VERSION_ID = PMV.VERSION_ID
+	    and  pmd.paycode_id = pp.paycode_id	
+	</select>
+	
+	<select id="selectPotonganKoperasiByCompanyId" parameterType="map" resultMap="hutangKoperasi">
+		select PAPF.PERSON_ID,PAPF.EMPLOYEE_NUMBER NPK,FIR.INSTL_NO,FIR.CONTRACT_NO,fir.inv_no,FIR.INV_AMOUNT,FIR.RSP_AMOUNT,
+       FIR.RSP_STS,FIR.RSP_REMARKS,FIR.PROCESS_DATE,FIR.MODIFIED_BY,FIR.MODIFIED_DATE,PMD.MODULE_ID,
+				pp.paycode_id,pp.paycode
+		from 
+				SP.FIF_INVOICE_RSP@SYSKOP.US.ORACLE.COM FIR, PEA_PERSONAL_INFORMATIONS PAPF,PAY_PAYCODES PP,
+	            PAY_MAD_VERSION PMV,
+	            pay_mad_dtl pmd
+	    where FIR.RSP_STS = 'U'
+		and PAPF.EMPLOYEE_NUMBER = fir.npk
+		and TRUNC(sysdate) between PAPF.EFFECTIVE_START_DATE and PAPF.EFFECTIVE_END_DATE
+		and PAPF.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+		and pp.paycode='SD007'
+		and  pp.company_id = papf.company_id
+	    and  PMV.COMPANY_ID = PAPF.COMPANY_ID
+	    and  TRUNC(sysdate) between pmv.DATE_FROM and pmv.DATE_TO
+	    and  PMD.VERSION_ID = PMV.VERSION_ID
+	    and  pmd.paycode_id = pp.paycode_id
+	</select>
+	
+	<update id="updateIuranKoperasi" parameterType="map"> 
+		UPDATE sp.trn_savings_rsp@syskop.us.oracle.com
+		SET sav_flagfif = #{flagFif, jdbcType=VARCHAR},
+ 			modified_by = #{updatedBy,jdbcType=VARCHAR},
+ 			modified_date = TRUNC (SYSDATE)
+		WHERE sav_member_id = #{employeeNumber,jdbcType=VARCHAR}
+ 		AND sav_prod_type_id = #{savProdTypeId,jdbcType=VARCHAR}	
+ 		AND sav_seq = #{savSequence, jdbcType=NUMERIC}	
+	</update>
+	
+	<select id="settlePrepayment" statementType="CALLABLE">
+		{ 
+			#{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.ap_spc_prepay.settle_prepayment@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{invoicePrepaymentNumber, mode=IN, jdbcType=VARCHAR},
+				#{prepaymentSequenceNumber, mode=IN, jdbcType=VARCHAR},
+				#{invoiceNumber, mode=IN, jdbcType=VARCHAR},
+				#{createdBy, mode=IN, jdbcType=VARCHAR},
+				#{createRv, mode=IN, jdbcType=VARCHAR},
+				#{rvNumber, mode=OUT, jdbcType=VARCHAR},
+				#{outMessage, mode=OUT, jdbcType=VARCHAR}
+			)
+		}
+	
+	</select>
+	
+	<insert id="insertRvTrnDeposit" parameterType="co.id.fifgroup.core.domain.interfacing.DepositInterface">
+		insert into ap.rv_trn_depositt@FIFAPPSREPL.US.ORACLE.COM (
+			DEPOSIT_NO,
+			SEQ_NO,
+			COY_ID,
+			CONTRACT_NO,
+			CUST_ID,
+			REFF_NO,
+			CURRENCY,
+			AMOUNT_CREDIT,
+			AMOUNT_DEBET,
+			SEGMENT1,
+			SEGMENT2,
+			SEGMRNT3,
+			SEGMENT4,
+			SEGMENT5,
+			SEGMENT6,
+			SEGMENT7,
+			SEGMENT8,
+			SEGMENT9,
+			SEGMENT10,
+			DESCRIPTION,
+			STATUS,
+			CREATED_BY,
+			CREATED_TIMESTAMP,
+			LASTUPDATE_BY,
+			LASTUPDATE_TIMESTAMP,
+			SOURCE_CODE,
+			LAST_HIST_SEQ
+		) VALUES (
+			#{depositNumber, jdbcType=VARCHAR},
+			#{sequence, jdbcType=NUMERIC},
+			#{companyCode, jdbcType=VARCHAR},
+			#{contractNumber, jdbcType=VARCHAR},
+			#{customerId, jdbcType=VARCHAR},
+			#{refferenceNumber, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{amountCredit, jdbcType=VARCHAR},
+			#{amountDebet, jdbcType=VARCHAR},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{segment9, jdbcType=VARCHAR},
+			#{segment10, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdTimestamp, jdbcType=DATE},
+			#{lastUpdateBy, jdbcType=VARCHAR},
+			#{lastUpdateTimestamp, jdbcType=DATE},
+			#{sourceCode, jdbcType=VARCHAR},
+			#{lastHistSeq, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertTrnDepositHistory" parameterType="co.id.fifgroup.core.domain.interfacing.DepositHistoryInterface">
+		insert into ap.rv_trn_deposit_hist@FIFAPPSREPL.US.ORACLE.COM(
+			DEPOSIT_NO,
+			SEQ_NO,
+			SEQ_HIST,
+			REFFERENCE_NO,
+			AMOUNT_CREDIT,
+			AMOUNT_DEBET,
+			OPENING_BAL,
+			CLOSING_BAL,
+			DESCRIPTION,
+			CREATED_BY,
+			CREATED_TIMESTAMP,
+			LASTUPDATE_BY,
+			LASTUPDATE_TIMESTAMP
+		) VALUES (
+			#{depositNumber, jdbcType=VARCHAR},
+			#{sequence, jdbcType=NUMERIC},
+			#{sequenceHistory, jdbcType=NUMERIC},
+			#{refferenceNumber, jdbcType=VARCHAR},
+			#{amountCredit, jdbcType=DECIMAL},
+			#{amountDebet, jdbcType=DECIMAL},
+			#{openingBalance, jdbcType=DECIMAL},
+			#{closingBalance, jdbcType=DECIMAL},
+			#{description, jdbcType=VARCHAR},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdTimestamp, jdbcType=TIMESTAMP},
+			#{lastUpdateBy, jdbcType=VARCHAR},
+			#{lastUpdateDate, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="insertTrnDeposit" parameterType="co.id.fifgroup.core.domain.interfacing.DepositInterface">
+		insert into ap.rv_trn_deposit@FIFAPPSREPL.US.ORACLE.COM(
+			DEPOSIT_NO,
+			SEQ_NO,
+			COY_ID,
+			CONTRACT_NO,
+			CUST_ID,
+			REFF_NO,
+			CURRENCY,
+			AMOUNT_CREDIT,
+			AMOUNT_DEBET,
+			SEGMENT1,
+			SEGMENT2,
+			SEGMENT3,
+			SEGMENT4,
+			SEGMENT5,
+			SEGMENT6,
+			SEGMENT7,
+			SEGMENT8,
+			SEGMENT9,
+			SEGMENT10,
+			DESCRIPTION,
+			STATUS,
+			CREATED_BY,
+			CREATED_TIMESTAMP,
+			LASTUPDATE_BY,
+			LASTUPDATE_TIMESTAMP,
+			SOURCE_CODE,
+			LAST_HIST_SEQ
+		) VALUES (
+			#{depositNumber, jdbcType=VARCHAR},
+			#{sequence, jdbcType=NUMERIC},
+			#{companyCode, jdbcType=VARCHAR},
+			#{contractNumber, jdbcType=VARCHAR},
+			#{customerId, jdbcType=VARCHAR},
+			#{refferenceNumber, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{amountCredit, jdbcType=DECIMAL},
+			#{amountDebet, jdbcType=DECIMAL},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{segment9, jdbcType=VARCHAR},
+			#{segment10, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdTimestamp, jdbcType=TIMESTAMP},
+			#{lastUpdateBy, jdbcType=VARCHAR},
+			#{lastUpdateTimestamp, jdbcType=TIMESTAMP},
+			#{sourceCode, jdbcType=VARCHAR},
+			#{lastHistSeq, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateHutangKoperasiByNpkAndContractNumber" parameterType="co.id.fifgroup.core.domain.interfacing.HutangKoperasi">
+		UPDATE 
+			fif_invoice_rsp@syskop.us.oracle.com
+		<set>
+			<if test="rspAmount != null">
+				rsp_amount = #{rspAmount, jdbcType=DECIMAL},
+			</if>
+			<if test="rspRemark != null">
+				rsp_remarks = #{rspRemark, jdbcType=VARCHAR},
+			</if>
+			<if test="processDate != null">
+				process_date = #{processDate, jdbcType=DATE},
+			</if>
+			<if test="modifiedBy != null">
+				modified_by = #{modifiedBy, jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedDate != null">
+				modified_date = #{modifiedDate, jdbcType=DATE},
+			</if>
+			<if test="rspSts != null">
+				rsp_sts = #{rspSts, jdbcType=VARCHAR},
+			</if>
+		</set>	
+		WHERE 
+			npk = #{npk, jdbcType=VARCHAR}
+			<if test="contractNumber != null">
+				AND contract_no = #{contractNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="instlNo != null">
+				AND instl_no = #{instlNo, jdbcType=VARCHAR}
+			</if>
+			<if test="closing">
+				AND rsp_sts = 'P'
+			</if>
+			
+	</update>
+	
+	<update id="updateActivityCode" parameterType="map">
+		UPDATE ap.ap_trn_invoice_dtl@FIFAPPSREPL.US.ORACLE.COM
+		   SET activity_code = #{activityCode, jdbcType=VARCHAR}
+		WHERE ap_invoice_no = #{invoiceNo, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateActivityCodeDetail" parameterType="map">
+		UPDATE ap.ap_trn_invoice_dtl@FIFAPPSREPL.US.ORACLE.COM
+		   SET activity_code = #{activityCode, jdbcType=VARCHAR}
+		WHERE ap_invoice_no = #{invoiceNo, jdbcType=VARCHAR}
+		and ap_sequence_no = #{seq, jdbcType=NUMERIC}
+		and ap_amount = #{amount, jdbcType=DECIMAL}
+	</update>
+	
+	<select id="insertBudgetActivityLog" statementType="CALLABLE">
+		{ call FIFAPPS.FS_P_BudgetActivityLog@FIFAPPSREPL.US.ORACLE.COM
+			(
+				#{pReferenceNo, mode=IN, jdbcType=VARCHAR},
+				#{pGuidNo, mode=IN, jdbcType=VARCHAR},
+				#{pMessage, mode=IN, jdbcType=VARCHAR},
+				#{pMenuId, mode=IN, jdbcType=VARCHAR},
+				#{pUserId, mode=IN, jdbcType=VARCHAR},
+				#{pSeqNo, mode=IN, jdbcType=NUMERIC}
+			)
+		}
+	</select>
+	
+	<select id="getInvoiceSequenceByInvoiceNoAndBranch" parameterType="map" resultType="int">
+		select nvl(ap_sequence_no,0) from ap_trn_invoice_dtl@FIFAPPSREPL.US.ORACLE.COM where ap_invoice_no = #{invoiceNumber, jdbcType=VARCHAR} and ap_branch_destination = #{branchDestination, jdbcType=VARCHAR}
+	</select>
+</mapper>

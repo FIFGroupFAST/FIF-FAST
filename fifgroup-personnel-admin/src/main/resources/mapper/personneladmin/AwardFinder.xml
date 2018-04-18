@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AwardFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.AwardDTO">
+		<id column="AWARD_ID" jdbcType="DECIMAL" property="awardId" />
+	    <result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+	    <result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="AWARD_DATE" jdbcType="TIMESTAMP" property="awardDate" />
+	    <result column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
+	    <result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
+	    <result column="JOB_CODE" jdbcType="VARCHAR" property="jobCode" />
+	    <result column="AWARD_TYPE" jdbcType="VARCHAR" property="awardType" />
+	    <result column="AWARD_PRIZE" jdbcType="VARCHAR" property="awardPrize" />
+	    <result column="AMOUNT" jdbcType="DECIMAL" property="amount" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	</resultMap>
+	
+	<select id="getAwardByPersonIdAndCompanyId" parameterType="map" resultMap="baseResult">
+		select
+			pa.AWARD_ID, 
+			pa.PERSON_ID, 
+			pa.COMPANY_ID, 
+			pa.AWARD_DATE, 
+			pa.JOB_ID, 
+			pa.AWARD_TYPE, 
+			pa.AWARD_PRIZE, 
+			pa.AMOUNT,
+			jb.JOB_NAME,
+			jb.JOB_CODE,
+			pa.CREATED_BY, 
+			pa.CREATION_DATE, 
+			pa.LAST_UPDATED_BY, 
+			pa.LAST_UPDATE_DATE
+		from PEA_AWARDS pa
+		left join EWS.WOS_JOBS jb on jb.JOB_ID = pa.JOB_ID 
+		where 1 = 1
+		<if test="personId != null">
+			AND pa.PERSON_ID = #{personId}
+		</if>
+		<if test="companyId != null">
+			AND pa.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+</mapper>

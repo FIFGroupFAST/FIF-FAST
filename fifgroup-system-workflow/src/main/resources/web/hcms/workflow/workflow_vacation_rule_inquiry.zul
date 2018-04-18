@@ -1,0 +1,75 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winWorkflowVacationRuleInquiry" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowVacationRuleInquiryComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.vacationRule}">
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row id="rowApproverName">
+							<label value="${labels.swf.approverName}" />
+							<bandbox id="bnbApprover" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonEmployeeNumberBandbox" ></bandbox>
+						</row>
+						<row>
+							<label value="${labels.swf.substituteApprover}" />
+							<bandbox id="bnbSubstituteApprover" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonEmployeeNumberBandbox" ></bandbox>
+						</row>
+						<row>
+							<label value="${labels.common.effectiveDateFrom}" />
+							<hbox>
+								<datebox id="dtbStartDate" width="100px"/>
+								<label value="${labels.common.to}" />
+								<datebox id="dtbEndDate" width="100px"/> 
+							</hbox>
+						</row>
+						<row>
+							<label />
+							<hbox>
+								<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+									image="${labels.image.link.search}"/>
+								<space width="20px" />
+								<button label="${labels.common.create}" id="btnNew" mold="trendy" 
+									image="${labels.image.link.add}"/>
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxVacationRule" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader label="${labels.swf.approverName}" align="center" sort="auto(approverFullName)"/>
+						<listheader label="${labels.swf.substituteName}" align="center" sort="auto(substituteFullName)"/>
+						<listheader label="${labels.common.effectiveDateFrom}" align="center" sort="auto(effectiveDateFrom)" />
+						<listheader label="${labels.common.effectiveDateTo}" align="center" sort="auto(effectiveDateTo)"/>
+						<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+						<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdatedDate)"/>
+						<listheader label="${labels.common.action}" align="center" />
+					</listhead>
+					<template name="model">
+					<listitem value="${each}">
+						<listcell label="${each.approverFullName}"></listcell>
+						<listcell label="${each.substituteFullName}"></listcell>
+						<listcell label="${date:formatDate(each.effectiveDateFrom)}"></listcell>
+						<listcell label="${date:formatDate(each.effectiveDateTo)}"></listcell>
+						<listcell label="${each.userName}"></listcell>
+						<listcell label="${date:formatDateTime(each.lastUpdatedDate)}"></listcell>
+						<listcell><a label="${labels.common.detail}" forward="lbxVacationRule.onDetail(${each})" style="color:blue"></a></listcell>
+					</listitem>
+					</template>
+				</listbox>
+				<exporter referenceId="lbxVacationRule" />
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

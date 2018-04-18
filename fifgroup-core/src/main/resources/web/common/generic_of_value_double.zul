@@ -1,0 +1,45 @@
+<window id="winGenericDoubleLov" title="${labels.common.listOfZipCode}" border="normal" closable="true"
+apply="co.id.fifgroup.core.controller.ListOfValueDoubleComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label id="lblSearchText1" />
+				<textbox id="txtCode" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label id="lblSearchText2" />
+				<textbox id="txtName" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hlayout>
+				<button id="btnFind" label="Find" mold="trendy" />
+				<button id="btnDeselect" label="${labels.common.deselect}" mold="trendy" />
+				</hlayout>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel1"/>
+			<listheader id="listHeadLabel2" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.value}"></listcell>
+				<listcell label="${each.description}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue"></paging>
+</groupbox>
+</window>

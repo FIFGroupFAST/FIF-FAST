@@ -1,0 +1,89 @@
+<zk>
+<window border="none" id="winWorkflowTemplateMessageCreate"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowTemplateMessageComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption
+					label="${labels.swf.templateMessage}">
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.swf.templateMessageName}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<textbox id="txtTemplateMessageName" width="350px" maxlength="50" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.transactionType}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<listbox id="cmbTrxType" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.actionType}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<listbox id="cmbActionType" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.subject}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<textbox id="txtSubject" width="600px" maxlength="512"/>
+						</row>
+						<row>
+							<label />
+							<button label="${labels.swf.parameterList}"
+								id="btnParameter" mold="trendy"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.contentMessage}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<ckeditor width="600px" id="ckeditorMessage" 
+								customConfigurationsPath="/styles/js/config.js">									
+								<attribute name="value">
+								</attribute>
+							</ckeditor>							
+						</row>			
+						<row>
+							<label />
+							<button id="btnParameterMessage" label="${labels.swf.parameterList}"
+								mold="trendy"/>
+						</row>			
+						<row>
+							<label value="${labels.swf.urlDetail}" />
+							<textbox id="txtUrlDetail" width="600px" maxlength="255" />
+						</row>
+					</rows>
+				</grid>
+				<separator />
+			</groupbox>
+			<separator />
+			<hbox>
+				<cell align="center" style="width:1250px;">
+					<button id="btnSave"
+						label="${labels.common.save}" mold="trendy" 
+						image="${labels.image.link.save}" />
+				</cell>
+				<cell align="right">
+					<button id="btnCancel"
+						label="${labels.common.cancel}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+		</panelchildren>
+	</panel>	
+</window>
+</zk>

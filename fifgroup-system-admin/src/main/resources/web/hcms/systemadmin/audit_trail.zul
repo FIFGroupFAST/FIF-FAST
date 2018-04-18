@@ -1,0 +1,86 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?xel-method prefix="control" name="getValue" class="co.id.fifgroup.audit.ControlType" signature="java.lang.String getValue(java.lang.Integer)" ?>
+<window id="winAuditTrail" apply="co.id.fifgroup.systemadmin.controller.AuditTrailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.auditTrail}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.sam.dateFrom}" />
+					<datebox id="dtbDateFrom" />
+				</row>
+				<row>
+					<label value="${labels.sam.dateTo}" />
+					<datebox id="dtbDateTo" />
+				</row>
+				<row>
+					<label value="${labels.sam.module}" />
+					<listbox id="lstModule" mold="select" width="25%">
+						<template name="model">
+							<listitem value="${each.moduleId}" label="${each.moduleName}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.sam.transactionType}" />
+					<listbox id="lstTransactionType" mold="select" width="25%" >
+						<template name="model">
+							<listitem value="${each.value}" label="${each.value}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.sam.user}" />
+					<bandbox width="25%" id="txtUser" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox"/>
+				</row>
+				<row>
+					<label />
+					<hbox>
+						<button id="btnView" label="${labels.sam.view}" mold="trendy" image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnGenerate" label="${labels.sam.generate}" mold="trendy" image="${labels.image.link.save}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstAuditTrail"  emptyMessage="No Data Found" width="100%" style="overflow:auto">
+			<listhead menupopup="auto">
+				<listheader sort="auto(number)" label="${labels.common.rowNum}" align="center" />
+				<listheader sort="auto(moduleName)" label="${labels.sam.module}" align="center" />
+				<listheader sort="auto(transactionType)" label="${labels.sam.transactionType}" align="center" />
+				<listheader sort="auto(controlType)" label="${labels.sam.activity}" align="center" />
+				<listheader sort="auto(trxId)" label="${labels.sam.transactionId}" align="center" />
+				<listheader sort="auto(auditDetail.attributeName)" label="${labels.sam.attribute}" align="center" />
+				<listheader sort="auto(auditDetail.attributeCurrentValue)" label="${labels.sam.oldValue}" align="center" />
+				<listheader sort="auto(auditDetail.attributeNewValue)" label="${labels.sam.newValue}" align="center" />
+				<listheader sort="auto(userName)" label="${labels.sam.user}" align="center" />
+				<listheader sort="auto(auditTimestamp)" label="${labels.sam.logTime}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell value="${each}" label="${each.number}"></listcell>
+					<listcell value="${each}" label="${each.moduleName}"></listcell>
+					<listcell value="${each}" label="${each.transactionType}"></listcell>
+					<listcell label="${control:getValue(each.controlType)}"></listcell>
+					<listcell value="${each}" label="${each.trxId}"></listcell>
+ 					<listcell value="${each}" label="${each.auditDetail.attributeName}"></listcell>
+					<listcell value="${each}" label="${each.auditDetail.attributeCurrentValue}"></listcell>
+					<listcell value="${each}" label="${each.auditDetail.attributeNewValue}"></listcell>
+					<listcell value="${each}" label="${each.userName}"></listcell>
+					<listcell label="${date:format(each.auditTimestamp,'dd MMM yyyy HH:mm:ss')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgAuditTrail" forward="onPaging" />		
+	</groupbox>
+</window>

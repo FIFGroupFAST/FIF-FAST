@@ -1,0 +1,48 @@
+<?page title="Information Entry" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="winSBInformationEntry" apply="co.id.fifgroup.controller.InformationEntryComposer">
+	<groupbox>
+		<caption id="cptInfoEntry" label="Information Entry" />
+		<grid>
+			<columns>
+				<column align="right" width="100px" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						Requestor
+						<label style="color:red;">*</label>
+					</hbox>
+					<hbox id="hboxRequestor" />
+				</row>
+				<row>
+					<hbox>
+						Request Date
+						<label style="color:red;">*</label>
+					</hbox>
+					<datebox id="dtbRequestDate" />
+				</row>
+				<row>
+					Information
+					<textbox id="txtInformation" multiline="true" rows="5" width="300px" />
+				</row>
+				<row id="rowSecretInfo">
+					Secret Info
+					<textbox id="txtSecretInfo" multiline="true" rows="5" width="300px" />
+				</row>
+				<row>
+					<space />
+					<div class="btn-group">
+						<button id="btnSubmit" label="Submit" mold="trendy"
+							image="${labels.image.link.add}" />
+						<button id="btnBack"
+							label="${labels.common.back}" mold="trendy"
+							image="${labels.image.link.back}" />
+					</div>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+</window>
+</zk>

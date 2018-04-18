@@ -1,0 +1,10 @@
+Effective Start Date,Code,Name,Description,Job For,Job Type,People Category,Job Group,Key Job (Y/N),Is Manager (Y/N)
+10-Mar-13,job001,name1,desc 1,NPK,COO,OP,1,Y,Y
+12-Feb-13,job001,name2,desc 2,CWK,PRO,OP,1,N,Y
+22-Feb-13,job002,officer,desc 3,CWK,CLE,FP,1,N,Y
+21-Feb-13,job003,senior officer,desc 4,NPK,COO,FP,1,N,N
+10-Mar-13,job004,back office,desc 5,NPK,NONE,FP,1,Y,N
+10-Mar-13,5,name3,desc 6,CWK,CLE,OP,1,N,N
+10-Mar-13,job005,back office,desc 7,NPK,CLE,OP,1,Y,N
+10-Mar-13,job006,front office,desc 8,NPK,PRO,OP,1,Y,Y
+10-Mar-13,job007,operator,desc 9,CWK,COO,FP,1,Y,Y

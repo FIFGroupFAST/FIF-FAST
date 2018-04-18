@@ -1,0 +1,114 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)"?>
+<window id="winSOPeriodDetail" apply="co.id.fifgroup.ssoa.controller.SOPeriodDetailComposer">
+	<panel id="panelDetailSOPeriod" title="Stock Opname Period - Detail" border="" collapsible="false" closable="false" 
+			maximizable="false" style="margin-bottom:10px">
+		<panelchildren style="padding:5px">
+			<grid>
+				<columns>
+					<column label="" width="150px" align="right"/>
+					<column label="" width="" />
+				</columns>
+				<rows>
+					<row>
+						<div class="col-right">
+							<label value="Period Name" width="30px"/>
+						</div>
+						<div>
+							<textbox width="300px" id="txtDesc" tabindex="1" maxlength="64" style="background-color:#fff;" disabled="true" />
+						</div>
+					</row>
+					<row>
+						<div class="col-right">
+							<label value="Period Start Date" width="30px"/>
+						</div>
+						<div>
+							<datebox id="dbStart" format="dd-MMM-yyyy" style="background-color:#fff;" readonly="true"/>
+						</div>
+					</row>
+					<row>
+						<div class="col-right">
+							<label value="Period End Date" width="30px"/>
+						</div>
+						<div>
+							<datebox id="dbEnd" format="dd-MMM-yyyy" style="background-color:#fff;" readonly="true"/>
+						</div>
+					</row>
+				</rows>
+			</grid>
+			<separator></separator>
+			<panel title="Branch" border="normal">
+				<panelchildren style="padding:5px">
+						<grid style="border:none;" sclass="form-entry">
+							<columns>
+								<column width="150px" align="right"></column>
+								<column></column>
+							</columns>
+							<rows>
+								<row>
+									<label value="Stock Opname Status"/>
+									<listbox id="cmbStatus" style="background-color:#fff;" mold="select">
+										<template name="model" var="item">
+											<listitem label="${each.description}" value="${each.key}" />
+										</template>
+									</listbox>
+								</row>
+								<row>
+									<div class="col-right">
+										<label value="Branch Code" width="30px"/>
+									</div>
+									<div>
+										<textbox width="200px" id="txtBranchCode" tabindex="1" maxlength="64" />
+									</div>
+								</row>
+								<row>
+									<div class="col-right">
+										<label value="Branch Name"  width="30px"/>
+									</div>
+									<div>
+										<textbox width="200px" id="txtBranchName" tabindex="1" maxlength="64" />
+									</div>
+								</row>
+								<row>
+									<div class="col-right">
+									
+									</div>
+									<div>
+										<button label="Find" id="btnFindDetail" image="/styles/images/btn_search.png"></button>
+									</div>
+								</row>
+							</rows>
+						</grid>
+						
+						<separator></separator>
+						<listbox id="lbxSOPeriodDetail" height="auto"  emptyMessage="No Data Found"
+						mold="paging" pageSize="10" pagingPosition="both">
+							<listhead style="text-align:left;" menupopup="auto">
+								<listheader label="Branch Code" sort="auto(branchCode)" />
+								<listheader label="Branch Name" sort="auto(branchName)" />
+								<listheader label="Notification" sort="auto(notificationStatusName)" />
+								<listheader label="Stock Opname Status" sort="auto(statusName)" />
+								<listheader label="Stock Opname Report Status" sort="auto(reportStatusName)" />
+							</listhead>
+							 <template name="model">
+								<listitem>
+									<listcell label="${each.branchCode}"></listcell>
+									<listcell label="${each.branchName}"></listcell>
+									<listcell label="${each.notificationStatusName}"></listcell>
+									<listcell label="${each.statusName}"></listcell>
+									<listcell>
+									<a label="${each.reportStatusName}" forward="onStatus(${each})"/>
+									</listcell>
+								</listitem>
+							 </template>
+						</listbox>
+						<exporter id="downloadDetail" referenceId="lbxSOPeriodDetail"/>
+					</panelchildren>	
+			</panel>
+			<div style="float:right; padding:5px 0px 5px 0px;">
+				<button id="backButton" label="Back" style="float:left" image="/styles/images/btn_back.png"/>
+		   	</div>
+		</panelchildren>
+	</panel>
+
+</window>

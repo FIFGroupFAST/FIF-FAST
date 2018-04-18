@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.eligibility.finder.DecisionTableModelFinder" >
+
+	<resultMap type="co.id.fifgroup.eligibility.dto.DecisionTableModelDTO" id="decisionTableModel">
+		<id column="MODEL_ID" property="id" jdbcType="VARCHAR" />
+		<id column="VERSION_NUMBER" property="versionNumber" jdbcType="NUMERIC" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="NUMERIC" />
+	    <result column="MODEL_NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <association property="resultType" resultMap="co.id.fifgroup.eligibility.finder.FactTypeFinder.factType" />
+	  	<collection property="conditions" ofType="co.id.fifgroup.eligibility.dto.DecisionTableColumnDTO" resultMap="decisionTableColumn" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.eligibility.dto.DecisionTableColumnDTO" id="decisionTableColumn">
+		<id column="COLUMN_ID" property="id" jdbcType="VARCHAR" />
+	    <result column="COLUMN_TYPE" property="columnType" javaType="co.id.fifgroup.eligibility.constant.ColumnType" />
+	    <result column="COLUMN_NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="OPERATOR" property="operator" javaType="co.id.fifgroup.eligibility.constant.Operator" />
+	    <result column="VALUE_TYPE" property="valueType" javaType="co.id.fifgroup.eligibility.constant.ValueType" />
+	    <result column="VALUE_LIST" property="valueList" jdbcType="VARCHAR"/>
+	    <result column="EDITABLE" property="editable" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <association property="factType" resultMap="co.id.fifgroup.eligibility.finder.FactTypeFinder.factType" />
+	    <association property="field" resultMap="co.id.fifgroup.eligibility.finder.FactTypeFinder.factTypeField" />
+	</resultMap>
+	
+	<select id="search" parameterType="Map" resultMap="decisionTableModel">
+		select
+			m.MODEL_ID,
+			m.MODEL_NAME,
+		    m2.version_number,
+		    t.FACT_TYPE_NAME
+		from
+			ELR_DEC_TBL_MODELS m
+		join (select model_id, max(version_number) version_number from elr_dec_Tbl_models group by model_id) m2
+		    on m2.model_id = m.model_id
+		    and m2.version_number = m.version_number
+		left join ELR_FACT_TYPES t
+			on m.RESULT_TYPE_ID = t.FACT_TYPE_ID
+		<where>
+			<if test="id != null">
+				upper(m.MODEL_ID) = upper(#{id, jdbcType=VARCHAR})
+			</if>
+			<if test="name != null">
+				upper(m.MODEL_NAME) like upper(#{name, jdbcType=VARCHAR})
+			</if>
+		</where>		
+		order by m.MODEL_ID
+	</select>
+
+	<select id="findByExample" parameterType="Map" resultMap="decisionTableModel">
+		select
+			distinct m.MODEL_ID,
+			m.MODEL_NAME,
+			m.COMPANY_ID,
+			t.FACT_TYPE_NAME
+		from
+			ELR_DEC_TBL_MODELS m
+		left join ELR_FACT_TYPES t
+			on m.RESULT_TYPE_ID = t.FACT_TYPE_ID
+		<where>
+			<if test="id != null">
+				upper(m.MODEL_ID) = upper(#{id, jdbcType=VARCHAR})
+			</if>
+			<if test="companyId != null">
+				AND m.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="versionNumber != null">
+				AND m.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+			</if>
+			<if test="name != null">
+				AND upper(MODEL_NAME) like upper('%' || #{name, jdbcType=VARCHAR} || '%') 
+			</if>
+		</where>
+		order by m.MODEL_ID
+	</select>
+	
+	<select id="findVersionByExample" parameterType="Map" resultMap="decisionTableModel">
+		select
+			m.VERSION_NUMBER
+		from
+			ELR_DEC_TBL_MODELS m
+		left join ELR_FACT_TYPES t
+			on m.RESULT_TYPE_ID = t.FACT_TYPE_ID
+		<where>
+			<if test="id != null">
+				upper(m.MODEL_ID) = upper(#{id, jdbcType=VARCHAR})
+			</if>
+			<if test="versionNumber != null">
+				AND m.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+			</if>
+			<if test="companyId != null">
+				AND m.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="name != null">
+				AND upper(MODEL_NAME) like upper('%' || #{name, jdbcType=VARCHAR} || '%') 
+			</if>
+		</where>
+		order by m.CREATION_DATE, m.VERSION_NUMBER
+	</select>
+	
+	<select id="findByIdAndVersionNumber" parameterType="map" resultMap="decisionTableModel">
+		select
+			m.MODEL_ID,
+			m.VERSION_NUMBER,
+			m.MODEL_NAME,
+			m.RESULT_TYPE_ID FACT_TYPE_ID,
+			t.COMPANY_ID,
+			t.FACT_TYPE_NAME,
+			t.RETRIEVAL_MODE,
+			t.SQL_QUERY,
+			f.FIELD_ID,
+			f.FIELD_NAME,
+			f.FIELD_TYPE,
+			f.LOOKUP_NAME,
+			f.LOOKUP_VALUE_FROM,
+			m.CREATED_BY,
+			m.CREATION_DATE,
+			m.LAST_UPDATED_BY,
+			m.LAST_UPDATE_DATE
+		from
+			ELR_DEC_TBL_MODELS m 
+		left join ELR_FACT_TYPES t
+			on m.RESULT_TYPE_ID = t.FACT_TYPE_ID
+		left join ELR_FACT_TYPE_FIELDS f
+			on m.RESULT_TYPE_ID = f.FACT_TYPE_ID 
+		where
+			upper(m.MODEL_ID) = upper(#{id, jdbcType=VARCHAR}) 
+			AND m.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+		order by m.CREATION_DATE
+	</select>
+	
+	<select id="findColumns" parameterType="map" resultMap="decisionTableColumn">
+		select 
+			c.COLUMN_ID,
+			c.COLUMN_TYPE,
+			c.COLUMN_NAME,
+			c.OPERATOR,
+			c.FACT_TYPE_ID,
+			c.VALUE_TYPE,
+			c.VALUE_LIST,
+			t.COMPANY_ID,
+			t.FACT_TYPE_NAME,
+			t.RETRIEVAL_MODE,
+			t.SQL_QUERY,
+			f.FIELD_ID,
+			f.FIELD_NAME,
+			f.FIELD_TYPE,
+			f.LOOKUP_NAME,
+			f.LOOKUP_VALUE_FROM,
+			0 as EDITABLE
+		from ELR_DEC_TBL_MODELS m
+		join ELR_DEC_TBL_COLUMNS c
+			on c.MODEL_ID = m.MODEL_ID 
+			and c.VERSION_NUMBER = m.VERSION_NUMBER
+			and c.COLUMN_TYPE = #{columnType, jdbcType=VARCHAR}
+		join ELR_FACT_TYPES t
+			on c.FACT_TYPE_ID = t.FACT_TYPE_ID
+		join ELR_FACT_TYPE_FIELDS f
+			on c.FIELD_ID = f.FIELD_ID
+			and c.FACT_TYPE_ID =f.FACT_TYPE_ID 
+		where
+			upper(m.MODEL_ID) = upper(#{id, jdbcType=VARCHAR})
+			AND m.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+
+		order by m.CREATION_DATE, c.COLUMN_ID
+	</select>
+	
+	<select id="findAvailableVersions" parameterType="String" resultType="Integer">
+		select VERSION_NUMBER
+		from ELR_DEC_TBL_MODELS
+		where MODEL_ID = #{id, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getNextVersion" parameterType="String" resultType="Integer">
+		select max(VERSION_NUMBER) + 1
+		from ELR_DEC_TBL_MODELS
+		where MODEL_ID = #{id, jdbcType=VARCHAR}
+	</select>
+
+</mapper>

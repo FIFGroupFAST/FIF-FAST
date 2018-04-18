@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Transfer_Asset" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="304f63fb-c3dc-4cca-b58a-66dedde3a4f1">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[/* Formatted on 8/25/2016 10:54:12 AM (QP5 v5.256.13226.35538) */
+SELECT DISTINCT
+    th.request_no,
+     (SELECT branch_name
+          FROM BRANCH_HIERARCHY_V
+         WHERE branch_id = th.branch_origin AND ROWNUM = 1)
+          BRANCH_NAME,
+       (SELECT branch_name
+          FROM BRANCH_HIERARCHY_V
+         WHERE branch_id = th.branch_destination AND ROWNUM = 1)
+          BRANCH_DESTINATION_NAME,
+    th.request_date,
+    a.asset_number,
+    a.book_type_code,
+    TO_CHAR(a.date_placed_in_service,'YYYY') as tahun,
+    a.description,
+    a.original_cost,
+    a.unrevalued_cost
+  FROM soc_assets a
+       INNER JOIN soc_transfer_dtl td ON td.asset_id = a.asset_id
+       INNER JOIN soc_transfer_hdr th ON th.transfer_id = td.transfer_id]]>
+	</queryString>
+	<field name="REQUEST_NO" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="BRANCH_DESTINATION_NAME" class="java.lang.String"/>
+	<field name="REQUEST_DATE" class="java.sql.Timestamp"/>
+	<field name="ASSET_NUMBER" class="java.lang.String"/>
+	<field name="BOOK_TYPE_CODE" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="ORIGINAL_COST" class="java.math.BigDecimal"/>
+	<field name="UNREVALUED_COST" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="33" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="6f8f0875-266e-4547-9e59-45aa81af4b78" x="1" y="2" width="801" height="28" backcolor="#FF9966"/>
+			</rectangle>
+			<line>
+				<reportElement uuid="3ecbaad4-23f7-419e-ae32-8c3aeb86f027" x="349" y="2" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="42d21e7d-9e52-488c-b241-7443c0649916" x="47" y="10" width="67" height="19"/>
+				<textElement/>
+				<text><![CDATA[NO MEMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a916244d-ee0d-4224-aa0d-adf3a3a3c3f5" x="8" y="10" width="23" height="18"/>
+				<textElement/>
+				<text><![CDATA[NO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="6eb92ab1-7871-41c1-a878-1c1921dcfba6" x="669" y="2" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="d624252a-bdd9-43f7-a35e-bc4c824222fe" x="570" y="10" width="76" height="18"/>
+				<textElement/>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="545efa04-2c52-424c-8d54-711df0ec1dee" x="124" y="9" width="69" height="16"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CAB. ASAL]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="c9bd17a5-0439-43ac-b858-2f779c0b1e8a" x="739" y="2" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="1365c456-5e84-4e40-9e44-7772e2fcc3ab" x="121" y="2" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="782bcd5f-6a46-4852-970c-69a627f30623" x="484" y="4" width="40" height="26"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TAHUN ASSET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="44f3dee0-4760-495e-a1ba-fab960651843" x="671" y="2" width="68" height="28"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NILAI PEROLEHAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b10e14e5-d410-42c2-ba5a-ff4d414b49f8" x="749" y="3" width="46" height="27"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NILAI BUKU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3be08476-2bd6-46a8-81d2-45536d167cd5" x="285" y="2" width="56" height="28"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TGL TRANSFER]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="5d10aa26-30bf-4517-800b-0ce2d6813c07" x="272" y="2" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="743f9b67-04b1-4443-b243-6ac54758fd91" x="198" y="2" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="7c2cd19e-a583-4dee-96b2-28c56ef00215" x="399" y="2" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="18161304-d1e8-4016-862a-66196b2d9f93" x="416" y="3" width="40" height="26"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ASSET TYPE]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="db5a47f2-256f-479b-a562-5045144609f3" x="530" y="2" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="fdef26b8-f71e-4e75-8cb7-7739946a9ea6" x="35" y="2" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="ac01586c-939f-4095-9bd7-9f6e54275a99" x="356" y="3" width="40" height="27"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NO ASSET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0b8f2195-48e9-46d6-a70a-f439e7f0705e" x="202" y="3" width="69" height="27"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CAB. PENERIMA]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="f76116b4-22b7-48a7-a80b-64b84e710635" x="474" y="3" width="1" height="26"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<textField>
+				<reportElement uuid="a8a0046a-53ec-4e4c-be72-c18227111232" x="401" y="0" width="72" height="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BOOK_TYPE_CODE}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="3003a677-8af7-49ed-b1d8-95efa6762f33" x="35" y="-2" width="1" height="61"/>
+			</line>
+			<textField>
+				<reportElement uuid="4b9d45ca-4a58-4dd7-8fca-88ec55f42f6c" x="201" y="-1" width="69" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BRANCH_DESTINATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="077fdc9e-7776-4279-aaa9-8bd131e7b916" x="482" y="0" width="42" height="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TAHUN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a45cd70-e3b2-44eb-97df-4305e300cdd0" x="275" y="0" width="73" height="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{REQUEST_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bccbf1ba-c8f2-4852-8e6a-77a9ae51ac21" x="47" y="-1" width="67" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{REQUEST_NO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="de705e76-2daf-4457-94d2-b4a85643a6ff" x="198" y="-3" width="1" height="62"/>
+			</line>
+			<textField>
+				<reportElement uuid="050be940-6dc5-4fb1-8869-d5b17a962270" x="535" y="0" width="129" height="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="7d88af25-be52-49a5-bf9e-fcb60ab5136d" x="399" y="-3" width="1" height="62"/>
+			</line>
+			<textField>
+				<reportElement uuid="7466003e-ab9a-41d3-a8a5-77161d103d6d" x="676" y="3" width="58" height="52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ORIGINAL_COST}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="507cf895-802b-4915-a969-728717b1e2f3" x="530" y="-3" width="1" height="62"/>
+			</line>
+			<line>
+				<reportElement uuid="16fab9b0-2ba6-4566-bfde-4379d8c61267" x="669" y="-5" width="1" height="64"/>
+			</line>
+			<line>
+				<reportElement uuid="87773df0-8a53-4b74-960b-30ee03a27255" x="272" y="-1" width="1" height="60"/>
+			</line>
+			<textField>
+				<reportElement uuid="9191a0df-46d7-448e-89de-4a8ef3c48477" x="125" y="-2" width="70" height="58"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="eca51df4-376c-4fc8-90d7-2aa306fcf815" x="2" y="-1" width="33" height="54"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="21e05c57-1f79-4e43-b72b-93d203cd8a9a" x="349" y="-1" width="1" height="60"/>
+			</line>
+			<textField>
+				<reportElement uuid="fa61704a-9bca-416b-9b20-e03546b7817c" x="353" y="0" width="44" height="55"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ASSET_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7a4aac06-ca57-4229-bb6b-3adf07fbd926" x="745" y="3" width="50" height="52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{UNREVALUED_COST}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="2fc1ae39-143f-496f-94f3-7190d752e88f" x="474" y="-3" width="1" height="62"/>
+			</line>
+			<line>
+				<reportElement uuid="beb35b2d-effe-427e-81e7-734353face73" x="739" y="-2" width="1" height="61"/>
+			</line>
+			<line>
+				<reportElement uuid="63b13dd3-f5fd-42e0-8b3d-ca79813ed5c5" x="121" y="-2" width="1" height="61"/>
+			</line>
+			<line>
+				<reportElement uuid="6bd48bc0-43e2-4194-96c1-bb0dfc694f6b" x="802" y="-3" width="1" height="62"/>
+			</line>
+			<line>
+				<reportElement uuid="683f61af-0f70-42cf-b84b-9c44dcd589ea" x="1" y="-2" width="1" height="61"/>
+			</line>
+			<line>
+				<reportElement uuid="1effba0e-c6a9-411b-b847-1e90c99a0d92" x="2" y="59" width="800" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

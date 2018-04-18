@@ -1,0 +1,20 @@
+<window id="winStatusPopup" title="Branch List" border="normal" width="600px" height="auto"
+closable="true" position="center,center" action="show: slideDown;hide: slideUp"
+apply="co.id.fifgroup.ssoa.ui.SOPeriodPopupBranchComposer">
+	<groupbox>
+		<listbox id="lbxBranch" mold="paging" pageSize="10" pagingPosition="both" height="auto" emptyMessage="No data found">
+			<listhead>
+				<listheader label="Branch Code" sort="auto" />
+				<listheader label="Branch Name" sort="auto" />
+			</listhead>
+			  <template name="model">
+					<listitem>
+						<listcell label="${each.branchCode}"></listcell>
+						<listcell label="${each.branchName}"></listcell>
+					</listitem>
+				</template>
+		</listbox>
+		<separator/>
+		<button id="btnClose" label="Close" image="${labels.image.link.cancel}" style="float:right"></button>
+	</groupbox>
+</window>

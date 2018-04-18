@@ -1,0 +1,47 @@
+<window id="winExtendInternship" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.ExtendInternshipComposer">
+	<groupbox mold="3d" >
+		<caption label="${labels.pea.extendInternship }" />
+		<label value="${labels.pea.extendInternshipPeopleBelow }"/>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.number }"/>
+					<label id="lblEmployeeNumber"/>
+				</row>
+				<row>
+					<label value="${labels.pea.fullName }"/>
+					<label id="lblFullName"/>
+				</row>
+				<row>
+					<label value="${labels.common.startDate }"/>
+					<label id="lblStartDate"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.endDate }"/>
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<datebox id="dtbEndDate" width="100px"/>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox>
+			<cell align="center" style="width:1250px;">
+				<button id="btnSubmit"
+					label="${labels.common.submit}" mold="trendy" 
+					image="${labels.image.link.submit}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

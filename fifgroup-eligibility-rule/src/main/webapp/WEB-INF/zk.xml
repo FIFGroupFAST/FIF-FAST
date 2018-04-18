@@ -1,0 +1,28 @@
+<zk>
+	<!-- Theme Property -->
+	<library-property>
+		<name>org.zkoss.theme.preferred</name>
+		<value>atlantic</value>
+	</library-property>
+
+	<!--  Font Properties -->
+	<library-property>
+		<name>org.zkoss.zul.theme.fontFamilyT</name>
+		<value>'DINRegular', tahoma, arial, sans-serif</value> 
+	</library-property> 
+	<library-property> 
+		<name>org.zkoss.zul.theme.fontFamilyC</name> 
+		<value>'DINRegular', tahoma, arial, sans-serif</value> 
+	</library-property> 
+
+	<!-- Cluster Environment configuration -->
+	<system-config>
+		<!-- <id-generator-class>co.id.fifgroup.main.util.SequenceIdGenerator</id-generator-class> -->
+		<ui-factory-class>
+			org.zkoss.zk.ui.http.SerializableUiFactory
+		</ui-factory-class>
+		<disable-zscript>true</disable-zscript>
+	</system-config>
+	
+
+</zk>

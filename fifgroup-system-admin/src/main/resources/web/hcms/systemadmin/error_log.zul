@@ -1,0 +1,63 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winErrorLog" apply="co.id.fifgroup.systemadmin.controller.ErrorLogComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.errorLog}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.sam.dateFrom}" />				
+					</hbox>
+					<hbox>
+						<datebox id="dtbDateFrom" />
+						<label value="${labels.sam.to}" />
+						<datebox id="dtbDateTo" />
+					</hbox>
+				</row>
+				<row>
+					<label value="${labels.sam.module}" />
+					<listbox id="lstModule" mold="select">
+						<template name="model">
+							<listitem value="${each}" label="${each.moduleName}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label />
+					<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstErrorLog"  mold="paging" pagingPosition="both" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader sort="auto(logTime)" label="${labels.sam.time}" align="center" />
+				<listheader sort="auto(moduleName)" label="${labels.sam.module}" align="center" />
+				<listheader sort="auto(errorMessage)" label="${labels.sam.errorMessage}" align="center"/>
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell
+						label="${date:format(each.logTime,'dd MMM yyyy HH:mm:ss')}">
+					</listcell>
+					<listcell value="${each}"
+						label="${each.moduleName}">
+					</listcell>
+					<listcell value="${each}"
+						label="${each.errorMessage}">
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstErrorLog" />
+	</groupbox>
+</window>

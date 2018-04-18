@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.HousingAllowanceFinder">
+	<resultMap type="co.id.fifgroup.personneladmin.dto.HousingAllowanceDTO"
+		id="housingAllowanceDTOResult">
+		<result column="HOUSING_ALLOWANCE_ID" property="housingAllowanceId"
+			jdbcType="DECIMAL" />
+		<result column="PERSON_ID" property="personId"
+			jdbcType="DECIMAL" />
+		<result column="COMPANY_ID" property="companyId"
+			jdbcType="DECIMAL" />
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate"
+			jdbcType="DATE" />
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate"
+			jdbcType="DATE" />
+		<result column="HOUSE_ALLOWANCE" property="houseAllowance"
+			jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy"
+			jdbcType="DECIMAL" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="DATE" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="DECIMAL" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="DATE" />
+	</resultMap>
+
+		<select id="selectHousingAllowanceByEffectiveOnDate"
+			parameterType="co.id.fifgroup.personneladmin.dto.HousingAllowanceDTO"
+			resultMap="housingAllowanceDTOResult">
+			SELECT
+			HOUSING_ALLOWANCE_ID
+			,PERSON_ID
+			,COMPANY_ID
+			,EFFECTIVE_START_DATE
+			,EFFECTIVE_END_DATE
+			,HOUSE_ALLOWANCE
+			,CREATED_BY
+			,CREATION_DATE
+			,LAST_UPDATED_BY,LAST_UPDATE_DATE
+			FROM
+			PEA_HOUSING_ALLOWANCE
+			<where>
+				<if test="personId != null">
+					AND PERSON_ID = #{personId}
+				</if>
+				<if test="companyId != null">
+					AND COMPANY_ID = #{companyId}
+				</if>
+				<if test="effectiveOnDate != null">
+					AND trunc(#{effectiveOnDate}) between EFFECTIVE_START_DATE
+					and EFFECTIVE_END_DATE
+				</if>
+			</where>
+	
+		</select>
+
+		<select id="countHousingAllowanceByEffectiveOnDate" parameterType="co.id.fifgroup.personneladmin.dto.HousingAllowanceDTO"
+				resultType="Integer">
+		SELECT COUNT(*)
+		FROM
+			PEA_HOUSING_ALLOWANCE
+			<where>
+				<if test="personId != null">
+					AND PERSON_ID = #{personId}
+				</if>
+				<if test="companyId != null">
+					AND COMPANY_ID = #{companyId}
+				</if>
+				<if test="effectiveOnDate != null">
+					AND trunc(#{effectiveOnDate}) between EFFECTIVE_START_DATE
+					and EFFECTIVE_END_DATE
+				</if>
+			</where>
+		</select>
+
+		<select id="selectHousingAllowanceByEffectiveOnDateByMaxId"
+				parameterType="co.id.fifgroup.personneladmin.dto.HousingAllowanceDTO"
+				resultMap="housingAllowanceDTOResult">
+				SELECT
+				HOUSING_ALLOWANCE_ID
+				,PERSON_ID
+				,COMPANY_ID
+				,EFFECTIVE_START_DATE
+				,EFFECTIVE_END_DATE
+				,HOUSE_ALLOWANCE
+				,CREATED_BY
+				,CREATION_DATE
+				,LAST_UPDATED_BY,LAST_UPDATE_DATE
+				FROM
+				PEA_HOUSING_ALLOWANCE
+				<where>
+				EFFECTIVE_START_DATE=(SELECT MAX(EFFECTIVE_START_DATE)FROM
+									PEA_HOUSING_ALLOWANCE 
+									<where>
+										<if test="personId != null">
+										AND PERSON_ID = #{personId}
+										</if>
+										<if test="companyId != null">
+										AND COMPANY_ID = #{companyId}
+										</if>
+										<if test="effectiveOnDate != null">
+						AND trunc(#{effectiveOnDate}) between EFFECTIVE_START_DATE
+						and EFFECTIVE_END_DATE
+					</if>
+				
+				</where>)
+					<if test="personId != null">
+						AND PERSON_ID = #{personId}
+					</if>
+					<if test="companyId != null">
+						AND COMPANY_ID = #{companyId}
+					</if>
+					<if test="effectiveOnDate != null">
+						AND trunc(#{effectiveOnDate}) between EFFECTIVE_START_DATE
+						and EFFECTIVE_END_DATE
+					</if>
+					
+				</where>
+		
+			</select>
+			
+		<select id="countStatusFlagHousing" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(*) 
+		FROM PEA_HOUSING_ALLOWANCE
+		<where>
+		HOUSE_ALLOWANCE = 'HOUSING'
+		<if test="personId != null"> 
+		AND PERSON_ID = #{personId}
+		</if>
+		<if test="companyId != null">
+		AND COMPANY_ID = #{companyId}
+		</if>
+		<if test="effectiveOnDate != null">
+		AND trunc(#{effectiveOnDate}) between EFFECTIVE_START_DATE
+						and EFFECTIVE_END_DATE
+		</if>		
+		</where> 
+		
+		</select>
+		
+		<select id="countFutureVersionHousingAllowance" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT
+		COUNT(*) 
+		FROM PEA_HOUSING_ALLOWANCE
+		<where>
+		<if test="companyId != null">
+		AND COMPANY_ID = #{companyId}
+		</if>
+		<if test="effectiveOnDate!=null">
+		 AND TRUNC(EFFECTIVE_START_DATE) &gt; TRUNC(#{effectiveOnDate})
+		</if>
+		<if test="personId!=null">
+		AND PERSON_ID = #{personId}
+		</if>
+		</where> 
+	</select>
+	
+	<select id="selectHousingAllowanceByEffectiveOnDateList"
+			parameterType="co.id.fifgroup.personneladmin.dto.HousingAllowanceDTO"
+			resultMap="housingAllowanceDTOResult">
+			SELECT
+			HOUSING_ALLOWANCE_ID
+			,PERSON_ID
+			,COMPANY_ID
+			,EFFECTIVE_START_DATE
+			,EFFECTIVE_END_DATE
+			,HOUSE_ALLOWANCE
+			,CREATED_BY
+			,CREATION_DATE
+			,LAST_UPDATED_BY,LAST_UPDATE_DATE
+			FROM
+			PEA_HOUSING_ALLOWANCE
+			<where>
+			HOUSING_ALLOWANCE_ID IS NOT NULL 
+			AND
+			trunc(sysdate) between EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+				<if test="personId != null">
+					AND PERSON_ID = #{personId}
+				</if>
+				<if test="companyId != null">
+					AND COMPANY_ID = #{companyId}
+				</if>
+				ORDER BY HOUSING_ALLOWANCE_ID ASC
+			</where>
+	
+		</select>
+</mapper>

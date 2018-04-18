@@ -1,0 +1,50 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<window id="winUploadFile" apply="co.id.fifgroup.systemadmin.controller.TaskFileUploadComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.uploadExecutableFile}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<formlabel value="${labels.sam.module}"
+						required="true" />
+					<listbox id="lsModule" mold="select">
+						<template name="model">
+							<listitem label="${each.moduleName}" value="${each.moduleId}" />
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<formlabel value="${labels.common.type}"
+						required="true" />
+					<radiogroup id="rdgType">
+						<radio label="${labels.sam.batchProcess }" checked="true" />
+						<radio label="${labels.sam.report }" />
+					</radiogroup>
+				</row>
+				<row>
+					<formlabel value="${labels.sam.executableFile}"
+						required="true" />
+						<hbox>
+							<textbox id="txtExecutableFile" />
+							<button id="btnBrowse" label="${labels.upload.browse}" upload="true, maxsize=-1" mold="trendy" />
+						</hbox>
+				</row>
+			</rows>
+		</grid>
+
+		<separator />
+		<div align="center">
+			<button id="btnUpload" label="${labels.upload.upload}"
+					mold="trendy" image="${labels.image.link.save}" />
+		</div>
+	</groupbox>
+</window>

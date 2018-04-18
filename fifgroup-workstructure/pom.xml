@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>co.id.fifgroup</groupId>
+		<artifactId>fifgroup-project</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<name>FIF Work Structure Module</name>
+	<artifactId>fifgroup-workstructure</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+		<mybatis.generator.overwrite>true</mybatis.generator.overwrite>
+	</properties>
+
+	<!-- include class & java source in jar file -->
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+
+	<dependencies>
+		<!-- Module Dependencies -->
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-basic-setup</artifactId>
+		</dependency>
+
+		<!-- JUnit Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<!-- Spring Dependency -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Oracle Dependencies -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+		</dependency>
+
+		<!-- MyBatis Dependencies -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+
+		<!-- ZK Dependency -->
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zk</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkplus</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zul</artifactId>
+		</dependency>
+
+
+	</dependencies>
+</project>

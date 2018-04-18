@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.dao.BankMapper">
+
+	<resultMap type="co.id.fifgroup.core.domain.Bank" id="baseResult">
+		<result column="BANK_CODE" jdbcType="VARCHAR" property="bankCode" />
+		<result column="BANK_NAME" jdbcType="VARCHAR" property="bankName" />
+		<result column="ACCOUNT_NUMBER" jdbcType="VARCHAR" property="accountNumber" />
+		<result column="ACCOUNT_NAME" jdbcType="VARCHAR" property="accountName" />
+		<result column="BRANCH_NAME" jdbcType="VARCHAR" property="branchName" />
+	</resultMap>
+
+	<select id="selectByExample" resultMap="baseResult" parameterType="co.id.fifgroup.core.domain.Bank">
+		select tmc.cp_code bank_code,tmc.name_full bank_name
+			from   TREASURY.TR_MST_COUNTERPARTIES@FIFAPPS.US.ORACLE.COM TMC
+			where  TMC.CP_TYPE = 'BANK'
+			and    TMC.STATUS_FLAG = 'A' 
+			and TMC.NAME_SHORT not like '%$%'
+			and tmc.cp_code in (select dtl.detail_code from BSE_LOOKUP_HDR hdr, BSE_LOOKUP_DEPENDENTS dtl
+				where hdr.lookup_id = dtl.lookup_id
+				and hdr.name = 'MST_VALID_BANK'
+				and trunc(sysdate) between dtl.date_from and dtl.date_to)
+			<if test="bankCode != null">
+				and tmc.cp_code like #{bankCode}
+			</if>
+			<if test="bankName != null">
+				and tmc.name_full like #{bankName}
+			</if>
+			ORDER BY tmc.cp_code ASC
+	</select>
+	
+	<select id="countByExample" resultType="INTEGER" parameterType="co.id.fifgroup.core.domain.Bank">
+		select count(*)
+			from   TREASURY.TR_MST_COUNTERPARTIES@FIFAPPS.US.ORACLE.COM TMC
+			where  TMC.CP_TYPE = 'BANK'
+			and    TMC.STATUS_FLAG = 'A'
+			and TMC.NAME_SHORT not like '%$%' 
+			and tmc.cp_code in (select dtl.detail_code from BSE_LOOKUP_HDR hdr, BSE_LOOKUP_DEPENDENTS dtl
+				where hdr.lookup_id = dtl.lookup_id
+				and hdr.name = 'MST_VALID_BANK'
+				and trunc(sysdate) between dtl.date_from and dtl.date_to)
+			<if test="bankCode != null">
+				and tmc.cp_code like #{bankCode}
+			</if>
+			<if test="bankName != null">
+				and tmc.name_full like #{bankName}
+			</if>
+	</select>
+	
+	<select id="selectByCode" resultMap="baseResult" parameterType="map">
+		select tmc.cp_code bank_code,tmc.name_full bank_name
+			from   TREASURY.TR_MST_COUNTERPARTIES@FIFAPPS.US.ORACLE.COM TMC
+			where  TMC.CP_TYPE = 'BANK'
+			and    TMC.STATUS_FLAG = 'A' 
+			<if test="bankCode != null">
+				and tmc.cp_code like #{bankCode}
+			</if>			
+	</select>
+	
+	<select id="selectByAccountNumber" resultMap="baseResult" parameterType="string">
+		select 
+		  cp_code bank_code,
+		  name_full bank_name,
+		  account_no account_number,
+		  account_name account_name,
+		  bank_branch branch_name
+		from   TREASURY.TR_MST_COUNTERPARTIES@FIFAPPS.US.ORACLE.COM TMC
+		join pay_banks_v pbv on pbv.bank_code = cp_code
+		where  TMC.CP_TYPE = 'BANK'
+		and    TMC.STATUS_FLAG = 'A' 
+		and TMC.NAME_SHORT not like '%$%'
+		and account_no =#{accountNo}
+	</select>
+	
+</mapper>

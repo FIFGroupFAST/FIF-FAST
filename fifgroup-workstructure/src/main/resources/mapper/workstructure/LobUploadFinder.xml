@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.LobUploadFinder">
+	
+	<resultMap type="co.id.fifgroup.workstructure.dto.LobStageDTO" id="lobStageDtoResult">
+		<result column="UPLOAD_ID" property="uploadId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="ROW_NUMBER" property="rowNumber" jdbcType="NUMERIC" />
+		<result column="ORGANIZATION_ID" property="organizationId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="JOB_ID" property="jobId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="PRODUCT_CODE" property="productCode"/>
+		<result column="PERCENTAGE" property="percentage"/>
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="DATE"/>
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="DATE"/>
+		<result column="RAW_DATA" property="rawData" jdbcType="VARCHAR"/>
+		<collection property="lobElements" ofType="co.id.fifgroup.workstructure.dto.LobElementDTO">
+			<result column="PRODUCT_CODE" property="productCode"/>
+			<result column="PERCENTAGE" property="percentage"/>
+			<result column="ROW_NUMBER" property="rowNum" jdbcType="NUMERIC" />
+		</collection>
+	</resultMap>
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.workstructure.dto.LobUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="BRANCH_ID" jdbcType="NUMERIC" property="branchId" />
+		<result column="FORMAT_REFERENCE_ID" jdbcType="NUMERIC" property="formatReferenceId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.core.domain.UploadError" id="errorResult">
+		<id column="ERROR_ID" property="errorId" jdbcType="DECIMAL"/>
+		<result column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="ROW_NUMBER" property="rowNumber" jdbcType="DECIMAL"/>
+		<result column="RAW_DATA" property="rawData" jdbcType="VARCHAR"/>
+		<result column="ERROR_MESSAGE" property="errorMessage" jdbcType="VARCHAR"/>
+		<result column="SOURCE" property="source" jdbcType="VARCHAR" javaType="co.id.fifgroup.core.constant.UploadErrorStatus"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<if test="batchNumber != null">
+			AND WBSE.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+		</if>
+		<if test="companyId != null">
+			AND WBSE.COMPANY_ID = #{companyId, jdbcType=DECIMAL}
+		</if>
+		<if test="branchId != null">
+			AND WBSE.BRANCH_ID = #{branchId, jdbcType=DECIMAL}
+		</if>
+		<if test="formatReferenceId != null">
+			AND WBSE.FORMAT_REFERENCE_ID = #{formatReferenceId, jdbcType=DECIMAL}
+		</if>
+		<if test="status != null">
+			AND WBSE.STATUS = #{status, jdbcType=VARCHAR}
+		</if>
+		<if test="createdBy != null">
+			AND WBSE.CREATED_BY = #{createdBy, jdbcType=DECIMAL}
+		</if>
+		<if test="creationDate != null">
+			AND WBSE.CREATION_DATE = #{creationDate, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdatedBy != null">
+			AND WBSE.LAST_UPDATED_BY = #{lastUpdatedBy, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdateDate != null">
+			AND WBSE.LAST_UPDATE_DATE = #{lastUpdateDate, jdbcType=TIMESTAMP}
+		</if>
+		<if test="batchNumberFrom != null">
+			<if test="!batchNumberFrom.trim().equals('')">
+				AND WBSE.BATCH_NUMBER &gt;= #{batchNumberFrom, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="batchNumberTo != null">
+			<if test="!batchNumberTo.trim().equals('')">
+				AND WBSE.BATCH_NUMBER &lt;= #{batchNumberTo, jdbcType=VARCHAR}
+			</if>
+		</if>
+	</sql>
+	
+	<select id="getLobUploads" parameterType="map" resultMap="baseResult" >
+		SELECT WBSE.BATCH_NUMBER,
+		  WBSE.COMPANY_ID,
+		  WBSE.BRANCH_ID,
+		  WBSE.FORMAT_REFERENCE_ID,
+		  WBSE.STATUS,
+		  WBSE.CREATED_BY,
+		  WBSE.CREATION_DATE,
+		  WBSE.LAST_UPDATED_BY,
+		  WBSE.LAST_UPDATE_DATE,
+		  (SELECT MIN(PAE_1.UPLOAD_DATE)
+		  FROM WOS_LOB_UPLOAD_ELEMENTS PAE_1
+		  WHERE PAE_1.BATCH_NUMBER = WBSE.BATCH_NUMBER
+		  ) AS PROCESS_DATE_FROM,
+		  (SELECT MAX(PAE_2.UPLOAD_DATE)
+		  FROM WOS_LOB_UPLOAD_ELEMENTS PAE_2
+		  WHERE PAE_2.BATCH_NUMBER = WBSE.BATCH_NUMBER
+		  ) AS PROCESS_DATE_TO,
+		  SU.USER_NAME
+		FROM WOS_LOB_UPLOADS WBSE
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = WBSE.LAST_UPDATED_BY)
+		<where>
+			AND WBSE.BATCH_NUMBER IN (
+										SELECT 
+											EUE.BATCH_NUMBER 
+										FROM 
+											wos_lob_upload_elements EUE
+											<where>
+												<if test="processDateFrom != null">
+													AND EUE.UPLOAD_DATE &gt;= #{processDateFrom, jdbcType=TIMESTAMP}
+												</if>
+												<if test="processDateTo != null">
+													AND EUE.UPLOAD_DATE &lt;= #{processDateTo, jdbcType=TIMESTAMP}
+												</if>
+											</where>
+									)
+			<include refid="whereClause"/>
+		</where> 
+	</select>
+
+	<select id="findStageByUploadId" parameterType="map" resultMap="lobStageDtoResult" >
+		select
+		  us.upload_id,
+		  us.row_number,
+		  us.effective_start_date,
+		  us.effective_end_date,
+		  us.organization_id,
+		  us.job_id,
+		  us.product_code,
+		  us.percentage,
+		  us.raw_data
+		from wos_lob_stg us
+		join wos_lob_upload_elements ele on us.upload_id = ele.upload_id
+		join wos_lob_uploads upl on ele.batch_number = upl.batch_number
+		where us.upload_id = (#{id, jdbcType=DECIMAL})
+		order by us.row_number	
+	</select>
+	
+	<select id="findStageByBatchNumber" parameterType="map" resultMap="lobStageDtoResult" >
+		select
+		  us.upload_id,
+		  us.row_number,
+		  us.effective_start_date,
+		  us.effective_end_date,
+		  us.organization_id,
+		  us.job_id,
+		  us.raw_data,
+		  us.product_code,
+		  us.percentage
+		from wos_lob_stg us
+		join wos_lob_upload_elements ele on us.upload_id = ele.upload_id
+		join wos_lob_uploads upl on ele.batch_number = upl.batch_number
+		where upl.batch_number = (#{batchNumber, jdbcType=VARCHAR})
+		order by us.row_number	
+	</select>
+	
+	<select id="getLobErrorByUploadId" parameterType="map" resultMap="errorResult" >
+		select * from wos_lob_errors where upload_id = #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="countSuccessRowByUploadId" parameterType="map" resultType="int">
+		SELECT COUNT(*) 
+			FROM 
+			(select 
+				effective_start_date, 
+				effective_end_date, 
+				organization_id, 
+				job_id 
+			from wos_lob_stg where upload_id = #{uploadId, jdbcType=NUMERIC}
+			group by effective_start_date, effective_end_date, organization_id, job_id)
+	</select>
+</mapper>

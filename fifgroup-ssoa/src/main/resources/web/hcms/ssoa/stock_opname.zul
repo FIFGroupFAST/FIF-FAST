@@ -1,0 +1,130 @@
+<?page title="SSOA" contentType="text/html;charset=UTF-8"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winStockOpnameInquiry" title="" apply="co.id.fifgroup.ssoa.controller.StockOpnameComposer">
+<!-- <style src="/styles/css/style.css" /> -->
+	<groupbox id="gbStockOpname" closable="false" mold="3d">
+		<caption label="Stock Opname"></caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="150px" align="right" />
+				<column/>
+			</columns>
+			<rows>
+				<row>
+					<label value="Period Name" />
+					<textbox id="txtSearchPeriodName" width="200px" />
+				</row>
+				<row>
+					<label value="Period Date" />
+					<div>
+						<datebox id="dtSearchPeriodStartDate1" format="dd-MMM-yyyy"   />
+						<label value="To" />
+						<datebox id="dtSearchPeriodStartDate2" format="dd-MMM-yyyy"   />
+					</div>
+				</row>
+
+				<row>
+					<div>
+						<label value="Branch" />
+					</div>
+					<div>
+							<bandbox id="bnbBranch" readonly="true"
+								width="280px"
+								use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox"
+								title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" headerLabel="Branch Code"
+								descLabel="Branch Name">
+							</bandbox>
+					</div>
+				</row>
+				<row>
+					<label/>
+					<hbox pack="center" align="center">
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}" />
+						<button id="btnNew" label="${labels.common.create}" mold="trendy" 
+						image="${labels.image.link.add}" style="margin-left:15px;" 
+						/>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator/>
+		<paging id="pgListOfValueTop"  />
+		<listbox id="stockOpnameListbox"  height="auto" emptyMessage="No Data Found">
+			<listhead>
+				<listheader label="Action" width="150px" />
+				<listheader id="hdrPeriodName" label="Period Name" sort="auto(description)" width="270px" />
+				<listheader id="hdrInstructionBy" label="Instruction By" sort="auto(branchName)" width="150px" />
+				<listheader id="hdrPeriodStartDate" label="Period Start Date" sort="auto(startDate)" width="150px" />
+				<listheader id="hdrPeriodEndDate" label="Period End Date" sort="auto(endDate)" width="150px" />
+				<listheader id="hdrStatus" label="Stock Opname Status" sort="auto(status)" width="170px" />
+				<listheader id="hdrReportNo" label="Report No" sort="auto(reportNo)" width="150px" />
+				<listheader id="hdrReportStatus" label="Approval Status" sort="auto(reportStatus)" width="130px" />
+				<listheader id="hdrLastUpdateBy" label="Last Update By" sort="auto(userName)" width="220px" />
+				<listheader id="hdrLastUpdateDate" label="Last Update Date" sort="auto(lastUpdateDate)" width="170px" />
+			</listhead>
+
+			<template name="model">
+				<listitem>
+				    <listcell>
+				    <a label="Detail" forward="onDetail(${each})"  style="color:blue" visible="${(each.statusCode != 'SO_STATUS_SUBMIT' and each.statusCode != 'SO_STATUS_APPROVED'and each.statusCode != 'SO_STATUS_REJECTED' and each.statusCode != 'SO_STATUS_CLOSED') ? false : true}"/>
+				    <a label="Result" forward="onResult(${each})"  style="color:blue" visible="${((each.statusCode == 'SO_STATUS_NOT_STARTED' or each.statusCode == 'SO_STATUS_ON_PROGRESS') and win$composer.branchId == each.branchId)   ? true : false}"/>
+				    <span style="color:blue;" visible="${(each.statusCode == 'SO_STATUS_ON_PROGRESS' and win$composer.branchId == each.branchId)? true : false}"> || </span>
+				    <a label="Reporting" forward="onReport(${each})"  style="color:blue" visible="${(each.statusCode == 'SO_STATUS_ON_PROGRESS' and win$composer.branchId == each.branchId)? true : false}"/>
+				    <span style="color:blue;" visible="${each.statusCode == 'SO_STATUS_SUBMIT' and win$composer.branchId == -1 ? true : false}"> || </span>
+				    <a label="Edit" forward="onEdit(${each})"  style="color:blue" visible="${each.statusCode == 'SO_STATUS_SUBMIT' and win$composer.branchId == -1 ? true : false}"/>
+				    </listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${date:format(each.startDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${date:format(each.endDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.status}"></listcell>
+					<listcell label="${each.reportNo}"></listcell>
+					<listcell>
+					<a label="${win$composer.getDescByCode(each.reportStatusCode)}" forward="onStatus(${each})"/>
+					</listcell>
+					<listcell label="${each.userName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy hh:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<listbox id="stockOpnameListboxForDownload"  height="auto" emptyMessage="No Data Found" visible="false" mold="paging" pageSize="5">
+			<listhead>
+				<listheader label="Period Name" sort="auto(periodName)" width="350px" />
+				<listheader label="Instruction By" sort="auto(owner)" width="150px" />
+				<listheader label="Period Start Date" sort="auto(periodStartDate)" width="150px" />
+				<listheader label="Period End Date" sort="auto(periodEndDate)" width="150px" />
+				<listheader label="Status" sort="auto(status)" width="150px" />
+				<listheader label="Last Update By" sort="auto(updateBy)" width="120px" />
+				<listheader label="Last Update Date" sort="auto(updateOn)" width="200px" />
+			</listhead>
+
+			<template name="model">
+				<listitem>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${date:format(each.startDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${date:format(each.endDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.status}"></listcell>
+					<listcell label="${each.reportNo}"></listcell>
+					<listcell label="${win$composer.getDescByCode(each.reportStatusCode)}"></listcell>
+					<listcell label="${each.userName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<separator></separator>
+		<!-- <exporter referenceId="stockOpnameListboxForDownload" />-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+	
+</window>

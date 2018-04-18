@@ -1,0 +1,63 @@
+<window id="winWorkflowApprovalModelMappingInquiry" 
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalModelMappingInquiryComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption label="${labels.swf.approvalModelMapping}">
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>				
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right"/>
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${ labels.swf.scope}" />
+							<listbox id="cmbScope" />
+						</row>
+						<row>
+							<label value="${ labels.swf.transactionType}" />
+							<listbox id="cmbTrxType" />
+								
+						</row>
+						<row>
+							<label value="${ labels.swf.hierarchyName}" />
+							<listbox id="cmbHierarchy" />
+						</row>
+						<row>
+							<label value="${ labels.common.effectiveOnDate}" />
+							<datebox id="dtbEffectiveOnDate" width="100px" />
+						</row>
+						<row>
+							<label />
+							<hbox>
+								<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+									image="${labels.image.link.search}"/>
+								<space width="20px" />
+								<button label="${labels.common.create}" id="btnNew" mold="trendy" 
+									image="${labels.image.link.add}"/>			
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxApprovalModelMapping" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader label="${labels.swf.scope}" align="center" sort="auto(lower(companyName))"/>
+						<listheader label="${labels.swf.transactionType}" align="center" sort="auto(transactionType)"/>
+						<listheader label="${labels.swf.hierarchyName}" align="center" sort="auto(orgHierName)"/>
+						<listheader label="${labels.common.effectiveDateFrom}" align="center" sort="auto(effectiveStartDate)" />
+						<listheader label="${labels.common.effectiveDateTo}" align="center" sort="auto(effectiveEndDate)" />
+						<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+						<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdatedDate)"/>
+						<listheader label="${labels.common.action}" align="center" />
+					</listhead>
+				</listbox>
+				<exporter referenceId="lbxApprovalModelMapping" />
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

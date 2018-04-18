@@ -1,0 +1,90 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winTransferInWithinGroup" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.TransferInWithinGroupComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.transferWithinGroup }" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid>
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.employeeNumber }" />
+					<textbox id="txtEmployeeNumber" use="co.id.fifgroup.core.ui.Searchtextbox"/>					
+				</row>
+				<row>
+					<label value="${labels.pea.employeeName }" />
+					<textbox id="txtEmployeeName" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+				</row>
+				<row>
+					<label value="${labels.pea.originCompany }" />
+					<listbox id="cmbOriginCompany" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.companyName }"/>
+							</listitem>
+						</template>
+					</listbox>					
+				</row>
+				<row>
+					<label value="${labels.pea.status }" />
+					<listbox id="cmbStatus" mold="select">
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.description }"/>
+							</listitem>
+						</template>
+					</listbox>					
+				</row>
+				<row>
+					<label value="${labels.pea.terminateDateFrom }" />
+					<hbox>
+						<datebox id="dtbDateFrom" width="100px" /> to <datebox id="dtbDateTo" width="100px" />					
+					</hbox>
+				</row>				
+				<row>
+					<label />
+					<cell colspan="3">
+						<hbox>
+							<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+								image="${labels.image.link.search}"/>
+						</hbox>
+					</cell>
+					
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lbxPeople" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.pea.originCompany }" sort="auto(originCompany)"/>
+				<listheader label="${labels.pea.employeeNumber }" sort="auto(number)"/>
+				<listheader label="${labels.pea.employeeName }" sort="auto(fullName)"/>
+				<listheader label="${labels.pea.status }" sort="auto(transferStatus)"/>
+				<listheader label="${labels.pea.terminationDate }" sort="auto(terminationDate)"/>
+				<listheader label="${labels.common.lastUpdateDate }" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy }" sort="auto(userName)"/>
+				<listheader label="${labels.common.action }" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.originCompany }"/>
+					<listcell label="${each.employeeNumber }"/>
+					<listcell label="${each.fullName }"/>
+					<listcell label="${each.transferStatus }"/>
+					<listcell label="${date:formatDate(each.terminationDate) }"/>
+					<listcell label="${date:formatDateTime(each.lastUpdateDate) }"/>
+					<listcell label="${each.userName }" />
+					<listcell><a label="${labels.common.detail}" forward="lbxPeople.onDetail(${each})" style="color:blue"></a></listcell>
+				</listitem>
+			</template>			
+		</listbox>
+		<exporter referenceId="lbxPeople" />
+	</groupbox>	
+</window>

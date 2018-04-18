@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemadmin.finder.TaskFinder">
+	
+	<resultMap id="selectExecutableFileByExampleResult" type="co.id.fifgroup.systemadmin.domain.ExecutableFile">
+	    <id column="EXECUTABLE_FILE_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="MODULE_ID" jdbcType="DECIMAL" property="moduleId" />
+	    <result column="EXECUTABLE_FILE_NAME" jdbcType="VARCHAR" property="executableFileName" />
+	    <result column="TASK_TYPE" jdbcType="DECIMAL" property="taskType" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+  	</resultMap>
+ 	
+  	<select id="selectExecutableFileByExample" parameterType="co.id.fifgroup.systemadmin.dto.ExecutableFileDTO" resultMap="selectExecutableFileByExampleResult">
+	    select EXECUTABLE_FILE_ID, MODULE_ID, EXECUTABLE_FILE_NAME, TASK_TYPE, CREATED_BY, CREATION_DATE, 
+	    LAST_UPDATED_BY, LAST_UPDATE_DATE
+	    from SAM_EXECUTABLE_FILES where TASK_TYPE = #{taskType,jdbcType=VARCHAR}
+	    and upper(EXECUTABLE_FILE_NAME) like(upper(#{executableFileName,jdbcType=DECIMAL}))
+  	</select>
+  
+    <resultMap id="selectTaskParameterByTaskIdResult" type="co.id.fifgroup.systemadmin.dto.TaskParameterDTO" >
+	    <id column="TASK_PARAM_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="TASK_ID" jdbcType="DECIMAL" property="taskId" />
+	    <result column="KEY" jdbcType="VARCHAR" property="key" />
+	    <result column="DISPLAY_NAME" jdbcType="VARCHAR" property="displayName" />
+	    <result column="DATA_TYPE" jdbcType="VARCHAR" property="dataType" />
+	    <result column="FLAG_MANDATORY" jdbcType="DECIMAL" property="mandatory" />
+	    <result column="VALUE" jdbcType="VARCHAR" property="taskParameterValue.value" />
+	    <result column="LOOKUP_ID" jdbcType="DECIMAL" property="lookupId" />
+	    <result column="STATIC_PARAM" jdbcType="DECIMAL" property="staticParam" />
+	    <result column="NAME" jdbcType="VARCHAR" property="lookupCode" />
+  	</resultMap>
+  
+  	<select id="selectTaskParameterByTaskId" resultMap="selectTaskParameterByTaskIdResult" parameterType="java.lang.Long" >
+		select 
+	 	 	task_param_id,
+	 		task_id,
+	  		key,
+	  		display_name,
+	  		data_type,
+	  		mandatory,
+	 	 	val.value
+		from sam_task_parameters tp left join sam_task_parameter_values val on tp.task_param_id = val.task_parameter_id
+		where task_id = #{id, jdbcType=NUMERIC}
+  	</select>
+  	
+  	<select id="getTaskParametersByTaskId" resultMap="selectTaskParameterByTaskIdResult" parameterType="java.lang.Long" >
+		select 
+	 	 	tp.task_param_id,
+	 		tp.task_id,
+		    tp.key,
+		    tp.display_name,
+		    tp.data_type,
+		    tp.mandatory,
+		    tp.lookup_id,
+		    tp.static_param,
+		    lo.name
+		from sam_task_parameters tp left join bse_lookup_hdr lo on tp.lookup_id = lo.lookup_id
+		where task_id = #{id, jdbcType=NUMERIC}
+		order by sequence_no, task_param_id asc
+  	</select>
+  	
+  	<select id="getTaskParametersNonStaticByTaskId" resultMap="selectTaskParameterByTaskIdResult" parameterType="java.lang.Long" >
+		select 
+	 	 	tp.task_param_id,
+	 		tp.task_id,
+		    tp.key,
+		    tp.display_name,
+		    tp.data_type,
+		    tp.mandatory,
+		    tp.lookup_id,
+		    lo.name
+		from sam_task_parameters tp left join bse_lookup_hdr lo on tp.lookup_id = lo.lookup_id
+		where task_id = #{id, jdbcType=NUMERIC} and static_param = 0
+  	</select>
+  	
+  	<select id="findTaskByExample" parameterType="co.id.fifgroup.systemadmin.dto.TaskDTO" resultMap="BaseResultMap" >
+		SELECT A.TASK_ID, A.TASK_NAME, A.DESCRIPTION, A.TASK_TYPE, A.EXECUTABLE_FILE_ID, A.CLASS_NAME, A.has_static_params,
+		A.OUTPUT_FORMAT, A.AFTER_COMPLETED, A.PRINTER_ID, A.CREATED_BY, A.CREATION_DATE,
+		A.LAST_UPDATE_DATE, B.USER_NAME
+		FROM SAM_TASKS A LEFT JOIN SAM_USERS B
+		ON B.USER_ID = A.LAST_UPDATED_BY
+		<where>
+			<if test="taskType != null">
+				AND UPPER(A.TASK_TYPE) LIKE UPPER(#{taskType, jdbcType=VARCHAR})
+			</if>
+			<if test="taskName != null">
+				AND UPPER(A.TASK_NAME) LIKE UPPER(#{taskName, jdbcType=VARCHAR})
+			</if>
+		</where>
+		ORDER BY A.LAST_UPDATE_DATE DESC
+  	</select>
+  	
+  	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.TaskDTO">
+	    <id column="TASK_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
+	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+	    <result column="TASK_TYPE" jdbcType="VARCHAR" property="taskType" />
+	    <result column="EXECUTABLE_FILE_ID" jdbcType="DECIMAL" property="executableFileId" />
+	    <result column="CLASS_NAME" jdbcType="VARCHAR" property="className" />
+	    <result column="HAS_STATIC_PARAMS" jdbcType="NUMERIC" property="hasStaticParams" />
+	    <result column="OUTPUT_FORMAT" jdbcType="VARCHAR" property="outputFormat" />
+	    <result column="AFTER_COMPLETED" jdbcType="VARCHAR" property="afterCompleted" />
+	    <result column="PRINTER_ID" jdbcType="DECIMAL" property="printerId" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+  	</resultMap>
+  	
+</mapper>

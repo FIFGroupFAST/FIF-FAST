@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Query_employee_homephone" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cd37f566-b9a3-4911-8aaf-82062bafac77">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PERSON_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT pc1.person_id,
+    pc1.company_id,
+    pc1.comm_information
+  FROM pea_communications pc1
+  WHERE comm_type  = 'HOME_PHONE'
+  AND pc1.end_date =
+    (SELECT MAX(end_date)
+    FROM pea_communications pc2
+    WHERE pc2.person_id = pc1.person_id
+    AND pc2.company_id  = pc1.company_id
+    AND pc2.comm_type   = 'HOME_PHONE'
+    )
+AND pc1.person_id = $P{PERSON_ID}
+AND pc1.company_id = $P{COMPANY_ID}
+AND rownum <= 1]]>
+	</queryString>
+	<field name="PERSON_ID" class="java.math.BigDecimal"/>
+	<field name="COMPANY_ID" class="java.math.BigDecimal"/>
+	<field name="COMM_INFORMATION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="d069a085-0714-4095-8667-23d859fd5e0d" stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COMM_INFORMATION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

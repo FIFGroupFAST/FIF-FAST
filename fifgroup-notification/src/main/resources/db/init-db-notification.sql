@@ -1,0 +1,81 @@
+--------------------------------------------------------
+--  File created - Thursday-November-22-2012   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Sequence SEQ_MESSAGE_NUMBER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "FIF"."SEQ_MESSAGE_NUMBER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TEMPLATE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "FIF"."SEQ_TEMPLATE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+
+--------------------------------------------------------
+--  DDL for Table MST_TEMPLATE_MESSAGE
+--------------------------------------------------------
+
+  CREATE TABLE "FIF"."MST_TEMPLATE_MESSAGE" 
+   (	"TEMPLATE_ID" NUMBER, 
+	"NAME" VARCHAR2(100 BYTE), 
+	"TEMPLATE_SUBJECT" VARCHAR2(255 BYTE), 
+	"TEMPLATE_CONTENT" VARCHAR2(500 BYTE), 
+	"START_DATE" DATE, 
+	"END_DATE" DATE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+
+--------------------------------------------------------
+--  DDL for Table NOTIFICATION_MESSAGE
+--------------------------------------------------------
+
+  CREATE TABLE "FIF"."NOTIFICATION_MESSAGE" 
+   (	"MESSAGE_ID" NUMBER, 
+	"RECEIVED_TIME" TIMESTAMP (6), 
+	"FROM_ID" RAW(20), 
+	"TO_ID" RAW(20), 
+	"MESSAGE_STATUS" NUMBER DEFAULT 0, 
+	"SUBJECT" VARCHAR2(255 BYTE), 
+	"CONTENT" VARCHAR2(500 BYTE)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+  
+--------------------------------------------------------
+--  Constraints for Table MST_TEMPLATE_MESSAGE
+--------------------------------------------------------
+
+  ALTER TABLE "FIF"."MST_TEMPLATE_MESSAGE" MODIFY ("TEMPLATE_ID" NOT NULL ENABLE);
+
+--------------------------------------------------------
+--  DDL for Trigger TEMPLATE_MESSAGE_AUTO_INCREMENT
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "FIF"."TEMPLATE_MESSAGE_AUTO_INCREMENT" 
+BEFORE INSERT ON MST_TEMPLATE_MESSAGE 
+REFERENCING NEW AS NEW
+FOR EACH ROW
+BEGIN
+SELECT SEQ_TEMPLATE.nextval INTO :NEW.TEMPLATE_ID FROM dual;
+END;
+/
+ALTER TRIGGER "FIF"."TEMPLATE_MESSAGE_AUTO_INCREMENT" ENABLE;
+--------------------------------------------------------
+--  DDL for Trigger TRIGGER_SEQ_MESSAGE_NUMBER
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "FIF"."TRIGGER_SEQ_MESSAGE_NUMBER" 
+BEFORE INSERT ON NOTIFICATION_MESSAGE 
+REFERENCING NEW AS NEW
+FOR EACH ROW
+BEGIN
+SELECT SEQ_MESSAGE_NUMBER.nextval INTO :NEW.MESSAGE_ID FROM dual;
+END;
+/
+ALTER TRIGGER "FIF"."TRIGGER_SEQ_MESSAGE_NUMBER" ENABLE;

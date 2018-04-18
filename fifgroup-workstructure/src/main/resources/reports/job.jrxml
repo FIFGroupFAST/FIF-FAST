@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="job" language="groovy" pageWidth="830" pageHeight="595" orientation="Landscape" columnWidth="790" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="086b3734-64ec-4157-8e9e-f41167794d63">
+	<property name="ireport.zoom" value="5.55991731349225"/>
+	<property name="ireport.x" value="1602"/>
+	<property name="ireport.y" value="159"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\FIF\\Workspace\\HCMS\\trunk\\Source Code\\hcms-workstructure\\src\\main\\resources\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EFFECTIVE_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="JOB_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  job.job_id,
+  ver.version_id,
+  job.job_code,
+  job.job_name,
+  ver.date_from,
+  ver.date_to,
+  case
+    when ver.job_for_code = 'NPK' then 'NPK'
+    when ver.job_for_code = 'CWK' then 'CWK'
+    when ver.job_for_code = 'NPKCWK' then 'NPK and CWK'
+    when ver.job_for_code = 'INTERNSHIP' then 'Internship'
+  end job_for,
+  case
+    when ver.job_type_code = 'COORDINATOR' then 'Coordinator'
+    when ver.job_type_code = 'PROCESSOR' then 'Processor'
+    when ver.job_type_code = 'CLERICAL' then 'Clerical'
+    when ver.job_type_code = 'NONE' then 'None'
+  end job_type,
+  case
+    when ver.people_category_code = 'OFFICE_PEOPLE' then 'Office People'
+    when ver.people_category_code = 'FIELD_PEOPLE' then 'Field People'
+  end people_category,
+  case
+    when ver.is_key_job = 1 then 'Yes'
+    when ver.is_key_job = 0 then 'No'
+  end key_job
+from wos_jobs job
+join wos_job_versions ver on job.job_id = ver.job_id
+where (job.job_id = $P{JOB_ID} OR $P{JOB_ID} is null)
+and job.company_id = $P{COMPANY_ID}
+and (trunc(to_date($P{EFFECTIVE_DATE})) between ver.date_from and ver.date_to OR trunc(to_date($P{EFFECTIVE_DATE})) is null)]]>
+	</queryString>
+	<field name="JOB_ID" class="java.math.BigDecimal"/>
+	<field name="VERSION_ID" class="java.math.BigDecimal"/>
+	<field name="JOB_CODE" class="java.lang.String"/>
+	<field name="JOB_NAME" class="java.lang.String"/>
+	<field name="DATE_FROM" class="java.sql.Timestamp"/>
+	<field name="DATE_TO" class="java.sql.Timestamp"/>
+	<field name="JOB_FOR" class="java.lang.String"/>
+	<field name="JOB_TYPE" class="java.lang.String"/>
+	<field name="PEOPLE_CATEGORY" class="java.lang.String"/>
+	<field name="KEY_JOB" class="java.lang.String"/>
+	<pageHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="55bd12ef-4904-4d4c-bdec-4ff3b6d690a6" x="341" y="0" width="100" height="26"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Job Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6c678a68-1fa3-4fda-b62e-87eac8c49d24" x="1" y="0" width="90" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e3b82bd6-774f-425b-9a53-59d34af51cf0" x="91" y="0" width="114" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8e2b4aba-c260-4bbf-9e78-f10acad23397" x="205" y="0" width="71" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Effective Date From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cdc7786e-40ca-4a30-b3b6-b287fc91f166" x="276" y="0" width="65" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Effective Date To]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="17472ddd-660b-46e8-b29b-6912b7968dbb" x="341" y="0" width="100" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Job For]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="274d71ea-4250-40de-a26e-d547d18026dd" x="441" y="0" width="85" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Job Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cb59f8bf-f1b2-45c3-97f0-2e405c32db94" x="526" y="0" width="100" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[People Category]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="482ca9ec-9e8e-4c84-8a21-1eb4351f3aa6" x="626" y="0" width="62" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Key Job]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="62481f38-802a-4215-8058-6ef5e1c80c43" x="688" y="0" width="102" height="33"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valid Grades]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<frame>
+				<reportElement uuid="1429c6e1-8428-4944-a400-62d8939e2729" stretchType="RelativeToTallestObject" x="688" y="0" width="102" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+			</frame>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d75f3041-ad65-48c6-8251-c24e76a66c63" stretchType="RelativeToTallestObject" x="1" y="0" width="90" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{JOB_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d5f9be12-8919-4e53-9d83-3b66b66259fe" stretchType="RelativeToTallestObject" x="91" y="0" width="114" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{JOB_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy">
+				<reportElement uuid="386ef255-2e2f-4197-a562-ab9af6d964f4" stretchType="RelativeToTallestObject" x="205" y="0" width="71" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DATE_FROM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy">
+				<reportElement uuid="c754a17b-7aa8-4363-a896-de55932abaed" stretchType="RelativeToTallestObject" x="276" y="0" width="65" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DATE_TO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f46529dd-b883-4b78-8333-f70a8882b270" stretchType="RelativeToTallestObject" x="341" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{JOB_FOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="3bb07020-8165-4002-9735-26ab0d1d7335" stretchType="RelativeToTallestObject" x="441" y="0" width="85" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{JOB_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="8f92c6d6-17be-41f4-a6ff-3b48fe1839b2" stretchType="RelativeToTallestObject" x="526" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PEOPLE_CATEGORY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="9b87682b-32d9-4557-8a33-95fa861ceccd" stretchType="RelativeToTallestObject" x="626" y="0" width="62" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{KEY_JOB}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="4a431fa1-bd6c-4e0b-acb1-f4567efda9c0" stretchType="RelativeToTallestObject" x="688" y="0" width="102" height="20"/>
+				<subreportParameter name="VERSION_ID">
+					<subreportParameterExpression><![CDATA[$F{VERSION_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "job_valid_grades.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

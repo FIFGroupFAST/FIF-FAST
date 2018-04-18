@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.OrganizationLevelFinder">
+ 	
+ 	<resultMap id="organizationLevelDtoResultMap" type="co.id.fifgroup.workstructure.dto.OrganizationLevelDto">
+	    <result column="LEVEL_ID" jdbcType="NUMERIC" property="id" />
+	    <result column="LEVEL_CODE" jdbcType="VARCHAR" property="code" />
+	    <result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+	    <result column="LEVEL_NAME" jdbcType="VARCHAR" property="name" />
+	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+	    <result column="COLOR" jdbcType="VARCHAR" property="color" />
+	    <result column="START_DATE" jdbcType="TIMESTAMP" property="startDate" />
+	    <result column="END_DATE" jdbcType="TIMESTAMP" property="endDate" />
+	    <result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="NUMERIC" property="lastUpdatedBy" />
+    	<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+    	<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+  	</resultMap>
+  	
+  	<select id="findByExample" resultMap="organizationLevelDtoResultMap" 
+  		parameterType="co.id.fifgroup.workstructure.dto.OrganizationLevelDto">
+  		select
+  			lvl.LEVEL_ID,
+  			lvl.LEVEL_CODE,
+  			lvl.COMPANY_ID,
+  			lvl.LEVEL_NAME,
+  			lvl.DESCRIPTION,
+  			lvl.COLOR,
+  			lvl.START_DATE,
+  			lvl.END_DATE,
+  			lvl.CREATED_BY,
+  			lvl.CREATION_DATE,
+  			lvl.LAST_UPDATED_BY,
+  			lvl.LAST_UPDATE_DATE,
+  			us.user_name
+  		from WOS_ORGANIZATION_LEVELS lvl
+  		join sam_users us on lvl.last_updated_by = us.user_id
+  		<where>
+  			<if test="code != null">
+  				LEVEL_CODE like #{code, jdbcType=VARCHAR}	
+  			</if>
+  			<if test="name != null">
+  				LEVEL_NAME like #{name, jdbcType=VARCHAR}	
+  			</if>
+  			<if test="companyId != null">
+  				AND COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+  			</if>
+  			<if test="effectiveOnDate != null">
+  				AND TRUNC(#{effectiveOnDate, jdbcType=DATE}) between START_DATE and END_DATE
+  			</if>
+  			<if test="endDate != null">
+  				AND END_DATE = TRUNC(#{endDate, jdbcType=DATE})
+  			</if>
+  		</where>
+  		order by LEVEL_CODE
+  	</select>
+  	
+  	<select id="findByExampleOrderByName" resultMap="organizationLevelDtoResultMap" 
+  		parameterType="co.id.fifgroup.workstructure.dto.OrganizationLevelDto">
+  		select
+  			lvl.LEVEL_ID,
+  			lvl.LEVEL_CODE,
+  			lvl.COMPANY_ID,
+  			lvl.LEVEL_NAME,
+  			lvl.DESCRIPTION,
+  			lvl.COLOR,
+  			lvl.START_DATE,
+  			lvl.END_DATE,
+  			lvl.CREATED_BY,
+  			lvl.CREATION_DATE,
+  			lvl.LAST_UPDATED_BY,
+  			lvl.LAST_UPDATE_DATE,
+  			us.user_name
+  		from WOS_ORGANIZATION_LEVELS lvl
+  		join sam_users us on lvl.last_updated_by = us.user_id
+  		<where>
+  			<if test="code != null">
+  				LEVEL_CODE like #{code, jdbcType=VARCHAR}	
+  			</if>
+  			<if test="name != null">
+  				LEVEL_NAME like #{name, jdbcType=VARCHAR}	
+  			</if>
+  			<if test="companyId != null">
+  				AND COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+  			</if>
+  			<if test="effectiveOnDate != null">
+  				AND TRUNC(#{effectiveOnDate, jdbcType=DATE}) between START_DATE and END_DATE
+  			</if>
+  			<if test="endDate != null">
+  				AND END_DATE = TRUNC(#{endDate, jdbcType=DATE})
+  			</if>
+  		</where>
+  		order by LEVEL_NAME asc
+  	</select>
+  	
+  	<select id="countByExample" parameterType="co.id.fifgroup.workstructure.dto.OrganizationLevelDto" resultType="Integer">
+  		select
+  			count(*)
+  		from
+  			WOS_ORGANIZATION_LEVELS
+  		<where>
+  			<if test="name != null">
+  				LEVEL_NAME = #{name, jdbcType=VARCHAR}	
+  			</if>
+  			<if test="companyId != null">
+  				AND COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+  			</if>
+  			<if test="effectiveOnDate != null">
+  				AND TRUNC(#{effectiveOnDate, jdbcType=DATE}) between START_DATE and END_DATE
+  			</if>
+  			<if test="endDate != null">
+  				AND END_DATE = TRUNC(#{endDate, jdbcType=DATE})
+  			</if>
+  		</where>
+  	</select>
+  	
+  	<select id="findAll" parameterType="Long" resultMap="organizationLevelDtoResultMap">
+  		select 
+  			LEVEL_ID,
+  			LEVEL_CODE,
+  			LEVEL_NAME
+ 		from wos_organization_levels ol
+  			where trunc(sysdate) between ol.start_date and ol.end_date
+  			and ol.company_id = #{companyId, jdbcType=NUMERIC}
+  	</select>
+  	
+  	<select id="findByCode" parameterType="map" resultType="String">
+		select lvl.level_code
+		  from wos_organization_levels lvl
+		  where upper(lvl.level_code) = upper(#{levelCode})
+		  and lvl.company_id = #{companyId}
+		  and trunc(sysdate) between lvl.start_date and lvl.end_date
+	</select>
+  
+</mapper>

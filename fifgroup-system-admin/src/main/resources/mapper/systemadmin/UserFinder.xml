@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemadmin.finder.UserFinder">
+  	
+  	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.UserDTO">
+	    <id column="USER_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	    <result column="PERSON_ID" jdbcType="NUMERIC" property="personId" />
+	    <result column="FULL_NAME" jdbcType="VARCHAR" property="employeeName" />
+	    <result column="DATE_FROM" jdbcType="DATE" property="dateFrom" />
+	    <result column="DATE_TO" jdbcType="DATE" property="dateTo" />
+	   	<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="VARCHAR" property="lastUpdatedBy" />
+	    <result column="NAME" jdbcType="VARCHAR" property="name" />
+	    <result column="JOB_ID" jdbcType="NUMERIC" property="jobId" />
+	    <collection property="jobResponsibilityDto" ofType="co.id.fifgroup.systemadmin.dto.UserResponsibilityDTO" javaType="ArrayList">
+	   		<id column="user_responsibility_id" jdbcType="NUMERIC" property="id" />
+	    	<result column="responsibility_id" jdbcType="NUMERIC" property="responsibilityId" />
+	    	<result column="responsibility_name" jdbcType="VARCHAR" property="directResponsibilityName" />
+	    	<result column="remark" jdbcType="VARCHAR" property="remark" />
+	    	<result column="date_from"  jdbcType="DATE" property="dateFrom" />
+	    	<result column="date_to"  jdbcType="DATE" property="dateTo" />
+	    </collection>
+  	</resultMap>
+  	
+  	<resultMap id="CountBaseResultMap" type="java.lang.Integer">
+	    <result column="TOTAL" jdbcType="NUMERIC" />
+  	</resultMap>
+  	
+  	<select id="findUserByUsernameAndEmployeeName" parameterType="co.id.fifgroup.systemadmin.dto.UserDTO" resultMap="BaseResultMap">
+  		SELECT U.USER_ID, U.USER_NAME, U.PERSON_ID, PI.FULL_NAME, U.DATE_FROM, U.DATE_TO,
+  		U.CREATED_BY, U.CREATION_DATE, U.LAST_UPDATE_DATE, U.LAST_UPDATED_BY, US.USER_NAME AS NAME
+		FROM SAM_USERS U 
+		LEFT JOIN (SELECT person_id,
+		    full_name
+		  FROM pea_personal_informations ppi1
+		  WHERE information_id =
+		    (SELECT MAX(information_id)
+		    FROM pea_personal_informations ppi2
+		    WHERE ppi1.person_id = ppi2.person_id
+		    )
+		    <!-- add for cwk -->
+		    <!-- UNION
+        SELECT cwk_person_id person_id,
+		    full_name
+		  FROM cwk_personal_informations cpi1
+		  WHERE information_id =
+		    (SELECT MAX(information_id)
+		    FROM cwk_personal_informations ppi2
+		    WHERE cpi1.cwk_person_id = ppi2.cwk_person_id
+		    ) -->
+		    <!-- end add for cwk -->
+		  ) PI ON PI.PERSON_ID = U.PERSON_ID
+		LEFT JOIN SAM_USERS US ON US.USER_ID = U.LAST_UPDATED_BY
+		<where>
+			<if test="userName != null">
+				UPPER(U.USER_NAME) LIKE UPPER(#{userName, jdbcType=VARCHAR})
+			</if>
+			<if test="employeeName != null">
+				AND UPPER(PI.FULL_NAME) LIKE UPPER(#{employeeName, jdbcType=VARCHAR})
+			</if>
+		</where>
+		ORDER BY UPPER(U.USER_NAME) ASC, U.LAST_UPDATE_DATE DESC
+  	</select>
+  	
+  	<select id="countUserByUsernameAndEmployeeName" parameterType="co.id.fifgroup.systemadmin.dto.UserDTO" resultMap="CountBaseResultMap">
+		SELECT COUNT(*) AS TOTAL
+		FROM SAM_USERS U 
+		LEFT JOIN (SELECT person_id,
+		    full_name
+		  FROM pea_personal_informations ppi1
+		  WHERE information_id =
+		    (SELECT MAX(information_id)
+		    FROM pea_personal_informations ppi2
+		    WHERE ppi1.person_id = ppi2.person_id
+		    )
+		  ) PI ON PI.PERSON_ID = U.PERSON_ID
+		<where>
+			<if test="userName != null">
+				UPPER(U.USER_NAME) LIKE UPPER(#{userName, jdbcType=VARCHAR})
+			</if>
+			<if test="employeeName != null">
+				AND UPPER(PI.FULL_NAME) LIKE UPPER(#{employeeName, jdbcType=VARCHAR})
+			</if>
+		</where>
+		ORDER BY U.LAST_UPDATE_DATE DESC
+  	</select>
+  	
+  	<select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+		SELECT U.USER_ID,
+		  U.USER_NAME,
+		  U.PERSON_ID,
+		  PI.FULL_NAME,
+		  U.DATE_FROM,
+		  U.DATE_TO,
+		  U.CREATED_BY,
+		  U.CREATION_DATE,
+		  U.LAST_UPDATE_DATE,
+		  U.LAST_UPDATED_BY,
+		  US.USER_NAME AS NAME
+		FROM SAM_USERS U
+		LEFT JOIN (SELECT person_id,
+		    full_name
+		  FROM pea_personal_informations ppi1
+		  WHERE information_id =
+		    (SELECT MAX(information_id)
+		    FROM pea_personal_informations ppi2
+		    WHERE ppi1.person_id = ppi2.person_id
+		    )
+		  ) PI ON PI.PERSON_ID = U.PERSON_ID
+		LEFT JOIN SAM_USERS US
+		ON US.USER_ID = U.LAST_UPDATED_BY
+		where U.USER_ID = #{userId,jdbcType=NUMERIC}
+		ORDER BY U.LAST_UPDATE_DATE DESC
+  	</select>
+  	
+  	<resultMap id="DirectBaseResultMap" type="co.id.fifgroup.systemadmin.dto.UserResponsibilityDTO">
+	    <id column="USER_RESPONSIBILITY_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="USER_ID" jdbcType="DECIMAL" property="userId" />
+	    <result column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="responsibilityId" />
+	    <result column="RESPONSIBILITY_NAME" jdbcType="VARCHAR" property="directResponsibilityName" />
+	    <result column="RESPONSIBILITY_TYPE" jdbcType="VARCHAR" property="responsibilityType" />
+	    <result column="DATE_FROM" jdbcType="DATE" property="dateFrom" />
+	    <result column="DATE_TO" jdbcType="DATE" property="dateTo" />
+	    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+  	</resultMap>
+  
+  	<resultMap id="JobBaseResultMap" type="co.id.fifgroup.systemadmin.dto.UserResponsibilityDTO">
+	    <id column="USER_RESPONSIBILITY_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="USER_ID" jdbcType="DECIMAL" property="userId" />
+	    <result column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="responsibilityId" />
+	    <result column="RESPONSIBILITY_NAME" jdbcType="VARCHAR" property="jobResponsibilityName" />
+	    <result column="RESPONSIBILITY_TYPE" jdbcType="VARCHAR" property="responsibilityType" />
+	    <result column="DATE_FROM" jdbcType="DATE" property="dateFrom" />
+	    <result column="DATE_TO" jdbcType="DATE" property="dateTo" />
+	    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+  
+  	<select id="findDirectResponsibilityByExample" parameterType="co.id.fifgroup.systemadmin.domain.UserResponsibility" resultMap="DirectBaseResultMap">
+  		SELECT
+  		  	UR.USER_RESPONSIBILITY_ID,
+  		  	UR.USER_ID,
+		  	R.RESPONSIBILITY_ID,
+		  	R.RESPONSIBILITY_NAME,
+		  	UR.RESPONSIBILITY_TYPE,
+		  	UR.DATE_FROM,
+		  	UR.DATE_TO,
+		  	UR.REMARK
+		FROM SAM_USER_RESPONSIBILITIES UR JOIN SAM_RESPONSIBILITIES R
+		ON R.RESPONSIBILITY_ID = UR.RESPONSIBILITY_ID
+		WHERE UR.USER_ID = #{userId,jdbcType=DECIMAL}
+		AND UR.RESPONSIBILITY_TYPE = #{responsibilityType,jdbcType=VARCHAR}
+  	</select>
+  
+  	<select id="findJobResponsibilityByExample" parameterType="co.id.fifgroup.systemadmin.domain.UserResponsibility" resultMap="JobBaseResultMap">
+		SELECT
+		  	UR.USER_RESPONSIBILITY_ID,
+		  	UR.USER_ID,
+		  	R.RESPONSIBILITY_ID,
+		  	R.RESPONSIBILITY_NAME,
+		  	UR.RESPONSIBILITY_TYPE,
+		  	UR.DATE_FROM,
+		  	UR.DATE_TO
+		FROM SAM_USER_RESPONSIBILITIES UR JOIN SAM_RESPONSIBILITIES R
+		ON UR.RESPONSIBILITY_ID = R.RESPONSIBILITY_ID
+		WHERE UR.USER_ID = #{userId,jdbcType=DECIMAL}
+		AND UR.RESPONSIBILITY_TYPE = #{responsibilityType,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<select id="findAllActiveUserWithJobId" parameterType="map" resultMap="BaseResultMap">
+  		select su.user_id,
+		  su.user_name,
+		  Ppa.Job_Id
+		from sam_users su
+		join pea_people_types pt on pt.person_id = su.person_id and (trunc(sysdate) between pt.effective_start_date and pt.effective_end_date)
+		join pea_primary_assignments ppa on ppa.person_id = pt.person_id and ppa.company_id = pt.company_id and (trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date)
+		where su.person_id is not null
+   	    and trunc(sysdate) between su.date_from and su.date_to
+		and pt.people_type = 'EMPLOYEE'
+		<if test="userName != null">
+			and su.user_name = #{userName, jdbcType=VARCHAR}
+		</if>
+		Union
+		select su.user_id,
+		  su.user_name,
+		  ca.Job_Id
+		from sam_users su
+		join cwk_assignments ca on ca.cwk_person_id = su.person_id and (trunc(sysdate) between ca.effective_start_date and ca.effective_end_date)
+		where su.person_id is not null
+   	    and trunc(sysdate) between su.date_from and su.date_to
+		and ca.people_type = 'CWK'
+		<if test="userName != null">
+			and su.user_name = #{userName, jdbcType=VARCHAR}
+		</if>
+  	</select>
+  	
+  	<select id="findAllActiveUserWithHasActiveDirectResponsibility"  resultMap="BaseResultMap">
+		SELECT 
+			us.user_id,
+			user_name,
+			ur.user_responsibility_id,
+			re.responsibility_name,
+			ur.remark
+		FROM sam_users us
+			JOIN sam_user_responsibilities ur
+				ON us.user_id = ur.user_id
+			left join sam_responsibilities re on re.responsibility_id = ur.responsibility_id
+		WHERE ur.responsibility_type = 'DIRECT'
+			AND TRUNC(sysdate) BETWEEN us.date_from AND us.date_to
+			AND TRUNC(sysdate) BETWEEN ur.date_from AND ur.date_to
+  	</select>
+  	
+</mapper>

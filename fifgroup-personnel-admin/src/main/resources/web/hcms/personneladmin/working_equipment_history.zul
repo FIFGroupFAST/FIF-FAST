@@ -1,0 +1,32 @@
+<zk>
+<window id="winWorkingEquipmentHistory" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.WorkingEquipmentHistoryComposer">
+	<space></space>
+	<groupbox>
+		<caption label="" />
+		<panel>
+			<panelchildren>
+				<listbox width="500px" id="lstWorkingEquipmentAssigned"
+					mold="paging" emptyMessage="${labels.common.noDataFound}"
+					pagingPosition="both">
+					<listhead>
+						<listheader
+							label="${labels.we.workingEquipmentType }" />
+						<listheader label="${labels.we.size }" />
+						<listheader label="${labels.pea.assignedDate }" />
+					</listhead>
+					<template name="model">
+						<listitem value="${each}">
+							<listcell label="${each.typeName}" />
+							<listcell label="${each.equipmentSize}" />
+							<listcell label="${each.assignedDateStr}" />
+						</listitem>
+					</template>
+				</listbox>
+				<exporter referenceId="lstWorkingEquipmentAssigned" />
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<space></space>
+</window>
+</zk>

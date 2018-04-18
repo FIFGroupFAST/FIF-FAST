@@ -1,0 +1,72 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winOrganizationLevelSetupInquiry"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationLevelSetupInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.organizationLevel}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.organizationLevelName}" />
+					<bandbox id="bnbOrgLevel" width="220px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganizationLevel}" searchText1="${labels.wos.organizationLevelCode}" searchText2="${labels.wos.organizationLevelName}" headerLabel1="${labels.wos.organizationLevelCode}" headerLabel2="${labels.wos.organizationLevelName}" />				
+				</row>
+				<row>
+					<label value="${labels.wos.effectiveOnDate}" />
+					<datebox id="dtbEffectiveOnDate" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy" 
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.wos.organizationLevel}" />
+			<listbox id="lstOrganizationLevel" emptyMessage="${labels.common.noDataFound}" pagingPosition="both" mold="paging">
+				<listhead menupopup="auto">
+					<listheader label="${labels.wos.organizationLevelCode}" align="center" sort="auto(lower(code))" hflex="min" width="150px"/>
+					<listheader label="${labels.wos.organizationLevelName}" align="center" sort="auto(lower(name))" hflex="min" width="150px"/>
+					<listheader label="${labels.wos.organizationLevelDescription}" align="center" sort="auto(lower(description))" hflex="min" width="150px"/>
+					<listheader label="${labels.wos.organizationLevelColor}" align="center" hflex="min" width="150px"/>
+					<listheader label="${labels.common.startDate}" align="center" width="100px" sort="auto(startDate)" />
+					<listheader label="${labels.common.endDate}" align="center" width="100px" sort="auto(endDate)" />
+					<listheader label="${labels.common.lastUpdateDate}" align="center" width="150px" sort="auto(lastUpdateDate)" />
+					<listheader label="${labels.common.lastUpdatedBy}" align="center" width="150px" sort="auto(userName)" />
+					<listheader label="${labels.common.action}" align="center" width="100px"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell value="${each}" label="${each.code }"></listcell>
+						<listcell value="${each}" label="${each.name }"></listcell>
+						<listcell value="${each}" label="${each.description }"></listcell>
+						<listcell value="${each}" label="${each.color }"></listcell>
+						<listcell value="${each}" label="${date:formatDate(each.startDate)}"></listcell>
+						<listcell value="${each}" label="${date:formatDate(each.endDate)}"></listcell>
+						<listcell value="${each}" label="${date:formatDateTime(each.lastUpdateDate)}"></listcell>
+						<listcell value="${each}" label="${each.userName}"></listcell>
+						<listcell><a label="${labels.common.detail}" forward="onLevelDetail(${each })" style="color:blue"/></listcell>
+					</listitem>	
+				</template>
+			</listbox>
+			<exporter referenceId="lstOrganizationLevel" />
+		</groupbox>		
+	</groupbox>
+</window>

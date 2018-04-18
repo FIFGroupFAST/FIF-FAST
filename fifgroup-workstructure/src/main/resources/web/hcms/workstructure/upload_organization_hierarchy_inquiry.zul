@@ -1,0 +1,79 @@
+<window id="windowUploadOrganizationHierarchyInquiry"
+	apply="co.id.fifgroup.workstructure.controller.UploadOrganizationHierarchyInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Upload Organization Hierarchy">
+			<div style="float:right">
+				<a image="${labels.image.link.help}"
+					forward="onDownloadUserManual()"
+					tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Organization Hierarchy Name"></label>
+					<combobox id="comboboxOrgHierName" width="300px" readonly="true"/>
+				</row>
+				<row>
+					<label value="Process Date" />
+					<hbox>
+						<datebox id="dtbDateFrom" width="100px" />
+						<label value="${labels.pea.to}" />
+						<datebox id="dtbDateTo" width="100px" />
+						<label id="labelErrorDate" style="color:red"/>
+					</hbox>
+				</row>
+				<row>
+					<label value="Batch Number" />
+					<hbox>
+						<textbox id="txtBatchNumberFrom" />
+						<label value="${labels.pea.to}" />
+						<textbox id="txtBatchNumberTo" />
+						<label id="labelErrorBatchNo" style="color:red"/>
+					</hbox>
+				</row>
+				<row>
+					<label />
+					<hbox>
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search }" />
+						<space />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add }" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstUploadOrganizationHierarchy"
+			emptyMessage="${labels.common.err.noDataFound }" mold="paging"
+			pagingPosition="both">
+			<listhead menupopup="auto" sizable="true">
+				<listheader label="Organization Hierarchy Name"
+					align="center" sort="auto(orgHierName)" width="200px" />
+				<listheader label="Batch Number" align="center"
+					sort="auto(batchNumber)" width="150px" />
+				<listheader label="Process Date" align="center"
+					sort="auto(processDateFrom)" width="150px" />
+				<listheader label="Efective Date From" align="center"
+					sort="auto(dateFrom)" width="150px" />
+				<listheader label="Efective Date To" align="center"
+					sort="auto(dateTo)" width="150px" />
+				<listheader label="Status" align="center"
+					sort="auto(status)" width="150px" />
+				<listheader label="Last Updated Date" align="center"
+					sort="auto(lastUpdateDate)" width="150px" />
+				<listheader label="Last Updated By" align="center"
+					 width="150px" />
+				<listheader label="Action" align="center" width="180px" />
+			</listhead>
+		</listbox>
+		<exporter referenceId="lstUploadOrganizationHierarchy" />
+	</groupbox>
+</window>

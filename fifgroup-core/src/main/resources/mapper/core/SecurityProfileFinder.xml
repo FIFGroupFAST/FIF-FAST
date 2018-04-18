@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.dao.SecurityProfileFinder">
+ 
+  <resultMap id="KeyValueResultMap" type="co.id.fifgroup.core.ui.lookup.KeyValue">
+    <result column="KEY" jdbcType="DECIMAL" property="key" javaType="java.lang.Long" />
+    <result column="VALUE" jdbcType="VARCHAR" property="value" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  
+  <resultMap id="AuthorizedMenuResult" type="co.id.fifgroup.core.ui.AuthorizedMenuDTO">
+	<result column="action_id" jdbcType="DECIMAL" property="actionId" javaType="java.lang.Long" />
+	<result column="menu_item_type" jdbcType="VARCHAR" property="menuItemType" />
+	<result column="sequence" jdbcType="VARCHAR" property="sequence" />
+	<result column="prompt" jdbcType="VARCHAR" property="displayName" />
+	<result column="item_name" jdbcType="VARCHAR" property="itemName" />
+	<result column="action_url" jdbcType="VARCHAR" property="actionUrl" />
+	<result column="module_id" jdbcType="DECIMAL" javaType="java.lang.Long" property="moduleId" />
+	<result column="user_manual" jdbcType="VARCHAR" property="userManual" />
+	<result column="module_name" jdbcType="VARCHAR" property="moduleName" />
+</resultMap>
+
+  <resultMap id="SecurityProfileResult" type="co.id.fifgroup.core.security.SecurityProfile">
+	<result column="user_id" jdbcType="DECIMAL" property="userId" javaType="java.lang.Long" />
+	<result column="user_name" jdbcType="VARCHAR" property="userName" />
+	<result column="person_id" jdbcType="DECIMAL" property="personId" javaType="java.lang.Long" />
+	<result column="person_uuid" jdbcType="VARBINARY" property="personUUID" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	<result column="full_name" jdbcType="VARCHAR" property="fullName" />
+	<result column="employee_number" jdbcType="VARCHAR" property="employeeNumber" />
+	<result column="company_id" jdbcType="DECIMAL" property="companyId" javaType="java.lang.Long" />
+	<result column="group_id" jdbcType="DECIMAL" property="businessGroupId" javaType="java.lang.Long" />
+	<result column="organization_id" jdbcType="DECIMAL" javaType="java.lang.Long"  property="organizationId" />
+	<result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
+	<result column="organization_name" jdbcType="VARCHAR" property="organizationName" />
+	<result column="job_id" jdbcType="DECIMAL" javaType="java.lang.Long"  property="jobId" />
+	<result column="job_code" jdbcType="VARCHAR" property="jobCode" />
+	<result column="job_name" jdbcType="VARCHAR" property="jobName" />
+	<result column="grade_id" jdbcType="DECIMAL" javaType="java.lang.Long"  property="gradeId" />
+	<result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+	<result column="branch_id" jdbcType="DECIMAL" javaType="java.lang.Long"  property="branchId" />
+	<result column="branch_name" jdbcType="VARCHAR" property="branchName" />
+</resultMap>
+
+ <resultMap id="SecurityResult" type="co.id.fifgroup.core.security.Security">
+	<result column="responsibility_id" jdbcType="DECIMAL" property="responsibilityId" />
+	<result column="responsibility_name" jdbcType="VARCHAR" property="responsibilityName" />
+	<result column="menu_id" jdbcType="DECIMAL" property="menuId" />
+	<result column="business_group_id" jdbcType="DECIMAL" property="businessGroupId" />
+	<result column="task_group_id" jdbcType="DECIMAL" property="taskGroupId" />
+	<result column="function_default_access" jdbcType="VARCHAR" property="functionDefaultAccess" />
+	<result column="security_type" jdbcType="VARCHAR" property="securityType" />
+	<result column="security_filter" jdbcType="VARCHAR" property="orgFilter" />
+	<result column="recursive" jdbcType="DECIMAL" property="recursive" /> 
+	<result column="org_level" jdbcType="DECIMAL" property="organizationLevelId" />
+</resultMap>
+
+<resultMap id="FunctionPermissionResult" type="co.id.fifgroup.core.security.FunctionPermission">
+	<result column="function_id" jdbcType="DECIMAL" property="functionId" />
+	<result column="flag_editable" jdbcType="NUMERIC" property="editable" />
+	<result column="flag_writable" jdbcType="NUMERIC" property="createable" />
+	<result column="flag_erasable" jdbcType="NUMERIC" property="deletable" />
+</resultMap>
+
+  <select id="selectEmployeeAuthorizedCompanies" parameterType="String" resultMap="KeyValueResultMap">
+  	
+  	select 
+	  distinct
+	  rc.company_id key,
+	  co.company_code value,
+	  co.company_name description
+	from 
+	sam_users u 
+	join sam_user_responsibilities ur on u.user_id = ur.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	join sam_responsibilities r on r.responsibility_id = ur.responsibility_id and (trunc(sysdate) between r.date_from and r.date_to)
+	join sam_responsibility_companies rc on rc.responsibility_id = r.responsibility_id
+	join bse_companies co on co.company_id = rc.company_id and (trunc(sysdate) between co.effective_start_date and co.effective_end_date)
+	join pea_personal_informations ppi on ppi.person_id = u.person_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+  	join pea_people_types ppt  on ppi.person_id= ppt.person_id and ppt.people_type in ('EMPLOYEE','INTERNSHIP') and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+	where
+	u.user_name = #{username,jdbcType=VARCHAR} and rc.company_id = (select company_id from pea_people_types where person_id = u.person_id and people_type in ('EMPLOYEE','INTERNSHIP') and (trunc(sysdate) between effective_start_date and effective_end_date))
+	union 
+	select 
+	  distinct
+	  rc.company_id key,
+	  co.company_code value,
+	  co.company_name description
+	from sam_users u join sam_user_responsibilities ur on u.user_id = ur.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	join sam_responsibilities r on r.responsibility_id = ur.responsibility_id and (trunc(sysdate) between r.date_from and r.date_to)
+	join sam_responsibility_companies rc on rc.responsibility_id = r.responsibility_id
+	join bse_companies co on co.company_id = rc.company_id and (trunc(sysdate) between co.effective_start_date and co.effective_end_date)
+	join pea_personal_informations ppi on ppi.person_id = u.person_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+  	join pea_people_types ppt  on ppi.person_id= ppt.person_id and ppt.people_type in ('EMPLOYEE','INTERNSHIP') and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+	where
+	u.user_name = #{username,jdbcType=VARCHAR} and (rc.company_id &lt;&gt; (select company_id from pea_people_types where person_id = u.person_id and people_type in ('EMPLOYEE','INTERNSHIP') and (trunc(sysdate) between effective_start_date and effective_end_date)) and rc.flag_other_user_multi = 1)
+  	union
+  	SELECT distinct CO.COMPANY_ID KEY,
+		CO.COMPANY_CODE VALUE,
+		CO.COMPANY_NAME description
+	from sam_users u 
+	JOIN PEA_PERSONAL_INFORMATIONS PPI ON PPI.PERSON_ID = U.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	JOIN PEA_PEOPLE_TYPES PPT  ON PPI.PERSON_ID= PPT.PERSON_ID AND PPT.PEOPLE_TYPE IN ('EMPLOYEE','INTERNSHIP') AND TRUNC(SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+	JOIN BSE_COMPANIES CO ON CO.COMPANY_ID = PPT.COMPANY_ID AND (TRUNC(SYSDATE) BETWEEN CO.EFFECTIVE_START_DATE AND CO.EFFECTIVE_END_DATE)
+	JOIN SAM_RESPONSIBILITIES R ON R.RESPONSIBILITY_ID = CO.RESPONSIBILITY_ID AND (TRUNC(SYSDATE) BETWEEN R.DATE_FROM AND R.DATE_TO)
+	join sam_responsibility_companies rc on rc.responsibility_id = r.responsibility_id and RC.COMPANY_ID = PPT.COMPANY_ID
+	WHERE
+	 u.user_name = #{username,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectEmployeeResponsibilityByCompany" parameterType="map" resultMap="KeyValueResultMap">
+  	select 
+	  ur.responsibility_id key,
+	  rs.responsibility_name value
+	from 
+	  sam_users us
+	  join sam_user_responsibilities ur on ur.user_id = us.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	  join sam_responsibility_companies rc on rc.responsibility_id = ur.responsibility_id
+	  join sam_responsibilities rs on rs.responsibility_id = rc.responsibility_id and (trunc(sysdate) between rs.date_from and rs.date_to)
+	where
+	  us.user_name = #{username,jdbcType=VARCHAR}
+	  and rc.company_id = #{companyId,jdbcType=NUMERIC}
+	  and rc.flag_other_user_multi = 1
+	union
+	select 
+	  ur.responsibility_id key,
+	  rs.responsibility_name value
+	from 
+	  sam_users us
+	  join sam_user_responsibilities ur on ur.user_id = us.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	  join sam_responsibility_companies rc on rc.responsibility_id = ur.responsibility_id
+	  join sam_responsibilities rs on rs.responsibility_id = rc.responsibility_id and (trunc(sysdate) between rs.date_from and rs.date_to)
+	where
+	  us.user_name = #{username,jdbcType=VARCHAR}
+	  and rc.company_id = (select pt.company_id 
+	    from pea_people_types pt join sam_users su 
+	      on su.person_id = pt.person_id 
+	      and (trunc(sysdate) between pt.effective_start_date and pt.effective_end_date )
+	      and pt.company_id = #{companyId,jdbcType=NUMERIC}
+	      where su.user_name = us.user_name
+	      )
+	  and rc.company_id = #{companyId,jdbcType=NUMERIC}
+	 UNION
+	SELECT  
+	  cast(rs.responsibility_id as number) key,
+	  rs.responsibility_name value 
+	FROM BSE_COMPANIES BC  
+  	JOIN SAM_RESPONSIBILITIES RS ON RS.RESPONSIBILITY_ID = BC.RESPONSIBILITY_ID 
+	and (trunc(sysdate) between rs.date_from and rs.date_to) 
+	AND (TRUNC(SYSDATE) BETWEEN BC.EFFECTIVE_START_DATE AND BC.EFFECTIVE_END_DATE)
+  AND BC.COMPANY_ID = (SELECT distinct COMPANY_ID FROM SAM_USERS SU JOIN PEA_PEOPLE_TYPES PPT ON PPT.PERSON_ID = SU.PERSON_ID
+  AND TRUNC(SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE AND PPT.PEOPLE_TYPE IN ('EMPLOYEE', 'INTERNSHIP')
+  AND SU.USER_NAME = #{username,jdbcType=VARCHAR})
+  and BC.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+	  order by 2 asc
+  </select>
+  
+   <select id="selectNonEmployeeResponsibilitiesByCompany" parameterType="map" resultMap="KeyValueResultMap">
+  	select 
+	  ur.responsibility_id key,
+	  rs.responsibility_name value
+	from 
+	  sam_users us
+	  join sam_user_responsibilities ur on ur.user_id = us.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	  join sam_responsibility_companies rc on rc.responsibility_id = ur.responsibility_id
+	  join sam_responsibilities rs on rs.responsibility_id = rc.responsibility_id and (trunc(sysdate) between rs.date_from and rs.date_to)
+	where
+	  us.user_name = #{username,jdbcType=VARCHAR}
+	  and rc.company_id = #{companyId,jdbcType=NUMERIC}
+	  and rc.flag_other_user_multi = 1
+    order by 2 asc
+  </select>
+  
+  <select id="selectAutohrizedMenu" parameterType="map" resultMap="AuthorizedMenuResult">
+	  select 
+		  mh.menu_id,
+		  mh.menu_name,
+		  md.action_id,
+		  md.menu_item_type,
+		  md.sequence,
+		  md.prompt,
+		  null item_name,
+	  	  null action_url,
+	      null module_id,
+	      null user_manual,
+	      null module_name
+		from sam_menu_hdr mh join sam_menu_dtl md on mh.menu_id = md.menu_id and (sysdate between md.date_from and md.date_to)
+		<where>
+			mh.menu_id = #{rootMenuId,jdbcType=NUMERIC} 
+			and md.menu_item_type = 'SUBMENU'
+			<if test="menuExclusions != null">
+				and 
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="menuExclusions">
+					md.action_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+		</where> 
+			
+		union
+		select 
+		  mh.menu_id,
+		  mh.menu_name,
+		  md.action_id,
+		  md.menu_item_type,
+		  md.sequence,
+		  md.prompt,
+		  fu.function_name item_name,
+		  fu.action_url,
+		  fu.module_id,
+		  fu.user_manual,
+		  mo.module_name
+		from sam_menu_hdr mh join sam_menu_dtl md on mh.menu_id = md.menu_id and (sysdate between md.date_from and md.date_to)
+		join sam_functions fu on fu.function_id = md.action_id
+		join bse_modules mo on mo.module_id = fu.module_id 
+		<where>
+			mh.menu_id = #{rootMenuId,jdbcType=NUMERIC} 
+			and md.menu_item_type = 'FUNCTION'
+			<if test="functionExclusions != null">
+				and 
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="functionExclusions">
+					md.action_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+		</where>
+		
+		
+		order by sequence asc
+</select>
+
+<select id="getSecurityProfile" parameterType="map" resultMap="SecurityProfileResult">
+	select distinct
+	  us.user_id, 
+	  us.user_name,
+	  pe.person_id,
+	  pe.person_uuid,
+	  pi.full_name,
+	  pi.employee_number,
+	  pa.company_id,
+	  co.group_id,
+	  pa.organization_id,
+	  org.organization_code,
+	  org.organization_name,
+	  pa.job_id,
+	  jb.job_code,
+	  jb.job_name,
+	  pa.grade_id,
+	  gr.grade_code,
+	  bhv.branch_id,
+	  bhv.branch_name 
+	from sam_users us 
+	left join pea_people pe on pe.person_id = us.person_id
+	left join pea_people_types pt on pt.person_id = us.person_id and pt.company_id = #{companyId,jdbcType=NUMERIC} and (TRUNC(sysdate) between pt.effective_start_date and pt.effective_end_date)
+	left join bse_companies co on co.company_id = pt.company_id and (TRUNC(sysdate) between co.effective_start_date and co.effective_end_date)
+	left join pea_personal_informations pi on pi.person_id = pe.person_id and pi.company_id = pt.company_id and ( TRUNC(sysdate) between pi.effective_start_date and pi.effective_end_date)
+	left join pea_primary_assignments pa on pa.person_id = pe.person_id and pa.company_id = pt.company_id and ( TRUNC(sysdate) between pa.effective_start_date and pa.effective_end_date)
+  	left JOIN BRANCH_HIERARCHY_V BHV ON pa.organization_id = bhv.organization_id
+	left join wos_organizations org on org.organization_id = pa.organization_id
+	left join wos_jobs jb on jb.job_id = pa.job_id
+	left join wos_grades gr on gr.grade_id = pa.grade_id
+	where 
+  	us.user_name = #{username,jdbcType=VARCHAR}
+		
+</select>
+
+<select id="getRolesByPersonIdAndJobId" parameterType="map" resultType="String">
+	select role_code from (select jr.management_type_code role_code, to_char(jr.job_id) job_id, to_char(null) person_id 
+	from wos_job_roles jr join wos_job_versions jv on jr.job_id = jv.job_id 
+	and TRUNC(sysdate) between jv.date_from and jv.date_to
+	UNION 
+	select role_type role_code, TO_CHAR(null) job_id, to_char(person_id) person_id 
+	from pea_roles where is_active = 1)
+	<!-- add for cwk -->
+	<!-- UNION 
+	select role_type role_code, TO_CHAR(null) job_id, to_char(cwk_person_id) person_id 
+	from cwk_roles where is_active = 1) -->
+	<!-- end add for cwk -->
+	where (job_id = #{jobId} or person_id = #{personId})
+
+</select>
+
+<select id="selectSecurityByAssignment" parameterType="map" resultMap="SecurityResult">
+	select 
+	  res.responsibility_id,
+	  res.responsibility_name,
+	  res.menu_id,
+	  res.task_group_id,
+	  res.business_group_id,
+	  res.function_default_access,
+	  rco.company_id,
+	  rco.security_by_assign security_type,
+	  rco.filter_by_assign security_filter,
+	  rco.flag_recursive_by_assign recursive,
+	  rco.org_level_id_by_assign org_level
+	from sam_responsibilities res left join sam_responsibility_companies rco on rco.responsibility_id = res.responsibility_id and (TRUNC(sysdate) between res.date_from and res.date_to)
+	where res.responsibility_id = #{respId,jdbcType=NUMERIC} and rco.company_id = #{companyId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectSecurityMultiCompany" parameterType="map" resultMap="SecurityResult">
+	select 
+	  res.responsibility_id,
+	  res.responsibility_name,
+	  res.menu_id,
+	  res.task_group_id,
+	  res.business_group_id,
+	  res.function_default_access,
+	  rco.company_id,
+	  rco.security_multi_coy security_type,
+	  rco.filter_multi security_filter,
+	  rco.flag_recursive_multi recursive,
+	  rco.org_level_id_multi org_level
+	from sam_responsibilities res left join sam_responsibility_companies rco on rco.responsibility_id = res.responsibility_id and (TRUNC(sysdate) between res.date_from and res.date_to)
+	where res.responsibility_id = #{respId,jdbcType=NUMERIC} and rco.company_id = #{companyId,jdbcType=NUMERIC}
+</select>
+
+<select id="countActiveUserByUsername" parameterType="String" resultType="java.lang.Integer">
+	select count (user_id) from sam_users where user_name = #{userName,jdbcType=VARCHAR} and (TRUNC(sysdate) between date_from and date_to)
+</select>
+
+<select id="selectFieldPermissionByResponsibilityId" parameterType="java.lang.Long" resultType="String">
+	select permission_name from sam_field_permissions where responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectFunctionItemExclusionByResponsibilityId" parameterType="java.lang.Long" resultType="java.lang.Long" >
+	select action_id from sam_item_exclusions where item_type = 'FUNCTION' and responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectMenuItemExclusionByResponsibilityId" parameterType="java.lang.Long" resultType="java.lang.Long" >
+	select action_id from sam_item_exclusions where item_type = 'SUBMENU' and responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectGradeMultiCompanyByResponsibilityId" parameterType="java.lang.Long" resultType="java.lang.Long" >
+	select grade_id from sam_grade_exclusions ge join sam_responsibility_companies rc on ge.resp_company_id = rc.resp_company_id and ge.security_coy_type = 'MULTICOY' where rc.responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectGradeAssignmentByResponsibilityId" parameterType="java.lang.Long" resultType="java.lang.Long" >
+	select grade_id from sam_grade_exclusions ge join sam_responsibility_companies rc on ge.resp_company_id = rc.resp_company_id and ge.security_coy_type = 'ASSIGNMENT' where rc.responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectOrganizationAssignmentByResponsibilityId" parameterType="java.lang.Long" resultType="java.lang.Long" >
+	select organization_id from sam_included_excluded_org ge join sam_responsibility_companies rc on ge.resp_company_id = rc.resp_company_id and ge.security_coy_type = 'ASSIGNMENT' where rc.responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectOrganizationMultiCompanyByResponsibilityId" parameterType="java.lang.Long" resultType="java.lang.Long" >
+	select organization_id from sam_included_excluded_org ge join sam_responsibility_companies rc on ge.resp_company_id = rc.resp_company_id and ge.security_coy_type = 'MULTICOY' where rc.responsibility_id = #{respId,jdbcType=NUMERIC}
+</select>
+
+<select id="selectFunctionPermissionsByResponsibilityId" parameterType="java.lang.Long" resultMap="FunctionPermissionResult">
+	select function_id, flag_writable, flag_editable, flag_erasable from sam_custom_function_access where responsibility_id = #{id,jdbcType=NUMERIC}
+</select>
+
+<select id="isEmployee" parameterType="String" resultType="Integer">
+	select count(user_id) from sam_users where person_id is not null and upper(user_name) =  upper(#{username,jdbcType=VARCHAR})
+</select>
+
+<select id="getNonEmployeeAuthorizedCompaniesByUserName" parameterType="String" resultMap="KeyValueResultMap">
+	
+	select distinct
+	  rc.company_id key,
+	  co.company_code value,
+	  co.company_name description
+	from 
+	  sam_users us 
+	  join sam_user_responsibilities ur on us.user_id = ur.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	  join sam_responsibilities rs on rs.responsibility_id = ur.responsibility_id and (trunc(sysdate) between rs.date_from and rs.date_to)
+	  join sam_responsibility_companies rc on rc.responsibility_id = rs.responsibility_id
+	  join bse_companies co on co.company_id = rc.company_id and (TRUNC(sysdate) between co.effective_start_date and co.effective_end_date)
+	where
+	  us.user_name = #{username,jdbcType=VARCHAR}
+	  and rc.flag_other_user_multi = 1
+
+</select>
+
+<update id="updateUserLastLoggedIn" parameterType="map">
+	update sam_users
+	set lalast_logged_in = #{date}
+	where user_name = #{username}
+</update>
+
+<select id="countBusinessGroupAdminByUsername" parameterType="String" resultType="int">
+	select count(*) result from sam_users where nvl(Is_Business_Group_Admin,0) = 1 and User_Name = #{userName, jdbcType=VARCHAR}
+</select>
+
+<select id="getBusinessGroup" resultMap="KeyValueResultMap">
+	select group_id key, group_name value, group_name description from Bse_Business_Groups
+</select>
+
+<select id="getSuperUserResponsibility" resultMap="KeyValueResultMap">
+	select responsibility_id key, Responsibility_Name value from Sam_Responsibilities where upper(Responsibility_Name) = 'SUPER USER'
+</select>
+
+<select id="getResponsibilityById" parameterType="java.lang.Long" resultMap="SecurityResult">
+	select 
+	  res.responsibility_id,
+	  res.responsibility_name,
+	  res.menu_id,
+	  res.task_group_id,
+	  res.business_group_id,
+	  res.function_default_access
+	from sam_responsibilities res
+	where res.responsibility_id = #{id,jdbcType=NUMERIC}
+</select>
+
+
+<select id="getUserIdByUsername" parameterType="String" resultType="Long">
+	select distinct user_id from sam_users where user_name = #{username, jdbcType=VARCHAR}
+</select>
+
+<select id="getUserIdByPersonId" resultType="Long">
+		SELECT CASE
+		          WHEN (
+						SELECT MAX(USR.USER_ID)
+						FROM SAM_USERS USR
+						LEFT JOIN PEA_PERSONAL_INFORMATIONS PPI ON PPI.PERSON_ID = USR.PERSON_ID
+						WHERE PPI.PERSON_ID = #{personId,jdbcType=NUMERIC}
+		                  ) IS NOT NULL
+		             THEN (
+		             	SELECT MAX(USR.USER_ID)
+						FROM SAM_USERS USR
+						LEFT JOIN PEA_PERSONAL_INFORMATIONS PPI ON PPI.PERSON_ID = USR.PERSON_ID
+						WHERE PPI.PERSON_ID = #{personId,jdbcType=NUMERIC}
+						)
+		          ELSE 0
+		       END AS REC_EXISTS
+		  FROM DUAL
+	</select>
+
+<select id="getSecurityProfileIsEmployee" parameterType="map" resultMap="SecurityProfileResult">
+	select distinct
+	  us.user_id, 
+	  us.user_name,
+	  pe.person_id,
+	  pe.person_uuid,
+	  pi.full_name,
+	  pi.employee_number,
+	  pa.company_id,
+	  co.group_id,
+	  pa.organization_id,
+	  org.organization_code,
+	  org.organization_name,
+	  pa.job_id,
+	  jb.job_code,
+	  jb.job_name,
+	  pa.grade_id,
+	  gr.grade_code,
+	  bhv.branch_id,
+	  bhv.branch_name 
+	from sam_users us 
+	left join pea_people pe on pe.person_id = us.person_id
+	left join pea_people_types pt on pt.person_id = us.person_id and (TRUNC(sysdate) between pt.effective_start_date and pt.effective_end_date)
+	left join bse_companies co on co.company_id = pt.company_id and (TRUNC(sysdate) between co.effective_start_date and co.effective_end_date)
+	left join pea_personal_informations pi on pi.person_id = pe.person_id and pi.company_id = pt.company_id and ( TRUNC(sysdate) between pi.effective_start_date and pi.effective_end_date)
+	left join pea_primary_assignments pa on pa.person_id = pe.person_id and pa.company_id = pt.company_id and ( TRUNC(sysdate) between pa.effective_start_date and pa.effective_end_date)
+  	left JOIN BRANCH_HIERARCHY_V BHV ON pa.organization_id = bhv.organization_id
+	left join wos_organizations org on org.organization_id = pa.organization_id
+	left join wos_jobs jb on jb.job_id = pa.job_id
+	left join wos_grades gr on gr.grade_id = pa.grade_id
+	where 
+  	us.user_name = #{username,jdbcType=VARCHAR}
+    and pt.people_type in ('EMPLOYEE','INTERNSHIP')
+</select>
+
+<select id="selectOrgIdByOrgSvpId" parameterType="map" resultType="Long">
+	
+	SELECT distinct wo.ORGANIZATION_ID FROM 
+	WOS_ORGANIZATIONS WO 
+	JOIN WOS_ORGANIZATION_VERSIONS WOV ON WO.ORGANIZATION_ID = WOV.ORGANIZATION_ID AND (TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO)
+	where ORGANIZATION_SPV_ID = #{orgId} and WO.COMPANY_ID = #{companyId}
+
+</select>
+
+<!-- CWK Handling -->
+<select id="selectCwkAuthorizedCompanies" parameterType="String" resultMap="KeyValueResultMap">
+  	SELECT DISTINCT rc.company_id KEY,
+	  co.company_code value,
+	  co.company_name description
+	FROM sam_users u
+	JOIN sam_user_responsibilities ur
+	ON u.user_id = ur.user_id
+	AND (TRUNC(sysdate) BETWEEN ur.date_from AND ur.date_to)
+	JOIN sam_responsibilities r
+	ON r.responsibility_id = ur.responsibility_id
+	AND (TRUNC(sysdate) BETWEEN r.date_from AND r.date_to)
+	JOIN sam_responsibility_companies rc
+	ON rc.responsibility_id = r.responsibility_id
+	JOIN bse_companies co
+	ON co.company_id = rc.company_id
+	AND (TRUNC(sysdate) BETWEEN co.effective_start_date AND co.effective_end_date)
+	JOIN cwk_personal_informations cpi
+	ON cpi.cwk_person_id = u.person_id
+	AND TRUNC(sysdate) BETWEEN cpi.effective_start_date AND cpi.effective_end_date
+	JOIN cwk_assignments ca
+	ON cpi.cwk_person_id     = ca.cwk_person_id
+	AND ca.people_type = 'CWK'
+	AND TRUNC(sysdate) BETWEEN ca.effective_start_date AND ca.effective_end_date
+	WHERE u.user_name = #{username,jdbcType=VARCHAR}
+	AND rc.company_id =
+	  (SELECT company_id
+	  FROM cwk_assignments
+	  WHERE cwk_person_id  = u.person_id
+	  AND people_type = 'CWK'
+	  AND (TRUNC(sysdate) BETWEEN effective_start_date AND effective_end_date)
+	  )
+	UNION
+	SELECT DISTINCT rc.company_id KEY,
+	  co.company_code value,
+	  co.company_name description
+	FROM sam_users u
+	JOIN sam_user_responsibilities ur
+	ON u.user_id = ur.user_id
+	AND (TRUNC(sysdate) BETWEEN ur.date_from AND ur.date_to)
+	JOIN sam_responsibilities r
+	ON r.responsibility_id = ur.responsibility_id
+	AND (TRUNC(sysdate) BETWEEN r.date_from AND r.date_to)
+	JOIN sam_responsibility_companies rc
+	ON rc.responsibility_id = r.responsibility_id
+	JOIN bse_companies co
+	ON co.company_id = rc.company_id
+	AND (TRUNC(sysdate) BETWEEN co.effective_start_date AND co.effective_end_date)
+	JOIN cwk_personal_informations cpi
+	ON cpi.cwk_person_id = u.person_id
+	AND TRUNC(sysdate) BETWEEN cpi.effective_start_date AND cpi.effective_end_date
+	JOIN cwk_assignments ca
+	ON cpi.cwk_person_id     = ca.cwk_person_id
+	AND ca.people_type = 'CWK'
+	AND TRUNC(sysdate) BETWEEN ca.effective_start_date AND ca.effective_end_date
+	WHERE u.user_name = #{username,jdbcType=VARCHAR}
+	AND (rc.company_id &lt;&gt;
+	  (SELECT company_id
+	  FROM cwk_assignments
+	  WHERE cwk_person_id  = u.person_id
+	  AND people_type = 'CWK'
+	  AND (TRUNC(sysdate) BETWEEN effective_start_date AND effective_end_date)
+	  )
+	AND rc.flag_other_user_multi = 1)
+	UNION
+	SELECT DISTINCT CO.COMPANY_ID KEY,
+	  CO.COMPANY_CODE VALUE,
+	  CO.COMPANY_NAME description
+	FROM sam_users u
+	JOIN cwk_personal_informations cpi
+	ON cpi.cwk_person_id = u.person_id
+	AND TRUNC(sysdate) BETWEEN cpi.effective_start_date AND cpi.effective_end_date
+	JOIN cwk_assignments ca
+	ON cpi.cwk_person_id     = ca.cwk_person_id
+	AND ca.people_type = 'CWK'
+	AND TRUNC(sysdate) BETWEEN ca.effective_start_date AND ca.effective_end_date
+	JOIN BSE_COMPANIES CO
+	ON CO.COMPANY_ID = ca.COMPANY_ID
+	AND (TRUNC(SYSDATE) BETWEEN CO.EFFECTIVE_START_DATE AND CO.EFFECTIVE_END_DATE)
+	JOIN SAM_RESPONSIBILITIES R
+	ON R.RESPONSIBILITY_ID = CO.RESPONSIBILITY_ID
+	AND (TRUNC(SYSDATE) BETWEEN R.DATE_FROM AND R.DATE_TO)
+	JOIN sam_responsibility_companies rc
+	ON rc.responsibility_id = r.responsibility_id
+	AND RC.COMPANY_ID       = ca.COMPANY_ID
+	WHERE u.user_name = #{username,jdbcType=VARCHAR}
+  </select>
+  
+ 	<!-- Modified by Jatis for CWK
+  		- Bug 9993 : security profile for cwk is not found because this query select cwk data from pea_people
+  		- Change PEA_PEOPLE to CWK_PEOPLE
+  	-->
+  <select id="getSecurityProfileIsCwk" parameterType="map" resultMap="SecurityProfileResult">
+	SELECT DISTINCT us.user_id,
+	  us.user_name,
+	  pe.cwk_person_id person_id,
+	  pe.person_uuid,
+	  cpi.full_name,
+	  cpi.cwk_number employee_number,
+	  ca.company_id,
+	  co.group_id,
+	  ca.organization_id,
+	  org.organization_code,
+	  org.organization_name,
+	  ca.job_id,
+	  jb.job_code,
+	  jb.job_name,
+	  null grade_id,
+	  null grade_code,
+	  bhv.branch_id,
+	  bhv.branch_name
+	FROM sam_users us
+	LEFT JOIN cwk_people pe
+	ON pe.cwk_person_id = us.person_id
+	LEFT JOIN cwk_assignments ca
+	ON ca.cwk_person_id   = pe.cwk_person_id
+	AND ( TRUNC(sysdate) BETWEEN ca.effective_start_date AND ca.effective_end_date)
+	LEFT JOIN cwk_personal_informations cpi
+	ON cpi.cwk_person_id   = pe.cwk_person_id
+	AND ( TRUNC(sysdate) BETWEEN cpi.effective_start_date AND cpi.effective_end_date)
+	LEFT JOIN bse_companies co
+	ON co.company_id = ca.company_id
+	AND (TRUNC(sysdate) BETWEEN co.effective_start_date AND co.effective_end_date)
+	LEFT JOIN BRANCH_HIERARCHY_V BHV
+	ON ca.organization_id = bhv.organization_id
+	LEFT JOIN wos_organizations org
+	ON org.organization_id = ca.organization_id
+	LEFT JOIN wos_jobs jb
+	ON jb.job_id = ca.job_id
+	WHERE us.user_name = #{username,jdbcType=VARCHAR}
+	AND ca.people_type IN ('CWK')
+</select>
+	<!-- End Modified by Jatis for CWK -->
+
+<select id="selectCwkResponsibilityByCompany" parameterType="map" resultMap="KeyValueResultMap">
+  	select 
+	  ur.responsibility_id key,
+	  rs.responsibility_name value
+	from 
+	  sam_users us
+	  join sam_user_responsibilities ur on ur.user_id = us.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	  join sam_responsibility_companies rc on rc.responsibility_id = ur.responsibility_id
+	  join sam_responsibilities rs on rs.responsibility_id = rc.responsibility_id and (trunc(sysdate) between rs.date_from and rs.date_to)
+	where
+	  us.user_name = #{username,jdbcType=VARCHAR}
+	  and rc.company_id = #{companyId,jdbcType=NUMERIC}
+	  and rc.flag_other_user_multi = 1
+	union
+	select 
+	  ur.responsibility_id key,
+	  rs.responsibility_name value
+	from 
+	  sam_users us
+	  join sam_user_responsibilities ur on ur.user_id = us.user_id and (trunc(sysdate) between ur.date_from and ur.date_to)
+	  join sam_responsibility_companies rc on rc.responsibility_id = ur.responsibility_id
+	  join sam_responsibilities rs on rs.responsibility_id = rc.responsibility_id and (trunc(sysdate) between rs.date_from and rs.date_to)
+	where
+	  us.user_name = #{username,jdbcType=VARCHAR}
+	  and rc.company_id = (select ca.company_id 
+	    from cwk_assignments ca join sam_users su 
+	      on su.person_id = ca.cwk_person_id 
+	      and (trunc(sysdate) between ca.effective_start_date and ca.effective_end_date )
+	      and ca.company_id = #{companyId,jdbcType=NUMERIC}
+	      where su.user_name = us.user_name
+	      )
+	  and rc.company_id = #{companyId,jdbcType=NUMERIC}
+<!-- 	 UNION -->
+<!-- 	SELECT   -->
+<!-- 	  rs.responsibility_id key, -->
+<!-- 	  rs.responsibility_name value  -->
+<!-- 	FROM BSE_COMPANIES BC   -->
+<!--   	JOIN SAM_RESPONSIBILITIES RS ON RS.RESPONSIBILITY_ID = BC.RESPONSIBILITY_ID  -->
+<!-- 	and (trunc(sysdate) between rs.date_from and rs.date_to)  -->
+<!-- 	AND (TRUNC(SYSDATE) BETWEEN BC.EFFECTIVE_START_DATE AND BC.EFFECTIVE_END_DATE) -->
+<!--   AND BC.COMPANY_ID = (SELECT distinct COMPANY_ID FROM SAM_USERS SU JOIN CWK_ASSIGNMENTS CA ON CA.CWK_PERSON_ID = SU.PERSON_ID -->
+<!--   AND TRUNC(SYSDATE) BETWEEN CA.EFFECTIVE_START_DATE AND CA.EFFECTIVE_END_DATE AND CA.PEOPLE_TYPE IN ('CWK') -->
+<!--   AND SU.USER_NAME = #{username,jdbcType=VARCHAR}) -->
+<!--   and BC.COMPANY_ID = #{companyId,jdbcType=NUMERIC} -->
+	  order by 2 asc
+  </select>
+
+</mapper>

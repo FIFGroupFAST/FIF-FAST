@@ -1,0 +1,26 @@
+
+<window id="winCompetencyManagement" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.CompetencyManagementPopupComposer" width="500px"  closable="true" title="Competency History">
+	<groupbox>
+		<label id="employeeName"></label>
+	</groupbox>
+	<groupbox id="groupSoftComptency">
+		<caption label="${labels.com.softCompetency }" />
+		<listbox id="lstCompetencySoft" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			
+		</listbox>
+	</groupbox>
+	<space />
+	<groupbox>
+		<caption label="${labels.com.technicalCompetency }" />
+		<listbox id="lstCompetencyTech" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			
+		</listbox>
+	</groupbox>
+	<div style="height:30px; width: 100%; position:relative;">
+		<div style="float:center;">
+			<button id="btnCancel" label="${labels.common.ok}" mold="trendy" image="${labels.image.link.cancel}"/>
+		</div>
+	</div>
+</window>
+

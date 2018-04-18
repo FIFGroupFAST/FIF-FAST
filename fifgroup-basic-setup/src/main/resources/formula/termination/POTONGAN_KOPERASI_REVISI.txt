@@ -1,0 +1,56 @@
+import groovy.transform.CompileStatic
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+import co.id.fifgroup.core.ui.lookup.KeyValue
+
+@CompileStatic
+public class PotonganKoperasi{
+	ServiceModel serviceModel;
+	Long personId;
+	Date processDate;
+	Long companyId;
+	Long terTypeId;
+
+	public Object getParam(){
+		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
+		String sqlPotonganKoperasi = """
+						select
+							ARDET_CONTRACT_NO as CONTRACT_NUMBER,
+							(ARDET_PRINCIPLE + ARDET_INTEREST + ARDET_PENALTY + ARDET_ADM_AMT) AMOUNT,
+							BHV.BRANCH_NAME AS BRANCH
+						from
+							PEA_PERSONAL_INFORMATIONS PPI
+							JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON(PPA.PERSON_ID = PPI.PERSON_ID AND PPA.COMPANY_ID = PPI.COMPANY_ID AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE)
+							JOIN trn_ar_invoice_dtl@SYSKOP.US.ORACLE.COM TAID ON(TAID.ARDET_MEMB_ID = PPI.EMPLOYEE_NUMBER)
+							JOIN BRANCH_HIERARCHY_V BHV ON(BHV.COMPANY_ID = PPI.COMPANY_ID AND BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID)
+						WHERE
+							ardet_group_id = 'G1000' AND ardet_trx_type = 'TERMINATION'
+							AND PPI.PERSON_ID = ${personId}
+							AND PPI.COMPANY_ID = ${companyId}
+							AND TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+					""";
+		List<Map<String, Object>> results = serviceModel.getFromQuery(sqlPotonganKoperasi);
+		
+		if(!results.isEmpty()){
+			for(Map<String, Object> result : results){
+				KeyValue KeyValue = new KeyValue();
+				KeyValue.setKey(result.get("CONTRACT_NUMBER"));
+				KeyValue.setValue(result.get("AMOUNT"));
+				KeyValue.setDescription(result.get("BRANCH"));
+                                keyvalues.add(KeyValue);
+			}
+			println("result : "+results.size()+" records");
+		} else
+			println("result : 0 record");
+		
+		return keyvalues;
+	 };
+}
+
+
+
+PotonganKoperasi subject = new PotonganKoperasi();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setCompanyId(company_id);
+return subject.getParam();

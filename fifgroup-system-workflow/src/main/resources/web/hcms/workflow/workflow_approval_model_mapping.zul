@@ -1,0 +1,93 @@
+<window id="winWorkflowApprovalModelMapping" 
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalModelMappingComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption label="${labels.swf.approvalModelMapping}">				
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column label="" width="150px" align="right"/>
+						<column label="" />
+						<column label="" width="150px" align="right"/>
+						<column label="" width="" />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${ labels.swf.scope}" />
+								<label value="${ labels.common.required}" style="color:red;" />
+							</hbox>							
+							<listbox id="cmbScope" />
+							<hbox>
+								<label value="${labels.common.effectiveDateFrom}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<datebox id="dtbEffectiveFrom" use="co.id.fifgroup.core.ui.DateBoxFrom" width="200px"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="${ labels.swf.transactionType}" />
+								<label value="${ labels.common.required}" style="color:red;" />
+							</hbox>
+							<listbox id="cmbTrxType" />
+							<hbox>							
+								<label value="${labels.common.effectiveDateTo}" />
+							</hbox>
+							<datebox id="dtbEffectiveTo" use="co.id.fifgroup.core.ui.DateBoxMax" width="200px" />	
+						</row>
+						<row>
+							<label value="${ labels.swf.hierarchyName}" />
+							<listbox id="cmbHierarchy" disabled="true"/>
+							<label />
+							<label />
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<button id="btnAddMapping" label="${labels.swf.addApprovalModelMapping }" mold="trendy"
+					image="${labels.image.link.add}" />
+				<separator />
+				<vbox>
+					<div id="errListApprovalModelMappingDetail" />
+					<hbox>
+						<listbox id="lbxApprovalModelMappingDetail" checkmark="true">
+							<listhead>
+								<listheader label="" width="30px"/>
+								<listheader label="${labels.swf.priority}" />
+								<listheader label="${labels.swf.conditionRule}" />
+								<listheader label="${labels.swf.approvalModelName}" />
+								<listheader label="${labels.common.action}" />
+							</listhead>
+						</listbox>
+						<vbox>
+							<button label="${labels.swf.top }" id="btnTop" width="50px" />
+							<button label="${labels.swf.up }" id="btnUp" width="50px" />
+							<button label="${labels.swf.down }" id="btnDown" width="50px" />
+							<button label="${labels.swf.bottom }" id="btnBottom" width="50px" />
+						</vbox>
+					</hbox>		
+					<button label="${labels.common.delete}"
+							id="btnDelete" mold="trendy" image="${labels.image.link.delete}"/>
+				</vbox>		
+			</groupbox>
+			<separator />	
+			<hbox>
+				<cell align="center" style="width:1250px;">
+					<button id="btnSave"
+						label="${labels.common.save}" mold="trendy" 
+						image="${labels.image.link.save}" />
+					<space width="20px"></space>
+					<button id="btnDeleteData"
+						label="${labels.common.delete}" mold="trendy" 
+						image="${labels.image.link.delete}" disabled="true"/>
+				</cell>
+				<cell align="right">
+					<button id="btnCancel"
+						label="${labels.common.cancel}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+		</panelchildren>
+	</panel>
+</window>

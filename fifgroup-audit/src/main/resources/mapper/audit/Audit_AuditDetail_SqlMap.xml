@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Audit_AuditDetail">
+	<!-- Result Map -->	
+		<resultMap id="auditDetailResultMap" type="co.id.fifgroup.audit.model.entity.AuditDetail">
+			<result column="audit_id" property="auditId" jdbcType="VARBINARY"
+ 								typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler"/>
+			<result column="attribute_id" property="attributeId" jdbcType="VARBINARY"
+ 								typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler"/>
+    		<result column="attribute_name" property="attributeName" jdbcType="VARCHAR" />
+ 			<result column="attribute_current_value" property="attributeCurrent" jdbcType="VARCHAR"/>
+ 			<result column="attribute_new_value" property="attributeNew" jdbcType="VARCHAR"/>
+ 			<result column="parent_attribute" property="parentAttribute" jdbcType="VARCHAR"/>
+ 		</resultMap>
+	<!-- Result Map -->
+	<!-- Select -->
+		<select id="getRefSequenceNumber" resultType="long" parameterType="co.id.fifgroup.audit.model.entity.AuditTrail">
+			select max(sequence_number) from SAM_AUDIT_DETAIL 
+			where audit_id = #{auditId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=.UUIDTypeHandler}
+		</select>
+		
+	<!-- Select -->
+	<!-- Insert -->
+		<insert id="insertNewAuditDetail" parameterType="co.id.fifgroup.audit.model.entity.AuditDetail">
+			insert into SAM_AUDIT_DETAIL(sequence_number, attribute_id, audit_id, attribute_name, 
+								attribute_current_value, attribute_new_value, flag_resolve_code, parent_attribute)
+			values (#{sequenceNumber, jdbcType=NUMERIC},
+					#{attributeId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler},
+			 		#{auditId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler},
+			 		#{attributeName, jdbcType=VARCHAR}, 
+			 		#{attributeCurrent, jdbcType=VARCHAR}, 
+			 		#{attributeNew, jdbcType=VARCHAR},
+			 		#{flagResolveCode, jdbcType=NUMERIC},
+			 		#{parentAttribute, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler})
+		</insert>
+	<!-- Insert -->
+</mapper>

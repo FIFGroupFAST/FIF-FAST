@@ -1,0 +1,122 @@
+<window id="winUploadAccountNumber" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.UploadAccountNumberComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.uploadAccountNumber}" />
+		<groupbox>
+			<caption label="${labels.common.download}" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.pea.accountType}" />
+						<listbox id="cmbAccountTypeDownload" mold="select">
+							<template name="model">
+								<listitem value="${each}">
+									<listcell label="${each.description}" />
+								</listitem>
+							</template>
+						</listbox>
+					</row>
+					<row>
+						<label />
+						<button id="btnDownloadTemplate" label="${labels.common.downloadTemplate}" mold="trendy" image="${labels.image.link.save}" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<groupbox>
+			<caption label="${labels.common.upload}" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.pea.accountType}" />
+						<listbox id="cmbAccountTypeUpload" mold="select">
+							<template name="model">
+								<listitem value="${each}">
+									<listcell label="${each.description}" />
+								</listitem>
+							</template>
+						</listbox>
+					</row>
+					<row>
+						<label value="${labels.pea.batchNumber}" />
+						<label id="lblBatchNumber" />
+					</row>
+					<row>
+						<label value="${labels.common.file}" />
+						<hbox>
+							<textbox id="txtFile" readonly="true"/>
+							<button id="btnBrowse" label="${labels.common.browse}" use="co.id.fifgroup.core.ui.ButtonUpload" mold="trendy" />
+						</hbox>
+					</row>
+					<row>
+						<label />
+						<button label="${labels.common.process}" id="btnProcess" mold="trendy" />
+					</row>
+					<row>
+						<label />
+						<grid sclass="form-entry" width="400px">
+							<columns>
+								<column width="180px" align="right" />
+								<column />
+							</columns>
+							<rows>
+								<row>
+									<label value="${labels.pea.totalRecord}" />
+									<label id="lblTotalRecord" />
+								</row>
+								<row>
+									<label value="${labels.pea.success}" />
+									<label id="lblTotalSucceed" />
+								</row>
+								<row>
+									<label value="${labels.pea.failed}" />
+									<label id="lblTotalFailed" />
+								</row>
+							</rows>
+						</grid>
+					</row>
+					<row>
+						<label />
+						<groupbox>
+						<caption label="${labels.pea.FailedRow}" />
+							<listbox id="lstFailedRow" mold="paging" pagingPosition="both">
+								<listhead>
+									<listheader label="${labels.pea.rowNumber}" align="center" width="100px"/>
+									<listheader label="${labels.pea.errorMessage}" align="center" sort="auto(rowNumber)" />
+								</listhead>
+								<template name="model">
+									<listitem>
+										<listcell value="${each}" label="${each.rowNumber}"></listcell>
+										<listcell value="${each}" label="${each.errorMessage}"></listcell>
+									</listitem>
+								</template>								
+							</listbox>
+							<separator />
+							<hbox pack="end" align="center" style="width:100%;">
+								<button id="btnDownload" label="${labels.common.download}" mold="trendy" disabled="true"/>
+							</hbox>
+						</groupbox>
+					</row>
+					<row>
+						<label />
+						<button id="btnCloseBatch" label="${labels.upload.closeBatch}" mold="trendy" disabled="true"/>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnCancel" label="${labels.common.cancel}" 
+				mold="trendy" image="${labels.image.link.cancel}"/>
+		</hbox>
+	</groupbox>
+</window>

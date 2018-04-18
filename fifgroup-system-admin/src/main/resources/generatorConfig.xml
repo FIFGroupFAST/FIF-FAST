@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="TaskManagementTable" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+	
+	
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.86:1521:TESTHCMS"
+			userId="hcms"
+			password="hcmstest" />
+			
+		<javaModelGenerator targetPackage="co.id.fifgroup.systemadmin.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.systemadmin" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.systemadmin.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>
+		
+		<!-- <table tableName="SAM_SPECIAL_PERMISSIONS" domainObjectName="SpecialPermission"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="SPECIAL_PERMISSION_ID" sqlStatement="select SAM_SPECIAL_PERMISSIONS_S.nextVal from dual" type="pre"/>
+		</table> -->
+		
+		<!-- <table tableName="SAM_FUNCTIONS" domainObjectName="Function"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="FUNCTION_ID" sqlStatement="select SAM_FUNCTIONS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="FUNCTION_ID" property="id"  />
+		</table> -->
+		
+		<!-- <table tableName="SAM_MENU_HDR" domainObjectName="Menu"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="MENU_ID" sqlStatement="select SAM_MENU_HDR_S.nextVal from dual" type="pre"/>
+			<columnOverride column="MENU_ID" property="id"  />
+		</table>
+		
+		<table tableName="SAM_MENU_DTL" domainObjectName="MenuDetail"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="MENU_DTL_ID" sqlStatement="select SAM_MENU_DTL_S.nextVal from dual" type="pre"/>
+			<columnOverride column="MENU_DTL_ID" property="id"  />
+		</table> -->
+		
+		
+		
+		
+		
+		<!-- <table tableName="SAM_TASK_GROUP_HDR" domainObjectName="TaskGroup"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_GROUP_ID" sqlStatement="select SAM_TASK_GROUP_HDR_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_GROUP_ID" property="id"  />
+		</table>
+		
+		<table tableName="SAM_TASK_GROUP_DTL" domainObjectName="TaskGroupDetail"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_GROUP_DTL_ID" sqlStatement="select SAM_TASK_GROUP_DTL_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_GROUP_DTL_ID" property="id"  />
+		</table> -->
+		
+<!-- 		<table tableName="SAM_JOB_RESPONSIBILITIES" domainObjectName="JobResponsibility" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 		</table> -->
+		
+		
+		
+		
+		<!-- <table tableName="SAM_RESPONSIBILITIES" domainObjectName="Responsibility"
+			modelType="flat"
+			enableDeleteByExample="    false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="RESPONSIBILITY_ID" sqlStatement="select SAM_RESPONSIBILITIES_S.nextVal from dual" type="pre"/>
+			<columnOverride column="RESPONSIBILITY_ID" property="id" />
+			<columnOverride column="DATE_FROM" jdbcType="DATE"  />
+			<columnOverride column="DATE_TO" jdbcType="DATE"  />
+		</table> -->
+		
+		<!-- <table tableName="SAM_ITEM_EXCLUSIONS" domainObjectName="ItemExclusion"
+			modelType="flat"
+			enableDeleteByExample="    false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="ITEM_EXCLUSION_ID" sqlStatement="select SAM_ITEM_EXCLUSIONS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="ITEM_EXCLUSION_ID" property="id" />
+		</table>
+		
+		<table tableName="SAM_RESPONSIBILITY_COMPANIES" domainObjectName="ResponsibilityCompany"
+			modelType="flat"
+			enableDeleteByExample="    false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="RESP_COMPANY_ID" sqlStatement="select SAM_RESPONSIBILITY_COMPANIES_S.nextVal from dual" type="pre"/>
+			<columnOverride column="RESP_COMPANY_ID" property="id" />
+		</table>
+		
+		<table tableName="SAM_SECURITY_COMPANIES" domainObjectName="SecurityCompany"
+			modelType="flat"
+			enableDeleteByExample="    false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="SECURITY_COMPANY_ID" sqlStatement="select SAM_SECURITY_COMPANIES_S.nextVal from dual" type="pre"/>
+			<columnOverride column="SECURITY_COMPANY_ID" property="id" />
+			<columnOverride column="FLAG_RECURSIVE" property="recursive" javaType="boolean" />
+			<columnOverride column="FLAG_OTHER_USER" property="grantedOtherUserAccess" javaType="boolean" />
+		</table>
+		
+		<table tableName="SAM_FIELD_PERMISSIONS" domainObjectName="FieldPermission"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="FIELD_PERMISSION_ID" sqlStatement="select SAM_FIELD_PERMISSIONS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="FIELD_PERMISSION_ID" property="id" />
+		</table>
+		
+		<table tableName="SAM_CUSTOM_FUNCTION_ACCESS" domainObjectName="FunctionAccess"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="CUSTOM_FUNCTION_ACCESS_ID" sqlStatement="select SAM_CUSTOM_FUNCTION_ACCESS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="CUSTOM_FUNCTION_ACCESS_ID" property="id" />
+			<columnOverride column="FLAG_WRITABLE" property="writable" javaType="boolean" />
+			<columnOverride column="FLAG_EDITABLE" property="editable" javaType="boolean" />
+			<columnOverride column="FLAG_ERASABLE" property="erasable" javaType="boolean" />
+		</table>
+		
+		<table tableName="SAM_GRADE_EXCLUSIONS" domainObjectName="GradeExclusion"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="GRADE_EXCLUSION_ID" sqlStatement="select SAM_GRADE_EXCLUSIONS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="GRADE_EXCLUSION_ID" property="id" />
+			<columnOverride column="SECURITY_COMPANY_ID" property="companyId" />
+		</table>
+		
+		<table tableName="SAM_INCLUDED_EXCLUDED_ORG" domainObjectName="IncludedOrganization"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="INCLUDED_EXCLUDED_ID" sqlStatement="select SAM_INCLUDED_EXCLUDED_ORG_S.nextVal from dual" type="pre"/>
+			<columnOverride column="INCLUDED_EXCLUDED_ID" property="id" />
+		</table> -->
+		
+		<!-- <table tableName="SAM_USERS" domainObjectName="User"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="USER_ID" sqlStatement="select SAM_USERS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="USER_ID" property="id" />
+			<columnOverride column="DATE_FROM" jdbcType="DATE"  />
+			<columnOverride column="DATE_TO" jdbcType="DATE"  />
+			<columnOverride column="IS_BUSINESS_GROUP_ADMIN" javaType="Boolean" />
+		</table> -->
+		
+		<!-- <table tableName="SAM_USER_RESPONSIBILITIES" domainObjectName="UserResponsibility"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="USER_RESPONSIBILITY_ID" sqlStatement="select SAM_USER_RESPONSIBILITIES_S.nextVal from dual" type="pre"/>
+			<columnOverride column="USER_RESPONSIBILITY_ID" property="id" />
+			<columnOverride column="DATE_FROM" jdbcType="DATE"  />
+			<columnOverride column="DATE_TO" jdbcType="DATE"  />
+		</table>
+		 -->
+		 
+<!-- 		 <table tableName="SAM_USER_ACCESS_RECORDS" domainObjectName="UserAccessRecord" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="USER_ACCESS_RECORD_ID" sqlStatement="select SAM_USER_ACCESS_RECORDS_S.nextval from dual" type="pre"/> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="SAM_MODULE_ERROR_LOGS" domainObjectName="ModuleErrorLog" -->
+<!-- 			modelType="flat" enableDeleteByExample="false" enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="ERROR_LOG_ID" sqlStatement="select sam_module_error_logs_s.nextval from dual" type="pre" /> -->
+<!-- 		</table> -->
+		<!-- <table tableName="SAM_AUDIT_TRAIL" domainObjectName="AuditTrail"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="SEQUENCE_NUMBER" sqlStatement="select F_GET_AUDIT_TRAIL_SEQ_NO.nextVal from dual" type="pre"/>
+		</table> -->
+		
+		<!-- <table tableName="SAM_AUDIT_DETAIL" domainObjectName="AuditDetail"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+		</table> -->
+		
+		<!-- Task Management -->
+		
+<!-- 		<table tableName="SAM_TASK_PARAMETER_VALUES" domainObjectName="TaskParameterValue" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="TASK_PARAMETER_VALUE_ID" sqlStatement="select SAM_TASK_PARAMETER_VALUES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="TASK_PARAMETER_VALUE_ID" property="id"  /> -->
+<!-- 			<columnOverride column="VALUE" javaType="java.lang.Object"  /> -->
+<!-- 		</table> -->
+			
+	<!-- <table tableName="SAM_TASK_RUNNER_HDR" domainObjectName="TaskRunner"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_RUNNER_ID" sqlStatement="select SAM_TASK_RUNNER_HDR_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_RUNNER_ID" property="id"  />
+			<columnOverride column="DATE_FROM" jdbcType="DATE"  />
+			<columnOverride column="DATE_TO" jdbcType="DATE"  />
+		</table>
+		
+		<table tableName="SAM_TASK_RUNNER_DTL" domainObjectName="TaskRunnerDetail"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_RUNNER_DTL_ID" sqlStatement="select SAM_TASK_RUNNER_DTL_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_RUNNER_DTL_ID" property="id"  />
+		</table> -->
+		
+		<!-- <table tableName="SAM_TASKS" domainObjectName="Task"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_ID" sqlStatement="select SAM_TASKS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_ID" property="id"  />
+			<columnOverride column="HAS_STATIC_PARAMS" property="hasStaticParams" javaType="boolean"  />
+		</table>  -->
+		
+		
+		
+		<!-- <table tableName="SAM_EXECUTABLE_FILES" domainObjectName="ExecutableFile"
+			modelType="flat"
+			enableDeleteByExample="    false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="EXECUTABLE_FILE_ID" sqlStatement="select SAM_EXECUTABLE_FILES_S.nextVal from dual" type="pre"/>
+			<columnOverride column="EXECUTABLE_FILE_ID" property="id"  />
+		</table> -->
+		
+		<!-- <table tableName="SAM_TASK_PARAMETERS" domainObjectName="TaskParameter"
+			modelType="flat"
+			enableDeleteByExample="    false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_PARAM_ID" sqlStatement="select SAM_TASK_PARAMETERS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_PARAM_ID" property="id"  />
+			<columnOverride column="MANDATORY" property="mandatory" javaType="boolean"  />
+			<columnOverride column="STATIC_PARAM" property="staticParam" javaType="boolean"  />
+		</table> -->
+		
+		<!-- <table tableName="SAM_TASK_REQUESTS" domainObjectName="TaskRequest"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TASK_REQUEST_ID" sqlStatement="select SAM_TASK_REQUESTS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="TASK_REQUEST_ID" property="id"  />
+		</table> -->
+		
+		
+		<!-- <table tableName="SAM_TASK_REQUEST_DETAILS" domainObjectName="TaskRequestDetail"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="REQUEST_DETAIL_ID" sqlStatement="select SAM_TASK_REQUEST_DETAILS_S.nextVal from dual" type="pre"/>
+			<columnOverride column="REQUEST_DETAIL_ID" property="id"  />
+		</table> -->
+		
+		<table tableName="NOTIF_TEMPLATES" domainObjectName="NotificationTemplate"
+			modelType="flat"
+			enableDeleteByExample="true"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="TEMPLATE_ID" sqlStatement="select NOTIF_TEMPLATES_S.nextVal from dual" type="pre"/>
+		</table>
+		
+		<table tableName="NOTIF_RECEIVER" domainObjectName="NotificationReceiver"
+			modelType="flat"
+			enableDeleteByExample="true"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="RECEIVER_ID" sqlStatement="select NOTIF_RECEIVER_S.nextVal from dual" type="pre"/>
+		</table>
+	</context>
+</generatorConfiguration>

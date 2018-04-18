@@ -1,0 +1,59 @@
+<window id="winBenefitEntitlement" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.BenefitEntitlementComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.benefitNonPrepayment }" />
+		<listbox id="lbxBenefitNonPrepayment" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" checkmark="false">
+			<listhead>
+				<listheader label="${labels.pea.benefitType }" width="150px"/>
+				<listheader label="${labels.pea.beneficiary }" width="150px"/>
+				<listheader label="${labels.pea.startActiveDate }" width="150px"/>
+				<listheader label="${labels.pea.endActiveDate }" width="150px"/>
+				<listheader label="${labels.pea.entitlement }" align="right" width="150px"/>
+				<listheader label="${labels.pea.adjustmentEntitlement }" width="200px"/>
+				<listheader label="${labels.pea.remark }" width="150px"/>
+				<listheader label="${labels.pea.used }" width="150px" align="right" />
+				<listheader label="${labels.pea.balance }" width="150px" align="right"/>
+			</listhead>
+		</listbox>
+	</groupbox>
+	<groupbox closable="false">
+		<caption label="${labels.pea.benefitPrepayment }" />
+		<listbox id="lbxBenefitPrepayment" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" checkmark="false">
+			<listhead>
+				<listheader label="${labels.pea.benefitType }" width="150px"/>
+				<listheader label="${labels.pea.beneficiary }" width="150px"/>
+				<listheader label="${labels.pea.startActiveDate }" width="150px"/>
+				<listheader label="${labels.pea.endActiveDate }" width="150px"/>
+				<listheader label="${labels.pea.entitlement }" width="150px" align="right"/>
+				<listheader label="${labels.pea.adjustmentEntitlement }" width="200px"/>
+				<listheader label="${labels.pea.remark }" width="150px"/>
+				<listheader label="${labels.pea.used }" width="150px" align="right"/>
+				<listheader label="${labels.pea.balance }" width="150px" align="right"/>
+			</listhead>
+		</listbox>
+	</groupbox>
+	<groupbox closable="false">
+		<caption label="${labels.pea.benefitPoint }" />
+		<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.totalPoint }" />  
+				<label id="lblTotalPoint" />				
+			</row>
+		</rows>
+	</grid>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>
+</window>

@@ -1,0 +1,64 @@
+<window id="winWorkflowTransactionApprovalDetail" border="none" 
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowTransactionApprovalDetailComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.transactionApprovalDetail}">
+				</caption>
+				<grid id="grdMessage">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.company}" />
+							<label id="lblCompany" />
+						</row>
+						<row>
+							<label value="${labels.swf.subject}" />
+							<label id="lblSubject" />
+						</row>
+						<row>
+							<label value="${labels.swf.transactionType}" />
+							<label id="lblTrxType" />
+						</row>
+						<row>
+							<label value="${labels.common.transactionStatus}" />
+							<label id="lblTrxStatus" />
+						</row>
+						<row>
+							<label value="${labels.swf.submitter}" />
+							<label id="lblSubmitter" />
+						</row>	
+						<row>
+							<label value="${labels.swf.submittedTime}" />
+							<label id="lblSubmittedTime" />
+						</row>							
+						<row>
+							<label value="${labels.swf.completedTime}" />
+							<label id="lblCompletedTime" />
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxApprovalHistory">
+					<listhead>
+						<listheader label="${labels.common.rowNum}" align="center" />
+						<listheader label="${labels.swf.approver}" align="center" />
+						<listheader label="${labels.swf.actionType}" align="center" />
+						<listheader label="${labels.swf.receivedTime}" align="center" />
+						<listheader label="${labels.swf.completedTime}" align="center" />
+						<listheader label="${labels.common.action}" align="center" />
+					</listhead>
+				</listbox>
+				<separator />
+				<hbox pack="end" align="center" style="width:100%;">
+					<button id="btnBack" label="${labels.common.back}" 
+						mold="trendy" image="${labels.image.link.back}"/>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

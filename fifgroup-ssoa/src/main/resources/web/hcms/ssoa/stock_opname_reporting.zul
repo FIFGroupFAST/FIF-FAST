@@ -1,0 +1,139 @@
+<?page title="System Property"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winStockOpnameReporting"
+	apply="co.id.fifgroup.ssoa.controller.StockOpnameReportingComposer">
+	<groupbox id="gbReport"  mold="3d">
+		<caption label="Stock Opname - Reporting" />
+		<hbox>
+			<grid sclass="form-entry">
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<label value="Period Name" />
+						<textbox width="300px" id="txtPeriodName"  disabled="true" />
+						<label value="Period Start Date" />
+						<textbox id="txtPeriodStartDate" width="300px"  disabled="true"  />
+					</row>
+					<row>
+						<label value="Branch" />
+						<textbox width="300px" id="txtBranch"  disabled="true" value="Metro" />
+						<label value="Period End Date" />
+						<textbox id="txtPeriodEndDate" width="300px"  disabled="true"  />
+					</row>
+				</rows>
+			</grid>
+		</hbox>
+		<separator/>
+		<groupbox closable="false" mold="3d">
+			<caption label="Registered Assets" style="font-weight: bold;color: black;" />
+			<label value="Summary" />
+			<listbox style="width:52%">	
+				<listitem>
+					<listcell  label="Number Of Asset"></listcell>
+					<listcell style ="text-align: right;"><label id="linkNumberOfAssetReg" /><span style="margin-left:7px;"/> <a label="View Detail" forward="onNumberOfAsset()" /></listcell>
+					<listcell></listcell>
+				</listitem>
+				<listitem>
+					<listcell label="Number Of Prossesed Asset"></listcell>
+					<listcell style ="text-align: right;"><label id="linkNumberOfProcessAssetReg"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onNumberOfProcessAsset()"/></listcell>
+					<listcell><span style="color:blue;"> || </span> <a label="Stock Opname Result Detail" forward="onViewDetail()"/></listcell>
+				</listitem>
+				<listitem>
+					<listcell label="Number Of UnProssesed Asset"></listcell>
+					<listcell style ="text-align: right;"><label id="linkNumberOfUnProcessAssetReg"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onNumberOfUnProcessAsset()"/></listcell>
+				    <listcell></listcell>
+				</listitem>
+			</listbox>	
+			
+			<separator/>
+			<label id="lblDtlProcess" value="Detail of Processed Asset" style="font-weight: bold;color: black;" visible="false" />
+			<listbox id="lbxRegisteredDetailReport" height="auto" width="auto" emptyMessage="No data found" mold="paging"  pagingPosition="both" visible="false">
+				<listhead>
+
+					<listheader label="Result"  width="300px" />
+					<listheader label="Number Of Asset"  width="220px" style ="text-align: right;"/>
+					<listheader label="Nilai Perolehan"  width="220px" style ="text-align: right;"/>
+					<listheader label="Nilai Buku"  width="220px" style ="text-align: right;"/>
+				
+				</listhead>
+				
+					<listitem>
+						<listcell label="Ditemukan, Kondisi Bagus, Digunakan"></listcell>
+						<listcell label="" style ="text-align: right;"><label id="linkAssetsStatusA"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onAssetsStatusA()"/></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+					</listitem>
+					<listitem>
+						<listcell label="Ditemukan, Kondisi Bagus, Tidak Digunakan"></listcell>
+						<listcell label="" style ="text-align: right;"><label id="linkAssetsStatusB"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onAssetsStatusB()"/></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+					</listitem>
+					<listitem>
+						<listcell label="Ditemukan, Kondisi Rusak"></listcell>
+						<listcell label="" style ="text-align: right;"><label id="linkAssetsStatusC"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onAssetsStatusC()"/></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+					</listitem>
+					<listitem>
+						<listcell label="Tidak Ditemukan"></listcell>
+						<listcell label="" style ="text-align: right;"><label id="linkAssetsStatusD"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onAssetsStatusD()"/></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+						<listcell label="" style ="text-align: right;"></listcell>
+					</listitem>
+				
+			</listbox>
+		</groupbox>
+		<separator/>
+		<groupbox closable="false" mold="3d">
+			<caption label="Unregistered Assets" />
+			
+			<listbox style="width:39.5%">	
+				<listitem>
+					<listcell  label="Number Of Asset"></listcell>
+					<listcell style ="text-align: right;"><label id="linkNumberOfAssetUnReg"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onNumberOfAssetUnReg()"/></listcell>
+				</listitem>
+			</listbox>	
+			<separator/>
+			<label value="Detail of Unregistered Asset" style="font-weight: bold;color: black;"  />
+			<listbox id="lbxUnregisteredDetailReport" height="auto" width="auto" emptyMessage="No data found" mold="paging" pagingPosition="both">
+			<listhead>
+					<listheader label="Result"  width="300px" />
+					<listheader label="Number Of Asset"  width="220px" style ="text-align: right;"/>
+				</listhead>
+				
+					<listitem>
+						<listcell label="Tidak Tercatat"></listcell>
+						<listcell  style ="text-align: right;"><label id="linkNotRecordedAssets"/><span style="margin-left:7px;"/> <a label="View Detail" forward="onNumberOfAssetUnReg()"/></listcell>
+					</listitem>
+				
+			</listbox>
+		</groupbox>
+		<groupbox>
+				<grid sclass="form-entry">
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<label value="Note" />
+					    <textbox id="txtNote" width="400px" tabindex="5" rows="5" style="background-color:#fff text-align: right;" />
+					</row>
+					
+				</rows>
+			</grid>
+					
+		</groupbox>
+		<separator/>
+		<button id="btnSubmit" style="margin-left:50%" label="Submit" 
+				image="${labels.image.link.save}"></button>
+		<button id="btnCancelReport" style="float:right;" label="Cancel" 
+				image="${labels.image.link.cancel}"></button>
+	</groupbox>
+</window>

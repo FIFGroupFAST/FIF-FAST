@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.JobUploadFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.workstructure.dto.JobUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="BRANCH_ID" jdbcType="NUMERIC" property="branchId" />
+		<result column="FORMAT_REFERENCE_ID" jdbcType="NUMERIC" property="formatReferenceId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<resultMap id="stageResult" type="co.id.fifgroup.workstructure.dto.JobStageDTO">
+		<result column="UPLOAD_ID" jdbcType="NUMERIC" property="uploadId" />
+		<result column="DATE_FROM" jdbcType="DATE" property="dateFrom" />
+		<result column="DATE_TO" jdbcType="DATE" property="dateTo" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="JOB_CODE" jdbcType="VARCHAR" property="code" />
+		<result column="JOB_NAME" jdbcType="VARCHAR" property="name" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="JOB_FOR_CODE" jdbcType="VARCHAR" property="jobForCode" />
+		<result column="JOB_TYPE_CODE" jdbcType="VARCHAR" property="jobTypeCode" />
+		<result column="PEOPLE_CATEGORY_CODE" jdbcType="VARCHAR" property="peopleCategoryCode" />
+		<result column="JOB_GROUP_CODE" jdbcType="VARCHAR" property="jobGroupCode" />
+		<result column="IS_KEY_JOB" javaType="Boolean" jdbcType="NUMERIC" property="isKeyJob" />
+		<result column="IS_MANAGER" javaType="Boolean" jdbcType="NUMERIC" property="isManager" />
+		<result column="GRADE_SET_ID" jdbcType="NUMERIC" property="gradeSetId" />
+		<result column="WORKING_SCHEDULE_ID" jdbcType="NUMERIC" property="workingScheduleId" />
+		<result column="ROW_NUMBER" jdbcType="NUMERIC" property="rowNumber" />
+		<result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+		<result column="IS_CLOSED" javaType="Boolean" jdbcType="NUMERIC" property="isClosed" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.UploadError" id="errorResult">
+		<id column="ERROR_ID" property="errorId" jdbcType="DECIMAL"/>
+		<result column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="ROW_NUMBER" property="rowNumber" jdbcType="DECIMAL"/>
+		<result column="RAW_DATA" property="rawData" jdbcType="VARCHAR"/>
+		<result column="ERROR_MESSAGE" property="errorMessage" jdbcType="VARCHAR"/>
+		<result column="SOURCE" property="source" jdbcType="VARCHAR" javaType="co.id.fifgroup.core.constant.UploadErrorStatus"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<if test="batchNumber != null">
+			AND WJE.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+		</if>
+		<if test="companyId != null">
+			AND WJE.COMPANY_ID = #{companyId, jdbcType=DECIMAL}
+		</if>
+		<if test="branchId != null">
+			AND WJE.BRANCH_ID = #{branchId, jdbcType=DECIMAL}
+		</if>
+		<if test="formatReferenceId != null">
+			AND WJE.FORMAT_REFERENCE_ID = #{formatReferenceId, jdbcType=DECIMAL}
+		</if>
+		<if test="status != null">
+			AND WJE.STATUS = #{status, jdbcType=VARCHAR}
+		</if>
+		<if test="createdBy != null">
+			AND WJE.CREATED_BY = #{createdBy, jdbcType=DECIMAL}
+		</if>
+		<if test="creationDate != null">
+			AND WJE.CREATION_DATE = #{creationDate, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdatedBy != null">
+			AND WJE.LAST_UPDATED_BY = #{lastUpdatedBy, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdateDate != null">
+			AND WJE.LAST_UPDATE_DATE = #{lastUpdateDate, jdbcType=TIMESTAMP}
+		</if>
+		<if test="batchNumberFrom != null">
+			<if test="!batchNumberFrom.trim().equals('')">
+				AND WJE.BATCH_NUMBER &gt;= #{batchNumberFrom, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="batchNumberTo != null">
+			<if test="!batchNumberTo.trim().equals('')">
+				AND WJE.BATCH_NUMBER &lt;= #{batchNumberTo, jdbcType=VARCHAR}
+			</if>
+		</if>
+	</sql>
+
+	<select id="getJobUploads" parameterType="map" resultMap="baseResult" >
+		SELECT 
+		  WJE.BATCH_NUMBER,
+		  WJE.COMPANY_ID, 
+		  WJE.BRANCH_ID, 
+		  WJE.FORMAT_REFERENCE_ID,
+		  WJE.STATUS,
+		  WJE.CREATED_BY,
+		  WJE.CREATION_DATE,
+		  WJE.LAST_UPDATED_BY,
+		  WJE.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PAE_1.UPLOAD_DATE) 
+				FROM 
+					WOS_JOB_ELEMENTS PAE_1
+					WHERE 
+						PAE_1.BATCH_NUMBER = WJE.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PAE_2.UPLOAD_DATE) 
+				FROM 
+					WOS_JOB_ELEMENTS PAE_2
+					WHERE 
+						PAE_2.BATCH_NUMBER = WJE.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM WOS_JOB_UPLOADS WJE
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = WJE.LAST_UPDATED_BY)
+		<where>
+			AND WJE.BATCH_NUMBER IN (
+										SELECT 
+											EUE.BATCH_NUMBER 
+										FROM 
+											wos_job_elements EUE
+											<where>
+												<if test="processDateFrom != null">
+													AND EUE.UPLOAD_DATE &gt;= #{processDateFrom, jdbcType=TIMESTAMP}
+												</if>
+												<if test="processDateTo != null">
+													AND EUE.UPLOAD_DATE &lt;= #{processDateTo, jdbcType=TIMESTAMP}
+												</if>
+											</where>
+									)
+			<include refid="whereClause"/>
+		</where>
+	</select>
+	
+	<select id="getJobStageByUploadId" parameterType="map" resultMap="stageResult" >
+		select 
+		  upload.company_id,
+	      stg.date_from,
+	      stg.date_to,
+	      stg.description,
+	      stg.grade_set_id,
+	      stg.is_key_job,
+	      stg.is_manager,
+	      stg.job_code,
+	      stg.job_for_code,
+	      stg.job_group_code,
+	      stg.job_name,
+	      stg.job_type_code,
+	      stg.people_category_code,
+	      stg.is_closed,
+	      stg.raw_data,
+		  stg.row_number,
+		  stg.upload_id,
+		  stg.working_schedule_id
+		from wos_job_stg stg
+		join wos_job_elements ele on stg.upload_id = ele.upload_id
+		join wos_job_uploads upload on ele.batch_number = upload.batch_number
+		where stg.upload_id= #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getJobErrorByUploadId" parameterType="map" resultMap="errorResult" >
+		select * from wos_job_errors where upload_id = #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getJobStageInOneBatchNumberByUploadId" parameterType="map" resultType="int" >
+		select count(1) from wos_job_stg stg
+			join wos_job_elements ele on stg.upload_id = ele.upload_id
+			join wos_job_uploads upl on ele.batch_number = upl.batch_number
+			<where>
+				stg.is_closed = 0
+				<if test="jobStage.code != null">
+					and upper(stg.job_code) = upper(#{jobStage.code})
+				</if>
+				<if test="jobStage.name != null">
+					and upper(stg.job_name) = upper(#{jobStage.name})
+				</if>
+			</where>
+			
+	</select>
+</mapper>

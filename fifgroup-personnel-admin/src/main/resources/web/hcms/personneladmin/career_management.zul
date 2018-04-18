@@ -1,0 +1,96 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winCareerManagement" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.CareerManagementComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.hav }" />
+		<listbox id="lbxHAV">
+			<listhead>
+				<listheader label="${labels.pea.period }" sort="auto(period)" /> <!-- 16021910232666: 03-Mar-16: add sort pada grid by AW -->
+				<listheader label="${labels.pea.hav }" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.period}"/>
+					<listcell label="${each.havName }"/>
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+	<groupbox closable="false" visible="false">
+		<caption label="${labels.pea.competency }" />
+		<listbox id="lbxCompetence">
+			<listhead>
+				<listheader label="${labels.pea.competency }" />
+				<listheader label="${labels.pea.remark }" />
+				<listheader label="${labels.pea.behaviouralIndicator }" />
+				<listheader label="${labels.pea.score }" />
+				<listheader label="${labels.common.effectiveStartDate }" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.name}"/>
+					<listcell label="${each.description}"/>
+					<listcell label="${each.behaviouralIndicator}"/>
+					<listcell label="${each.score}"/>
+					<listcell label="${date:formatDate(each.effectiveStartDate)}"/>
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+	<groupbox closable="false">
+		<caption label="${labels.pea.assesmentList }" />
+		<listbox id="lbxAssesments">
+			<listhead>
+				<listheader label="${labels.pea.employee }" width="150px" />
+				<listheader label="${labels.pea.employeeName }" width="150px"/>
+				<listheader label="${labels.pea.assesmentDate }" width="150px"/>
+				<listheader label="${labels.pea.originJob }" width="200px"/>
+				<listheader label="${labels.pea.targetJob }" width="200px"/>
+				<listheader label="${labels.pea.phycologicalBureau }" width="200px"/>
+				<listheader label="${labels.pea.assesmentResult }" width="200px"/>
+				<listheader label="${labels.pea.hc }" width="150px"/>
+				<listheader label="${labels.pea.entryBy }" width="150px"/>
+				<listheader label="${labels.pea.download }" width="100px"/>
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.employeeNumber }" />
+					<listcell label="${each.fullName }" />
+					<listcell label="${date:formatDate(each.assesmentDate) }" />
+					<listcell label="${each.originJob }" />
+					<listcell label="${each.targetJob }" />
+					<listcell label="${each.bureauPsychology }" />
+					<listcell label="${each.assesmentResult }" />
+					<listcell label="${each.hcResult }" />
+					<listcell label="${each.entryBy }" />
+					<listcell><a label="${labels.common.download}" style="text-decoration:underline ;color:blue" forward="lbxAssesments.onDetail(${each})"></a></listcell>
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+	<groupbox closable="false">
+		<caption label="${labels.pea.presentationList }" />
+		<listbox id="lbxPresentationList">
+			<listhead>
+				<listheader label="${labels.pea.employeeNumber }" />
+				<listheader label="${labels.pea.employeeName }" />
+				<listheader label="${labels.pea.job }" />
+				<listheader label="${labels.pea.grade }" />
+				<listheader label="${labels.pea.note }" />
+				<listheader label="${labels.pea.finalResult }" />
+				<listheader label="${labels.pea.file }" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.employeeNumber }" />
+					<listcell label="${each.fullName }" />
+					<listcell label="${each.originJob }" />
+					<listcell label="${each.grade }" />
+					<listcell label="${each.remark }" />
+					<listcell label="${each.actingDecision }" />
+					<listcell><a label="${labels.common.download}" style="text-decoration:underline ;color:blue" forward="lbxPresentationList.onDetail(${each})"></a></listcell>
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+</window>

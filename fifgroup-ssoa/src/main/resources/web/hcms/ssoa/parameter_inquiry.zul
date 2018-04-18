@@ -1,0 +1,63 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winParameterInquiry" apply="co.id.fifgroup.ssoa.controller.ParameterInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Parameter">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Parameter Code" />
+					<searchtextbox id="txtCode" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label value="Parameter Name" />
+					<searchtextbox id="txtName" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+<!-- 		<paging id="pgParameterTop" forward="onPaging" autohide="true" detailed="true"/>	 -->
+		<listbox id="parameterListbox" mold="paging" pagingPosition="both" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+			    <listheader label="${labels.common.action}" align="center" />
+				<listheader label="Parameter Code" align="center" sort="auto(parameterCode)" />
+				<listheader label="Parameter Name" align="center" sort="auto(parameterName)" />
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+				
+			</listhead>
+			<template name="model">
+				<listitem>
+				    <listcell><a label="Edit" forward="onDetail(${each})" style="color:blue" /> | <a label="Delete" forward="onDelete(${each})" style="color:blue" /></listcell>
+					<listcell label="${each.parameterCode}" />
+					<listcell label="${each.parameterName}" />
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}"></listcell>
+					<listcell label="${each.userName}" />
+					
+				</listitem>
+			</template>
+		</listbox>
+<!-- 		<paging id="pgParameter" forward="onPaging" autohide="true" detailed="true"/>	 -->
+		<exporter referenceId="parameterListbox" />	
+	</groupbox>
+</window>

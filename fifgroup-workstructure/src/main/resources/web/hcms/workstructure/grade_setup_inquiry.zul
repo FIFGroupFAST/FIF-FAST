@@ -1,0 +1,73 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winGradeSetupInquiry"
+	apply="co.id.fifgroup.workstructure.controller.GradeSetupInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.common.grade}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.gradeName}" />
+					<bandbox id="bnbGrade" width="300px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfGrade}" searchText1="${labels.wos.gradeCode}" searchText2="${labels.wos.gradeName}" headerLabel1="${labels.wos.gradeCode}" headerLabel2="${labels.wos.gradeName}" />
+				</row>
+				<row>
+					<label value="${labels.wos.effectiveOnDate}" />
+					<datebox id="dtbEffectiveOnDate" format="dd-MMM-yyyy" />
+				</row>
+				
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+						<space width="20px" />
+						<button id="btnUpload"
+							label="${labels.upload.upload}" mold="trendy"
+							image="${labels.image.link.upload}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.common.grade}" />
+			<listbox id="lstGrade" emptyMessage="${labels.common.noDataFound}" pagingPosition="both" mold="paging">
+				<listhead menupopup="auto">
+					<listheader label="${labels.wos.gradeCode}" align="center" sort="auto(lower(code))"/>
+					<listheader label="${labels.wos.grade}" align="center" sort="auto(lower(grade))" />
+					<listheader	label="${labels.wos.subGrade}" align="center" sort="auto(lower(subGrade))" />
+					<listheader	label="${labels.wos.gradeDescription}" align="center" sort="auto(lower(description))" />
+					<listheader	label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)" />
+					<listheader	label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)" />
+					<listheader label="${labels.common.action}" align="center"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell><label value="${each.code }"/></listcell>
+						<listcell><label value="${each.grade }"/></listcell>
+						<listcell><label value="${each.subGrade }"/></listcell>
+						<listcell><label value="${each.description }"/></listcell>
+						<listcell><label value="${date:formatDateTime(each.lastUpdateDate) }"/></listcell>
+						<listcell><label value="${each.userName }"/></listcell>
+						<listcell><a label="${labels.common.detail }" forward="onGradeDetail(${each})" style="color:blue" /></listcell>
+					</listitem>
+				</template>
+			</listbox>
+			<exporter referenceId="lstGrade" />
+		</groupbox>
+	</groupbox>
+</window>

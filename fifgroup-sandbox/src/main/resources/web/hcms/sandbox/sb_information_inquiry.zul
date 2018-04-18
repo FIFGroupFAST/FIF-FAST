@@ -1,0 +1,51 @@
+<?page title="Information Inquiry" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="winSBInformationInquiry" apply="co.id.fifgroup.controller.InformationInquiryComposer">
+	<groupbox mold="3d">
+		<caption label="Information Inquiry" />
+		<grid>
+			<columns>
+				<column align="right" width="100px" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					Requestor
+					<hbox id="hboxRequestor" />
+				</row>
+				<row>
+					Request Date
+					<hbox>
+						<datebox id="dtbFrom" />
+						<space width="20px" />
+						To
+						<space width="20px" />
+						<datebox id="dtbTo" />
+						<label id="lblErrorMessageDatebox" style="color:red;" visible="false" />
+					</hbox>
+				</row>
+				<row>
+					<space />
+					<div class="btn-group">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<button id="btnNew"
+							label="${labels.common.newHistory}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</div>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstInformationInquiry" multiple="true" emptyMessage="No Data Found" mold="paging" pagingPosition="both">
+			<listhead id="lstheadInformationInquiry" />
+		</listbox>
+		<listbox id="lstInformationInvisible" visible="false" multiple="true">
+			<listhead id="lstheadInformationInquiryInvisible" />
+		</listbox>
+		<separator />
+		<exporter referenceId="lstInformationInvisible"/>
+	</groupbox>
+</window>
+</zk>

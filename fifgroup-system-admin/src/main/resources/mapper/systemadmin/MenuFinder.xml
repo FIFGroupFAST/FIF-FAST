@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.finder.MenuFinder">
+
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.MenuDto">
+		<id column="MENU_ID" property="id" jdbcType="DECIMAL" />
+		<result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="DATE_FROM" property="dateFrom" jdbcType="DATE" />
+		<result column="DATE_TO" property="dateTo" jdbcType="DATE" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<collection property="menuDetailDto" javaType="ArrayList" ofType="co.id.fifgroup.systemadmin.dto.MenuDetailDto">
+			<id column="MENU_DTL_ID" property="id" jdbcType="DECIMAL" />
+			<result column="MENU_ITEM_TYPE" property="menuItemType" jdbcType="VARCHAR" />
+			<result column="SEQUENCE" property="sequence" jdbcType="NUMERIC" />
+			<result column="PROMPT" property="prompt" jdbcType="VARCHAR" />
+			<result column="DTL_DATE_FROM" property="dateFrom" jdbcType="DATE" />
+			<result column="DTL_DATE_TO" property="dateTo" jdbcType="DATE" />
+			<result column="ACTION_ID" property="actionId" jdbcType="DECIMAL" />
+			<result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	<resultMap id="MenuItemResultMap" type="co.id.fifgroup.systemadmin.domain.MenuItem">
+		<id column="ACTION_ID" property="actionId" jdbcType="DECIMAL" />
+		<result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getMenuName" resultMap="BaseResultMap">
+		SELECT MENU_NAME from SAM_MENU_HDR
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select 
+	      hd.menu_id,
+	      hd.menu_name,
+	      hd.description,
+	      hd.date_from,
+	      hd.date_to,
+	      hd.created_by,
+	      hd.creation_date,
+	      hd.last_updated_by,
+	      hd.last_update_date,
+		  MENU_DTL_ID,
+		  m.MENU_ITEM_TYPE,
+		  m.SEQUENCE,
+		  PROMPT,
+		  m.DATE_FROM dtl_date_from,
+		  m.DATE_TO dtl_date_to,
+		  m.ACTION_ID,
+		  FUNCTION_NAME ITEM_NAME
+		from SAM_MENU_HDR HD LEFT JOIN sam_menu_dtl m on hd.menu_id = m.menu_id
+    	left join sam_functions f on f.function_id = m.action_id 
+		where m.menu_item_type='FUNCTION' AND hd.MENU_ID = #{menuId, jdbcType=NUMERIC}
+		UNION
+		select 
+	      hd.menu_id,
+	      hd.menu_name,
+	      hd.description,
+	      hd.date_from,
+	      hd.date_to,
+	      hd.created_by,
+	      hd.creation_date,
+	      hd.last_updated_by,
+	      hd.last_update_date,
+		  MENU_DTL_ID,
+		  m.MENU_ITEM_TYPE,
+		  SEQUENCE,
+		  PROMPT,
+		  m.DATE_FROM dtl_date_from,
+		  m.DATE_TO dtl_date_to,
+		  ACTION_ID,
+		  f.MENU_NAME ITEM_NAME
+		from SAM_MENU_HDR HD LEFT JOIN sam_menu_dtl m on hd.menu_id = m.menu_id
+    	left join sam_menu_hdr f on f.menu_id = m.action_id 
+		where m.menu_item_type='SUBMENU' AND m.MENU_ID = #{menuId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="selectFunctionByExample" parameterType="co.id.fifgroup.systemadmin.domain.MenuItem" resultMap="MenuItemResultMap">
+		SELECT 
+			FUNCTION_ID AS ACTION_ID, 
+			FUNCTION_NAME AS ITEM_NAME
+		FROM SAM_FUNCTIONS
+		WHERE UPPER(FUNCTION_NAME) LIKE UPPER(#{itemName, jdbcType=VARCHAR})
+		order by upper(FUNCTION_NAME) asc
+	</select>
+	
+	<select id="countFunctionByExample" parameterType="co.id.fifgroup.systemadmin.domain.MenuItem" resultType="int">
+		SELECT 
+			count(*)
+		FROM SAM_FUNCTIONS
+		WHERE UPPER(FUNCTION_NAME) LIKE UPPER(#{itemName, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="selectMenuByExample" parameterType="co.id.fifgroup.systemadmin.domain.MenuItem" resultMap="MenuItemResultMap">
+		SELECT 
+			MENU_ID AS ACTION_ID,
+			MENU_NAME AS ITEM_NAME
+		FROM SAM_MENU_HDR
+		WHERE UPPER(MENU_NAME) LIKE UPPER(#{itemName, jdbcType=VARCHAR})
+		order by upper(menu_name) asc
+	</select>
+	
+	<select id="countMenuByExample" parameterType="co.id.fifgroup.systemadmin.domain.MenuItem" resultType="int">
+		SELECT 
+			count(*)
+		FROM SAM_MENU_HDR
+		WHERE UPPER(MENU_NAME) LIKE UPPER(#{itemName, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="selectMenuByMenu" parameterType="co.id.fifgroup.systemadmin.domain.Menu" resultMap="BaseResultMap">
+		SELECT A.*, B.USER_NAME
+		FROM SAM_MENU_HDR A JOIN SAM_USERS B
+		ON B.USER_ID = A.LAST_UPDATED_BY
+		<where>
+			<if test="menuName != null" >
+      			UPPER(A.MENU_NAME) LIKE UPPER(#{menuName, jdbcType=VARCHAR})
+    		</if>
+    		<if test="description != null" >
+      			AND UPPER(A.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR})
+    		</if> 		
+		</where>
+<!-- 		ORDER BY A.LAST_UPDATE_DATE DESC -->
+		ORDER BY A.MENU_NAME, A.DESCRIPTION, A.DATE_FROM, A.DATE_TO ASC
+	</select>
+	
+</mapper>

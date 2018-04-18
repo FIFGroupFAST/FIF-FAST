@@ -1,0 +1,59 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winAffcoMutation" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AffcoMutationComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.affcoMutation }">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid>
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.employeeName }"/>
+					<bandbox id="bnbEmployee" readonly="true" width="50%" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.employee}" searchText1="${labels.pea.employeeNumber}" searchText2="${labels.pea.employeeName}" headerLabel1="${labels.pea.employeeNumber}" headerLabel2="${labels.pea.employeeName}"></bandbox>				
+				</row>
+				<row>
+					<label value="${labels.pea.effectiveOnDate }" />
+					<datebox id="dtbEffectiveOnDate" width="100px" />
+				</row>				
+				<row>
+					<label />
+					<cell>
+						<hbox>
+							<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+								image="${labels.image.link.search}"/>
+							<button label="${labels.pea.addNewAffco}" id="btnAddNewAffco" mold="trendy" 
+								image="${labels.image.link.add}"/>
+						</hbox>
+					</cell>					
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lbxPeople" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.pea.employeeNumber }" sort="auto(employeeNumber)"/>
+				<listheader label="${labels.pea.employeeName }" sort="auto(fullName)"/>
+				<listheader label="${labels.pea.hireDate }" sort="auto(hireDate)"/>
+				<listheader label="${labels.common.lastUpdateDate }" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy }" sort="auto(userName)"/>
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.employeeNumber }" />
+					<listcell label="${each.fullName }" />
+					<listcell label="${date:formatDate(each.hireDate) }" />
+					<listcell label="${date:formatDateTime(each.lastUpdateDate) }" />
+					<listcell label="${each.userName }" />
+				</listitem>			
+			</template>			
+		</listbox>
+		<exporter referenceId="lbxPeople" />
+	</groupbox>
+</window>

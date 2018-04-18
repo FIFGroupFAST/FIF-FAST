@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.eligibility.finder.FactTypeCacheSynchronizeMapper">
+	<delete id="deleteFactTypeCache" parameterType="map">
+		delete from elr_fact_type_cache where company_id = #{companyId, jdbcType=NUMERIC}
+	</delete>
+	
+	<insert id="populateEmployee" parameterType="map">
+		insert into elr_fact_type_cache(
+			person_id, company_id, 
+			mop_count,
+			MOP2_COUNT,
+			COP_COUNT,
+			COP2_COUNT,
+			OCOP_COUNT,
+			OPEX_COUNT,
+			OPEX2_COUNT,
+			CASHABLE_COUNT,
+			OVERTIME_COUNT,
+			UNPAID_LEAVE_COUNT,
+			UNPAID_ABSENT_COUNT)
+		select ppt.person_id, ppt.company_id,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  from pea_people_types ppt
+		where 
+		  trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+		  and ppt.people_type = 'EMPLOYEE'
+		  and ppt.company_id = #{companyId, jdbcType=NUMERIC}
+	</insert>
+	
+	<update id="synchronizeCOP" parameterType="map">
+		merge into elr_fact_type_cache eft 
+		using (
+		  select 
+		    ppt.person_id,
+		    ppt.company_id,
+		    count(lt_cop.loan_trn_id) cop_count
+		  from pea_people_types ppt
+		  join pea_primary_assignments ppa
+		    on ppa.person_id = ppt.person_id
+		    and ppa.company_id = ppt.company_id
+		    and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+		  join pea_personal_informations ppi
+		    on ppi.person_id = ppt.person_id
+		    and ppi.company_id = ppt.company_id
+		    and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+		  join loa_loan_types llt_cop
+		    on llt_cop.loan_type_name = 'COP'
+		    and llt_cop.company_id = ppt.company_id
+		  join loa_loan_trn lt_cop
+		    on lt_cop.person_id = ppt.person_id
+		    and lt_cop.company_id = ppt.company_id
+		    and lt_cop.loan_status = 'DISBURSED'
+		    and lt_cop.loan_id = llt_cop.loan_id
+		    and lt_cop.deduction_start &lt;= trunc(last_day(sysdate))
+		  where 
+		    trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+		  group by ppt.person_id, ppt.company_id
+		) ftc
+		on (
+		  ftc.person_id = eft.person_id
+		  and ftc.company_id = eft.company_id
+		)
+		when matched then
+		  update set
+		    eft.cop_count = ftc.cop_count
+	</update>
+	
+	<update id="synchronizeCOP2" parameterType="map">
+		merge into elr_fact_type_cache eft 
+		using (
+		  select 
+		    ppt.person_id,
+		    ppt.company_id,
+		    count(lt_cop.loan_trn_id) cop2_count
+		  from pea_people_types ppt
+		  join pea_primary_assignments ppa
+		    on ppa.person_id = ppt.person_id
+		    and ppa.company_id = ppt.company_id
+		    and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+		  join pea_personal_informations ppi
+		    on ppi.person_id = ppt.person_id
+		    and ppi.company_id = ppt.company_id
+		    and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+		  join loa_loan_types llt_cop
+		    on llt_cop.loan_type_name = 'COP 2'
+		    and llt_cop.company_id = ppt.company_id
+		  join loa_loan_trn lt_cop
+		    on lt_cop.person_id = ppt.person_id
+		    and lt_cop.company_id = ppt.company_id
+		    and lt_cop.loan_status = 'DISBURSED'
+		    and lt_cop.loan_id = llt_cop.loan_id
+		    and lt_cop.deduction_start &lt;= trunc(last_day(sysdate))
+		  where 
+		    trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+		  group by ppt.person_id, ppt.company_id
+		) ftc
+		on (
+		  ftc.person_id = eft.person_id
+		  and ftc.company_id = eft.company_id
+		)
+		when matched then
+		  update set
+		    eft.cop2_count = ftc.cop2_count
+	</update>
+	
+	<update id="synchronizeMOP" parameterType="map">
+		merge into elr_fact_type_cache eft 
+		using (
+		  select 
+		    ppt.person_id,
+		    ppt.company_id,
+		    count(lt_cop.loan_trn_id) mop_count
+		  from pea_people_types ppt
+		  join pea_primary_assignments ppa
+		    on ppa.person_id = ppt.person_id
+		    and ppa.company_id = ppt.company_id
+		    and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+		  join pea_personal_informations ppi
+		    on ppi.person_id = ppt.person_id
+		    and ppi.company_id = ppt.company_id
+		    and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+		  join loa_loan_types llt_cop
+		    on llt_cop.loan_type_name = 'MOP'
+		    and llt_cop.company_id = ppt.company_id
+		  join loa_loan_trn lt_cop
+		    on lt_cop.person_id = ppt.person_id
+		    and lt_cop.company_id = ppt.company_id
+		    and lt_cop.loan_status = 'DISBURSED'
+		    and lt_cop.loan_id = llt_cop.loan_id
+		    and lt_cop.deduction_start &lt;= trunc(sysdate)
+		  where 
+		    trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+		  group by ppt.person_id, ppt.company_id
+		) ftc
+		on (
+		  ftc.person_id = eft.person_id
+		  and ftc.company_id = eft.company_id
+		)
+		when matched then
+		  update set
+		    eft.mop_count = ftc.mop_count
+	</update>
+	
+	<update id="synchronizeMOP2" parameterType="map">
+		merge into elr_fact_type_cache eft 
+		using (
+		  select 
+		    ppt.person_id,
+		    ppt.company_id,
+		    count(lt_cop.loan_trn_id) mop2_count
+		  from pea_people_types ppt
+		  join pea_primary_assignments ppa
+		    on ppa.person_id = ppt.person_id
+		    and ppa.company_id = ppt.company_id
+		    and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+		  join pea_personal_informations ppi
+		    on ppi.person_id = ppt.person_id
+		    and ppi.company_id = ppt.company_id
+		    and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+		  join loa_loan_types llt_cop
+		    on llt_cop.loan_type_name = 'MOP 2'
+		    and llt_cop.company_id = ppt.company_id
+		  join loa_loan_trn lt_cop
+		    on lt_cop.person_id = ppt.person_id
+		    and lt_cop.company_id = ppt.company_id
+		    and lt_cop.loan_status = 'DISBURSED_FIFAPPS'
+		    and lt_cop.loan_id = llt_cop.loan_id
+		    and lt_cop.deduction_start &lt;= trunc(sysdate)
+		  where 
+		    trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+		  group by ppt.person_id, ppt.company_id
+		) ftc
+		on (
+		  ftc.person_id = eft.person_id
+		  and ftc.company_id = eft.company_id
+		)
+		when matched then
+		  update set
+		    eft.mop2_count = ftc.mop2_count
+	</update>
+	
+	
+	<update id="synchronizeCashable" >
+		merge into elr_fact_type_cache eft2
+		using (
+		  select 
+		    eft.person_id,
+		    eft.company_id,
+		    count(lct.cashable_trn_id) cashable_count
+		  from elr_fact_type_cache eft
+		  join lea_cashable_trn lct
+		    on lct.person_id = eft.person_id
+		  group by eft.person_id, eft.company_id
+		) cashable
+		on (
+		  eft2.person_id = cashable.person_id
+		  and eft2.company_id = cashable.company_id
+		)
+		when matched then
+		update set 
+		  eft2.cashable_count = 1
+	</update>
+	
+	<update id="synchronizeOvertime">
+		merge into elr_fact_type_cache eft2
+		using (
+		  select 
+		    eft.person_id,
+		    eft.company_id,
+		    count(tfr.summary_id) overtime_count
+		  from elr_fact_type_cache eft
+		  join tms_finalize_results tfr
+			  on tfr.person_id = eft.person_id
+			  and nvl(tfr.overtime_point, 0) &gt; 0
+			  and tfr.is_processed_to_payroll = 0
+		  group by eft.person_id, eft.company_id
+		) cashable
+		on (
+		  eft2.person_id = cashable.person_id
+		  and eft2.company_id = cashable.company_id
+		)
+		when matched then
+		update set 
+		  eft2.overtime_count = 1
+	</update>
+	
+	<update id="synchronizeUnpaidLeave">
+		merge into elr_fact_type_cache eft2
+		using (
+		  select 
+		    eft.person_id,
+		    eft.company_id,
+		    count(tfr.summary_id) overtime_count
+		  from elr_fact_type_cache eft
+		  join tms_finalize_results tfr
+			  on tfr.person_id = eft.person_id
+			  and nvl(tfr.unpaid_leave, 0) &gt; 0
+			  and tfr.is_processed_to_payroll = 0
+		  group by eft.person_id, eft.company_id
+		) unpaidleave
+		on (
+		  eft2.person_id = unpaidleave.person_id
+		  and eft2.company_id = unpaidleave.company_id
+		)
+		when matched then
+		update set 
+		  eft2.unpaid_leave_count = 1
+	</update>
+	
+	<update id="synchronizeUnpaidAbsent">
+		merge into elr_fact_type_cache eft2
+		using (
+		  select 
+		    eft.person_id,
+		    eft.company_id,
+		    count(tfr.summary_id) overtime_count
+		  from elr_fact_type_cache eft
+		  join tms_finalize_results tfr
+			  on tfr.person_id = eft.person_id
+			  and nvl(tfr.unpaid_absent, 0) &gt; 0
+			  and tfr.is_processed_to_payroll = 0
+		  group by eft.person_id, eft.company_id
+		) unpaidabsent
+		on (
+		  eft2.person_id = unpaidabsent.person_id
+		  and eft2.company_id = unpaidabsent.company_id
+		)
+		when matched then
+		update set 
+		  eft2.unpaid_absent_count = 1
+	</update>
+	
+	<update id="synchronizeOPEX">
+		merge into elr_fact_type_cache eft2
+		using (
+		select 
+		  distinct
+		  eft.person_id,
+		  eft.company_id
+		from  elr_fact_type_cache eft
+		join  pay_paycodes p 
+		  on p.paycode = 'GA007'
+		  and p.company_id = eft.company_id
+		join pay_emp_payroll_hdr eph
+		  on eph.person_id = eft.person_id
+		  and eph.company_id = eft.company_id
+		join pay_emp_payroll_dtl epd
+		  on epd.emp_payroll_hdr_id = eph.emp_payroll_hdr_id
+		  and epd.paycode_id = p.paycode_id
+		  and trunc(sysdate) between epd.date_from and epd.date_To
+		) ocop
+		on (
+		  ocop.person_id = eft2.person_id
+		  and ocop.company_id = eft2.company_id
+		)
+		when matched then 
+		  update set
+		    eft2.opex_count = 1
+	</update>
+	
+	<update id="synchronizeOPEX2">
+		merge into elr_fact_type_cache eft2
+		using (
+		select 
+		  distinct
+		  eft.person_id,
+		  eft.company_id
+		from  elr_fact_type_cache eft
+		join  pay_paycodes p 
+		  on p.paycode = 'GA030'
+		  and p.company_id = eft.company_id
+		join pay_emp_payroll_hdr eph
+		  on eph.person_id = eft.person_id
+		  and eph.company_id = eft.company_id
+		join pay_emp_payroll_dtl epd
+		  on epd.emp_payroll_hdr_id = eph.emp_payroll_hdr_id
+		  and epd.paycode_id = p.paycode_id
+		  and trunc(sysdate) between epd.date_from and epd.date_To
+		) ocop
+		on (
+		  ocop.person_id = eft2.person_id
+		  and ocop.company_id = eft2.company_id
+		)
+		when matched then 
+		  update set
+		    eft2.opex2_count = 1
+	</update>
+	
+	<update id="synchronizeOCOP">
+		merge into elr_fact_type_cache eft2
+		using(
+		  select  distinct
+		  eft.person_id,
+		  eft.company_id
+		  from elr_fact_type_cache eft
+		  join pea_personal_informations ppi
+		    on eft.person_id = ppi.person_id
+		    and eft.company_id = ppi.company_id
+		    and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+		   JOIN OCO_TRANSACTIONS OCOP
+		    ON OCOP.PERSON_ID = PPI.PERSON_ID
+		    and ocop.transaction_status ='OPEN'
+		    and OCOP.APPROVAL_STATUS = 'APPROVED'
+		    and trunc(nvl(OCOP.START_OCOP_DEDUCTION_DATE, TO_DATE('31-DEC-4712','DD-MON-YYYY'))) &lt;= sysdate
+		) ocop
+		on (
+		  ocop.person_id = eft2.person_id
+		  and ocop.company_id = eft2.company_id
+		) 
+		when matched then
+		update set
+		  eft2.ocop_count = 1
+	</update>
+</mapper>

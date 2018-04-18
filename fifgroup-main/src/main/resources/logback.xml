@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+
+	<jmxConfigurator />
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{req.remoteHost} %thread] %-5level %logger{128} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<file>${com.sun.aas.instanceRoot}/logs/hcms-error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${com.sun.aas.instanceRoot}/logs/archived/hcms-error.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%X{req.remoteHost} %thread] %-5level %logger{128} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${com.sun.aas.instanceRoot}/logs/hcms.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${com.sun.aas.instanceRoot}/logs/archived/hcms.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%X{req.remoteHost} %thread] %-5level	%logger{128} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="co.id.fifgroup" level="debug" />
+	<logger name="org.zkoss" level="warn" />
+	<logger name="org.springframework" level="info" />
+
+	<root level="info">
+		<appender-ref ref="CONSOLE" />
+		<!-- <appender-ref ref="FILE" /> -->
+		<!-- <appender-ref ref="ERROR" /> -->
+	</root>
+</configuration>
+                

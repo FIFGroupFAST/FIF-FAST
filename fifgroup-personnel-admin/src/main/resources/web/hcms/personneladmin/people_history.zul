@@ -1,0 +1,11 @@
+<window id="winPeopleHistory" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.PeopleHistoryComposer">
+	<listbox id="lbxPeopleHistory">
+		<listhead>
+			<listheader label="${labels.pea.date }" />
+			<listheader label="${labels.pea.event }" />
+			<listheader label="${labels.pea.document }" />
+		</listhead>
+	</listbox>
+		
+</window>

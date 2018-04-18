@@ -1,0 +1,89 @@
+<window id="winAddressDetail" border="normal" title="${labels.pea.addressDetail }"
+	apply="co.id.fifgroup.personneladmin.controller.AddressDetailComposer">
+	<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					<label value="${labels.pea.country }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<bandbox id="bnbCountry" readonly="true" width="250px" use="co.id.fifgroup.basicsetup.common.LookupWindowBasicSetup" title="${labels.pea.listOfCountry}" searchText="${labels.pea.countryName}" headerLabel="${labels.pea.countryName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.province }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<bandbox id="bnbProvince" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.pea.listOfProvince}" searchText="${labels.pea.provinceName}" headerLabel="${labels.pea.provinceName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.city }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<bandbox id="bnbCity" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.pea.listOfCity}" searchText="${labels.pea.cityName}" headerLabel="${labels.pea.cityName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.kecamatan }" />
+				</hbox>	
+				<bandbox id="bnbKecamatan" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.pea.listOfKecamatan}" searchText="${labels.pea.kecamatanName}" headerLabel="${labels.pea.kecamatanName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.kelurahan }" />
+				</hbox>	
+				<bandbox id="bnbKelurahan" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.pea.listOfKelurahan}" searchText="${labels.pea.kelurahanName}" headerLabel="${labels.pea.kelurahanName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.zipcode}" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<bandbox id="bnbZipCode" readonly="true" use="co.id.fifgroup.core.ui.CommonPopupZipCodeBandbox"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.address}" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<textbox id="txtAddress" maxlength="300" width="250px" rows="3" />
+			</row>
+			<row>
+				<label></label>
+				<checkbox id="chkPhysical" label="${labels.pea.isPhysicalAddress }"/>
+			</row>
+			<row>
+				<label></label>
+				<checkbox id="chkKTP" label="${labels.pea.isKtpAddress }"/>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.common.startDate}" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<datebox id="dtbStartDate" width="100px" />
+			</row>
+			<row>
+				<label value="${labels.common.endDate}" />
+				<datebox id="dtbEndDate" width="100px" use="co.id.fifgroup.core.ui.DateBoxMax" />
+			</row>
+		</rows>
+	</grid> 
+	<hbox>
+		<cell align="center" style="width:1250px;">
+			<button id="btnAdd"
+				label="${labels.common.ok}" mold="trendy" 
+				image="${labels.image.link.add}" />
+		</cell>
+		<cell align="right">
+			<button id="btnCancel"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>
+</window>

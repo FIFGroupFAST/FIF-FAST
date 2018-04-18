@@ -1,0 +1,16 @@
+<window border="none" id="winHousingPlacementRequestInquiry" apply="co.id.fifgroup.personneladmin.controller.HousingTransactionInquiryComposer">
+	<groupbox mold="3d">
+		<listbox id="lstPlacementRequest" emptyMessage="${labels.common.err.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.hou.housingContract }" sort="auto(contractNumber)" width="150px" />
+				<listheader label="${labels.hou.houseType }" sort="auto(houseType)" width="150px"/>
+				<listheader label="${labels.common.branch }" sort="auto(houseBranchName)" width="150px" />
+				<listheader label="${labels.hou.houseLocation }" sort="auto(houseLocation)" width="150px"/>
+				<listheader label="${labels.hou.address }" sort="auto(houseAddress)" width="300px"/>
+				<listheader label="${labels.hou.placementDate }" sort="auto(placementDate)" width="150px"/>
+				<listheader label="${labels.hou.closedDate }" sort="auto(closedDate)" width="150px"/>				
+			</listhead>
+		</listbox>
+		<exporter referenceId="lstPlacementRequest" />
+	</groupbox>
+</window>

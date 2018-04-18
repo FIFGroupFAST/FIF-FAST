@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.ssoa.dao.SOPeriodMapper">
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.ssoa.domain.SOPeriod">
+		<id column="SO_PERIOD_ID" jdbcType="DECIMAL" property="soPeriodId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="START_DATE" jdbcType="DATE" property="startDate" />
+		<result column="END_DATE" jdbcType="DATE" property="endDate" />
+		<result column="INVOLVE_BRANCH" jdbcType="INTEGER" property="involveBranch" />
+		<result column="NOT_STARTED_BRANCH" jdbcType="INTEGER"
+			property="notStartedBranch" />
+		<result column="IN_PROCESS_BRANCH" jdbcType="INTEGER" property="inProcessBranch" />
+		<result column="SUBMIT_BRANCH" jdbcType="INTEGER" property="submitBranch" />
+		<result column="APPROVED_BRANCH" jdbcType="INTEGER" property="approveBranch" />
+		<result column="CLOSED_BRANCH" jdbcType="INTEGER" property="closedBranch" />
+		<result column="STATUS_ID" jdbcType="DECIMAL" property="statusId" />
+		<result column="STATUS_CODE" jdbcType="VARCHAR" property="statusCode" />
+		<result column="LAST_NOTIFICATION_DATE" jdbcType="DATE"
+			property="lastNotificationDate" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATE_BY" jdbcType="DECIMAL" property="lastUpdateBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"
+			property="lastUpdateDate" />
+		<result column="STATUS_NAME" jdbcType="VARCHAR" property="statusName" />
+		<result column="PERIOD_DATE" jdbcType="VARCHAR" property="periodDate" />
+		<result column="START_DATE_TOSTRING" jdbcType="VARCHAR" property="startDateTostring" />
+		<result column="END_DATE_TOSTRING" jdbcType="VARCHAR" property="endDateTostring" />
+	</resultMap>
+
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<sql id="Base_Column_List">
+		P.SO_PERIOD_ID,
+		P.COMPANY_ID,
+		P.DESCRIPTION,
+		P.START_DATE,
+		P.END_DATE,
+		P.INVOLVE_BRANCH,
+		P.NOT_STARTED_BRANCH,
+		P.IN_PROCESS_BRANCH,
+		P.SUBMIT_BRANCH,
+		P.APPROVED_BRANCH,
+		P.CLOSED_BRANCH,
+		P.STATUS_ID,
+		P.STATUS_CODE,
+		L.DESCRIPTION as STATUS_NAME,
+		P.LAST_NOTIFICATION_DATE,
+		P.CREATED_BY,
+		P.CREATION_DATE,
+		P.LAST_UPDATE_BY,
+		P.LAST_UPDATE_DATE
+	</sql>
+
+	<select id="selectByExample" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from SOC_SO_PERIOD_HDR P
+		INNER JOIN BSE_LOOKUP_DEPENDENTS L on L.DETAIL_CODE = P.STATUS_CODE
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select DISTINCT 'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		 ,company_id,
+      	 TO_CHAR(P.START_DATE, 'dd Monthyyyy') AS START_DATE_TOSTRING,
+         TO_CHAR(P.END_DATE, 'dd Monthyyyy') AS END_DATE_TOSTRING,
+         TO_CHAR (P.start_date, 'Monthyyyy') AS PERIOD_DATE
+		from SOC_SO_PERIOD_HDR P
+		LEFT JOIN BSE_LOOKUP_DEPENDENTS L on
+		L.DETAIL_CODE = P.STATUS_CODE
+		where P.SO_PERIOD_ID =
+		#{soPeriodId,jdbcType=DECIMAL}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		SOC_SO_PERIOD_HDR
+		where SO_PERIOD_ID = #{soPeriodId,jdbcType=DECIMAL}
+	</delete>
+
+	<insert id="insert" parameterType="co.id.fifgroup.ssoa.domain.SOPeriod"
+		useGeneratedKeys="true">
+		<selectKey keyProperty="soPeriodId" order="BEFORE"
+			resultType="java.lang.Long">
+			select SOC_SO_PERIOD_HDR_S.nextVal from dual
+		</selectKey>
+		insert into SOC_SO_PERIOD_HDR
+		(SO_PERIOD_ID,
+		COMPANY_ID,
+		DESCRIPTION,
+		START_DATE,
+		END_DATE,
+		INVOLVE_BRANCH,
+		NOT_STARTED_BRANCH,
+		IN_PROCESS_BRANCH,
+		SUBMIT_BRANCH,
+		APPROVED_BRANCH,
+		CLOSED_BRANCH,
+		STATUS_ID,
+		STATUS_CODE,
+		LAST_NOTIFICATION_DATE,
+		CREATED_BY,
+		CREATION_DATE,
+		LAST_UPDATE_BY,
+		LAST_UPDATE_DATE)
+
+		values(
+		#{soPeriodId,jdbcType=DECIMAL},
+		#{companyId,jdbcType=DECIMAL},
+		#{description,jdbcType=VARCHAR},
+		#{startDate,jdbcType=DATE},
+		#{endDate,jdbcType=DATE},
+		#{involveBranch,jdbcType=INTEGER},
+		#{notStartedBranch,jdbcType=INTEGER},
+		#{inProcessBranch,jdbcType=INTEGER},
+		#{submitBranch,jdbcType=INTEGER},
+		#{approveBranch,jdbcType=INTEGER},
+		#{closedBranch,jdbcType=INTEGER},
+		(SELECT LOOKUP_ID FROM BSE_LOOKUP_DEPENDENTS
+		WHERE DETAIL_CODE = #{statusCode,jdbcType=VARCHAR}),
+		#{statusCode,jdbcType=VARCHAR},
+		#{lastNotificationDate,jdbcType=DATE},
+		#{createdBy,jdbcType=DECIMAL},
+		#{creationDate,jdbcType=TIMESTAMP},
+		#{lastUpdateBy,jdbcType=DECIMAL},
+		#{lastUpdateDate,jdbcType=TIMESTAMP})
+	</insert>
+
+	<insert id="insertSelective" parameterType="co.id.fifgroup.ssoa.domain.SOPeriod">
+		<selectKey keyProperty="soPeriodId" order="BEFORE"
+			resultType="java.lang.Long">
+			select SOC_SO_PERIOD_HDR_S.nextVal from dual
+		</selectKey>
+		insert into SOC_SO_PERIOD_HDR
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			SO_PERIOD_ID,
+			<if test="COMPANY_ID != null">
+				COMPANY_ID,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="startDate != null">
+				START_DATE,
+			</if>
+			<if test="endDate != null">
+				END_DATE,
+			</if>
+			<if test="involveBranch != null">
+				INVOLVE_BRANCH,
+			</if>
+			<if test="notStartedBranch != null">
+				NOT_STARTED_BRANCH,
+			</if>
+			<if test="inProcessBranch != null">
+				IN_PROCESS_BRANCH,
+			</if>
+			<if test="submitBranch != null">
+				SUBMIT_BRANCH,
+			</if>
+			<if test="approveBranch != null">
+				APPROVED_BRANCH,
+			</if>
+			<if test="closedBranch != null">
+				CLOSED_BRANCH,
+			</if>
+			<if test="lastNotificationDate != null">
+				LAST_NOTIFICATION_DATE,
+			</if>
+			<if test="createdBy != null">
+				CREATED_BY,
+			</if>
+			<if test="creationDate != null">
+				CREATION_DATE,
+			</if>
+			<if test="lastUpdateBy != null">
+				LAST_UPDATE_BY,
+			</if>
+			<if test="lastUpdateDate != null">
+				LAST_UPDATE_DATE
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateBy != null">
+				#{lastUpdateBy,jdbcType=DECIMAL},
+			</if>
+			<if test="lastUpdateDate != null">
+				#{lastUpdateDate,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+
+	</insert>
+
+	<select id="countByExample" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodExample"
+		resultType="java.lang.Integer">
+		select count(*) from SOC_SO_PERIOD_HDR
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+
+	<update id="updateByPrimaryKey" parameterType="co.id.fifgroup.ssoa.domain.SOPeriod">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		update
+		SOC_SO_PERIOD_HDR
+		SET
+		STATUS_ID = #{statusId,jdbcType=VARCHAR},
+		STATUS_CODE= #{statusCode,jdbcType=VARCHAR},
+		LAST_UPDATE_BY = #{lastUpdateBy,jdbcType=DECIMAL},
+		LAST_UPDATE_DATE = #{lastUpdateDate,jdbcType=TIMESTAMP}
+		where
+		SO_PERIOD_ID = #{soPeriodId,jdbcType=DECIMAL}
+	</update>
+
+	<update id="updateByExampleSelective" parameterType="map">
+		update SOC_SO_PERIOD_HDR
+		<set>
+			<if test="record.companyId != null">
+				COMPANY_ID = #{record.companyId,jdbcType=DECIMAL},
+			</if>
+			<if test="record.description != null">
+				DESCRIPTION = #{record.description,jdbcType=VARCHAR},
+			</if>
+			<if test="record.startDate != null">
+				START_DATE = #{record.startDate,jdbcType=DATE},
+			</if>
+			<if test="record.endDate != null">
+				END_DATE = #{record.endDate,jdbcType=DATE},
+			</if>
+			<if test="record.involveBranch != null">
+				INVOLVE_BRANCH =
+				#{record.involveBranch,jdbcType=INTEGER},
+			</if>
+			<if test="record.notStartedBranch != null">
+				NOT_STARTED_BRANCH =
+				#{record.notStartedBranch,jdbcType=INTEGER},
+			</if>
+			<if test="record.inProcessBranch != null">
+				IN_PROCESS_BRANCH =
+				#{record.inProcessBranch,jdbcType=INTEGER},
+			</if>
+			<if test="record.submitBranch != null">
+				SUBMIT_BRANCH = #{record.submitBranch,jdbcType=INTEGER},
+			</if>
+			<if test="record.approveBranch != null">
+				APPROVED_BRANCH =
+				#{record.approveBranch,jdbcType=INTEGER},
+			</if>
+			<if test="record.closedBranch != null">
+				CLOSED_BRANCH = #{record.closedBranch,jdbcType=INTEGER},
+			</if>
+			<if test="record.statusCode != null">
+				STATUS_CODE = #{record.statusCode,jdbcType=VARCHAR},
+			</if>
+			<if test="record.lastNotificationDate != null">
+				LAST_NOTIFICATION_DATE =
+				#{record.lastNotificationDate,jdbcType=DATE},
+			</if>
+			<if test="record.lastUpdateBy != null">
+				LAST_UPDATE_BY = #{record.lastUpdateBy,jdbcType=DECIMAL},
+			</if>
+			<if test="record.lastUpdateDate != null">
+				LAST_UPDATE_DATE =
+				#{record.lastUpdateDate,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+
+
+	<select id="selectByExampleWithRowbounds" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from SOC_SO_PERIOD_HDR P
+		INNER JOIN BSE_LOOKUP_DEPENDENTS L on
+		L.DETAIL_CODE = L.STATUS_CODE
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+
+
+	<resultMap id="statusStockOpname" type="co.id.fifgroup.ssoa.dto.SOPeriodDetailDTO">
+		<id column="LOOKUP_ID" property="lookUpId" jdbcType="DECIMAL" />
+		<result column="STATUS_CODE" property="statusCode" jdbcType="VARCHAR" />
+		<result column="STATUS_NAME" property="statusName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectStatusSOPeriod" resultMap="statusStockOpname"
+		parameterType="co.id.fifgroup.ssoa.domain.SOPeriod">
+		SELECT DISTINCT
+		L.LOOKUP_ID,
+		L.NAME,
+		LD.DESCRIPTION as STATUS_NAME,
+		LD.DETAIL_CODE as STATUS_CODE
+		FROM BSE_LOOKUP_HDR L
+		INNER JOIN BSE_LOOKUP_DEPENDENTS LD on LD.LOOKUP_ID = L.LOOKUP_ID
+		WHERE
+		UPPER(L.NAME) = (UPPER(#{statusCode,jdbcType=VARCHAR}))
+
+	</select>
+
+
+	<resultMap id="BaseResultAssetMap" type="co.id.fifgroup.ssoa.domain.Assets">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		<id column="ASSET_ID" jdbcType="DECIMAL" property="id" />
+		<result column="EBS_ASSET_ID" jdbcType="DECIMAL" property="ebsAssetId" />
+		<result column="ASSET_NUMBER" jdbcType="DECIMAL" property="assetNumber" />
+		<result column="TAG_NUMBER" jdbcType="DECIMAL" property="tagNumber" />
+		<result column="SERIAL_NUMBER" jdbcType="VARCHAR" property="serialNumber" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="CATEGORY_ID" jdbcType="DECIMAL" property="categoryId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="BRANCH_ID" jdbcType="VARCHAR" property="branchId" />
+		<result column="LOCATION_ID" jdbcType="VARCHAR" property="locationId" />
+		<result column="POSITION" jdbcType="VARCHAR" property="position" />
+		<result column="DATE_PLACED_IN_SERVICE" jdbcType="DATE"
+			property="datePlacedInService" />
+		<result column="LIFE_IN_MONTHS" jdbcType="DECIMAL" property="lifeInMonths" />
+
+		<result column="ORIGINAL_COST" jdbcType="DECIMAL" property="originalCost" />
+		<result column="UNREVALUED_COST" jdbcType="DECIMAL" property="unrevaluedCost" />
+		<result column="BOOK_TYPE_CODE" jdbcType="VARCHAR" property="bookTypeCode" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATE_BY" jdbcType="DECIMAL" property="lastUpdateBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"
+			property="lastUpdateDate" />
+	</resultMap>
+
+	<sql id="Base_Column_List_Assets">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		ASSET_ID,
+		EBS_ASSET_ID,
+		ASSET_NUMBER,
+		TAG_NUMBER,
+		SERIAL_NUMBER,
+		DESCRIPTION,
+		CATEGORY_ID,
+		COMPANY_ID,
+		BRANCH_ID,
+		LOCATION_ID,
+		POSITION,
+		DATE_PLACED_IN_SERVICE,
+		LIFE_IN_MONTHS,
+		ORIGINAL_COST,
+		UNREVALUED_COST,
+		BOOK_TYPE_CODE,
+		CREATED_BY,
+		CREATION_DATE, LAST_UPDATE_BY, LAST_UPDATE_DATE
+	</sql>
+
+	<select id="selectByBranchId" parameterType="java.lang.Long"
+		resultMap="BaseResultAssetMap">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		select distinct
+		<include refid="Base_Column_List_Assets" />
+		from SOC_ASSETS
+		where BRANCH_ID = #{branchId,jdbcType=DECIMAL} and retired_flag = 'N'
+        and COMPANY_ID = #{companyId,jdbcType=DECIMAL}
+	</select>
+
+	<resultMap id="BaseResultBranchMap" type="co.id.fifgroup.ssoa.domain.Branch">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		<id column="BRANCH_ID" jdbcType="DECIMAL" property="branchId" />
+		<result column="BRANCH_CODE" jdbcType="VARCHAR" property="branchCode" />
+		<result column="BRANCH_NAME" jdbcType="VARCHAR" property="branchName" />
+		<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="ORG_HIER_ID" jdbcType="DECIMAL" property="orgHierId" />
+
+	</resultMap>
+
+	<sql id="Base_Column_List_Branch">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		BRANCH_ID,
+		BRANCH_CODE,
+		BRANCH_NAME
+	</sql>
+
+	<select id="getUnClosedBranchStatus" parameterType="co.id.fifgroup.ssoa.domain.Branch"
+		resultMap="BaseResultBranchMap">
+		 select
+	       BRANCH_ID,
+	       BRANCH_CODE,
+	       BRANCH_NAME
+		from (SELECT DISTINCT 
+          wo.organization_id BRANCH_ID,
+          wo.organization_code BRANCH_CODE,
+          wo.organization_name BRANCH_NAME,
+          wo.company_id COMPANY_ID
+            FROM wos_location_versions wlv
+                 JOIN wos_locations wl ON wl.location_id = wlv.location_id
+                 JOIN wos_organizations wo ON wo.organization_id = wlv.branch_owner_id
+                 left join soc_stock_opname_hdr soh on soh.branch_id= wo.organization_id and soh.company_id= wo.company_id
+           WHERE              
+             soh.status_code != 'SO_STATUS_CLOSED' and
+           TRUNC (SYSDATE) BETWEEN wlv.date_from AND wlv.date_to
+          UNION
+          SELECT -1 organization_id,
+                 'HEADOFFICE' organization_code,
+                 'Head Office' organization_name,
+                 NULL
+            FROM DUAL)    
+	</select>
+		
+	<select id="selectAllBranch" parameterType="co.id.fifgroup.ssoa.domain.Branch"
+		resultMap="BaseResultBranchMap">
+		<!-- WARNING - @mbggenerated This element is automatically generated by 
+			MyBatis Generator, do not modify. This element was generated on Tue Mar 19 
+			22:59:29 ICT 2013. -->
+		select
+		'false' as QUERYID,
+		<include refid="Base_Column_List_Branch" />
+		from (
+           SELECT distinct
+                  br.organization_id branch_id,
+                  brv.branch_code BRANCH_CODE,
+                  br.organization_name branch_name
+             FROM wos_organizations wo
+                  JOIN wos_organization_versions wov
+                     ON     wov.organization_id = wo.organization_id
+                        AND TRUNC (SYSDATE) BETWEEN wov.date_from
+                                                AND wov.date_to
+                        AND wov.is_head_office = 0
+                  JOIN wos_locations wl ON wov.location_id = wl.location_id
+                  JOIN wos_location_versions wlv
+                     ON     wlv.location_id = wl.location_id
+                        AND TRUNC (SYSDATE) BETWEEN wlv.date_from
+                                                AND wlv.date_to
+                  LEFT JOIN wos_organizations br
+                     ON wlv.branch_owner_id = br.organization_id
+                  LEFT JOIN wos_organization_versions brv
+                     ON     brv.organization_id = br.organization_id
+                        AND TRUNC (SYSDATE) BETWEEN brv.date_from
+                                                AND brv.date_to
+                  WHERE wo.company_id = #{companyId,jdbcType=DECIMAL}
+          UNION
+          SELECT -1 organization_id,
+                 'HEADOFFICE' organization_code,
+                 'Head Office' organization_name
+            FROM DUAL)
+			where
+			 	UPPER(BRANCH_CODE) like (UPPER('%' || #{branchCode} || '%'))
+				and UPPER(BRANCH_NAME) like (UPPER('%' || #{branchName} || '%'))
+				AND BRANCH_ID not in(select branch_id from soc_stock_opname_hdr where STATUS_CODE != 'SO_STATUS_CLOSED')
+			order by branch_code asc
+	</select>
+
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="BaseResultMapKeyValue">
+		<result column="KEY" property="key" javaType="java.lang.Object" />
+		<result column="VALUE" property="value" javaType="java.lang.Object" />
+		<result column="DESCRIPTION" property="description" javaType="java.lang.Object" />
+	</resultMap>
+	<select id="getLookupKeyValues" parameterType="map"
+		resultMap="BaseResultMapKeyValue">
+		SELECT DISTINCT
+		bld.LOOKUP_ID KEY,
+		bld.DETAIL_CODE VALUE,
+		bld.DESCRIPTION DESCRIPTION
+		FROM bse_lookup_hdr blh
+		join BSE_LOOKUP_DEPENDENTS bld on bld.lookup_id = blh.lookup_id
+		WHERE
+		blh.name = #{lookupName}
+		and rownum=1
+		<if test="key != null">
+			AND UPPER(bld.DETAIL_CODE) like
+			(UPPER('%' || #{key} || '%'))
+		</if>
+		ORDER BY bld.DESCRIPTION ASC
+	</select>
+	
+	<select id="getStatusSOPeriod" resultMap="BaseResultMap" parameterType="co.id.fifgroup.ssoa.domain.SOPeriod">
+	    <!--
+	      WARNING - @mbggenerated
+	      This element is automatically generated by MyBatis Generator, do not modify.
+	      This element was generated on Tue Mar 19 22:59:29 ICT 2013.
+	    -->
+	   select involve_branch, not_started_branch, closed_branch from soc_so_period_hdr
+  	</select>
+	
+	
+	
+	<update id="updateStatusSOPeriod" parameterType="co.id.fifgroup.ssoa.domain.StockOpname">
+	    <!--
+	      WARNING - @mbggenerated
+	      This element is automatically generated by MyBatis Generator, do not modify.
+	      This element was generated on Tue Mar 19 22:59:29 ICT 2013.
+	    -->
+	   update soc_so_period_hdr 
+    		set status_code= case when involve_branch = closed_branch then 'SO_PERIOD_STATUS_IN_FINISH'
+    						when involve_branch > not_started_branch then 'SO_PERIOD_STATUS_IN_PROCESS'
+    						else 'SO_PERIOD_STATUS_NOT_STARTED' end 
+  	</update>
+  	
+  	
+  	 <select id="getNotificationMessageByName" parameterType="java.lang.String" resultType="java.lang.Long">
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Tue Mar 19 22:59:29 ICT 2013.
+    -->
+    select template_id from NTF_TEMPLATE_MESSAGE where template_name = 'SO Period Notification' and rownum = 1
+  </select>
+  
+   <select id="getNotificationTransfer" parameterType="java.lang.String" resultType="java.lang.Long">
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Tue Mar 19 22:59:29 ICT 2013.
+    -->
+    select template_id from NTF_TEMPLATE_MESSAGE where template_name = 'Asset Transfer Notification' and rownum = 1
+  </select>
+  
+  <select id="getResendNotificationMessageByName" parameterType="java.lang.String" resultType="java.lang.Long">
+    <!--
+      WARNING - @mbggenerated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      This element was generated on Tue Mar 19 22:59:29 ICT 2013.
+    -->
+    select template_id from NTF_TEMPLATE_MESSAGE where template_name = 'SO Period Resend Notification' and rownum = 1
+  </select>
+  
+	<resultMap id="statusNotStartedBranch" type="co.id.fifgroup.ssoa.dto.SOPeriodDTO">
+		<id column="BRANCH_ID" property="branchId" jdbcType="DECIMAL" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+		<result column="SO_PERIOD_ID" property="soPeriodId" jdbcType="VARCHAR" />
+		<result column="PERIOD_DATE" jdbcType="VARCHAR" property="periodDate" />
+		<result column="START_DATE_TOSTRING" jdbcType="VARCHAR" property="startDateTostring" />
+		<result column="END_DATE_TOSTRING" jdbcType="VARCHAR" property="endDateTostring" />
+	</resultMap>
+	
+	<select id="getNotStartedBranch" parameterType="co.id.fifgroup.ssoa.domain.SOPeriod"
+		resultMap="statusNotStartedBranch">
+		 select 
+		 	branch_id, 
+		 	soh.company_id,
+		 	TO_CHAR(START_DATE, 'dd Monthyyyy') AS START_DATE_TOSTRING,
+         	TO_CHAR(END_DATE, 'dd Monthyyyy') AS END_DATE_TOSTRING,
+         	TO_CHAR (start_date, 'Monthyyyy') AS PERIOD_DATE
+          from soc_so_period_dtl sod
+		    inner join soc_so_period_hdr soh on soh.so_period_id = sod.so_period_id
+		  where sod.STATUS_CODE='SO_STATUS_NOT_STARTED'
+		        and soh.so_period_id = #{soPeriodId,jdbcType=DECIMAL}
+	</select>
+		        
+</mapper>

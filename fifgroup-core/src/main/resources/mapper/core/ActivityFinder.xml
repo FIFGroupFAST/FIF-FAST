@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.ActivityFinder">
+
+<!-- 	<resultMap id="baseResultMap" type="co.id.fifgroup.core.dto.ActivityDTO"> -->
+<!-- 		<result column="Cost_Center_code" property="costCenterCode" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Activity_Code" property="activityCode" jdbcType="DECIMAL" /> -->
+<!-- 		<result column="Activity_Name" property="activityName" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Strategic_Objectives" property="strategicObjective" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Strategic_Initiatives" property="startegicInitiative" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Activity_Type" property="activityType" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Sub_Activities" property="subActivity" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Deliverables" property="deliverable" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Kpi_Measurement" property="kpiMeasurement" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Kpi_Target" property="kpiTarget" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="IPP_Weight" property="ippWeight" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="IPP_target" property="ippTarget" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Startdate" property="startDate" jdbcType="DATE" /> -->
+<!-- 		<result column="Enddate" property="endDate" jdbcType="DATE" /> -->
+<!-- 		<result column="Leader" property="leader" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Team_Member" property="teamMember" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Related_Function" property="relatedFunction" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Capex" property="capex" jdbcType="DECIMAL" /> -->
+<!-- 		<result column="Opex" property="opex" jdbcType="DECIMAL" /> -->
+<!-- 		<result column="Status" property="status" jdbcType="DECIMAL" /> -->
+<!-- 		<result column="Created_By" property="createdBy" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Created_Date" property="createdDate" jdbcType="DATE" /> -->
+<!-- 		<result column="Updated_By" property="updatedBy" jdbcType="VARCHAR" /> -->
+<!-- 		<result column="Updated_Date" property="updatedDate" jdbcType="DATE" /> -->
+<!-- 	</resultMap> -->
+	
+<!-- 	<select id="findByExample" parameterType="co.id.fifgroup.core.dto.ActivityDTO" resultMap="baseResultMap"> -->
+<!-- 		Select  -->
+<!-- 		  ta.Cost_Center_code, -->
+<!-- 		  Ta.Activity_Code, -->
+<!-- 		  Ta.Activity_Name, -->
+<!-- 		  Ta.Strategic_Objectives, -->
+<!-- 		  Ta.Strategic_Initiatives, -->
+<!-- 		  ta.Activity_Type, -->
+<!-- 		  Ta.Sub_Activities, -->
+<!-- 		  Ta.Deliverables, -->
+<!-- 		  Ta.Kpi_Measurement, -->
+<!-- 		  Ta.Kpi_Target, -->
+<!-- 		  Ta.IPP_Weight, -->
+<!-- 		  Ta.IPP_target, -->
+<!-- 		  Ta.Startdate, -->
+<!-- 		  Ta.Enddate, -->
+<!-- 		  Ta.Leader, -->
+<!-- 		  ta.Team_Member, -->
+<!-- 		  Ta.Related_Function, -->
+<!-- 		  Ta.Capex, -->
+<!-- 		  Ta.Opex, -->
+<!-- 		  Ta.Status, -->
+<!-- 		  Ta.Created_By, -->
+<!-- 		  Ta.Created_Date, -->
+<!-- 		  ta.Updated_By, -->
+<!-- 		  Ta.Updated_Date -->
+<!-- 		from tbl_activity ta -->
+<!-- 		<where> -->
+<!-- 			<if test="costCenterCode != null"> -->
+<!-- 				and ta.Cost_Center_code = #{costCenterCode, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="activityCode != null"> -->
+<!-- 				and Ta.Activity_Code = #{activityCode, jdbcType=DECIMAL} -->
+<!-- 			</if> -->
+<!-- 			<if test="activityName != null"> -->
+<!-- 				and Ta.Activity_Name = #{activityName, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="strategicObjective != null"> -->
+<!-- 				and Ta.Strategic_Objectives = #{strategicObjective, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="startegicInitiative != null"> -->
+<!-- 				and  Ta.Strategic_Initiatives  = #{startegicInitiative, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="activityType != null"> -->
+<!-- 				and ta.Activity_Type = #{activityType, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="subActivity != null"> -->
+<!-- 				and Ta.Sub_Activities  = #{subActivity, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="deliverable != null"> -->
+<!-- 				and Ta.Deliverables = #{deliverable, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="kpiMeasurement != null"> -->
+<!-- 				and Ta.Kpi_Measurement = #{kpiMeasurement, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="kpiTarget != null"> -->
+<!-- 				and Ta.Kpi_Target = #{kpiTarget, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="ippWeight != null"> -->
+<!-- 				and Ta.IPP_Weight = #{ippWeight, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="ippTarget != null"> -->
+<!-- 				and Ta.IPP_target = #{ippTarget, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="startDate != null"> -->
+<!-- 				and  Ta.Startdate  = #{startDate, jdbcType=DATE} -->
+<!-- 			</if> -->
+<!-- 			<if test="endDate != null"> -->
+<!-- 				and  Ta.Enddate = #{endDate, jdbcType=DATE} -->
+<!-- 			</if> -->
+<!-- 			<if test="leader != null"> -->
+<!-- 				and Ta.Leader = #{leader, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="teamMember != null"> -->
+<!-- 				and  ta.Team_Member  = #{teamMember, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="relatedFunction != null"> -->
+<!-- 				and  Ta.Related_Function  = #{relatedFunction, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 			<if test="capex != null"> -->
+<!-- 				and Ta.capex  = #{capex, jdbcType=DECIMAL} -->
+<!-- 			</if> -->
+<!-- 			<if test="opex != null"> -->
+<!-- 				and ta.opex = #{opex, jdbcType=DECIMAL} -->
+<!-- 			</if> -->
+<!-- 			<if test="status != null"> -->
+<!-- 				and ta.status = #{status, jdbcType=DECIMAL} -->
+<!-- 			</if> -->
+<!-- 		</where> -->
+<!-- 	</select> -->
+	
+	<resultMap id="baseResultMap" type="co.id.fifgroup.core.dto.ActivityDTO">
+		<result column="TRX_CODE" property="trxCode" jdbcType="VARCHAR" />
+		<result column="TRX_DESC" property="trxDesc" jdbcType="VARCHAR" />
+		<result column="SYSTEM_DESC" property="systemDesc" jdbcType="VARCHAR" />
+		<result column="COA_CODE" property="coaCode" jdbcType="VARCHAR" />
+		<result column="ACTIVITY_CODE" property="activityCode" jdbcType="VARCHAR" />
+		<result column="ACTIVITY_NAME" property="activityName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="findByExample" resultMap="baseResultMap">
+		SELECT TRX_CODE, 
+				TRX_DESC, 
+				SYSTEM_DESC, 
+				COA_CODE,
+				ACTIVITY_CODE, 
+				ACTIVITY_CODE || ' | ' || ACTIVITY_NAME ACTIVITY_NAME
+			FROM FIFBUDGET_TOOLS.VW_MST_ACTIVITY@budget.us.oracle.com
+      		WHERE SYSTEM_DESC = 'HCMS'
+	</select>
+	
+	<select id="findByExampleByBandbox" resultMap="baseResultMap" parameterType="map">
+		SELECT distinct ACTIVITY_CODE, ACTIVITY_NAME
+			FROM FIFBUDGET_TOOLS.VW_MST_ACTIVITY@budget.us.oracle.com
+	<where>
+	activity_code is not null
+	and activity_name is not null
+	<if test="activityCode!=null">
+	AND lower(ACTIVITY_CODE) like lower(#{activityCode})
+	</if>
+	<if test="activityName!=null">
+	AND lower(ACTIVITY_NAME) like lower(#{activityName})
+	</if>
+	</where>
+	order by activity_code
+	</select>
+	
+	<select id="countByExample" parameterType="map" resultType="Integer">
+		select
+		  count(distinct activity_code)
+		from FIFBUDGET_TOOLS.VW_MST_ACTIVITY@budget.us.oracle.com
+		<where>
+		activity_code is not null
+		and activity_name is not null	
+	<if test="activityCode!=null">
+	AND lower(ACTIVITY_CODE) like lower(#{activityCode})
+	</if>
+	<if test="activityName!=null">
+	AND lower(ACTIVITY_NAME) like lower(#{activityName})
+	</if>
+		</where>
+	</select>
+	
+	<select id="selectBudgetActivityByCode" parameterType="map" resultMap="baseResultMap">
+	SELECT distinct ACTIVITY_CODE, ACTIVITY_CODE || ' | ' || ACTIVITY_NAME ACTIVITY_NAME
+			FROM FIFBUDGET_TOOLS.VW_MST_ACTIVITY@budget.us.oracle.com
+			<where>
+			<if test="activityCode!=null">
+			ACTIVITY_CODE = #{activityCode}
+			</if>
+			</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,33 @@
+<window id="winAwardInformation" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.AwardInformationComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.awardList }" />
+		<panel>
+			<panelchildren>
+				<listbox id="lbxAwards" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.pea.awardDate}" width="150px"/>
+						<listheader label="${labels.pea.job}" width="400px"/>
+						<listheader label="${labels.pea.awardType}" width="250px"/>
+						<listheader label="${labels.pea.awardPrize}" width="150px" />
+						<listheader label="${labels.pea.amount}" width="150px" />
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRow" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>		
+</window>

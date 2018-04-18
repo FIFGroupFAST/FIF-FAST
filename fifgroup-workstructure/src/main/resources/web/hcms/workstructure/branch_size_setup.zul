@@ -1,0 +1,60 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winBranchSizeSetup"
+	apply="co.id.fifgroup.workstructure.controller.BranchSizeSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.branchSize}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.common.effectiveDateFrom}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<datebox id="dtbStartDate" format="dd-MMM-yyyy" width="130px"/>
+				</row>
+				<row>
+					<label value="${labels.common.effectiveDateTo}" />
+					<datebox id="dtbEndDate" use="co.id.fifgroup.core.ui.DateBoxMax" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<bandbox id="bnbOrganization" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganization}" searchText1="${labels.wos.organizationCode}" searchText2="${labels.wos.organizationName}" headerLabel1="${labels.wos.organizationCode}" headerLabel2="${labels.wos.organizationName}" />
+				</row>
+				<row>
+					<label value="${labels.wos.organizationLevel}" />
+					<label id="lblOrgLevel" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.branchSize}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstBranchSize" mold="select" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+				<space width="20px" />
+				<button id="btnDelete" label="${labels.common.delete}"
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

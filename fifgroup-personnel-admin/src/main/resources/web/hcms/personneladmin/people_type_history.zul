@@ -1,0 +1,24 @@
+<window id="winPeopleTypeHistory" border="normal" title="${labels.pea.peopleTypeHistory }"
+	apply="co.id.fifgroup.personneladmin.controller.PeopleTypeHistoryComposer">
+	<groupbox>
+		<caption label="${labels.pea.peopleTypeHistory }"/>
+		<listbox id="lbxPeopleTypeHistory">
+			<listhead>
+				<listheader label="${labels.pea.effectiveDateFrom }"/>
+				<listheader label="${labels.pea.effectiveDateTo }"/>
+				<listheader label="${labels.pea.peopleType }"/>
+				<listheader label="${labels.pea.employmentCategory }"/>
+				<listheader label="${labels.pea.referenceNumber }"/>
+			</listhead>		
+		</listbox>
+	</groupbox>
+	<hbox>
+		<cell align="center" style="width:1250px;">			
+		</cell>
+		<cell align="right">
+			<button id="btnBack"
+				label="${labels.common.back}" mold="trendy"
+				image="${labels.image.link.back}" />
+		</cell>
+	</hbox>
+</window>

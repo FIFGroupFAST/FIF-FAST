@@ -1,0 +1,58 @@
+import java.util.List;
+import java.util.Map;
+import co.id.fifgroup.core.util.DateUtil
+
+import groovy.transform.CompileStatic
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+
+@CompileStatic
+class EpmdAmount {
+	String paycodeName;
+	Map<String, Object> additionalParam;
+	ServiceModel serviceModel;
+	Long companyId;
+	Long personId;
+	Long amount;
+        Date processDate;
+	
+       public Double getEpmdAmount(){
+                boolean isRapel = false;
+                if(additionalParam.containsKey("isRapel") && (additionalParam.get("isRapel") instanceof Boolean && (Boolean) additionalParam.get("isRapel"))) {
+                     isRapel = true;
+                }
+                BigDecimal amountRapel = BigDecimal.ZERO;
+                if(additionalParam.containsKey("rapelAmount") && (additionalParam.get("rapelAmount") instanceof BigDecimal)) {
+                     amountRapel = (BigDecimal) additionalParam.get("rapelAmount");
+                }
+                if(isRapel) {
+                     return Double.valueOf(amountRapel.toString());
+                }
+		String processDateConv = DateUtil.format(DateUtil.truncate(processDate));
+		paycodeName = (String)additionalParam.get('paycode');
+              
+                if (paycodeName !=null){
+
+		List<Map<String, Object>> resultList = serviceModel.getFromQuery("select PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(pepd.amount) amount from   PAY_PAYCODES pp, PAY_EMP_PAYROLL_HDR PEPH,PAY_EMP_PAYROLL_DTL pepd where  PP.PAYCODE='"+paycodeName+"' and    PP.COMPANY_ID="+companyId+" AND    PEPH.COMPANY_ID = pp.company_id and    PEPH.PERSON_ID = "+personId+" and    PEPD.EMP_PAYROLL_HDR_ID = PEPH.EMP_PAYROLL_HDR_ID and    pepd.paycode_id = pp.paycode_id and    to_date('"+processDateConv +"') between PEPD.DATE_FROM and pepd.date_to");
+		if (!resultList.isEmpty()){
+               Map<String,Object> result = resultList.get(0);
+		amount = Long.valueOf(result.get("AMOUNT").toString());
+		return Double.valueOf(amount.toString());
+               }else{
+               return Double.valueOf("0");
+                 }
+           }else{
+              return Double.valueOf("0");
+           }
+   
+	}
+	
+}
+
+EpmdAmount subject = new EpmdAmount ();
+subject.setCompanyId(company_id);
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setAdditionalParam(additionalParam);
+subject.setProcessDate(process_date);
+return subject.getEpmdAmount();

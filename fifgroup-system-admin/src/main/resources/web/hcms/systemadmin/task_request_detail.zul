@@ -1,0 +1,84 @@
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<window apply="co.id.fifgroup.systemadmin.controller.TaskRequestDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.submitNewRequest}" />
+		<groupbox>
+			<caption label="${labels.sam.taskRequest}" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<formlabel value="${labels.common.name}" required="true" />
+						<bandbox id="txtTaskRunnerName" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" />
+					</row>
+					<row>
+						<formlabel value="${labels.sam.parameters}" required="true" />
+						<bandbox id="txtTaskParameter"/>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<groupbox>
+			<caption label="${labels.sam.times }" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<formlabel value="${labels.sam.runTheTask}" required="true" />
+						<hbox>
+							<textbox id="txtRunTheTask" readonly="true" />
+							<button id="btnSchedule" label="${labels.sam.schedule}" mold="trendy" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<groupbox>
+			<caption label="${labels.sam.output}" />
+			<grid>
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<formlabel value="${labels.sam.format}" />
+						<listbox id="formatListbox" mold="select" width="25%">
+							<template name="model">
+								<listitem value="${each}" label="${each.value}" />
+							</template>
+						</listbox>
+					</row>
+					<row>
+						<label />
+						<hbox>
+							<radiogroup id="afterComplted">
+								<radio label="${labels.common.save}" />
+								<radio  label="${labels.common.print}" />
+							</radiogroup>
+						</hbox>
+					</row>
+					<row>
+						<formlabel value="${labels.sam.printer}" />
+						<bandbox width="25%" id="bdnPrinter" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSubmit" label="${labels.common.submit}" mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

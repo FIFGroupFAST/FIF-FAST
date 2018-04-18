@@ -1,0 +1,47 @@
+<window id="winWorkflowConfirmationCancelTransaction" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowConfirmationCancelTransactionComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption label="${labels.swf.confirmationCancelTransaction}" />
+				<listbox id="lbxMultipleTask">
+					<listhead>
+						<listheader label="${labels.common.rowNum}" align="center" width="50px" />
+						<listheader label="${labels.swf.company}" align="center" />
+						<listheader label="${labels.swf.subject}" align="center" />
+						<listheader label="${labels.swf.transactionType}" align="center" />
+						<listheader label="${labels.common.transactionStatus}" align="center" />
+						<listheader label="${labels.swf.submitter}" align="center" />
+						<listheader label="${labels.swf.submittedTime}" align="center" />
+						<listheader label="${labels.swf.completedTime}" align="center" />
+					</listhead>
+				</listbox>
+				<separator />
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.remarks}" />
+							<textbox id="txtRemark" rows="5" width="600px" maxlength="255"/>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<hbox>
+					<cell align="center" style="width:1250px;">
+						<button id="btnCancelTrx"
+							label="${labels.swf.cancelTransaction}" mold="trendy" />
+					</cell>
+					<cell align="right">
+						<button id="btnCancel"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+					</cell>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

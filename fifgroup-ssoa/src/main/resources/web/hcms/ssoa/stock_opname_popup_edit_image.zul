@@ -1,0 +1,25 @@
+<window id="winEditPopup" title="Unregistered Asset" border="normal" width="700px" height="auto"
+closable="true" position="center,center" action="show: slideDown;hide: slideUp"
+apply="co.id.fifgroup.ssoa.ui.StockOpnamePopupEditImageComposer">
+	<groupbox>
+	<separator/>
+		<separator/>
+		<groupbox mold="3d">
+			<caption label="Asset Photo" />
+			<separator/>
+			<label id="lblErrStockOpnameInfo" style="color:red" />
+			<separator/>
+			<listbox id="lstStockOpnameInfo" style="align:left;" emptyMessage="${labels.common.noDataFound}" >
+				<listhead>
+					<listheader label="Photo Name" width="" />
+				</listhead>
+			</listbox>
+			<separator/>
+		</groupbox>
+		<separator/>
+		<div align="center">
+			<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" 
+			image="${labels.image.link.cancel}" style="float:right;" />
+		</div>
+	</groupbox>
+</window>

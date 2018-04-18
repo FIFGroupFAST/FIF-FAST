@@ -1,0 +1,324 @@
+<?page title="System Property"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winStockOpnameAdd"
+	apply="co.id.fifgroup.ssoa.controller.StockOpnameAddComposer">
+	<!-- <style src="/styles/css/lat.css" /> -->
+	<groupbox id="gbadd" closable="false" mold="3d">
+		<caption id="cptHeader" label="Stock Opname - Add" />
+		<grid>
+			<columns>
+				<column width="150px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<div>
+						<label value="Period Name" />
+						<span ><label value="*" style="color:Red !important;"/></span>
+					</div>
+					<div>
+						<textbox width="300px" id="txtPeriodName"
+						 />
+					</div>
+				</row>
+				<row>
+					<div>
+						<label value="Period Start Date" />
+						<span ><label value="*" style="color:Red !important;"/></span>
+					</div>
+					<div>
+						<datebox id="dtPeriodStartDate"
+							format="dd-MMM-yyyy" style="background-color:#fff;"
+							 />
+					</div>
+				</row>
+				<row>
+					<div>
+						<label value="Period End Date" />
+						<span ><label value="*" style="color:Red !important;"/></span>
+					</div>
+					<div>
+						<datebox id="dtPeriodEndDate"
+							format="dd-MMM-yyyy" style="background-color:#fff;"
+							 />
+					</div>
+				</row>
+				<row>
+				<div>
+					<label value="Branch" />
+					<span ><label value="*" style="color:Red !important;"/></span>
+				</div>
+				<div>
+					<bandbox id="bnbBranch" readonly="true"
+								width="28s0px"
+								disabled="true"
+								use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox"
+								title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" headerLabel="Branch Code"
+								descLabel="Branch Name">
+				    </bandbox>
+				</div>	
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+	<groupbox id="gbResult" closable="false" mold="3d">
+		<caption label="Registered Assets" />
+		<hbox>
+			<grid sclass="form-entry">
+				<columns>
+					<column width="150px" align="right"></column>
+					<column></column>
+					<column width="150px" align="right"></column>
+					<column></column>
+				</columns>
+				<rows>
+					<row>
+						<label value="Asset Number" />
+						<textbox width="200px" id="txtAssetNoSearch"
+							style="background-color:#fff;"  />
+						<label value="Result" />
+						<listbox mold="select" id="cbResultSearch" >
+								<template name="model">
+									<listitem label="${each.description}" value="${each.key}" />
+								</template>
+								
+						</listbox>
+						
+					</row>
+					<row>
+						<label value="Description" />
+						<textbox id="txtDescriptionSearch" width="300px" 
+							style="background-color:#fff;"  />
+						<label value="Recommendation" />
+						<listbox mold="select" id="cbRecommendationSearch">
+								<template name="model">
+									<listitem label="${each.description}" value="${each.key}" />
+								</template>
+								
+						</listbox>
+					</row>
+					<row>
+					<button id="btnSearch" label="Find"/>
+					</row>
+				</rows>
+			</grid>
+		</hbox>
+		<separator />
+		<listbox id="lstStockOpnameDetail" checkmark="true"  emptyMessage="${labels.common.noDataFound}" 
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+			<listhead id="lHead">
+			    <listheader label="" width="0px" />
+				<listheader label="Action" width="70px" />
+				<listheader id="hdrAssetNumber" label="Asset Number" sort="auto(assetNo)" width="120px" />
+				<listheader id="hdrDescription" label="Description" sort="auto(description)" width="350px" />
+				<listheader id="hdrStockOpnameResult" label="Result" sort="auto(opnameResult)" width="300px" />
+				<listheader id="hdrStockOpnameSugest" label="Recommendation" sort="auto(opnameSugest)" width="220px" />
+				<listheader id="hdrStockOpnameHOSugest" label="HO Recommendation" sort="auto(opnameHOSugest)" width="250px" />
+				<listheader label="Photo" sort="auto(image)" width="70px" /> 
+				<listheader id="hdrAssetType" label="Asset Type" sort="auto(bookTypeCode)" width="100px" />
+				<listheader id="hdrNetBookValue" label="Net Book Value" sort="auto(netBookValue)" width="120px" />
+				<listheader id="hdrBranchCode" label="Branch Code" sort="auto(branchCode)" width="120px" /> 
+				<listheader id="hdrBranchName" label="Branch Name" sort="auto(branchName)" width="200px" />
+				<listheader id="hdrLocationCode" label="Kode Outlet" sort="auto(locationCode)" width="120px" /> 
+				<listheader id="hdrLocationName" label="Nama Outlet" sort="auto(locationName)" width="200px" />
+				<listheader id="hdrCategoryName" label="Asset Category" sort="auto(itemCategory)" width="130px" />
+				<listheader id="hdrDatePlaceInService" label="Tanggal Perolehan" sort="auto(dateOfService)" width="150px" />
+				<listheader id="hdrSerialNumber" label="Serial Number" sort="auto(serialNumber)" width="130px" />
+				<listheader id="hdrStockOpnameBy" label="Stock Opname By" sort="auto(stockOpnameBy)" width="150px" />
+				<listheader id="hdrStockOpnameDate" label="Stock Opname Date" sort="auto(stockOpnameDate)" width="160px" />
+				<listheader id="hdrLastUpdateBy" label="Last Update By" sort="auto(lastUpdateBy)" width="150px" />
+ 				<listheader id="hdrLastUpdateDate" label="Last Update Date" sort="auto(lastUpdateDate)" width="150px" />
+				</listhead>
+				
+			
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<listbox id="lstStockOpnameDetailForDownload"  height="auto" emptyMessage="No Data Found" visible="false" mold="paging" pageSize="5">
+			<listhead>
+				<listheader label="Asset Number" sort="auto(assetNo)"
+					width="130px" />
+				<listheader label="Description" sort="auto(description)"
+					width="400px" />
+				<listheader label="Result" sort="auto(opnameResult)"
+					width="300px" />
+				<listheader label="Recommendation"
+					sort="auto(opnameSugest)" width="250px" />
+				<listheader label="Asset Type" sort="auto(bookTypeCode)"
+					width="150px" />
+				 <listheader label="Branch Code" sort="auto(branchCode)"
+					width="120px" /> 
+				<listheader label="Branch Name" sort="auto(branchName)"
+					width="200px" />
+				 <listheader label="Kode Outlet"
+					sort="auto(locationCode)" width="120px" /> 
+				<listheader label="Nama Outlet"
+					sort="auto(locationName)" width="200px" />
+				<listheader label="Asset Category"
+					sort="auto(itemCategory)" width="130px" />
+				<listheader label="Tanggal Perolehan"
+					sort="auto(dateOfService)" width="150px" />
+				<listheader label="Serial Number"
+					sort="auto(serialNumber)" width="150px" />
+				<listheader label="Stock Opname By"
+					sort="auto(stockOpnameBy)" width="150px" />
+				<listheader label="Stock Opname Date"
+					sort="auto(stockOpnameDate)" width="200px" />
+				<listheader label="Last Update By"
+					sort="auto(lastUpdateBy)" width="150px" />
+				<listheader label="Last Update Date"
+					sort="auto(lastUpdateDate)" width="200px" />
+			</listhead>
+
+			<template name="model">
+				<listitem>
+					<listcell label="${each.assetNo}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.opnameResult}"></listcell>
+					<listcell label="${each.opnameSugest}"></listcell>
+					<listcell label="${each.assetType}"></listcell>
+					<listcell label="${each.branchCode}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${each.locationCode}"></listcell>
+					<listcell label="${each.locationName}"></listcell>
+					<listcell label="${each.categoryName}"></listcell>
+					<listcell label="${date:format(each.dateOfService,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.serialNumber}"></listcell>
+					<listcell label="${each.createdByName}"></listcell>
+					<listcell label="${date:format(each.creationDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.lastUpdateByName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<!--  <exporter referenceId="lstStockOpnameDetailForDownload" />-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+
+	<groupbox id="gbUnreg" closable="false" mold="3d">
+		<caption label="Unregistered Assets" />
+		<separator />
+		<listbox id="lstStockOpnameUnregAsset" checkmark="true" emptyMessage="${labels.common.noDataFound}" mold="paging" pageSize="10"
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+			<listhead>
+			    <listheader label="" width="0px" />
+				<listheader label="Action" width="100px" />
+				<listheader label="Asset Number" sort="auto(assetNo)"
+					width="130px" />
+				<listheader label="Description" sort="auto(description)"
+					width="350px" />
+				<listheader label="Result" sort="auto(opnameResult)"
+					width="300px" />
+				<listheader label="Recommendation"
+					sort="auto(opnameSugest)" width="220px" />
+				<listheader label="HO Recommendation"
+					sort="auto(opnameHOSugest)" width="250px" />
+				<listheader label="Photo" sort="auto(image)"
+					width="80px" /> 
+				<listheader label="Asset Type" sort="auto(assetType)"
+					width="100px" />
+				 <listheader label="Branch Code" sort="auto(branchCode)"
+					width="120px" /> 
+				<listheader label="Branch Name" sort="auto(branchName)"
+					width="200px" />
+				 <listheader label="Kode Outlet"
+					sort="auto(locationCode)" width="100px" />
+				<listheader label="Nama Outlet"
+					sort="auto(locationName)" width="200px" />
+				<listheader label="Asset Category"
+					sort="auto(itemCategory)" width="130px" />
+				<listheader label="Tanggal Perolehan"
+					sort="auto(dateOfService)" width="150px" />
+				<listheader label="Serial Number"
+					sort="auto(serialNumber)" width="120px" />
+				<!-- <listheader label="Stock Opname By"
+					sort="auto(stockOpnameBy)" width="150px" />
+				<listheader label="Stock Opname Date"
+					sort="auto(stockOpnameDate)" width="200px" /> -->
+			</listhead>
+		</listbox>
+		<listbox id="lstStockOpnameUnregAssetForDownload"  height="auto" emptyMessage="No Data Found" visible="false" mold="paging" pageSize="5">
+			<listhead>
+				<listheader label="Asset Number" sort="auto(assetNo)"
+					width="130px" />
+				<listheader label="Description" sort="auto(description)"
+					width="400px" />
+				<listheader label="Result" sort="auto(opnameResult)"
+					width="300px" />
+				<listheader label="Recommendation"
+					sort="auto(opnameSugest)" width="220px" />
+				<listheader label="Asset Type" sort="auto(assetType)"
+					width="150px" />
+				 <listheader label="Branch Code" sort="auto(branchCode)"
+					width="120px" /> 
+				<listheader label="Branch Name" sort="auto(branchName)"
+					width="200px" />
+				 <listheader label="Kode Outlet"
+					sort="auto(locationCode)" width="120px" /> 
+				<listheader label="Nama Outlet"
+					sort="auto(locationName)" width="200px" />
+				<listheader label="Asset Category"
+					sort="auto(itemCategory)" width="130px" />
+				<listheader label="Tanggal Perolehan"
+					sort="auto(dateOfService)" width="150px" />
+				<listheader label="Serial Number"
+					sort="auto(serialNumber)" width="150px" />
+				<!-- <listheader label="Stock Opname By"
+					sort="auto(stockOpnameBy)" width="150px" />
+				<listheader label="Stock Opname Date"
+					sort="auto(stockOpnameDate)" width="200px" /> -->
+				
+			</listhead>
+
+			<template name="model">
+				<listitem>
+					<listcell label="${each.assetNo}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.opnameResult}"></listcell>
+					<listcell label="${each.opnameSugest}"></listcell>
+					<listcell label="${each.assetType}"></listcell>
+					<listcell label="${each.branchCode}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${each.locationCode}"></listcell>
+					<listcell label="${each.locationName}"></listcell>
+					<listcell label="${each.categoryName}"></listcell>
+					<listcell label="${date:format(each.dateOfService,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.serialNumber}"></listcell>
+					<!-- <listcell label="${each.createdBy}"></listcell>
+					<listcell label="${date:format(each.creationDate,'dd-MMM-yyyy')}"></listcell> -->
+				</listitem>
+			</template>
+		</listbox>
+		<!--  <exporter referenceId="lstStockOpnameUnregAssetForDownload" />-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs2" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload2"  label="Download" />
+		</div>
+		</div>
+		<separator />
+		<button id="btnAddUnregisteredAsset"
+			label="Add Unregistered Asset">
+		</button>
+	</groupbox>
+	<groupbox id="gbButton">
+		<div align="center">
+			<button id="btnSave" label="Save"
+				image="${labels.image.link.save}" />
+			<button id="btnCancel" label="Cancel" style="float:right;"
+				image="${labels.image.link.cancel}" />
+		</div>
+	</groupbox>
+</window>

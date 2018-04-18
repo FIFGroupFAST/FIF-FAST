@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Grade_rate_branch" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ea63695f-9704-455f-befe-0c2b27136e84">
+	<property name="ireport.zoom" value="2.5937424601000023"/>
+	<property name="ireport.x" value="215"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="VERSION_ID" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  rate.grade_rate_id,
+  rate.version_id,
+  rate.branch_id,
+  rate.min_salary,
+  rate.max_salary,
+  org.organization_id,
+  org.organization_name
+from wos_grade_rates rate
+join (select wo.organization_id, wo.organization_name
+from wos_organizations wo
+UNION
+select -1 organization_id, 'Head Office' organization_name from dual)
+ org on rate.branch_id = org.organization_id
+where rate.version_id = $P{VERSION_ID}
+order by rate.grade_rate_id]]>
+	</queryString>
+	<field name="GRADE_RATE_ID" class="java.math.BigDecimal"/>
+	<field name="VERSION_ID" class="java.math.BigDecimal"/>
+	<field name="BRANCH_ID" class="java.math.BigDecimal"/>
+	<field name="MIN_SALARY" class="java.math.BigDecimal"/>
+	<field name="MAX_SALARY" class="java.math.BigDecimal"/>
+	<field name="ORGANIZATION_ID" class="java.math.BigDecimal"/>
+	<field name="ORGANIZATION_NAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d54dcc74-d518-4904-904a-fb1e941ef3b7" stretchType="RelativeToTallestObject" x="0" y="0" width="170" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ORGANIZATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d64ae605-cd54-488a-be0e-b728d53198f7" stretchType="RelativeToTallestObject" x="170" y="0" width="80" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MIN_SALARY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="6e016b57-ec67-4bbf-a74d-0e2d87d48235" stretchType="RelativeToTallestObject" x="250" y="0" width="80" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MAX_SALARY}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

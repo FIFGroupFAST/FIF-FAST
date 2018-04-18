@@ -1,0 +1,69 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winGradeSetSetup"
+	apply="co.id.fifgroup.workstructure.controller.GradeSetSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.gradeSetSetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.wos.gradeSetName}" />
+						<label value="${labels.common.required}"
+							style="color:red;" />
+					</hbox>
+					<textbox id="txtGradeSetName" width="300px" maxlength="100"/>
+				</row>
+				<row>
+					<label value="${labels.wos.gradeDescription}" />
+					<textbox id="txtDesc" width="300px"
+						maxlength="100" rows="2" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.startDate}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<datebox id="dtbFrom" use="co.id.fifgroup.core.ui.DateBoxFrom" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label value="${labels.common.endDate}" />
+					<datebox id="dtbTo" use="co.id.fifgroup.core.ui.DateBoxMax" format="dd-MMM-yyyy" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.wos.gradeSet}" />
+			<div id="errGradeSet"></div>
+			<listbox id="lstGradeSet" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="" width="30px"/>
+					<listheader label="${labels.wos.hierarchySequence}" align="center" width="150px"/>
+					<listheader label="${labels.wos.grade}" align="center" />
+					<listheader label="${labels.wos.concordanceGradeLevel}" align="center" width="200px"/>
+				</listhead>
+			</listbox>
+			<separator />
+			<hbox>
+				<button id="btnAddRow" label="${labels.common.addRow}" mold="trendy" />
+				<button id="btnDeleteRow" label="${labels.common.delete}" mold="trendy" />
+			</hbox>
+		</groupbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

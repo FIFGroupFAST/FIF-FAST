@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.dao.AssignmentTrackHistoryMapper">
+	<resultMap id="BaseResultMapAssTrackHistory" type="co.id.fifgroup.personneladmin.domain.AssignmentTrackHistory">
+		<result column="ASSIGNMENT_ID" jdbcType="DECIMAL" property="assignmentId" />
+		<result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+		<result column="EFFECTIVE_END_DATE" jdbcType="DATE" property="effectiveEndDate" />
+		<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+		<result column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
+		<result column="JOB_GROUP_CODE" jdbcType="DECIMAL" property="jobGroupCode" />
+		<result column="GRADE" jdbcType="VARCHAR" property="grade" />
+		<result column="SUB_GRADE" jdbcType="VARCHAR" property="subGrade" />
+		<result column="ASSIGNMENT_STATUS" jdbcType="VARCHAR" property="assignmentStatus" />
+		<result column="HOUSING_ALLOWANCE" jdbcType="VARCHAR" property="housingAllowance" />
+		<result column="TRANSFERED_BY" jdbcType="VARCHAR" property="transferedBy" />
+		<result column="DATE_TRACK_CHANGE" jdbcType="VARCHAR" property="dateTrackChange" />
+		<result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName" />
+	</resultMap>
+	
+	<select id="getAssTrackByPersonId" resultMap="BaseResultMapAssTrackHistory">
+		  SELECT ppa.assignment_id,
+		         ppa.person_id,
+		         ppa.company_id,
+		         ppa.effective_start_date,
+		         ppa.effective_end_date,
+		         ppa.organization_id,
+		         ppa.job_id,
+		         (SELECT wjv.job_group_code
+		            FROM wos_job_versions wjv
+		           WHERE     TRUNC (ppa.effective_start_date) &gt;= TRUNC (wjv.date_from)
+		                 AND TRUNC (ppa.effective_end_date) &lt;= TRUNC (wjv.date_to)
+		                 AND wjv.job_id = ppa.job_id)
+		            job_group_code,
+		         wg.grade,
+		         wg.sub_grade,
+		         ppa.assignment_status,
+		         ppa.housing_allowance,
+		         ppa.transfered_by,
+		         BC.COMPANY_NAME
+		    FROM pea_primary_assignments ppa,
+		         wos_jobs wj,
+		         wos_grades wg,
+		         bse_companies bc
+		   WHERE     ppa.job_id = wj.job_id
+		   		 AND bc.company_id = ppa.company_id
+		         AND wg.grade_id = ppa.grade_id
+		         AND ppa.person_id = #{personId}
+		ORDER BY ppa.effective_start_date DESC
+	</select>
+	
+	<select id="getAllPersonId" resultType="Integer">
+		SELECT DISTINCT ppt.person_id
+		  FROM pea_people_types ppt
+		 WHERE 1 = 1
+			<if test="status == 'ACTIVE'">
+				AND (TRUNC (#{date} - 1) BETWEEN TRUNC (ppt.effective_start_date)
+                           				     AND TRUNC (ppt.effective_end_date)
+                           OR TRUNC (ppt.effective_start_date) &gt;= TRUNC (#{date} - 1))
+                AND ppt.people_type = 'EMPLOYEE'
+			</if>
+	</select>
+	
+	<select id="getAssTrackHistory" resultMap="BaseResultMapAssTrackHistory">
+		SELECT PADT.ASSIGNMENT_ID,
+		       PADT.PERSON_ID,
+		       PADT.EFFECTIVE_START_DATE,
+		       PADT.EFFECTIVE_END_DATE,
+		       PADT.DATE_TRACK_CHANGE
+		  FROM pea_assignment_date_tracks padt
+		 WHERE 1 = 1
+			<if test="personId != null">
+				AND PADT.PERSON_ID = #{personId}
+			</if>
+	  ORDER BY padt.effective_start_date DESC
+	</select>
+	
+	<delete id="deleteAssTrackHistory">
+    	delete from pea_assignment_date_tracks padt
+    		  where PADT.PERSON_ID = #{personId}
+    </delete>
+<!-- 	<select id="getOrganizationSourceNextval" resultType="int"> -->
+<!-- 		SELECT organization_source_s.NEXTVAL -->
+<!-- 		  FROM DUAL -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="getEmployeeNumberWhereJobIdIsHead" resultType="string"> -->
+<!-- 		SELECT ppi.employee_number -->
+<!-- 		  FROM pea_primary_assignments ppa, -->
+<!-- 		       pea_personal_informations ppi, -->
+<!-- 		       pea_people_types ppt -->
+<!-- 		 WHERE     TRUNC (#{date}) BETWEEN TRUNC (ppa.effective_start_date) -->
+<!-- 		                                     AND TRUNC (ppa.effective_end_date) -->
+<!-- 		       AND TRUNC (#{date}) BETWEEN TRUNC (ppt.effective_start_date) -->
+<!-- 		                                     AND TRUNC (ppt.effective_end_date) -->
+<!-- 		       AND TRUNC (#{date}) BETWEEN TRUNC (ppi.effective_start_date) -->
+<!-- 		                                     AND TRUNC (ppi.effective_end_date) -->
+<!-- 		       AND ppi.person_id = ppt.person_id -->
+<!-- 		       AND ppa.person_id = ppi.person_id -->
+<!-- 		       AND ppt.people_type = 'EMPLOYEE' -->
+<!-- 		       AND ppa.job_id = #{jobId} -->
+<!-- 		       AND ppa.organization_id = #{organizationId} -->
+<!-- 	</select> -->
+
+	<insert id="insertAssDateTracks" parameterType="co.id.fifgroup.personneladmin.domain.AssignmentTrackHistory">
+		INSERT INTO ews.pea_assignment_date_tracks (ASSIGNMENT_ID,
+		  											  PERSON_ID,
+												      EFFECTIVE_START_DATE,
+												  	  EFFECTIVE_END_DATE,
+												  	  DATE_TRACK_CHANGE,
+												  	  CREATED_BY,
+												  	  CREATION_DATE,
+												 	  LAST_UPDATED_BY,
+												 	  LAST_UPDATE_DATE)
+			 VALUES (#{assignmentId, jdbcType=INTEGER},
+			 		 #{personId, jdbcType=INTEGER},
+			 		 TRUNC(#{effectiveStartDate, jdbcType=TIMESTAMP}),
+					 TRUNC(#{effectiveEndDate, jdbcType=TIMESTAMP}),
+					 #{dateTrackChange, jdbcType=VARCHAR},
+			 		 -1,
+			 		 sysdate,
+			 		 -1,
+			 		 sysdate)
+	</insert>
+
+<!-- 	<update id="updateJob" parameterType="co.id.fifgroup.batchprocess.domain.Job"> -->
+<!-- 		UPDATE job@pdca.fif.co.ID -->
+<!-- 		   SET JOB_NAME = #{jobName, jdbcType=VARCHAR}, -->
+<!-- 			   START_DATE = TRUNC(#{startDate, jdbcType=TIMESTAMP}), -->
+<!-- 			   END_DATE = TRUNC(#{endDate, jdbcType=TIMESTAMP}) -->
+<!-- 		 WHERE ID = #{id, jdbcType=INTEGER} -->
+<!-- 		   AND JOB_CODE = #{jobCode, jdbcType=VARCHAR} -->
+<!-- 	</update> -->
+	
+<!-- 	<select id="updateUserPDCA" statementType="CALLABLE">  -->
+<!-- 		{ CALL pdca_util.update_pdca_user@pdca.fif.co.id } -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="updateHeadOrgPDCA" statementType="CALLABLE">  -->
+<!-- 		{ CALL pdca_util.update_head_organization@pdca.fif.co.id } -->
+<!-- 	</select> -->
+</mapper>

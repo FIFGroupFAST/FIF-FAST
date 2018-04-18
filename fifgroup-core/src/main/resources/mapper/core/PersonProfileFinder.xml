@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.finder.PersonProfileFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.core.dto.PersonAssignmentProfileDTO">
+		<id column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="PEOPLE_TYPE" jdbcType="VARCHAR" property="peopleType" />
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+        <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+		<result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR" />
+		<result column="LOCATION_ID" property="locationId" jdbcType="NUMERIC" />
+		<result column="LOCATION_NAME" property="locationName" jdbcType="VARCHAR" />
+		<result column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+		<result column="JOB_GROUP_CODE" property="jobGroupCode" jdbcType="VARCHAR" />
+		<result column="PERSONAL_GRADE_CODE" property="personalGradeCode" jdbcType="VARCHAR" />
+		<collection property="contacts" ofType="co.id.fifgroup.core.dto.ContactDTO" javaType="ArrayList" >
+			<id column="COMMUNICATION_ID" property="communicationId" jdbcType="NUMERIC"/>
+			<result column="COMM_TYPE" property="typeCode" jdbcType="VARCHAR" />
+			<result column="COMM_INFORMATION" property="information" jdbcType="VARCHAR"/>
+			<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP"/>
+			<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap id="resultPersonId" type="java.lang.Long">
+		<result column="PERSON_ID" jdbcType="DECIMAL" />
+	</resultMap>
+	
+	<resultMap id="resultPersonDTO" type="co.id.fifgroup.core.dto.PersonAdapterDTO">
+		<result column="PERSON_ID" jdbcType="DECIMAL" property="personId"/>
+		<result column="PERSON_WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="personWorkingScheduleId"/>
+		<result column="GRADE_ID" jdbcType="DECIMAL" property="gradeId"/>
+		<result column="GRADE_WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="gradeWorkingScheduleId"/>
+		<result column="JOB_ID" jdbcType="DECIMAL" property="jobId"/>
+		<result column="JOB_WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="jobWorkingScheduleId"/>
+		<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId"/>
+		<result column="ORG_WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="organizationWorkingScheduleId"/>
+		<result column="LOCATION_ID" jdbcType="DECIMAL" property="locationId"/>
+		<result column="LOC_WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="locationWorkingScheduleId"/>
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId"/>
+		<result column="COMPANY_WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="companyWorkingScheduleId"/>
+	</resultMap>
+	
+	<select id="getWorkingScheduleIdByPersonIdAndAttendanceDate" parameterType="map" resultMap="resultPersonDTO">
+		<!-- select 
+			(
+			case
+			when ppi.working_schedule_id is null
+			then 
+			  case
+			  when gradv.working_schedule_id is null
+			  then 
+			    case
+			    when jobsv.working_schedule_id is null
+			    then 
+			      case
+			      when orgsv.working_schedule_id is null
+			      then 
+			        case
+			        when locsv.working_schedule_id is null
+			        then
+			          case
+			          when comp.working_schedule_id is null
+			          then null
+			          else comp.working_schedule_id
+			          end 
+			        else locsv.working_schedule_id
+			        end 
+			      else orgsv.working_schedule_id
+			      end 
+			    else jobsv.working_schedule_id
+			    end 
+			  else gradv.working_schedule_id
+			  end 
+			else ppi.working_schedule_id
+			end
+			)
+			as working_schedule_id
+	
+			from pea_personal_informations ppi
+			left join pea_primary_assignments ppa on (ppi.person_id = ppa.person_id and trunc(to_date('01-07-2013','dd-mm-yyyy')) between ppa.effective_start_date and ppa.effective_end_date and trunc(to_date('01-07-2013','dd-mm-yyyy')) between ppi.effective_start_date and ppi.effective_end_date)
+			left join EWS.wos_grades grad on (ppa.grade_id = grad.grade_id)
+			left join EWS.wos_grade_versions gradv on (grad.grade_id = gradv.grade_id and trunc(to_date('01-07-2013','dd-mm-yyyy')) between gradv.date_from and gradv.date_to)
+			left join EWS.wos_jobs jobs on (ppa.job_id = jobs.job_id)
+			left join EWS.wos_job_versions jobsv on (jobsv.job_id = jobs.job_id and trunc(to_date('01-07-2013','dd-mm-yyyy')) between jobsv.date_from and jobsv.date_to)
+			left join EWS.wos_organizations orgs on (ppa.organization_id = orgs.organization_id)
+			left join EWS.wos_organization_versions orgsv on (orgs.organization_id = orgsv.organization_id and trunc(to_date('01-07-2013','dd-mm-yyyy')) between orgsv.date_from and orgsv.date_to)
+			left join EWS.wos_locations locs on (orgsv.location_id = locs.location_id)
+			left join EWS.wos_location_versions locsv on (locs.location_id = locsv.location_id and trunc(to_date('01-07-2013','dd-mm-yyyy')) between locsv.date_from and locsv.date_to)
+			left join bse_companies comp on(ppa.company_id = comp.company_id and trunc(to_date('01-07-2013','dd-mm-yyyy')) between comp.effective_start_date and comp.effective_end_date)
+			where 
+			ppi.person_id = #{personId}
+			and trunc(#{attendanceDate}) between ppi.effective_start_date and ppi.effective_end_date -->
+	select distinct
+	ppi.person_id,
+	ppi.working_schedule_id as person_working_schedule_id,
+	gradv.grade_id,
+	gradv.working_schedule_id as grade_working_schedule_id,
+	jobsv.job_id,
+	jobsv.working_schedule_id as job_working_schedule_id,
+	orgsv.organization_id,
+	orgsv.working_schedule_id as org_working_schedule_id,
+	locsv.location_id,
+	locsv.working_schedule_id as loc_working_schedule_id,
+	comp.company_id,
+	comp.working_schedule_id as company_working_schedule_id
+	from pea_personal_informations ppi
+	join pea_people_types ppt
+		on ppt.people_type = 'EMPLOYEE'
+		and ppt.person_id = ppi.person_id
+		and ppt.company_id = ppi.company_id
+		and trunc(#{attendanceDate, jdbcType=DATE}) between ppt.effective_Start_date and ppt.effective_end_date
+	left join pea_primary_assignments ppa 
+		on ppi.person_id = ppa.person_id and trunc(#{attendanceDate}) between ppa.effective_start_date and ppa.effective_end_date 
+		and trunc(#{attendanceDate}) between ppi.effective_start_date and ppi.effective_end_date
+		and ppt.company_id = ppa.company_id
+	left join wos_grades grad on (ppa.grade_id = grad.grade_id)
+	left join wos_grade_versions gradv on (grad.grade_id = gradv.grade_id and trunc(#{attendanceDate}) between gradv.date_from and gradv.date_to)
+	left join wos_jobs jobs on (ppa.job_id = jobs.job_id)
+	left join wos_job_versions jobsv on (jobsv.job_id = jobs.job_id and trunc(#{attendanceDate}) between jobsv.date_from and jobsv.date_to)
+	left join wos_organizations orgs on (ppa.organization_id = orgs.organization_id)
+	left join wos_organization_versions orgsv on (orgs.organization_id = orgsv.organization_id and trunc(#{attendanceDate}) between orgsv.date_from and orgsv.date_to)
+	left join wos_locations locs on (orgsv.location_id = locs.location_id)
+	left join wos_location_versions locsv on (locs.location_id = locsv.location_id and trunc(#{attendanceDate}) between locsv.date_from and locsv.date_to)
+	left join bse_companies comp on(ppa.company_id = comp.company_id and trunc(#{attendanceDate}) between comp.effective_start_date and comp.effective_end_date)
+	where 
+	ppi.person_id = #{personId}
+	and trunc(#{attendanceDate}) between ppi.effective_start_date and ppi.effective_end_date
+	</select>
+
+	<select id="selectAssignmentByPersonId" parameterType="map" resultMap="baseResult">
+	 	select 
+	 	      pa.person_id,
+	 	      pa.company_id,
+	 	      pt.people_type,
+			  pi.employee_number,
+			  pi.full_name,
+			  pa.organization_id,
+			  wo.organization_name,
+			  wov.location_id,
+			  lo.location_name,
+			  pa.job_id,
+			  jo.job_name,
+			  jov.job_group_code,
+			  pa.grade_id,
+			  gr.personal_grade_code,
+			  comm.communication_id,
+        comm.comm_type,
+        comm.comm_information
+		  from pea_primary_assignments pa
+		  join pea_people_types pt on pa.person_id = pt.person_id and pa.company_id = pt.company_id
+            and trunc(sysdate) between pt.effective_start_date and pt.effective_end_date
+		  join pea_personal_informations pi on pa.person_id = pi.person_id and pa.company_id = pi.company_id
+            and trunc(sysdate) between pi.effective_start_date and pi.effective_end_date
+		  join wos_organizations wo on wo.organization_id = pa.organization_id
+		  join wos_jobs jo on jo.job_id = pa.job_id
+		  join wos_grade_versions gr on gr.grade_id = pa.grade_id and trunc(sysdate) between gr.date_from and gr.date_to
+		  join wos_organization_versions wov on wo.organization_id = wov.organization_id and trunc(sysdate) between wov.date_from and wov.date_to
+		  join wos_locations lo on wov.location_id = lo.location_id
+		  join wos_job_versions jov on jo.job_id = jov.job_id and sysdate between jov.date_from and jov.date_to
+      	  left join pea_communications comm on pa.person_id = comm.person_id and pa.company_id = comm.company_id
+		  where pa.person_id = #{personId}
+		  and pa.company_id = #{companyId}
+      		and trunc(sysdate) between pa.effective_start_date and pa.effective_end_date
+ 	</select>
+
+ 	<select id="selectPersonIdByEmployeeNumber" parameterType="map" resultMap="resultPersonId">
+		SELECT PERSON_ID
+		FROM PEA_PERSONAL_INFORMATIONS
+		WHERE EMPLOYEE_NUMBER = #{employeeNumber}
+		<if test="companyId !=null">
+		AND COMPANY_ID = #{companyId}
+		</if>
+    	AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+ 	</select>
+ 	
+ 	<select id="countActiveAssignmentEmployee" resultType="Integer" parameterType="map">
+ 		SELECT COUNT(*)
+		FROM pea_primary_assignments assignment
+		JOIN pea_people_types ppt ON ppt.person_id = assignment.person_id 
+		AND ppt.people_type = 'EMPLOYEE'
+		LEFT JOIN
+		  (SELECT j.job_id,
+		    ver.job_for_code
+		  FROM wos_jobs j
+		  JOIN wos_job_versions ver
+		  ON j.job_id = ver.job_id
+		  AND TRUNC(sysdate) BETWEEN ver.date_from AND ver.date_to
+		  ) job ON job.job_id = assignment.job_id
+		WHERE TRUNC(sysdate) BETWEEN assignment.effective_start_date AND assignment.effective_end_date
+		AND TRUNC(sysdate) BETWEEN ppt.effective_start_date AND ppt.effective_end_date 
+		<if test="companyId != null">
+			and assignment.company_id = #{companyId}			
+		</if>
+		<if test="organizationId != null">
+			and assignment.organization_id = #{organizationId}
+		</if>
+		<if test="jobId != null">
+			and assignment.job_id = #{jobId}			
+		</if>
+		<if test="listJobFor != null">
+			<if test="listJobFor.size() != 0">
+			 and job.job_for_code in
+			 <foreach item="item" open="(" close=")" separator=","
+				collection="listJobFor">
+				#{item}
+			 </foreach>		  		
+	  		</if>
+		</if>			
+ 	</select>
+ 	
+</mapper>

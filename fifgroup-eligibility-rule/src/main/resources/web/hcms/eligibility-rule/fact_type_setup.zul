@@ -1,0 +1,88 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winFactTypeSetup"
+	apply="co.id.fifgroup.eligibility.controller.FactTypeSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.elr.factType}" />
+		<grid sclass="form-entry" style="border: 0px;">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.elr.factTypeName}" />
+					<textbox id="txtFactTypeName" disabled="${arg.subject != null}" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox visible="${arg.subject == null || arg.subject.id != 'NONE' }">
+			<caption label="${labels.elr.factTypeFields}" />
+			<listbox id="lstFields" multiple="true" checkmark="true"  >
+				<listhead>
+					<listheader width="30px" />
+					<listheader label="Field Name" />
+					<listheader label="Field Type" />
+					<listheader label="Action" />
+				</listhead>
+				<template name="model">
+				<listitem checkable="${each.editable }" >
+					<listcell></listcell>
+					<listcell><label value="${each.name }"/></listcell>
+					<listcell><label value="${each.fieldType }"/></listcell>
+					<listcell><a label="Detail" forward="onFieldDetail(${each })" /></listcell>
+				</listitem>
+				</template>
+			</listbox>
+			<separator />
+			<hbox>
+				<button id="btnAddField" label="Add Row" />
+				<button id="btnRemoveField" label="Delete" />
+			</hbox>
+		</groupbox>
+		<separator />
+		<grid sclass="form-entry" style="border: none;">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.elr.retrievalMode}" />
+					<listbox id="lstRetrievalMode" mold="select" use="co.id.fifgroup.core.ui.EnumListbox" 
+						disabled="${arg.subject != null}" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<grid sclass="form-entry" id="gridSqlQuery" style="border: 0px;">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.elr.sqlQuery}" />
+					<textbox id="txtSqlQuery" width="97%" rows="20"/>
+				</row>
+				<row>
+					<label />
+					<button id="btnTest"
+						label="${labels.elr.test}" mold="trendy" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

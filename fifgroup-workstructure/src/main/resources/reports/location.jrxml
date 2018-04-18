@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="location" language="groovy" pageWidth="880" pageHeight="400" orientation="Landscape" columnWidth="840" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1abad37a-005b-4145-8b4a-11b250c9dd03">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="EFFECTIVE_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOCATION_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  loc.location_id,
+  loc.location_code,
+  loc.location_name,
+  ver.version_id,
+  ver.date_from,
+  ver.date_to,
+  (select provinsi from fs_mst_provinsi prov
+    where prov.prov_code = ver.province_code) province,
+  (select city from fs_mst_cities city
+    where city.city_code = ver.city_code) city,
+    (select dpd.description
+    from bse_lookup_hdr hdr
+    join bse_lookup_dependents dpd on hdr.lookup_id = dpd.lookup_id
+    where hdr.name = 'MST_COUNTRY'
+    and dpd.detail_code = ver.country_code
+    and dpd.company_scope in (-1, loc.company_id)) country,
+    (select dpd.description
+    from bse_lookup_hdr hdr
+    join bse_lookup_dependents dpd on hdr.lookup_id = dpd.lookup_id
+    where hdr.name = 'MST_ZONE'
+    and dpd.detail_code = ver.zone_code
+    and dpd.company_scope in (-1, loc.company_id)) zone,
+    (select info.info_value from wos_location_infos info
+    where info.version_id = ver.version_id
+    and info.info_id = (select dtl.other_info_dtl_id from bse_other_info_hdr hdr
+    join bse_other_info_dtl dtl on hdr.other_info_hdr_id = dtl.other_info_hdr_id
+    where upper(hdr.form_name) = upper('LOCATION')
+    and upper(dtl.detail_code) = upper('COLA_INDEX')
+    and dtl.company_scope in (-1, loc.company_id))) index_cola
+from wos_locations loc
+join wos_location_versions ver on loc.location_id = ver.location_id
+where (loc.location_id like $P{LOCATION_ID} OR $P{LOCATION_ID} is null)
+and (trunc(to_date($P{EFFECTIVE_DATE})) between ver.date_from and ver.date_to OR trunc(to_date($P{EFFECTIVE_DATE})) is null)
+and loc.company_id = $P{COMPANY_ID}
+order by loc.location_name asc, ver.date_from]]>
+	</queryString>
+	<field name="LOCATION_ID" class="java.math.BigDecimal"/>
+	<field name="LOCATION_CODE" class="java.lang.String"/>
+	<field name="LOCATION_NAME" class="java.lang.String"/>
+	<field name="VERSION_ID" class="java.math.BigDecimal"/>
+	<field name="DATE_FROM" class="java.sql.Timestamp"/>
+	<field name="DATE_TO" class="java.sql.Timestamp"/>
+	<field name="PROVINCE" class="java.lang.String"/>
+	<field name="CITY" class="java.lang.String"/>
+	<field name="COUNTRY" class="java.lang.String"/>
+	<field name="ZONE" class="java.lang.String"/>
+	<field name="INDEX_COLA" class="java.lang.String"/>
+	<pageHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="846166ae-bac1-4dec-b4fd-5db614efc153" x="400" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="303115b3-5cdf-46d8-b484-b7cbbd982d37" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="efc9bbd5-ab87-45f7-b98c-a5324400bea9" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e5ac12bc-a185-43b2-944a-9a2f8386d1a2" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Effective Date From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="979ae817-a74a-4ed7-a4a4-71abeda8b593" x="300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Effective Date To]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3d4df39b-6127-4c47-9395-0792d27208dc" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f72f8b3d-e4f2-48aa-a10a-fe6488216d02" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Province]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="76de3c05-5cde-4c21-a26a-e6506b3a7e90" x="600" y="0" width="84" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Country]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c61775f3-0af9-4104-8aeb-6506df33ffb1" x="684" y="0" width="78" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Zone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d3c6a448-e08f-4291-b898-a21dd86d83cc" x="762" y="0" width="78" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Index COLA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="68c30d5d-d87b-4160-9f55-f84200820259" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{LOCATION_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1fef48d6-3ab8-419e-9732-da41824591fb" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{LOCATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement uuid="122f3993-60d1-4011-8e6c-d409082f4fa2" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DATE_FROM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement uuid="d16d12d9-97b2-482a-8abd-83595d0a9b8e" x="300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DATE_TO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1f2c81c9-2954-424b-a148-70c71c9077af" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b2c1cf8b-e2ae-46de-828b-1e5288d393bc" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PROVINCE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="81508ecb-13d8-4901-989c-3ff80a4cb3d3" x="600" y="0" width="84" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COUNTRY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="612d487f-f840-4ebb-8437-5c5de131e1af" x="762" y="0" width="78" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{INDEX_COLA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="aad2b4b4-94ad-4643-a6be-6563a0e1f177" x="684" y="0" width="78" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ZONE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

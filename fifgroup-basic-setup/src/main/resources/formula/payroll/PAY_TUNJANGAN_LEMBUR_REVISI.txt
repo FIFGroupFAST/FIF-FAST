@@ -1,0 +1,148 @@
+import groovy.transform.CompileStatic;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+
+import co.id.fifgroup.basicsetup.service.ServiceModel;
+
+@CompileStatic
+class TunjanganLembur {
+
+	Long personId;
+	Date processDate;
+	Long companyId;
+	Double basicSalary;
+	ServiceModel serviceModel;
+	String processDateStr;
+	Map<String, Object> additionalParam;
+	boolean isRapel = false;
+	DateFormat dfDate = new SimpleDateFormat("dd-MMM-yyyy");
+	
+	public Double getTunjanganLembur() {
+		if(additionalParam.containsKey("isRapel") && (additionalParam.get("isRapel") instanceof Boolean && (Boolean) additionalParam.get("isRapel"))) {
+			isRapel = true;
+		}
+
+		processDateStr = dfDate.format(processDate);
+		
+		Double tunjanganLembur = Double.valueOf("0");
+		
+		Long presentDays = Long.valueOf("0");
+		
+		String sqlPresentDays = "";
+		
+		if(isRapel) {
+			DateTime dtProcessDate = new DateTime(processDate);
+			dtProcessDate = dtProcessDate.minusMonths(1);
+			String processDateRapel = DateUtil.format(dtProcessDate.toDate());
+
+			sqlPresentDays = """
+			SELECT
+				NVL(SUM(PRESENT_DAYS), 0) AS PRESENT_DAYS
+			FROM
+				TMS_FINALIZE_RESULTS
+			WHERE
+				TO_CHAR(TO_DATE('${processDateRapel}', 'DD-MON-YYYY'), 'MMYYYY') = TO_CHAR(PERIOD_START, 'MMYYYY')
+				AND TO_CHAR(TO_DATE('${processDateRapel}', 'DD-MON-YYYY'), 'MMYYYY') = TO_CHAR(PERIOD_END, 'MMYYYY')
+				AND PERSON_ID = ${personId}
+			""";
+		} else {
+			sqlPresentDays = """
+			SELECT
+				NVL(SUM(PRESENT_DAYS), 0) AS PRESENT_DAYS
+			FROM
+				TMS_FINALIZE_RESULTS
+			WHERE
+				TRUNC(TO_DATE('${processDateStr}', 'DD-MON-YYYY')) > TRUNC(PERIOD_END) AND
+				PERSON_ID = ${personId} AND IS_PROCESSED_TO_PAYROLL = 0
+			""";
+		}
+
+		List<Map<String, Object>> resultPresentDays = this.serviceModel.getFromQuery(sqlPresentDays);
+		
+		if(!resultPresentDays.isEmpty()) {
+			Map<String, Object> dataPresentDays = resultPresentDays.get(0);
+			if(dataPresentDays.get("PRESENT_DAYS") != null) {
+				presentDays = Long.valueOf(dataPresentDays.get("PRESENT_DAYS").toString());
+			}
+		}
+		
+		Double tunjanganMakan = Double.valueOf(presentDays.toString()).doubleValue() * getEpmdAmount("GA001").doubleValue();
+		Double tunjanganTransport = Double.valueOf(presentDays.toString()).doubleValue() * getEpmdAmount("GA003").doubleValue();
+		
+		DateFormat df = new SimpleDateFormat("MMyyyy");
+		String bulanProcess = df.format(processDate);
+		
+		String sqlIsOvertime = "";
+		if(isRapel) {
+			sqlIsOvertime = """
+			SELECT
+				NVL(SUM(OVERTIME_POINT), 0) AS NUM_OVERTIME
+			FROM
+				TMS_FINALIZE_RESULTS
+			WHERE
+				TRUNC(TO_DATE('${processDateStr}', 'DD-MON-YYYY')) > TRUNC(PERIOD_END) AND
+				PERSON_ID = ${personId}
+			""";
+		} else {
+			sqlIsOvertime = """
+			SELECT
+				NVL(SUM(OVERTIME_POINT), 0) AS NUM_OVERTIME
+			FROM
+				TMS_FINALIZE_RESULTS
+			WHERE
+				TRUNC(TO_DATE('${processDateStr}', 'DD-MON-YYYY')) > TRUNC(PERIOD_END) AND
+				PERSON_ID = ${personId} AND IS_PROCESSED_TO_PAYROLL = 0
+			""";
+		}
+
+		List<Map<String, Object>> resultOvertime = this.serviceModel.getFromQuery(sqlIsOvertime);
+		
+		if(!resultOvertime.isEmpty()) {
+			Map<String, Object> dataOvertime = resultOvertime.get(0);
+			Integer numOvertime = Integer.valueOf(dataOvertime.get("NUM_OVERTIME").toString());
+			
+			tunjanganLembur = Double.valueOf(Math.round(Double.valueOf(numOvertime.toString()).doubleValue() / Double.valueOf("173.0").doubleValue() * (Double.valueOf("0.75").doubleValue() * (basicSalary.doubleValue() + tunjanganMakan.doubleValue() + tunjanganTransport.doubleValue()))).toString());
+			
+		}
+		
+		return tunjanganLembur;
+		
+	}
+	
+	private Double getEpmdAmount(String paycode) {
+		String processDateEpmd = processDateStr;
+		if(isRapel) {
+			processDateEpmd = dfDate.format(new Date());
+		}
+		Double epmdAmount = Double.valueOf("0");
+		String sqlEpmdAmount = """
+								SELECT
+									TO_NUMBER(NVL(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(PEPD.AMOUNT, '0')), '0'), '0')) AS AMOUNT
+								FROM
+									PAY_EMP_PAYROLL_HDR PEPH
+									JOIN PAY_EMP_PAYROLL_DTL PEPD ON(PEPD.EMP_PAYROLL_HDR_ID = PEPH.EMP_PAYROLL_HDR_ID AND TRUNC(TO_DATE('${processDateStr}', 'DD-MON-YYYY')) BETWEEN TRUNC(PEPD.DATE_FROM) AND TRUNC(PEPD.DATE_TO))
+									JOIN PAY_PAYCODES PP ON(PP.PAYCODE_ID = PEPD.PAYCODE_ID AND TRUNC(TO_DATE('${processDateEpmd}', 'DD-MON-YYYY')) BETWEEN TRUNC(PP.DATE_FROM) AND TRUNC(PP.DATE_TO) AND PP.COMPANY_ID = ${companyId} AND PP.PAYCODE = '${paycode}')
+								WHERE
+									PEPH.PERSON_ID = ${personId} AND
+									PEPH.COMPANY_ID = ${companyId}
+								""";
+		List<Map<String, Object>> resultEpmdAmount = this.serviceModel.getFromQuery(sqlEpmdAmount);
+		if(!resultEpmdAmount.isEmpty()) {
+			Map<String, Object> dataEpmdAmount = resultEpmdAmount.get(0);
+			epmdAmount = Double.valueOf(dataEpmdAmount.get("AMOUNT").toString());
+		}
+		return epmdAmount;
+	}
+	
+}
+
+TunjanganLembur tunjanganLembur = new TunjanganLembur();
+tunjanganLembur.setPersonId(person_id);
+tunjanganLembur.setProcessDate(process_date);
+tunjanganLembur.setCompanyId(company_id);
+tunjanganLembur.setBasicSalary(PAY_BASIC_SALARY);
+tunjanganLembur.setServiceModel(serviceModel);
+tunjanganLembur.setAdditionalParam(additionalParam);
+return tunjanganLembur.getTunjanganLembur();

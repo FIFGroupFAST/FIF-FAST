@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.workstructure.finder.GradeFinder">
+
+	<resultMap id="gradeDtoResultMap" type="co.id.fifgroup.workstructure.dto.GradeDTO">
+		<id column="GRADE_ID" property="id" jdbcType="NUMERIC" />
+		<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="NUMERIC" />
+		<result column="VERSION_NUMBER" property="versionNumber" jdbcType="NUMERIC" />
+		<result column="GRADE_CODE" property="code" jdbcType="VARCHAR" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+		<result column="PERSONAL_GRADE_CODE" property="personalGradeCode" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="WORKING_SCHEDULE_ID" property="workingScheduleId" javaType="Long" jdbcType="NUMERIC"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="NUMERIC" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="NUMERIC" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+		<result column="DATE_FROM" property="dateFrom" />
+		<result column="DATE_TO" property="dateTo" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<collection property="gradeRates" ofType="co.id.fifgroup.workstructure.dto.GradeRateDTO">
+			<result column="BRANCH_ID" property="branchId"/>
+			<result column="ORGANIZATION_NAME" property="branchName"/>
+			<result column="MIN_SALARY" property="minSalary"/>
+			<result column="MAX_SALARY" property="maxSalary"/>
+		</collection>
+		<collection property="gradeInfos" ofType="co.id.fifgroup.workstructure.dto.OtherInfoDTO" javaType="java.util.List" >
+			<id column="INFO_ID" property="infoId" javaType="Long" jdbcType="NUMERIC" />
+			<result column="GRADE_ID" property="id" javaType="Long" jdbcType="NUMERIC"/>
+			<result column="VERSION_ID" property="versionId" javaType="Long" jdbcType="NUMERIC"/>
+			<result column="INFO_VALUE" property="infoValue" jdbcType="VARCHAR"/>
+			<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+			<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap id="gradeSetElementDtoResultMap" type="co.id.fifgroup.workstructure.dto.GradeSetElementDTO">
+		<result column="GRADE_SET_ELEMENT_ID" property="elementId"/>
+		<result column="GRADE_SET_ID" property="id"/>
+		<result column="GRADE_SEQUENCE" property="gradeSequence"/>
+		<result column="GRADE_ID" property="gradeId"/>
+		<result column="CONCORDANCE_LEVEL" property="concordanceLevel"/>
+	</resultMap>
+	
+	<select id="findByInquiry" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultMap="gradeDtoResultMap">
+		select 
+			g.GRADE_ID,
+			gv.VERSION_NUMBER,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			gv.DESCRIPTION,
+			gv.last_updated_by,
+			gv.last_update_date,
+			us.user_name
+		from WOS_GRADES g
+		join WOS_GRADE_VERSIONS gv on g.GRADE_ID = gv.GRADE_ID
+		join sam_users us on us.user_id = g.LAST_UPDATED_BY
+		<where>
+			<if test="companyId != null">
+				and g.COMPANY_ID = #{companyId, jdbcType=VARCHAR}		
+			</if>
+			<if test="code != null">
+				and g.GRADE_CODE like #{code, jdbcType=VARCHAR}		
+			</if>
+<!-- 			<if test="name != null"> -->
+<!-- 				and (g.GRADE || '-' || g.SUB_GRADE) like ('%' || #{name, jdbcType=VARCHAR} || '%') -->
+<!-- 			</if> -->
+			<if test="grade!= null">
+				and g.GRADE like #{grade, jdbcType=VARCHAR}
+			</if>
+			<if test="subGrade!= null">
+				and g.SUB_GRADE like #{subGrade, jdbcType=VARCHAR}
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultMap="gradeDtoResultMap">
+		select 
+			g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			gv.DATE_FROM,
+			gv.DATE_TO,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION,
+			gr.BRANCH_ID,
+			gr.MIN_SALARY,
+			gr.MAX_SALARY						
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		left join WOS_GRADE_RATES gr
+			on gr.VERSION_ID = gv.VERSION_ID
+		left join WOS_GRADE_INFOS gi
+			on gi.VERSION_ID = gv.VERSION_ID
+		<where>
+			<if test="companyId != null">
+				and g.COMPANY_ID= #{companyId, jdbcType=NUMERIC}		
+			</if>
+			<if test="id != null">
+				g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			</if>
+			<if test="code != null">
+				and g.GRADE_CODE like #{code, jdbcType=VARCHAR}		
+			</if>
+			<if test="name != null">
+				and (g.GRADE || '-' || g.SUB_GRADE) like ('%' || #{name, jdbcType=VARCHAR} || '%')
+			</if>
+			<if test="grade!= null">
+				and g.GRADE = #{grade, jdbcType=VARCHAR}
+			</if>
+			<if test="subGrade!= null">
+				and g.SUB_GRADE = #{subGrade, jdbcType=VARCHAR}
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByExampleCurrentAndFuture" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultMap="gradeDtoResultMap">
+		select DISTINCT
+			g.GRADE						
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		left join WOS_GRADE_RATES gr
+			on gr.VERSION_ID = gv.VERSION_ID
+		left join WOS_GRADE_INFOS gi
+			on gi.VERSION_ID = gv.VERSION_ID
+		<where>
+			<if test="companyId != null">
+				and g.COMPANY_ID= #{companyId, jdbcType=NUMERIC}		
+			</if>
+			<if test="id != null">
+				g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			</if>
+			<if test="code != null">
+				and g.GRADE_CODE like #{code, jdbcType=VARCHAR}		
+			</if>
+			<if test="name != null">
+				and (g.GRADE || '-' || g.SUB_GRADE) like ('%' || #{name, jdbcType=VARCHAR} || '%')
+			</if>
+			<if test="grade!= null">
+				and g.GRADE = #{grade, jdbcType=VARCHAR}
+			</if>
+			<if test="subGrade!= null">
+				and g.SUB_GRADE = #{subGrade, jdbcType=VARCHAR}
+			</if>
+			<if test="effectiveOnDate != null">
+				and 
+				(
+				(trunc(#{effectiveOnDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO)
+				OR
+				(trunc(#{effectiveOnDate, jdbcType=DATE}) &lt; trunc(gv.DATE_FROM))
+				)
+			</if>
+		</where>
+		ORDER BY G.GRADE
+	</select>
+	
+	<select id="countByExampleCurrentAndFuture" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+		(
+			select DISTINCT
+				g.GRADE						
+			from WOS_GRADES g
+			left join WOS_GRADE_VERSIONS gv
+				on g.GRADE_ID = gv.GRADE_ID
+			left join WOS_GRADE_RATES gr
+				on gr.VERSION_ID = gv.VERSION_ID
+			left join WOS_GRADE_INFOS gi
+				on gi.VERSION_ID = gv.VERSION_ID
+			<where>
+				<if test="companyId != null">
+					and g.COMPANY_ID= #{companyId, jdbcType=NUMERIC}		
+				</if>
+				<if test="id != null">
+					g.GRADE_ID = #{id, jdbcType=NUMERIC}
+				</if>
+				<if test="code != null">
+					and g.GRADE_CODE like #{code, jdbcType=VARCHAR}		
+				</if>
+				<if test="name != null">
+					and (g.GRADE || '-' || g.SUB_GRADE) like ('%' || #{name, jdbcType=VARCHAR} || '%')
+				</if>
+				<if test="grade!= null">
+					and g.GRADE = #{grade, jdbcType=VARCHAR}
+				</if>
+				<if test="subGrade!= null">
+					and g.SUB_GRADE = #{subGrade, jdbcType=VARCHAR}
+				</if>
+				<if test="effectiveOnDate != null">
+					and 
+					(
+					(trunc(#{effectiveOnDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO)
+					OR
+					(trunc(#{effectiveOnDate, jdbcType=DATE}) &lt; trunc(gv.DATE_FROM))
+					)
+				</if>
+			</where>
+		)
+	</select>
+	
+	<select id="findByExampleWithRowbounds" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultMap="gradeDtoResultMap">
+		select 
+			g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			gv.DATE_FROM,
+			gv.DATE_TO,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION,
+			gr.BRANCH_ID,
+			gr.MIN_SALARY,
+			gr.MAX_SALARY						
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		left join WOS_GRADE_RATES gr
+			on gr.VERSION_ID = gv.VERSION_ID
+		left join WOS_GRADE_INFOS gi
+			on gi.VERSION_ID = gv.VERSION_ID
+		<where>
+			<if test="companyId != null">
+				and g.COMPANY_ID= #{companyId, jdbcType=NUMERIC}		
+			</if>
+			<if test="id != null">
+				g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			</if>
+			<if test="code != null">
+				and UPPER(g.GRADE_CODE) like UPPER(#{code, jdbcType=VARCHAR})		
+			</if>
+			<if test="name != null">
+				and UPPER(g.GRADE || '-' || g.SUB_GRADE) like UPPER(#{name, jdbcType=VARCHAR})
+			</if>
+			<if test="grade!= null">
+				and g.GRADE = #{grade, jdbcType=VARCHAR}
+			</if>
+			<if test="subGrade!= null">
+				and g.SUB_GRADE = #{subGrade, jdbcType=VARCHAR}
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO
+			</if>
+		</where>
+		ORDER BY g.GRADE_CODE ASC
+	</select>
+	
+	<select id="countByExample" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultType="Integer">
+		select 
+			count(*)			
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		left join WOS_GRADE_RATES gr
+			on gr.VERSION_ID = gv.VERSION_ID
+		<where>
+			<if test="companyId != null">
+				and g.COMPANY_ID= #{companyId, jdbcType=NUMERIC}		
+			</if>
+			<if test="id != null">
+				g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			</if>
+			<if test="code != null">
+				and UPPER(g.GRADE_CODE) like UPPER(#{code, jdbcType=VARCHAR})		
+			</if>
+			<if test="name != null">
+				and UPPER(g.GRADE || '-' || g.SUB_GRADE) like UPPER(#{name, jdbcType=VARCHAR})
+			</if>
+			<if test="grade!= null">
+				and g.GRADE = #{grade, jdbcType=VARCHAR}
+			</if>
+			<if test="subGrade!= null">
+				and g.SUB_GRADE = #{subGrade, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="findByIdAndVersionNumber" parameterType="map" resultMap="gradeDtoResultMap">
+		select
+			g.COMPANY_ID,
+			g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			gv.DATE_FROM,
+			gv.DATE_TO,
+			gv.PERSONAL_GRADE_CODE,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION,
+			gv.WORKING_SCHEDULE_ID,
+			gr.BRANCH_ID,
+			gr.MIN_SALARY,
+			gr.MAX_SALARY,
+			gi.info_id,
+      		gi.info_value,
+			org.organization_name
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		left join WOS_GRADE_RATES gr
+			on gr.VERSION_ID = gv.VERSION_ID
+		left join WOS_GRADE_INFOS gi
+			on gi.VERSION_ID = gv.VERSION_ID
+		left join wos_organizations org on org.organization_id = gr.branch_id
+		where
+			g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			and gv.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+		order by org.organization_name
+	</select>
+	
+	<select id="findByIdAndDate" parameterType="map" resultMap="gradeDtoResultMap">
+		select 
+			g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION,
+			gv.WORKING_SCHEDULE_ID,
+			gr.BRANCH_ID,
+			gr.MIN_SALARY,
+			gr.MAX_SALARY						
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		left join WOS_GRADE_RATES gr
+			on gr.VERSION_ID = gv.VERSION_ID
+		left join WOS_GRADE_INFOS gi
+			on gi.VERSION_ID = gv.VERSION_ID
+		where
+			g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			and trunc(#{effectiveDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO
+		order by gr.BRANCH_ID 
+	</select>
+	
+	<select id="findVersionsById" parameterType="Long" resultType="Integer">
+		select
+			gv.VERSION_NUMBER
+		from WOS_GRADES g
+		left join WOS_GRADE_VERSIONS gv
+			on g.GRADE_ID = gv.GRADE_ID
+		where
+			g.GRADE_ID = #{id, jdbcType=NUMERIC}
+		order by gv.VERSION_NUMBER
+	</select>
+	
+	<select id="findByGradeSetId" parameterType="map" resultMap="gradeDtoResultMap">
+		 select g.grade_id, 
+		 	g.grade, 
+		 	g.sub_grade,
+		 	g.grade_code
+		 from wos_grades g
+		 left join wos_grade_set_elements gse
+    	 	on g.grade_id = gse.grade_id
+    	 left join wos_grade_versions gv
+       		on g.grade_id = gv.grade_id
+       	<where>
+		 	gse.grade_set_id = #{gradeSetId, jdbcType=NUMERIC}
+ 			and trunc(sysdate) between gv.date_from and gv.date_to
+ 			<if test="gradeCode != null">
+				and UPPER(g.grade_code) like UPPER(#{gradeCode, jdbcType=VARCHAR})
+ 			</if>
+ 			<if test="gradeName != null">
+				and UPPER((g.GRADE || '-' || g.SUB_GRADE)) like UPPER(#{gradeName, jdbcType=VARCHAR})
+ 			</if>
+       	</where>
+		ORDER BY g.grade_code asc
+	</select>
+	
+	<select id="countByGradeSetId" parameterType="map" resultType="Integer">
+		 select count(*)
+		 from wos_grades g
+		 left join wos_grade_set_elements gse
+    	 	on g.grade_id = gse.grade_id
+    	 left join wos_grade_versions gv
+       		on g.grade_id = gv.grade_id
+       	<where>
+		 	gse.grade_set_id = #{gradeSetId, jdbcType=NUMERIC}
+ 			and trunc(sysdate) between gv.date_from and gv.date_to
+ 			<if test="gradeCode != null">
+				and UPPER(g.grade_code) like UPPER(#{gradeCode, jdbcType=VARCHAR})
+ 			</if>
+ 			<if test="gradeName != null">
+				and UPPER(g.GRADE || '-' || g.SUB_GRADE) like UPPER(#{gradeName, jdbcType=VARCHAR})
+ 			</if>
+       	</where>
+		
+	</select>
+	
+	<select id="findByName" parameterType="map" resultMap="gradeDtoResultMap">
+		select
+			g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION
+		from wos_grades g
+		join wos_grade_versions gv
+		  on g.grade_id=gv.grade_id
+		where g.company_id = #{companyId, jdbcType=NUMERIC}
+		  and upper(g.grade) like upper(#{name, jdbcType=VARCHAR})
+		  and g.company_id = #{companyId, jdbcType=NUMERIC}
+		  and trunc(sysdate) between gv.date_from and gv.date_to
+	</select>
+	
+	<!-- add by rim CR HCMS - Promotion Acting -->
+	<select id="findByCode" parameterType="map" resultMap="gradeDtoResultMap">
+		select
+			g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION
+		from wos_grades g
+		join wos_grade_versions gv
+		  on g.grade_id=gv.grade_id
+		where g.company_id = #{companyId, jdbcType=NUMERIC}
+		  and upper(g.grade_code) like upper(#{gradeCode, jdbcType=VARCHAR})
+		  and g.company_id = #{companyId, jdbcType=NUMERIC}
+		  and trunc(sysdate) between gv.date_from and gv.date_to
+	</select>
+	<!-- add by rim CR HCMS - Promotion Acting -->
+
+	<select id="isHaveFuture" parameterType="Long" resultType="int">
+		SELECT
+		COUNT(GV.VERSION_NUMBER)
+		FROM WOS_GRADE_VERSIONS GV JOIN WOS_GRADES G ON(GV.GRADE_ID =
+		G.GRADE_ID)
+		<where>
+			<if test="id != null">
+				GV.GRADE_ID = #{id, jdbcType=DECIMAL}
+				and gv.version_number > 
+					(SELECT GV.VERSION_NUMBER
+					FROM
+					WOS_GRADE_VERSIONS GV
+					JOIN WOS_GRADES G ON(GV.GRADE_ID = G.GRADE_ID)
+					<where>
+					G.GRADE_ID = #{id, jdbcType=DECIMAL}
+					AND TRUNC(SYSDATE) BETWEEN GV.DATE_FROM AND GV.DATE_TO)
+					</where>
+			</if>
+		</where>
+	</select>
+	
+	 <select id="findLastVersionByCode" parameterType="map" resultMap="gradeDtoResultMap" >
+	    SELECT 
+	    	g.GRADE_ID,
+			gv.VERSION_ID,
+			gv.VERSION_NUMBER,
+			gv.DATE_FROM,
+			gv.DATE_TO,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			g.CREATED_BY,
+			g.CREATION_DATE,
+			g.LAST_UPDATED_BY,
+			g.LAST_UPDATE_DATE,
+			gv.DESCRIPTION,
+	      	wgi.info_id,
+	      	wgi.info_value
+	      FROM WOS_GRADES G		 
+		  JOIN WOS_GRADE_VERSIONS GV ON G.GRADE_ID = GV.GRADE_ID
+		  left join wos_grade_infos wgi on wgi.version_id = gv.version_id
+		  WHERE GV.VERSION_NUMBER = (SELECT COUNT(GV.VERSION_NUMBER)
+		     FROM WOS_GRADES G		 
+		 	 JOIN WOS_GRADE_VERSIONS GV 
+		 	 ON G.GRADE_ID = GV.GRADE_ID
+		     AND G.GRADE_CODE = (#{gradeCode, jdbcType=VARCHAR})
+		     AND G.COMPANY_ID = (#{companyId, jdbcType=NUMERIC})  
+		     )
+		     AND G.GRADE_CODE = (#{gradeCode, jdbcType=VARCHAR})
+		     AND G.COMPANY_ID = (#{companyId, jdbcType=NUMERIC})   
+	  </select>
+	  
+	  <select id="findGradeSetElementByJobIdAndGradeId" parameterType="map" resultMap="gradeSetElementDtoResultMap">
+	  	select
+		  ele.grade_set_element_id,
+		  ele.grade_set_id,
+		  ele.grade_sequence,
+		  ele.grade_id,
+		  ele.concordance_level
+		from wos_grade_sets grade 
+		join wos_grade_set_elements ele on grade.grade_set_id = ele.grade_set_id
+		join wos_job_versions jv on ele.grade_set_id = jv.grade_set_id
+		where jv.job_id = #{jobId, jdbcType=NUMERIC}
+		and ele.grade_id = #{gradeId, jdbcType=NUMERIC}
+		and trunc(sysdate) between jv.date_from and jv.date_to
+		and trunc(sysdate) between grade.start_date and grade.end_date
+	  </select>
+	  
+	  <select id="findGradeSequenceValidGradeByJobId" parameterType="map" resultType="Integer">
+	  	select
+		  ele.grade_sequence
+		from wos_job_versions jv
+		join wos_job_valid_grades valid on jv.version_id = valid.version_id
+		join wos_grade_sets grade on jv.grade_set_id = grade.grade_set_id
+		join wos_grade_set_elements ele on grade.grade_set_id = ele.grade_set_id
+		where jv.job_id = #{jobId, jdbcType=NUMERIC}
+		and trunc(sysdate) between jv.date_from and jv.date_to
+		and trunc(sysdate) between grade.start_date and grade.end_date
+	  </select>
+	  
+	  <select id="findGradeActiveByCompanyId" parameterType="map" resultType="String">
+	  	select distinct grade
+		from wos_grades wg
+  		join wos_grade_versions wgv on wgv.grade_id = wg.grade_id 
+  			and trunc(sysdate) between wgv.date_from and wgv.date_to
+  		where wg.company_id = #{companyId}
+  		<if test="grade != null">
+  			and wg.grade like #{grade, jdbcType=VARCHAR}
+  		</if>
+  		order by grade
+	  </select>
+	  
+	  <select id="findSubGradeActiveByCompanyId" parameterType="map" resultType="String">
+	  	select distinct sub_grade
+		from wos_grades wg
+  		join wos_grade_versions wgv on wgv.grade_id = wg.grade_id 
+  			and trunc(sysdate) between wgv.date_from and wgv.date_to
+  		where wg.company_id = #{companyId}	  
+  		<if test="subGrade != null">
+  			and wg.sub_grade = #{subGrade}
+  		</if>
+  		order by sub_grade	
+	  </select>
+	  
+	  <select id="findSubGradeByGradeCompanyId" parameterType="map" resultType="String">
+		select distinct sub_grade
+		from wos_grades wg
+  		join wos_grade_versions wgv on wgv.grade_id = wg.grade_id
+  			and trunc(sysdate) between wgv.date_from and wgv.date_to
+  		where wg.company_id = #{companyId}
+  		<if test="grade != null">
+  			and wg.grade = #{grade}
+  		</if>
+  		order by sub_grade	
+	  </select>
+	  
+	  <select id="findStringGradeByCompanyId" parameterType="map" resultType="String">
+		SELECT DISTINCT g.GRADE FROM WOS_GRADES g
+		LEFT JOIN WOS_GRADE_VERSIONS gv
+		ON g.GRADE_ID = gv.GRADE_ID
+		LEFT JOIN WOS_GRADE_RATES gr
+		ON gr.VERSION_ID = gv.VERSION_ID
+		LEFT JOIN WOS_GRADE_INFOS gi
+		ON gi.VERSION_ID  = gv.VERSION_ID
+		WHERE g.COMPANY_ID= #{companyId}
+		and trunc(#{effectiveOnDate, jdbcType=DATE})  BETWEEN gv.DATE_FROM AND gv.DATE_TO
+		ORDER BY G.GRADE ASC
+	  </select>
+	  
+	  <select id="findGradeIdsByStringGrade" resultType="Long">
+		SELECT DISTINCT(G.GRADE_ID) FROM WOS_GRADES G
+		LEFT JOIN WOS_GRADE_VERSIONS GV
+		ON G.GRADE_ID = GV.GRADE_ID
+		LEFT JOIN WOS_GRADE_RATES GR
+		ON GR.VERSION_ID = GV.VERSION_ID
+		LEFT JOIN WOS_GRADE_INFOS GI
+		ON GI.VERSION_ID  = GV.VERSION_ID
+		WHERE G.COMPANY_ID= #{companyId}
+		AND G.GRADE = #{grade}
+		<if test="subgrade != null and subgrade.length() > 0">
+			AND G.SUB_GRADE = #{subgrade}
+		</if>
+		AND SYSDATE  BETWEEN GV.DATE_FROM AND GV.DATE_TO
+		ORDER BY G.GRADE_ID ASC	  
+	  </select>
+	  
+	  
+	  <select id="findGradeByGradeAndSubGrade" parameterType="map" resultMap="gradeDtoResultMap">
+		  select wg.GRADE_ID,
+		  		wg.COMPANY_ID,
+				wg.GRADE_CODE,
+				wg.GRADE,
+				wg.SUB_GRADE,
+				wg.CREATED_BY,
+				wg.CREATION_DATE,
+				wg.LAST_UPDATED_BY,
+				wg.LAST_UPDATE_DATE
+		  	from wos_grades wg
+			  join wos_grade_set_elements wgse on wgse.grade_id = wg.grade_id
+			  where wg.company_id = #{companyId}
+			  and wgse.grade_set_id = #{gradeSetId}
+			  and wg.grade = #{grade}
+			  and wg.sub_grade = #{subGrade}
+	  </select>
+	  
+	   <select id="getMinSalaryByGradeIdAndBranchId" parameterType="map" resultType="BigDecimal">
+	   		select 
+	   			rate.min_salary
+			from wos_grades grade
+			join wos_grade_versions ver on grade.grade_id = ver.grade_id
+			join wos_grade_rates rate on ver.version_id = rate.version_id
+			where grade.grade_id = #{gradeId, jdbcType=NUMERIC}
+			<if test="branchId != null">
+				and rate.branch_id = #{branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="date != null">
+				and trunc(#{date, jdbcType=DATE}) between ver.date_from and ver.date_to
+			</if>
+	   </select>
+	   
+	   <select id="getMaxSalaryByGradeIdAndBranchId" parameterType="map" resultType="BigDecimal">
+	   		select 
+	   			rate.max_salary
+			from wos_grades grade
+			join wos_grade_versions ver on grade.grade_id = ver.grade_id
+			join wos_grade_rates rate on ver.version_id = rate.version_id
+			where grade.grade_id = #{gradeId, jdbcType=NUMERIC}
+			<if test="branchId != null">
+				and rate.branch_id = #{branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="date != null">
+				and trunc(#{date, jdbcType=DATE}) between ver.date_from and ver.date_to
+			</if>
+	   </select>
+	   
+	   <select id="isFutureExist" parameterType="Long" resultType="Integer">
+			select count(ver.version_id) from wos_grade_versions ver
+				where ver.grade_id = #{id}
+				and ver.date_from > trunc(sysdate)
+		</select>
+		
+		
+		<select id="findVersionIdByIdAndDate" parameterType="map" resultType="Long">
+			select 
+				gv.VERSION_ID				
+			from WOS_GRADES g
+			left join WOS_GRADE_VERSIONS gv
+				on g.GRADE_ID = gv.GRADE_ID
+			where
+				g.GRADE_ID = #{id, jdbcType=NUMERIC}
+				and trunc(#{effectiveDate, jdbcType=DATE}) between gv.DATE_FROM and gv.DATE_TO
+		</select>
+	
+		<select id="findActiveGradeForLov" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultMap="gradeDtoResultMap">
+			select 
+				g.GRADE_ID,
+				g.GRADE_CODE,
+				g.GRADE,
+				g.SUB_GRADE
+			from WOS_GRADES g
+			join WOS_GRADE_VERSIONS gv on g.GRADE_ID = gv.GRADE_ID
+			where g.company_id = #{companyId}
+      	 	<if test="effectiveOnDate != null">
+	      	 	and trunc(#{effectiveOnDate}) between gv.date_from and gv.date_to
+      	 	</if>
+		    <if test="code != null">
+				and UPPER(g.GRADE_CODE) like UPPER(#{code, jdbcType=VARCHAR})		
+			</if>
+			<if test="name != null">
+				and UPPER(g.GRADE || '-' || g.SUB_GRADE) like UPPER(#{name, jdbcType=VARCHAR})
+			</if>
+			order by g.GRADE_CODE
+		</select>
+		
+		<select id="countActiveGradeForLov" parameterType="co.id.fifgroup.workstructure.dto.GradeDTO" resultType="Integer">
+			select 
+				count(*)
+			from WOS_GRADES g
+			join WOS_GRADE_VERSIONS gv on g.GRADE_ID = gv.GRADE_ID
+			where g.company_id = #{companyId}
+      	 	<if test="effectiveOnDate != null">
+	      	 	and trunc(#{effectiveOnDate}) between gv.date_from and gv.date_to
+      	 	</if>
+		    <if test="code != null">
+				and UPPER(g.GRADE_CODE) like UPPER(#{code, jdbcType=VARCHAR})		
+			</if>
+			<if test="name != null">
+				and UPPER(g.GRADE || '-' || g.SUB_GRADE) like UPPER(#{name, jdbcType=VARCHAR})
+			</if>
+			order by g.GRADE_CODE
+		</select>
+		
+		<resultMap id="GradeRateResultMap" type="co.id.fifgroup.workstructure.domain.GradeRate">
+		    <id column="GRADE_RATE_ID" jdbcType="DECIMAL" property="id" />
+		    <result column="VERSION_ID" jdbcType="DECIMAL" property="versionId" />
+		    <result column="BRANCH_ID" jdbcType="DECIMAL" property="branchId" />
+		    <result column="MIN_SALARY" jdbcType="DECIMAL" property="minSalary" />
+		    <result column="MAX_SALARY" jdbcType="DECIMAL" property="maxSalary" />
+		  </resultMap>
+		
+		<select id="getGradeRateByGradeIdAndBranchId" parameterType="map" resultMap="GradeRateResultMap">
+	   		select 
+	   			rate.*
+			from wos_grades grade
+			join wos_grade_versions ver on grade.grade_id = ver.grade_id
+			join wos_grade_rates rate on ver.version_id = rate.version_id
+			where grade.grade_id = #{gradeId, jdbcType=NUMERIC}
+			<if test="branchId != null">
+				and rate.branch_id = #{branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="date != null">
+				and trunc(#{date, jdbcType=DATE}) between ver.date_from and ver.date_to
+			</if>
+	   </select>
+		
+	<select id="findGradeActiveByDateAndCompanyId" parameterType="map" resultType="String">
+	  	select distinct grade
+		from wos_grades wg
+  		join wos_grade_versions wgv on wgv.grade_id = wg.grade_id 
+  		<where>
+  			and wg.company_id = #{companyId}
+  			<if test="effectiveDate != null">
+  				and trunc(#{effectiveDate}) between wgv.date_from and wgv.date_to
+  			</if>
+  			<if test="effectiveDate == null">
+  				and wgv.date_to &gt; trunc(sysdate) 
+  			</if>
+  		</where>
+  		order by grade
+	  </select>
+	  
+	  <select id="findSubGradeActiveByDateAndCompanyId" parameterType="map" resultType="String">
+	  	select distinct sub_grade
+		from wos_grades wg
+  		join wos_grade_versions wgv on wgv.grade_id = wg.grade_id 
+  		<where>
+  			and wg.company_id = #{companyId}
+  			<if test="effectiveDate != null">
+  				and trunc(#{effectiveDate}) between wgv.date_from and wgv.date_to
+  			</if>
+  			<if test="effectiveDate == null">
+  				and wgv.date_to &gt; trunc(sysdate) 
+  			</if>
+  		</where>
+  		order by sub_grade	
+	  </select>
+	  
+	<select id="findById" parameterType="map"  resultMap="gradeDtoResultMap">
+		select 
+			g.GRADE_ID,
+			gv.VERSION_NUMBER,
+			g.GRADE_CODE,
+			g.GRADE,
+			g.SUB_GRADE,
+			gv.DESCRIPTION,
+			gv.last_updated_by,
+			gv.last_update_date,
+			us.user_name
+		from WOS_GRADES g
+		join WOS_GRADE_VERSIONS gv on g.GRADE_ID = gv.GRADE_ID
+		join sam_users us on us.user_id = g.LAST_UPDATED_BY
+		<where>
+			g.GRADE_ID = #{id, jdbcType=NUMERIC}
+			and trunc(sysdate) between trunc(gv.date_from) and trunc(gv.date_to)
+		</where>
+	</select>
+</mapper>

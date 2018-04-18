@@ -1,0 +1,515 @@
+<?page title="SSOA" contentType="text/html;charset=UTF-8"?>
+<window id="winAddress" border="none"
+	apply="co.id.fifgroup.ssoa.controller.StockOpnamePeriodComposer">
+<style src="/styles/css/style.css"/>
+			<panel id="panelView" title="Stock Opname Period" border="normal" collapsible="false" closable="false" maximizable="false" 
+				style="margin-bottom:10px" width="100%">
+				<panelchildren style="padding:5px">
+					<grid style="margin-bottom:5px">
+						<columns>
+							<column label="" width="150px"  align="right"/>
+							<column label="" width="" />
+						</columns>
+						<rows>
+							<row>
+								<div sclass="col-right">
+									<label value="Period Name" width="30px"/>
+								</div>
+								<div>
+									<textbox width="300px" tabindex="1" id="txtSearchPeriodName" maxlength="64" />
+								</div>
+							</row>
+							<row>
+								<div sclass="col-right">
+									<label value="Status" width="30px"/>
+								</div>
+								<div>
+									<combobox value="New">
+										<comboitem label="New"/>
+										<comboitem label="Start"/>
+										<comboitem label="On Progress"/>
+									</combobox>
+								</div>
+							</row>
+							<row>
+								<div class="col-right"></div>
+								<div>
+									<button id="searchButton" label="Find" style="" image="/styles/images/btn_search.png"/>
+					   				<button id="newButton" label="New" style="margin-left:15px;" image="/styles/images/btn_add.png"/>
+								</div>
+							</row>
+						</rows>
+					</grid>
+			
+					<listbox id="lbxStockOpnamePeriod" height="auto"  emptyMessage="No Stock Opname found in the result"
+					mold="paging" pageSize="3" pagingPosition="both">
+						<listhead sizable="true" style="text-align:left;" menupopup="auto">
+							<listheader label="Action" width="160px" />
+							<listheader label="Period Name" sort="auto" width="300px" />
+							<listheader label="Period Start Date" sort="auto" width="150px"/>
+							<listheader label="Period End Date" sort="auto" width="150px"/>
+							<listheader label="Involved Branch" sort="auto" width="110px"/>
+							<listheader label="Not Started Branch" sort="auto" width="110px" />
+							<listheader label="In Process Branch" sort="auto" width="110px" />
+							<listheader label="Submit Branch" sort="auto" width="110px" />
+							<listheader label="Approve Branch" sort="auto" width="110px" />
+							<listheader label="Closed Branch" sort="auto" width="110px" />
+							<listheader label="Status" sort="auto" width="150px" />
+							<listheader label="Last Update By" sort="auto" width="170px" />
+							<listheader label="Last Update Date" sort="auto" width="170px" />
+						</listhead>
+						<!-- <template name="model">
+						<listitem>
+							<listcell style="text-align:center;"> 
+								
+							</listcell>
+							<listcell label="${each.periodName}"></listcell>
+							<listcell label="${each.periodStartDate}"></listcell>
+							<listcell label="${each.periodEndDate}"></listcell>
+							<listcell label="${each.locationNumber}"></listcell>
+							<listcell label="${each.status}"></listcell>
+							<listcell label="${each.updateBy}"></listcell>
+							<listcell label="${each.updateOn}"></listcell>
+						</listitem>
+						
+						
+						</template> -->
+						<listitem>
+							<listcell style="text-align:left;"> 
+							<a label="Resend Notification"/> <a label="Detail"/>  
+							</listcell>
+							<listcell label="Stock Opname Wilayah 1 Periode 2016"></listcell>
+							<listcell label="1-Feb-2016"></listcell>
+							<listcell label="29-April-2016"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="New"></listcell>
+							<listcell label="system.admin"></listcell>
+							<listcell label="22-Feb-2016 10:00"></listcell>
+						</listitem>
+						<listitem>
+							<listcell style="text-align:left;"> 
+							<a label="Resend Notification"/> <a label="Detail"/>  
+							</listcell>
+							<listcell label="Stock Opname Wilayah 2 Periode 2016"></listcell>
+							<listcell label="1-Feb-2016"></listcell>
+							<listcell label="29-April-2016"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="Start"></listcell>
+							<listcell label="system.admin"></listcell>
+							<listcell label="22-Feb-2016 10:00"></listcell>
+						</listitem>
+						<listitem>
+							<listcell style="text-align:left;"> 
+							<a label="Detail" onClick="panelDetailStockOpnamePeriod.setVisible(true)"/>  
+							</listcell>
+							<listcell label="Stock Opname Nasional Periode 2016"></listcell>
+							<listcell label="1-Aug-2016"></listcell>
+							<listcell label="30-Sep-2016"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="4"></listcell>
+							<listcell label="3"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="1"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="On Progress"></listcell>
+							<listcell label="system.admin"></listcell>
+							<listcell label="22-Feb-2016 10:00"></listcell>
+						</listitem>
+						<listitem>
+							<listcell style="text-align:left;"> 
+							<a label="Detail" onClick="panelDetailStockOpnamePeriod.setVisible(true)"/>  
+							</listcell>
+							<listcell label="Stock Opname Nasional Periode 2015"></listcell>
+							<listcell label="1-Aug-2015"></listcell>
+							<listcell label="30-Sep-2016"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="0"></listcell>
+							<listcell label="8"></listcell>
+							<listcell label="Close"></listcell>
+							<listcell label="system.admin"></listcell>
+							<listcell label="22-Feb-2016 10:00"></listcell>
+						</listitem>
+					</listbox>
+					
+					<div style="float:right; padding:5px 0px;">
+				 	<div 
+					viewModel="@id('vm') @init('main.java.co.id.fifgroup.assetstockopname.domain.JasperReportViewModel')">
+					Download As : <listbox id="lbxFormatDownload" mold="select">
+						<!-- <template name="model">
+							<listitem value="#{each.value}" label="${each.value}"></listitem>
+						</template> -->
+						<listitem>
+							<listcell label="PDF"></listcell>
+						</listitem>
+						<listitem>
+							<listcell label="XLS"></listcell>
+						</listitem>
+					</listbox>
+				
+					<button label="Download" onClick="@command('showReport')" />
+				<!-- 
+					<jasperreport id="report" height="360px" 
+						src="@load(vm.reportConfig.source, after='showReport')" 
+						parameters="@load(vm.reportConfig.parameters, after='showReport')" 
+						type="@load(vm.reportConfig.type.value, after='showReport')" 
+						datasource="@load(vm.reportConfig.dataSource, after='showReport')"/>
+				 -->
+				</div>
+				 	
+					</div>
+			
+				</panelchildren>
+			</panel>
+			
+			
+			<panel title="Stock Opname Period - Add" id="panelAddStockOpnamePeriod" visible="false" border="normal">
+				<panelchildren style="padding:5px;">
+					<grid style="margin-bottom:5px;" >
+						<columns>
+							<column label="" width="150px" align="right"/>
+							<column label="" width="" />
+						</columns>
+						<rows>
+							<row>
+								<div class="col-right">
+									<label value="Period Name" width="30px"/>
+									<span style="color:Red;">*</span>
+								</div>
+								<div>
+									<textbox width="300px" tabindex="1" id="txtPeriodName" maxlength="64" />
+								</div>
+							</row>
+							<row>
+								<div class="col-right">
+									<label value="Period Start Date" width="30px"/>
+									<span style="color:Red;">*</span>
+								</div>
+								<div>
+									<datebox tabindex="1" id="dtPeriodStartDate" style="background-color:#fff;" readonly="true"/>
+								</div>
+							</row>
+							<row>
+								<div class="col-right">
+									<label value="Period End Date" width="30px"/>
+									<span style="color:Red;">*</span>
+								</div>
+								<div>
+									<datebox tabindex="1" id="dtPeriodEndDate" style="background-color:#fff;" readonly="true"/>
+								</div>
+							</row>				            
+						</rows>
+					</grid>
+					<separator></separator>
+					<panel title="Branch">
+						<panelchildren>
+							<listbox>
+								<listhead>
+									<listheader></listheader>
+									<listheader></listheader>
+									<listheader></listheader>
+									<listheader></listheader>
+								</listhead>
+								<listitem>
+										<listcell>
+											<div style="margin-left:5px">
+												<checkbox checked="true"></checkbox>
+												<label>Cabang Jakarta 1</label>
+											</div>
+										</listcell>
+										<listcell>
+											<checkbox></checkbox>
+											<label>Cabang Bogor</label>
+										</listcell>
+										<listcell>
+											<checkbox></checkbox>
+											<label>Cabang Depok</label>
+										</listcell>
+										<listcell>
+											<checkbox></checkbox>
+											<label>Cabang Ciawi</label>
+										</listcell>
+									
+								</listitem>
+								<listitem>
+									<listcell>
+										<div style="margin-left:5px">
+											<checkbox checked="true"></checkbox>
+											<label>Cabang Jakarta 2</label>
+											</div>
+									</listcell>
+									<listcell>
+										<checkbox></checkbox>
+										<label>Cabang Sumedang</label>
+									</listcell>
+									<listcell>
+										<checkbox></checkbox>
+										<label>Cabang Bandung</label>
+									</listcell>
+									<listcell>
+										<checkbox></checkbox>
+										<label>Cabang Karawang</label>
+									</listcell>
+								</listitem>
+								<listitem>
+									<listcell>
+										<div style="margin-left:5px">
+											<checkbox checked="true"></checkbox>
+											<label>Cabang Bekasi</label>
+										</div>
+									</listcell>
+									<listcell>
+										<checkbox></checkbox>
+										<label>Cabang Garut</label>
+									</listcell>
+									<listcell>
+										<checkbox></checkbox>
+										<label>Cabang Tasik</label>
+									</listcell>
+									<listcell>
+										<checkbox></checkbox>
+										<label>Cabang Purwakarta</label>
+									</listcell>
+								</listitem>
+							</listbox>
+						</panelchildren>
+					</panel>
+					<separator></separator>
+					<button id="saveButton" label="Save" image="${labels.image.link.save}" style="margin-left:50%"></button>
+					<button id="cancelButton" label="Cancel" image="${labels.image.link.cancel}" style="float:right"></button>
+				</panelchildren>
+			</panel>
+			
+			
+
+			<!-- <panel id="panelAddStockOpnamePeriod" title="Stock Opname Period-Add" border="" collapsible="false" closable="false" 
+					maximizable="false" style="margin-bottom:10px" visible="false">
+				<panelchildren style="padding:5px">
+					<grid>
+						<columns>
+							<column label="" width="150px" align="right"/>
+							<column label="" width="" />
+						</columns>
+						<rows>
+							<row>
+								<div class="col-right">
+									<label value="Period Name" width="30px"/>
+									<span style="color:Red;">*</span>
+								</div>
+								<div>
+									<textbox width="300px" tabindex="1" id="txtPeriodName" maxlength="64" />
+								</div>
+							</row>
+							<row>
+								<div class="col-right">
+									<label value="Period Start Date" width="30px"/>
+									<span style="color:Red;">*</span>
+								</div>
+								<div>
+									<datebox tabindex="1" id="dtPeriodStartDate" style="background-color:#fff;" readonly="true"/>
+								</div>
+							</row>
+							<row>
+								<div class="col-right">
+									<label value="Period End Date" width="30px"/>
+									<span style="color:Red;">*</span>
+								</div>
+								<div>
+									<datebox tabindex="1" id="dtPeriodEndDate" style="background-color:#fff;" readonly="true"/>
+								</div>
+							</row>				            
+						</rows>
+					</grid>
+					<separator></separator>
+					<listbox id="lbxAddStockOpnamePeriod">
+						<listhead style="text-align:left;">
+							<listheader label="" width="60px"/>
+							<listheader label="Location Name" />
+							<listheader label="Location Type"/>
+						</listhead>
+						<listitem>
+							<listcell><checkbox></checkbox></listcell>
+							<listcell>
+								<bandbox use="co.id.fifgroup.ssoa.ui.CommonPopupDoubleBandbox2" width="50%"></bandbox>
+							</listcell>
+							<listcell><textbox value="Cabang" width="100%" id="" readonly="true"/></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox></checkbox></listcell>
+							<listcell>
+								<bandbox use="co.id.fifgroup.ssoa.ui.CommonPopupDoubleBandbox2" width="50%"></bandbox>
+							</listcell>
+							<listcell><textbox value="Cabang" width="100%" id="" readonly="true"/></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox></checkbox></listcell>
+							<listcell>
+								<bandbox use="co.id.fifgroup.ssoa.ui.CommonPopupDoubleBandbox2" width="50%"></bandbox>
+							</listcell>
+							<listcell><textbox value="Cabang" width="100%" id="" readonly="true"/></listcell>
+						</listitem>
+						<listitem>
+							<listcell><checkbox></checkbox></listcell>
+							<listcell>
+								<bandbox use="co.id.fifgroup.ssoa.ui.CommonPopupDoubleBandbox2" width="50%"></bandbox>
+							</listcell>
+							<listcell><textbox value="" width="100%" id="" readonly="true"/></listcell>
+						</listitem>
+						<listitem visible="false">
+							<listcell><checkbox></checkbox></listcell>
+							<listcell>
+								<bandbox use="co.id.fifgroup.ssoa.ui.CommonPopupDoubleBandbox2" width="50%"></bandbox>
+							</listcell>
+							<listcell><textbox value="" width="100%" id="" readonly="true"/></listcell>				
+						</listitem>
+					</listbox>
+					<separator></separator>
+					<div>
+						<button id="addRowStockOpnamePeriod" label="Add Row" style="float:left" />
+		   				<button id="deleteRowStockOpnamePeriod" label="Delete" style="margin-left:15px;"/>
+			   		</div>
+			   		<div align="center">
+		   				<button id="saveButton" label="Save" style="float:center;" image="/styles/images/btn_save.png"/>
+		   				<button id="cancelButton" label="Cancel" style="float:right;" image="/styles/images/btn_back.png"/>
+			   		</div>
+				</panelchildren>
+			</panel> -->
+			<separator></separator>
+			<panel id="panelDetailStockOpnamePeriod" title="Stock Opname Period - Detail" border="" collapsible="false" closable="false" 
+					maximizable="false" style="margin-bottom:10px" visible="false">
+				<panelchildren style="padding:5px">
+					<grid>
+						<columns>
+							<column label="" width="150px" align="right"/>
+							<column label="" width="" />
+						</columns>
+						<rows>
+							<row>
+								<div class="col-right">
+									<label value="Period Name" width="30px"/>
+								</div>
+								<div>
+									<textbox width="300px" tabindex="1" id="" maxlength="64" style="background-color:#fff;" disabled="true" />
+								</div>
+							</row>
+							<row>
+								<div class="col-right">
+									<label value="Period Start Date" width="30px"/>
+								</div>
+								<div>
+									<textbox width="200px" tabindex="1" id="" maxlength="64" style="background-color:#fff;" disabled="true" />
+								</div>
+							</row>
+							<row>
+								<div class="col-right">
+									<label value="Period End Date" width="30px"/>
+								</div>
+								<div>
+									<textbox width="200px" tabindex="1" id="" maxlength="64" style="background-color:#fff;" disabled="true" />
+								</div>
+							</row>
+						</rows>
+					</grid>
+					<separator></separator>
+					<panel title="Branch" border="normal">
+						<panelchildren style="padding:5px">
+								<grid style="border:none;">
+									<columns>
+										<column width="150px" align="right"></column>
+										<column></column>
+									</columns>
+									<rows>
+										<row>
+											<label>Stock Opname Status</label>
+											<combobox value="Reporting">
+												<comboitem label="All" value="All"></comboitem>
+												<comboitem label="Not Started" value="Not Started"></comboitem>
+												<comboitem label="Started" value="Started"></comboitem>
+												<comboitem label="Reporting" value="Reporting"></comboitem>
+												<comboitem label="Approved" value="Approved"> </comboitem>
+												<comboitem label="Close" value="Close"></comboitem>
+											</combobox>
+										</row>
+									</rows>
+								</grid>
+								
+								<separator></separator>
+								<listbox id="lbxStockOpnamePeriodDetail" height="auto"  emptyMessage="No Stock Opname found in the result"
+								mold="paging" pageSize="10" pagingPosition="both">
+									<listhead style="text-align:left;" menupopup="auto">
+										<listheader label="Branch Code" sort="auto" />
+										<listheader label="Branch Name" sort="auto" />
+										<listheader label="Notification" sort="auto" />
+										<listheader label="Stock Opname Status" sort="auto" />
+									</listhead>
+									<!-- <template name="model">  -->
+									<listitem>
+										<listcell label="FIFBR001"></listcell>
+										<listcell label="Cabang Jakarta 1"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell label="Not Started"></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR002"></listcell>
+										<listcell label="Cabang Bandung"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell label="In Process"></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR003"></listcell>
+										<listcell label="Cabang Depok"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell><a label="Submit" /></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR004"></listcell>
+										<listcell label="Cabang Bogor"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell><a label="Approve" /></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR005"></listcell>
+										<listcell label="Cabang Jakarta 2"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell label="Closed"></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR006"></listcell>
+										<listcell label="Cabang Garut"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell label="In Process"></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR007"></listcell>
+										<listcell label="Cabang Bekasi"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell><a label="Submit" /></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="FIFBR008"></listcell>
+										<listcell label="Cabang Purwakarta"></listcell>
+										<listcell label="Send"></listcell>
+										<listcell label="Closed"></listcell>
+									</listitem>
+									<!-- </template>  -->
+								</listbox>
+							</panelchildren>	
+					</panel>
+					<div style="float:right; padding:5px 0px 5px 0px;">
+						<button id="backButton" label="Back" style="float:left" image="/styles/images/btn_back.png"/>
+				   	</div>
+				</panelchildren>
+			</panel>
+</window>	

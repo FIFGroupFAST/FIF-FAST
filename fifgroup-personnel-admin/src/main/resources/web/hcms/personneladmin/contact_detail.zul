@@ -1,0 +1,132 @@
+<window id="winContactDetail" border="normal" title="${labels.pea.contactDetail }"
+	apply="co.id.fifgroup.personneladmin.controller.ContactDetailComposer">
+	<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					<label value="${labels.pea.relationship }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<listbox id="cmbRelationship" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description }"/>
+						</listitem>
+					</template>
+				</listbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.fullName }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<textbox id="txtFullName" maxlength="100" width="300px"/>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.birthDate }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<datebox id="dtbBirthDate" width="100px" constraint="no future"/>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.ageDetail }" />
+				</hbox>	
+				<label id="lblAgeDetail" />
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.gender }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<listbox id="cmbGender" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description }"/>
+						</listitem>
+					</template>
+				</listbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.maritalStatus }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<listbox id="cmbMaritalStatus" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description }"/>
+						</listitem>
+					</template>
+				</listbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.bloodType }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>	
+				<listbox id="cmbBloodType" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description }"/>
+						</listitem>
+					</template>
+				</listbox>
+			</row>
+			<row>
+				<label value="${labels.pea.familyMemberPriority }" />
+				<listbox id="cmbFamilyMemberPriority" mold="select">
+					<template name="model">
+						<listitem value="${each }">
+							<listcell label="${each.description }"/>
+						</listitem>
+					</template>
+				</listbox>
+			</row>
+			<row>
+				<label value="${labels.pea.clothSize }"/>
+				<textbox id="txtClothSize" maxlength="10" width="150px"/>
+			</row>
+			<row>
+				<label value="${labels.pea.contactEmail}"/>
+				<textbox id="txtContactEmail" maxlength="50" width="300px"/>
+			</row>
+			<row>
+				<label value="${labels.pea.contactPhone }"/>
+				<textbox id="txtContactPhone" maxlength="30" width="150px"/>
+			</row>
+			<row>
+				<label value="${labels.pea.medicalInsuranceNumber}"/>
+				<textbox id="txtMedicalInsuranceNumber" maxlength="30" width="150px"/>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.common.startDate}" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<datebox id="dtbStartDate" width="100px" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+			</row>
+			<row>
+				<label value="${labels.common.endDate}" />
+				<datebox id="dtbEndDate" width="100px" use="co.id.fifgroup.core.ui.DateBoxMax" />
+			</row>
+		</rows>
+	</grid> 
+	<hbox>
+		<cell align="center" style="width:1250px;">
+			<button id="btnAdd"
+				label="${labels.common.ok}" mold="trendy" 
+				image="${labels.image.link.add}" />
+		</cell>
+		<cell align="right">
+			<button id="btnCancel"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>
+</window>

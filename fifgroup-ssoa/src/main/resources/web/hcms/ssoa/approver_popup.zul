@@ -1,0 +1,19 @@
+<window id="winApproverPopup" title="Approver" border="normal" width="900px" height="auto" closable="true"
+apply="co.id.fifgroup.ssoa.common.ApproverPopupComposer">
+<groupbox mold="3d" open="true">
+<listbox id="lbxApprovalHistory" height="auto">
+					<listhead>
+						<listheader label="${labels.common.rowNum}" align="center" />
+						<listheader label="${labels.swf.approver}" align="center" />
+						<listheader label="${labels.swf.actionType}" align="center" />
+						<listheader label="${labels.swf.receivedTime}" align="center" />
+						<listheader label="${labels.swf.completedTime}" align="center" />
+					</listhead>
+				</listbox>
+				<separator />
+				<hbox pack="end" align="center" style="width:100%;">
+					<button id="btnClose" label="Close" 
+						mold="trendy" />
+				</hbox>
+</groupbox>
+</window>

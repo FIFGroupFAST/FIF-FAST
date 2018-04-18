@@ -1,0 +1,120 @@
+<window id="winVitalStatistic" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.VitalStatisticComposer">
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.physical }" />
+		<grid>
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.pea.height }"  />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<hbox>
+						<decimalbox id="decHeight" maxlength="6" /> 
+						<label value="${labels.pea.cm }" id="lblHeight" /> 
+					</hbox> 
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.pea.weight }"  />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<hbox>
+						<decimalbox id="decWeight" maxlength="6" /> 
+						<label value="${labels.pea.kg }" id="lblWeight"/> 
+					</hbox> 
+				</row>
+				<row>
+					<label value="${labels.pea.shoulderWidth }"  />
+					<hbox>
+						<decimalbox id="decShoulderWidth" maxlength="6" /> 
+						<label value="${labels.pea.cm }" id="lblCmShoulderWidth"/> 
+					</hbox> 
+				</row>
+				<row>
+					<label value="${labels.pea.chestWidth }"  />
+					<hbox>
+						<decimalbox id="decChestWidth" maxlength="6" /> 
+						<label value="${labels.pea.cm }" id="lblCmChestWidth"/>
+					</hbox> 
+				</row>
+				<row>
+					<label value="${labels.pea.waistWidth }"  />
+					<hbox>
+						<decimalbox id="decWaistWidth" maxlength="6"/> 
+						<label value="${labels.pea.cm }" id="lblWaistWidth"/>
+					</hbox> 
+				</row>
+			</rows>
+		</grid>
+		
+		<groupbox closable="false">
+			<caption label="${labels.pea.eyes }" />
+			<grid>
+				<columns>
+					<column width="180px" align="right" valign="top" />
+					<column width="100px"/>
+					<column align="left" valign="top" />
+					<column width="100px"/>
+					<column align="left" valign="top" />
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.pea.sphere }"  />
+						<decimalbox id="decSphereLeft"  maxlength="5" /> 
+						<label value="${labels.pea.left }" id="lblSphereLeft"/>  
+						<decimalbox id="decSphereRight" maxlength="5" />
+						<label value="${labels.pea.right }" id="lblSphereRight"/> 
+					</row>
+					<row>
+						<label value="${labels.pea.cylinder }"  />
+						<decimalbox id="decCylinderLeft" maxlength="5" />
+						<label value="${labels.pea.left }" id="lblCylinderLeft"/> 
+						<decimalbox id="decCylinderRight" maxlength="5" />
+						<label value="${labels.pea.right }" id="lblCylinderRight"/> 
+					</row>
+					<row>
+						<label value="${labels.pea.bifocal }"  />
+						<decimalbox id="decBifocalLeft" maxlength="5" />
+						<label value="${labels.pea.left }" id="lblBiofocalLeft"/> 
+						<decimalbox id="decBifocalRight" maxlength="5" />
+						<label value="${labels.pea.right }" id="lblBiofocalRight"/> 
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+	</groupbox>
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.apparel }" />
+		<panel>
+			<panelchildren>
+				<listbox id="lbxApparels" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.pea.apparel}" />
+						<listheader label="${labels.pea.size}" />						
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRow" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>		
+</window>

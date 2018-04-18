@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.BudgetFinder">
+
+	
+	<select id="actualizeBudget" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call actualizebudget@budget.us.oracle.com 
+			(
+				#{activityCode, mode=IN, jdbcType=VARCHAR},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{periodMonth, mode=IN, jdbcType=NUMERIC},
+				#{amount, mode=IN, jdbcType=DECIMAL},
+				#{executor, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="bookBudget" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call bookBudget@budget.us.oracle.com 
+			(
+				#{activityCode, mode=IN, jdbcType=VARCHAR},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{periodMonth, mode=IN, jdbcType=NUMERIC},
+<!-- 				#{tolerance, mode=IN, jdbcType=DECIMAL}, -->
+				#{amount, mode=IN, jdbcType=DECIMAL},
+				#{executor, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="forceBookBudget" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call forceBookBudget@budget.us.oracle.com 
+			(
+				#{activityCode, mode=IN, jdbcType=VARCHAR},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{periodMonth, mode=IN, jdbcType=NUMERIC},
+<!-- 				#{tolerance, mode=IN, jdbcType=DECIMAL}, -->
+				#{amount, mode=IN, jdbcType=DECIMAL},
+				#{executor, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="forceActualizeBudget" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call forceActualizeBudget@budget.us.oracle.com 
+			(
+				#{activityCode, mode=IN, jdbcType=VARCHAR},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{periodMonth, mode=IN, jdbcType=NUMERIC},
+<!-- 				#{tolerance, mode=IN, jdbcType=DECIMAL}, -->
+				#{amount, mode=IN, jdbcType=DECIMAL},
+				#{executor, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="releaseBudget" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call releaseBudget@budget.us.oracle.com 
+			(
+				#{activityCode, mode=IN, jdbcType=VARCHAR},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{periodMonth, mode=IN, jdbcType=NUMERIC},
+				#{amount, mode=IN, jdbcType=DECIMAL},
+				#{executor, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="reverseBudget" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call reverseBudget@budget.us.oracle.com
+			(
+				#{activityCode, mode=IN, jdbcType=VARCHAR},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{periodMonth, mode=IN, jdbcType=NUMERIC},
+				#{amount, mode=IN, jdbcType=DECIMAL},
+				#{executor, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemadmin.finder.TaskGroupFinder">
+	
+	<select id="getTaskGroupIdAndRunnerName" parameterType="java.lang.Long" resultMap="TaskGroupIdAndNameResult">
+		SELECT B.TASK_GROUP_DTL_ID, B.TASK_GROUP_ID, A.TASK_RUNNER_ID, A.TASK_RUNNER_NAME
+		FROM SAM_TASK_RUNNER_HDR A
+		JOIN SAM_TASK_GROUP_DTL B
+    	ON A.TASK_RUNNER_ID = B.TASK_RUNNER_ID
+    	AND B.TASK_GROUP_ID = #{taskGroup.id, jdbcType=NUMERIC}
+    	order by a.task_runner_name
+	</select>
+	
+	<delete id="deleteByTaskGroupId" parameterType="map">
+		DELETE FROM SAM_TASK_GROUP_DTL WHERE TASK_GROUP_ID = #{taskGroupId, jdbcType=NUMERIC}
+	</delete>
+	
+	<select id="findByExampleWithRowbounds" parameterType="co.id.fifgroup.systemadmin.domain.TaskGroup" resultMap="TaskGroupHeaderResult">
+		SELECT A.TASK_GROUP_ID, A.TASK_GROUP_NAME, A.DESCRIPTION, A.CREATED_BY, A.CREATION_DATE,
+		A.LAST_UPDATE_DATE, B.USER_NAME
+		FROM SAM_TASK_GROUP_HDR A JOIN SAM_USERS B ON B.USER_ID = A.LAST_UPDATED_BY
+    	<if test="taskGroupName != null">
+    		AND UPPER(A.TASK_GROUP_NAME) LIKE UPPER(#{taskGroupName, jdbcType=VARCHAR})
+    	</if>
+    	<if test="description != null">
+    		AND UPPER(A.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR})
+    	</if>
+    	ORDER BY LAST_UPDATE_DATE DESC
+	</select>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.TaskGroupDetailDTO" id="TaskGroupIdAndNameResult">
+		<result column="TASK_GROUP_DTL_ID" jdbcType="DECIMAL" property="id" />
+		<result column="TASK_GROUP_ID" jdbcType="DECIMAL" property="taskGroupId" />
+		<result column="TASK_RUNNER_ID" jdbcType="DECIMAL" property="taskRunnerId" />
+		<result column="TASK_RUNNER_NAME" jdbcType="VARCHAR" property="taskRunnerName" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.TaskGroupDTO" id="TaskGroupHeaderResult">
+		<result column="TASK_GROUP_ID" jdbcType="DECIMAL" property="id" />
+		<result column="TASK_GROUP_NAME" jdbcType="VARCHAR" property="taskGroupName" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	</resultMap>
+	
+</mapper>

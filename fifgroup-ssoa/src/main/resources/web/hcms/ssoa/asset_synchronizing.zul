@@ -1,0 +1,112 @@
+<?page title="SSOA" contentType="text/html;charset=UTF-8"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssetSynchronizing" border="none"
+	apply="co.id.fifgroup.ssoa.controller.AssetSynchronizingComposer">
+	
+	<groupbox id="gbAssetSynchronizing" closable="false" mold="3d">
+		<caption label="Asset Synchronizing"></caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column label="" width="150px" align="right" />
+				<column label="" width="" />
+			</columns>
+			<rows>
+				<row>
+					<div sclass="col-right">
+						<label value="Synchronized Date" width="30px" />
+					</div>
+					<div>
+						<datebox tabindex="1" id="dtSearchProcessDateFrom" format="dd-MMM-yyyy" /> 
+						<label value=" To "/>
+						<datebox tabindex="1" id="dtSearchProcessDateTo" format="dd-MMM-yyyy" />
+					</div>
+				</row>
+				<row>
+					<label value="Status"/>
+					<listbox id="cmbStatus" style="background-color:#fff;" mold="select" >
+						<template name="model">
+							<listitem label="${each.description}" value="${each.key}" />
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<div class="col-right"></div>
+					<div>
+						<button id="btnFind" label="Find" style="" image="/styles/images/btn_search.png" />
+					</div>
+				</row>
+			</rows>
+		</grid>
+
+		<separator></separator>
+		<paging id="pgListOfValueTop"  />
+		<listbox id="assetSynchronizingListbox" height="auto"  emptyMessage="No data found" >
+			<listhead style="text-align:left;" menupopup="auto">
+				<listheader label="Action" width="80px" />
+				<listheader id="hdrSyncDate" label="Synchronized Date"  sort="auto(processDate)" width="160px" />
+				<listheader id="hdrSyncType" label="Synchronized Type" sort="auto(syncTypeName)" width="170px" />
+				<listheader id="hdrDesc" label="Description" sort="auto(processDate)" width="" />
+				<listheader id="hdrStatus" label="Status" sort="auto(statusName)" width="120px" />	
+				<listheader id="hdrErrLog" label="Error Log" sort="auto(processDate)" width="170px" />							
+				<listheader id="hdrLastUpdateBy" label="Last update by" sort="auto(lastUpdateBy)" width="170px" />
+				<listheader id="hdrLastUpdateDate" label="Last update date" sort="auto(lastUpdateDate)" width="190px" />
+			</listhead>
+
+			<template name="model">		
+				<listitem>
+					<listcell><a label="Detail" forward="onDetail(${each})" style="color:blue" /></listcell>
+					<listcell label="${date:format(each.processDate,'dd MMM yyyy')}"></listcell>
+					<listcell label="${each.syncTypeName}"></listcell>		
+					<listcell label="Asset Synchronizing ${date:format(each.processDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.statusName}"></listcell>
+					<listcell>	
+                    		<a label="Log_${date:format(each.processDate,'dd-MMM-yyyy')}.txt" forward="onOpenErrorLog(${each})"  style="color:blue"/>
+                    </listcell>		
+												
+					<listcell label="System"/>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<separator/>
+		
+		<listbox id="lbxAssetSyncDownload" height="auto" visible="false">
+			<listhead style="text-align:left;" menupopup="auto">
+			    <listheader label="Action" width="120px" />
+				<listheader label="Synchronized Date" sort="auto(processDate)" width="200px" />
+				<listheader label="Sync Type" sort="auto(syncTypeName)" width="140px" />
+				<listheader label="Description" sort="auto(description)" width="" />
+				<listheader label="Status" sort="auto(statusName)" width="120px" />	
+				<listheader label="Error Log" sort="auto(errorLog)" width="170px" />							
+				<listheader label="Last update by" sort="auto(lastUpdateBy)" width="170px" />
+				<listheader label="Last update date" sort="auto(lastUpdateDate)" width="190px" />
+			</listhead>
+
+			<template name="model">
+				<listitem>
+				     <listcell label=""></listcell>	
+					<listcell label="${date:format(each.processDate,'dd MMM yyyy')}"></listcell>
+					<listcell label="${each.syncTypeName}"></listcell>		
+					<listcell label="Asset Synchronizing ${date:format(each.processDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.statusName}"></listcell>
+					<listcell label="Log_${date:format(each.processDate,'dd-MMM-yyyy')}.txt"></listcell>
+					<listcell label="System"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<!--  <exporter referenceId="lbxAssetSyncDownload" />-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+		
+	</groupbox>
+</window>	

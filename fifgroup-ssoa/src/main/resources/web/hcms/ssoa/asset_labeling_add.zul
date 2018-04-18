@@ -1,0 +1,103 @@
+<?page title="Asset Labeling"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<zk xmlns:w="client" xmlns:h="native">
+<window id="winAssetLabelingAdd" apply="co.id.fifgroup.ssoa.controller.AssetLabelingAddComposer">
+	
+	<groupbox id="gbAssetLabelingAdd" closable="false"
+		mold="3d">
+		<caption label="Asset labeling - Add" />
+		<hbox>
+			<grid sclass="form-entry">
+				<columns>
+					<column width="210px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<div>
+							<label value="Labeling Date" />
+							<label value="*" style="color:Red;" />
+						</div>
+						<div>
+							<datebox format="dd-MMM-yyyy"  id="labelingDate"/>
+						</div>
+					</row>
+					<row>
+						<label value="Branch" />
+						<textbox style="background-color:#fff;"
+							disabled="true" id="branchOwnerAdd" width="270px" />
+					</row>
+					<row>
+						<label value="Description" />
+						<textbox rows="4" cols="50" width="300px" id="description"/>
+					</row>
+				</rows>
+			</grid>
+		</hbox>
+		<separator />
+		<label id="errMsgDtl"/>
+		<groupbox closable="false" mold="3d">
+			<caption label="Asset" />
+			<label id="lblErrAssetAdd" style="color:red" />
+			<listbox id="lstAssetAdd" emptyMessage="${labels.common.noDataFound}"
+				use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead >
+					<listheader label="" width="50px" />
+					<listheader label="Asset Number" width="130px" />
+					<listheader label="Print Count" width="110px" />
+					<listheader label="Reprinting Reason" width="160px" />
+					<listheader label="Asset Type" width="100px" />
+					<listheader label="Branch Code" width="130px" />
+					<listheader label="Branch Name" width="160px" />
+					<listheader label="Kode Outlet" width="160px" />
+					<listheader label="Nama Outlet" width="160px" />
+					<listheader label="Asset Category" width="150px" />
+					<listheader label="Tanggal Perolehan" width="150px" />
+					<listheader label="Description" width="300px" />
+					<listheader label="Serial Number" width="160px" />
+					
+				</listhead>
+			</listbox>
+			<separator></separator>
+		    <exporter referenceId="lstAssetAdd" />
+			<hbox>
+				<button id="btnAddAsset" label="Add Asset"
+					image="${labels.image.link.add}" />
+				<button id="btnDelete" label="${labels.common.delete}"
+					mold="trendy" style="margin-left:15px;" image="" />
+			</hbox>
+		</groupbox>
+
+		<separator />
+		<div align="center">
+			<button id="btnSave" label="Save"
+				image="${labels.image.link.save}" />
+			<button id="btnCancel" label="Cancel" style="float:right;"
+				image="${labels.image.link.cancel}"/>
+		</div>
+	</groupbox>
+	<separator />
+	
+	<iframe id="iFramePdf" name="iFramePdf"  height="0" width="0" style="visibility:hidden;"  ></iframe>
+	
+	<h:script>
+	    <![CDATA[
+	    var i =0;
+		jQuery('.z-iframe').on('load', function() {
+			
+			if(i==1){
+			
+				if(navigator.userAgent.indexOf("Chrome") != -1 )
+			    {
+					jQuery('.z-iframe').get(0).contentWindow.print();
+			    }
+			}
+		});
+		
+		
+		]]>
+	</h:script>
+	
+	
+</window>
+</zk>

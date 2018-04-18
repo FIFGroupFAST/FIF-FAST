@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="TaskManagementTable" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+	
+		<!-- <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.86:1521:testhcms"
+			userId="hcms"
+			password="hcmstest" /> -->
+			
+<!-- 			<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" -->
+<!-- 			connectionURL="jdbc:oracle:thin:@10.17.18.86:1521:sithcms" -->
+<!-- 			userId="hcms" -->
+<!-- 			password="hcms1" /> -->
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.68:1521:HCMSDEV"
+			userId="hcms"
+			password="hcms" />
+			
+		<javaModelGenerator targetPackage="co.id.fifgroup.personneladmin.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.personneladmin" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.personneladmin.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>
+		
+<!-- 		<table tableName="PEA_PEOPLE" domainObjectName="Person" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="PERSON_ID" sqlStatement="select PEA_PEOPLE_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="PERSON_UUID" property="personUUID" jdbcType="VARBINARY" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_PERSONAL_INFORMATIONS" domainObjectName="PersonalInformation" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="INFORMATION_ID" sqlStatement="select PEA_PERSONAL_INFORMATIONS_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="IS_PILGRIMAGE" property="pilgrimage" javaType="Boolean"  /> -->
+<!-- 			<columnOverride column="IS_SMOKER" property="smoker" javaType="Boolean"  /> -->
+<!-- 			<columnOverride column="ASTRA_JOIN_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="HIRE_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="PROBATION_END_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="TRAINING_END_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="MARITAL_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE"  /> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_PRIMARY_ASSIGNMENTS" domainObjectName="PrimaryAssignment" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="ASSIGNMENT_ID" sqlStatement="select PEA_PRIMARY_ASSIGNMENTS_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="IS_INTERNSHIP" property="internship" javaType="Boolean"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE"  /> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_ASSIGNMENT_OTHER_INFO" domainObjectName="AssignmentOtherInfo" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 		</table> -->
+		
+<!-- 		 <table tableName="PEA_PEOPLE_TYPES" domainObjectName="PeopleType" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="PEOPLE_TYPE_ID" sqlStatement="select PEA_PEOPLE_TYPES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="IS_AFFCO" property="affco" javaType="Boolean"  /> -->
+<!-- 			<columnOverride column="IS_CANCELED" property="canceled" javaType="Boolean"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE"  /> -->
+<!-- 		</table>  -->
+		
+<!-- 		<table tableName="PEA_ROLES" domainObjectName="Role" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="ROLE_ID" sqlStatement="select PEA_ROLES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="IS_ACTIVE" property="active" javaType="boolean"  /> -->
+<!-- 		</table>  -->
+		
+<!-- 		<table tableName="PEA_COMMUNICATIONS" domainObjectName="Communication" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMMUNICATION_ID" sqlStatement="select PEA_COMMUNICATIONS_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_JOB_QUESTION_SETS" domainObjectName="JobQuestionSet" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="JOB_QUESTION_SET_ID" sqlStatement="select PEA_JOB_QUESTION_SETS_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="END_DATE" jdbcType="DATE"  /> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_ACCOUNT_INFORMATIONS" domainObjectName="AccountInformation" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="ACCOUNT_INFO_ID" sqlStatement="select PEA_ACCOUNT_INFORMATIONS_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_DRIVING_LICENSES" domainObjectName="DrivingLicense" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="DRIVING_LICENSE_ID" sqlStatement="select PEA_DRIVING_LICENSES_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_BANK_INFORMATIONS" domainObjectName="BankInformation" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="BANK_INFO_ID" sqlStatement="select PEA_BANK_INFORMATIONS_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_ADDRESSES" domainObjectName="Address" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="ADDRESS_ID" sqlStatement="select PEA_ADDRESSES_S.nextval from dual" type="pre" /> -->
+<!-- 			<columnOverride column="IS_PHYSICAL" property="physical" javaType="boolean"  /> -->
+<!-- 			<columnOverride column="IS_KTP" property="ktp" javaType="boolean"  />					 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_EDUCATIONS" domainObjectName="Education"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="EDUCATION_ID" sqlStatement="select PEA_EDUCATIONS_S.nextval from dual" type="pre" /> -->
+<!-- 			<columnOverride column="IS_GRADUATE" property="graduate" javaType="boolean"  />	 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_CONTACTS" domainObjectName="Contact"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="CONTACT_ID" sqlStatement="select PEA_CONTACTS_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+
+<!-- 			<table tableName="PEA_PROBATION_REVIEWS" domainObjectName="ProbationReview" -->
+<!-- 				modelType="flat" -->
+<!-- 				enableDeleteByExample="true" -->
+<!-- 				enableUpdateByExample="true" -->
+<!-- 				selectByPrimaryKeyQueryId="false" -->
+<!-- 				selectByExampleQueryId="false"> -->
+<!-- 				<property name="useActualColumnNames" value="false"/> -->
+<!-- 				<generatedKey column="PROBATION_REVIEW_ID" sqlStatement="select PEA_PROBATION_REVIEWS_S.nextVal from dual" type="pre"/> -->
+<!-- 				<columnOverride column="TERMINATION_DATE" jdbcType="DATE"  /> -->
+<!-- 			</table> -->
+			
+<!-- 			<table tableName="PEA_QUESTION_ANSWERS" domainObjectName="QuestionAnswer" -->
+<!-- 				modelType="flat" -->
+<!-- 				enableDeleteByExample="false" -->
+<!-- 				enableUpdateByExample="true" -->
+<!-- 				selectByPrimaryKeyQueryId="false" -->
+<!-- 				selectByExampleQueryId="false"> -->
+<!-- 				<property name="useActualColumnNames" value="false"/> -->
+<!-- 				<generatedKey column="QUESTION_ANSWER_ID" sqlStatement="select PEA_QUESTION_ANSWERS_S.nextVal from dual" type="pre"/> -->
+<!-- 			</table> -->
+			
+<!-- 			<table tableName="PEA_EXIT_CLEARANCES" domainObjectName="ExitClearance" -->
+<!-- 				modelType="flat" -->
+<!-- 				enableDeleteByExample="false" -->
+<!-- 				enableUpdateByExample="true" -->
+<!-- 				selectByPrimaryKeyQueryId="false" -->
+<!-- 				selectByExampleQueryId="false"> -->
+<!-- 				<property name="useActualColumnNames" value="false"/> -->
+<!-- 				<generatedKey column="EXIT_CLEARANCE_ID" sqlStatement="select PEA_EXIT_CLEARANCES_S.nextVal from dual" type="pre"/> -->
+<!-- 			</table>			 -->
+
+<!-- 		<table tableName="PEA_PEOPLE_HISTORIES" domainObjectName="PeopleHistory"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="HISTORY_ID" sqlStatement="select PEA_PEOPLE_HISTORIES_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_VITAL_STATISTICS" domainObjectName="VitalStatistic"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="VITAL_STATISTIC_ID" sqlStatement="select PEA_VITAL_STATISTICS_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_APPARELS" domainObjectName="Apparel"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="APPAREL_ID" sqlStatement="select PEA_APPARELS_S.nextval from dual" type="pre" />			 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_WORKING_EQUIPMENTS" domainObjectName="WorkingEquipment"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="EQUIPMENT_ID" sqlStatement="select PEA_WORKING_EQUIPMENTS_S.nextval from dual" type="pre" /> -->
+<!-- 			<columnOverride column="IS_RETURNABLE" property="returnable" javaType="boolean"  />				 -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_WORKING_EXPERIENCES" domainObjectName="WorkingExperience"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="EXPERIENCE_ID" sqlStatement="select PEA_WORKING_EXPERIENCES_S.nextval from dual" type="pre" />		 -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_AWARDS" domainObjectName="Award"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="AWARD_ID" sqlStatement="select PEA_AWARDS_S.nextval from dual" type="pre" />		 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_DOCUMENTS" domainObjectName="Document"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="DOCUMENT_ID" sqlStatement="select PEA_DOCUMENTS_S.nextval from dual" type="pre" /> -->
+<!-- 			<columnOverride column="IS_EDITABLE" property="editable" javaType="boolean"  />		 -->
+<!-- 		</table> -->		
+		
+<!-- 		<table tableName="PEA_SECONDARY_ASSIGNMENTS" domainObjectName="SecondaryAssignment"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="ASSIGNMENT_ID" sqlStatement="select PEA_SECONDARY_ASSIGNMENTS_S.nextval from dual" type="pre" /> -->
+<!-- 			<columnOverride column="IS_FIFAPPS_ACCESS" property="fifappsAccess" javaType="boolean"  />				 -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_OTHER_INFO" domainObjectName="OtherInfo"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<generatedKey column="OTHER_INFO_ID" sqlStatement="select PEA_OTHER_INFO_S.nextval from dual" type="pre" /> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="PEA_ASSIGNMENT_STG" domainObjectName="AssignmentStage"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 		</table>	 -->
+		
+<!-- 		<table tableName="PEA_AWARD_STG" domainObjectName="AwardStage"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<columnOverride column="AWARD_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_ACCOUNT_INFO_STG" domainObjectName="AccountInfoStage"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<columnOverride column="DPA_JOIN_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="PEA_PTKP_STG" domainObjectName="PtkpStage"  -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 		</table> -->
+
+<!-- 	<table tableName="PEA_WORK_EQUIPMENT_STG" domainObjectName="WorkEquipmentStage"  -->
+<!-- 		modelType="flat" -->
+<!-- 		enableDeleteByExample="true" -->
+<!-- 		enableUpdateByExample="true" -->
+<!-- 		selectByPrimaryKeyQueryId="false" -->
+<!-- 		selectByExampleQueryId="false"> -->
+<!-- 		<property name="useActualColumnNames" value="false" /> -->
+<!-- 		<columnOverride column="DATE_ASSIGNED" jdbcType="DATE"  /> -->
+<!-- 		<columnOverride column="RETURN_DATE" jdbcType="DATE"  /> -->
+<!-- 		<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 	</table> -->
+
+<!-- 		<table tableName="PEA_DPA_ACCOUNTS" domainObjectName="DpaAccount" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="DPA_ACCOUNT_ID" sqlStatement="select PEA_DPA_ACCOUNTS_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table>  -->
+
+<!-- 	<table tableName="PEA_DPA_ACCOUNT_STG" domainObjectName="DpaAccountStage"  -->
+<!-- 		modelType="flat" -->
+<!-- 		enableDeleteByExample="true" -->
+<!-- 		enableUpdateByExample="true" -->
+<!-- 		selectByPrimaryKeyQueryId="false" -->
+<!-- 		selectByExampleQueryId="false"> -->
+<!-- 		<property name="useActualColumnNames" value="false" /> -->
+<!-- 		<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 	</table> -->
+
+<!-- 	<table tableName="PEA_DPA_AMOUNT_STG" domainObjectName="DpaAmountStage"  -->
+<!-- 		modelType="flat" -->
+<!-- 		enableDeleteByExample="true" -->
+<!-- 		enableUpdateByExample="true" -->
+<!-- 		selectByPrimaryKeyQueryId="false" -->
+<!-- 		selectByExampleQueryId="false"> -->
+<!-- 		<property name="useActualColumnNames" value="false" /> -->
+<!-- 		<columnOverride column="IS_CLOSED" property="isClosed" javaType="boolean"  /> -->
+<!-- 	</table> -->
+
+<!-- 		<table tableName="PEA_INTERFACE_BUFFERS" domainObjectName="InterfaceBuffer" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false" /> -->
+<!-- 			<columnOverride column="ASSIGNMENT_EFFECTIVE_DATE" jdbcType="DATE"  /> -->
+<!-- 			<columnOverride column="NEW_EMPLOYEE" property="newEmployee" javaType="boolean"  /> -->
+<!-- 		</table> -->
+		
+		<table tableName="PEA_HOUSING_ALLOWANCE" domainObjectName="HousingAllowance"
+			modelType="flat"
+			enableDeleteByExample="true"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="HOUSING_ALLOWANCE_ID" sqlStatement="select PEA_HOUSING_ALLOWANCE_S.nextVal from dual" type="pre"/>
+			<columnOverride column="IS_LUMPSUM_REQUESTED" javaType="Boolean"  />
+		</table>
+	</context>
+</generatorConfiguration>

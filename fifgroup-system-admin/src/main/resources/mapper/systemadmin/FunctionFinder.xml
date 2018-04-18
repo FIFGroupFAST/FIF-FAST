@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.finder.FunctionFinder">
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.systemadmin.dto.FunctionDTO" resultMap="BaseResultMap">
+		SELECT A.FUNCTION_ID, A.MODULE_ID, A.FUNCTION_NAME, A.DESCRIPTION, 
+		A.ACTION_URL, A.USER_MANUAL, B.USER_NAME, 
+		A.CREATED_BY, A.CREATION_DATE, A.LAST_UPDATE_DATE
+		FROM SAM_FUNCTIONS A JOIN SAM_USERS B ON B.USER_ID = A.LAST_UPDATED_BY
+		<if test="moduleId != null">
+			AND A.MODULE_ID = #{moduleId, jdbcType=NUMERIC}
+		</if>
+		<if test="functionName != null">
+			AND UPPER(A.FUNCTION_NAME) LIKE UPPER(#{functionName, jdbcType=VARCHAR})
+		</if>
+		<if test="description != null">
+			AND UPPER(A.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR})
+		</if>
+		ORDER BY A.LAST_UPDATE_DATE DESC
+	</select>
+	
+	<select id="getFunctionName" resultMap="BaseResultMap">
+		SELECT FUNCTION_NAME FROM SAM_FUNCTIONS
+	</select>
+	
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.FunctionDTO">
+		<id column="FUNCTION_ID" property="id" jdbcType="NUMERIC" />
+		<result column="MODULE_ID" property="moduleId" jdbcType="NUMERIC" />
+		<result column="FUNCTION_NAME" property="functionName" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="ACTION_URL" property="actionUrl" jdbcType="VARCHAR" />
+		<result column="USER_MANUAL" property="userManual" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+</mapper>

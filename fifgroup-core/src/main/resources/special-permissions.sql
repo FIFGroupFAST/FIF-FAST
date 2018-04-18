@@ -1,0 +1,1 @@
+insert into sam_special_permissions(permission_name, special_permission_id) values('common.includeExEmployee', sam_special_permissions_s.nextval);

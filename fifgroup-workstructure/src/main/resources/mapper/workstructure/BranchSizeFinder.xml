@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.BranchSizeFinder">
+	
+	<resultMap type="co.id.fifgroup.workstructure.dto.BranchSizeDTO" id="branchSizeDtoResult">
+		<id column="ORG_BRANCH_SIZE_ID" property="id" javaType="Long" jdbcType="NUMERIC"/>
+		<result column="ORGANIZATION_ID" property="organizationId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="ORGANIZATION_CODE" property="organizationCode" jdbcType="VARCHAR"/>
+		<result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR"/>
+		<result column="LEVEL_CODE" property="organizationLevel" jdbcType="VARCHAR"/>
+		<result column="SIZE_CODE" property="sizeCode" jdbcType="VARCHAR"/>
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="DATE"/>
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="DATE"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.BranchSizeDTO" resultMap="branchSizeDtoResult">
+		select 
+				wo.ORGANIZATION_CODE,
+				wo.ORGANIZATION_NAME,
+				bs.ORGANIZATION_ID,
+				wos.LEVEL_CODE,
+				bs.ORG_BRANCH_SIZE_ID,
+				bs.EFFECTIVE_START_DATE,
+				bs.EFFECTIVE_END_DATE,
+				bs.SIZE_CODE,
+				bs.CREATED_BY,
+				bs.CREATION_DATE,
+				bs.LAST_UPDATED_BY,
+				bs.LAST_UPDATE_DATE,
+				us.user_name
+			from WOS_ORGANIZATIONS wo
+ 			join WOS_BRANCH_SIZES bs on wo.ORGANIZATION_ID = bs.ORGANIZATION_ID
+			join WOS_ORGANIZATION_VERSIONS wos on wo.ORGANIZATION_ID = wos.ORGANIZATION_ID and trunc(sysdate) between wos.date_from and wos.date_to
+			join branch_hierarchy_v bhv on bhv.organization_id = wo.organization_id
+			join sam_users us on us.user_id = bs.LAST_UPDATED_BY
+			<where>
+				<if test="organizationId != null">
+					and wo.ORGANIZATION_ID = (#{organizationId, jdbcType=DECIMAL})
+				</if>
+				<if test="branchId != null">
+					and bhv.branch_id = (#{branchId, jdbcType=DECIMAL})
+				</if>
+				<if test="effectiveOnDate != null">
+					 and trunc(#{effectiveOnDate, jdbcType=DATE}) between bs.EFFECTIVE_START_DATE and bs.EFFECTIVE_END_DATE
+				</if>
+				<if test="companyId != null">
+					and wo.company_id = (#{companyId, jdbcType=DECIMAL})
+				</if>
+			</where>
+			order by bs.EFFECTIVE_START_DATE
+	</select>
+	
+	<select id="findCurrentHistoryById" parameterType="Long" resultMap="branchSizeDtoResult">
+		select * from WOS_BRANCH_SIZES bs
+			where bs.ORGANIZATION_ID = (#{organizationId, jdbcType=DECIMAL})
+			and trunc(sysdate) between bs.EFFECTIVE_START_DATE and bs.EFFECTIVE_END_DATE
+	</select>
+	
+	<select id="findByIdAndHistroyId" parameterType="Long" resultMap="branchSizeDtoResult">
+		select * from WOS_BRANCH_SIZES bs
+			where bs.ORGANIZATION_ID = (#{organizationId, jdbcType=DECIMAL})
+			and bs.ORG_BRANCH_SIZE_ID = (#{id, jdbcType=DECIMAL})
+	</select>
+	
+	<select id="findHistoriesById" parameterType="Long" resultType="Long">
+		select
+			bs.ORG_BRANCH_SIZE_ID
+		from WOS_BRANCH_SIZES bs
+		where
+			bs.ORGANIZATION_ID = #{organizationId, jdbcType=NUMERIC}
+		order by bs.ORG_BRANCH_SIZE_ID
+	</select>
+	
+	<select id="isFutureExist" parameterType="Long" resultType="Integer">
+		select count(1) from wos_branch_sizes 
+			where trunc(effective_start_date) > trunc(sysdate)
+			and organization_id = #{organizationId}
+	</select>
+	
+</mapper>

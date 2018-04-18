@@ -1,0 +1,51 @@
+<window id="winWorkflowApprovalModelInquiry" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalModelInquiryComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.approvalModel}">
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right"/>
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.approvalModelName}" />
+							<textbox id="txtApprovalModelName" width="300px"/>
+						</row>
+						<row>
+							<label />
+							<hbox>
+								<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+									image="${labels.image.link.search}"/>
+								<space width="20px" />
+								<button label="${labels.common.create}" id="btnNew" mold="trendy" 
+									image="${labels.image.link.add}"/>			
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />			
+				<listbox id="lbxApprovalModel" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader label="${labels.swf.approvalModelName}" align="center" sort="auto(lower(avmName))"/>
+						<listheader label="${labels.common.action}" align="center" />
+					</listhead>
+					<template name="model">
+					<listitem value="${each}">
+						<listcell label="${each.avmName}"></listcell>
+						<listcell><a label="${labels.common.detail}" forward="lbxApprovalModel.onDetail(${each})" style="color:blue"></a></listcell>
+					</listitem>
+					</template>
+				</listbox>
+				<exporter referenceId="lbxApprovalModel" />
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

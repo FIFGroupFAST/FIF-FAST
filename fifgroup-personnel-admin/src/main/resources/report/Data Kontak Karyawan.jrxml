@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Data Kontak Karyawan" language="groovy" pageWidth="1400" pageHeight="595" orientation="Landscape" columnWidth="1360" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4c1d08ce-6f50-4d7c-acb7-8eb4006f7bed">
+	<property name="ireport.zoom" value="4.177248169415675"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="49"/>
+	<parameter name="BRANCH_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTACT_START_ACTIVE_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTACT_START_ACTIVE_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTACT_END_ACTIVE_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONTACT_END_ACTIVE_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AUTHORIZED_ORGANIZATIONS" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STATIC_PARAM_EMPLOYEE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT bc.company_name,
+  bh.branch_name,
+  wo.organization_name,
+  ppi.employee_number,
+  ppi.full_name,
+  pc.contact_name,
+  pc.relationship,
+  pc.beneficiary_priority_code,
+  pc.birth_date,
+  pc.gender,
+  pc.marital_status,
+  pc.start_date,
+  pc.end_date
+FROM pea_personal_informations ppi
+JOIN pea_primary_assignments ppa
+ON ppa.person_id   = ppi.person_id
+AND ppa.company_id = ppi.company_id
+JOIN bse_companies bc
+ON bc.company_id = ppi.company_id
+JOIN branch_hierarchy_v bh
+ON bh.organization_id = ppa.organization_id
+JOIN wos_organizations wo
+ON wo.organization_id = ppa.organization_id
+JOIN (select pc.full_name contact_name,
+  rel.description relationship,
+  fmp.description beneficiary_priority_code,
+  pc.birth_date,
+  pc.gender,
+  pc.marital_status,
+  pc.start_date,
+  pc.end_date,
+  pc.person_id,
+  pc.company_id
+  from pea_contacts pc
+  join (select bld.* from bse_lookup_hdr hdr join bse_lookup_dependents bld on bld.lookup_id = hdr.lookup_id where hdr.name = 'MST_CONTACT') rel on rel.detail_code = pc.relationship
+  join (select bld.* from bse_lookup_hdr hdr join bse_lookup_dependents bld on bld.lookup_id = hdr.lookup_id where hdr.name = 'MST_FAMILY_MEMBER_PRIORITY') fmp on fmp.detail_code = pc.beneficiary_priority_code
+UNION
+select
+  pi.full_name contact_name,
+  null relationship,
+  'Employee' beneficiary_priority_code,
+  pi.birth_date,
+  pi.gender_code,
+  pi.marital_status,
+  pi.hire_date,
+  TO_DATE('31-DEC-4712', 'DD-MON-YYYY') end_date,
+  pi.person_id,
+  pi.company_id
+  from pea_personal_informations pi
+  where trunc(sysdate) between pi.effective_start_date and pi.effective_end_date) pc
+ON pc.person_id = ppi.person_id AND pc.company_id = ppi.company_id
+WHERE bh.org_hier_id     =
+  (SELECT org_hier_id
+  FROM EWS.wos_organization_hier
+  WHERE company_id         = ppi.company_id
+  AND upper(org_hier_type) = upper('STRUCTURAL')
+  )
+AND TRUNC(sysdate) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+AND TRUNC(sysdate) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+AND (pc.start_date >= TRUNC(TO_DATE($P{CONTACT_START_ACTIVE_DATE_FROM}, 'DD-MON-YYYY')) OR $P{CONTACT_START_ACTIVE_DATE_FROM} is null)
+AND (pc.start_date <= TRUNC(TO_DATE($P{CONTACT_START_ACTIVE_DATE_TO}, 'DD-MON-YYYY')) OR $P{CONTACT_START_ACTIVE_DATE_TO} is null)
+AND (pc.end_date >= TRUNC(TO_DATE($P{CONTACT_END_ACTIVE_DATE_FROM}, 'DD-MON-YYYY')) OR $P{CONTACT_END_ACTIVE_DATE_FROM} is null)
+AND (pc.end_date <= TRUNC(TO_DATE($P{CONTACT_END_ACTIVE_DATE_TO}, 'DD-MON-YYYY')) OR $P{CONTACT_END_ACTIVE_DATE_TO} is null)
+AND (ppi.employee_number = $P{STATIC_PARAM_EMPLOYEE} OR $P{STATIC_PARAM_EMPLOYEE} is null)
+AND (bh.branch_id = $P{BRANCH_ID} OR $P{BRANCH_ID} is null)
+AND $X{IN, ppa.organization_id, AUTHORIZED_ORGANIZATIONS}
+ORDER BY bh.branch_name ASC, ppi.full_name ASC, pc.contact_name asc]]>
+	</queryString>
+	<field name="COMPANY_NAME" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="ORGANIZATION_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_NUMBER" class="java.lang.String"/>
+	<field name="FULL_NAME" class="java.lang.String"/>
+	<field name="CONTACT_NAME" class="java.lang.String"/>
+	<field name="RELATIONSHIP" class="java.lang.String"/>
+	<field name="BENEFICIARY_PRIORITY_CODE" class="java.lang.String"/>
+	<field name="BIRTH_DATE" class="java.sql.Timestamp"/>
+	<field name="GENDER" class="java.lang.String"/>
+	<field name="MARITAL_STATUS" class="java.lang.String"/>
+	<field name="START_DATE" class="java.sql.Timestamp"/>
+	<field name="END_DATE" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="acab3122-df6d-4c38-826c-a75704111673" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Company]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="edb96fa4-6f0b-401f-8a0a-640d0a479bc8" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8c372725-2c99-49ae-80dd-6bc9175652e5" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Organization]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5125c9b7-d6cf-4298-9674-e1bccff0c017" x="300" y="0" width="187" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Employee Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="82c16390-c8f6-44de-b0b4-d3f9d29e3d27" x="487" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1b6274d-4b17-43c5-a289-fc29bc7daef2" x="587" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Relationship]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0fcf1028-1ffd-4e68-85d8-b19cf1c397c3" x="687" y="0" width="113" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Family Member Priority]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="64a27ac9-12f7-40b6-bb5c-7f846e926876" x="800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact Birth Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="46684f7f-b23f-460b-854f-1f03c903b7ae" x="900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="88686d55-a1ea-44b1-a45c-42747f2c71f3" x="1000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact Marital Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d4ab9d8c-5e19-4b1a-91c7-85ad037556a8" x="1100" y="0" width="118" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact Start Date Active]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="56c9ae93-98ae-4151-ac43-484e66bde30e" x="1218" y="0" width="113" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact End Date Active]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f52fe788-b721-4e7b-a9b0-5f154e19edf1" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="dafefa5e-433d-4b5f-8ddf-7e2b6d7dc4ca" stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d471adab-2417-4267-8992-803add5e2abd" stretchType="RelativeToTallestObject" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ORGANIZATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fdd5764f-3b3d-4350-81b7-dd62ac0a6406" stretchType="RelativeToTallestObject" x="300" y="0" width="187" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NUMBER} + " - " + $F{FULL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ba2fbeff-c16a-4bf6-bcff-06df863d134c" stretchType="RelativeToTallestObject" x="487" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CONTACT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fcf8be78-9f3c-4ad0-ba87-b14b22c09211" stretchType="RelativeToTallestObject" x="587" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{RELATIONSHIP}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="75f1ad2f-de0a-4f51-8cc0-84da5826b7bc" stretchType="RelativeToTallestObject" x="687" y="0" width="113" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BENEFICIARY_PRIORITY_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="6d817074-d55a-4fb4-b291-662c2549d5bf" stretchType="RelativeToTallestObject" x="800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BIRTH_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="15772c41-0053-4045-83eb-3ed454625abc" stretchType="RelativeToTallestObject" x="900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{GENDER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9a75ef43-89e3-4b8c-8e13-b260a0e146a2" stretchType="RelativeToTallestObject" x="1000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MARITAL_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="b02612e4-f460-412e-a091-852e03d4c3c8" stretchType="RelativeToTallestObject" x="1100" y="0" width="118" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{START_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="883bec0e-be0d-4e66-a22e-31601f9629fb" stretchType="RelativeToTallestObject" x="1218" y="0" width="113" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{END_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

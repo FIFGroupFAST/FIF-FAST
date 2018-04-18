@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.dao.InformationMapper">
+
+	<resultMap type="co.id.fifgroup.domain.Information" id="BaseResultMap">
+		<result column="INFORMATION_ID" property="informationId" jdbcType="NUMERIC" />
+		<result column="REQUESTOR_NUMBER" property="requestorNumber" jdbcType="NUMERIC"/>
+		<result column="REQUESTOR_NAME" property="requestorName" jdbcType="VARCHAR"/>
+		<result column="REQUEST_DATE" property="requestDate" jdbcType="DATE"/>
+		<result column="INFORMATION" property="informationData" jdbcType="VARCHAR"/>
+		<result column="SECRET_INFO" property="secretInfo" jdbcType="VARCHAR"/>
+		<result column="CREATED_DATE" property="createdDate" jdbcType="TIMESTAMP"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+		<result column="LAST_UPDATED_DATE" property="lastUpdatedDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+		<result column="AVM_TRX_ID" property="avmTrxId" jdbcType="VARBINARY"
+			 				typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler"/>
+		<result column="APPROVAL_STATUS" property="approvalStatus" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insertInformation" parameterType="co.id.fifgroup.domain.Information" >
+		<selectKey resultType="int" order="BEFORE" keyProperty="informationId">
+			select SB_INFORMATION_S.nextVal from dual
+		</selectKey>
+		INSERT INTO
+		SB_INFORMATION
+		(
+			INFORMATION_ID,
+			REQUESTOR_NUMBER,
+			REQUESTOR_NAME,
+			REQUEST_DATE,
+			INFORMATION,
+			SECRET_INFO,
+			CREATED_DATE,
+			CREATED_BY,
+			LAST_UPDATED_DATE,
+			LAST_UPDATED_BY,
+			ORGANIZATION_ID
+		)
+		VALUES
+		(
+			#{informationId,jdbcType=NUMERIC},
+			#{requestorNumber,jdbcType=NUMERIC},
+			#{requestorName,jdbcType=VARCHAR},
+			#{requestDate,jdbcType=TIMESTAMP},
+			#{informationData,jdbcType=VARCHAR},
+			#{secretInfo,jdbcType=VARCHAR},
+			#{createdDate,jdbcType=TIMESTAMP},
+			#{createdBy,jdbcType=VARCHAR},
+			#{lastUpdatedDate,jdbcType=TIMESTAMP},
+			#{lastUpdatedBy,jdbcType=VARCHAR},
+			#{organizationIDEmployee,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<update id="updateInformation">
+		UPDATE SB_INFORMATION
+			<set>
+				<if test="requestorNumber != null">
+					REQUESTOR_NUMBER = #{requestorNumber,jdbcType=NUMERIC},
+				</if>
+				<if test="requestorName != null">
+					REQUESTOR_NAME = #{requestorName,jdbcType=VARCHAR},
+				</if>
+				<if test="requestDate != null">
+					REQUEST_DATE = #{requestDate,jdbcType=TIMESTAMP},
+				</if>
+				<if test="informationData != null">
+					INFORMATION = #{informationData,jdbcType=VARCHAR},
+				</if>
+				<if test="secretInfo != null">
+					SECRET_INFO = #{secretInfo,jdbcType=VARCHAR},
+				</if>
+				<if test="createdDate != null">
+					CREATED_DATE = #{createdDate,jdbcType=TIMESTAMP},
+				</if>
+				<if test="createdBy != null">
+					CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+				</if>
+				<if test="lastUpdatedDate != null">
+					LAST_UPDATED_DATE = #{lastUpdatedDate,jdbcType=TIMESTAMP},
+				</if>
+				<if test="lastUpdatedBy != null">
+					LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=VARCHAR},
+				</if>
+				<if test="avmTrxId != null">
+					AVM_TRX_ID = #{avmTrxId,jdbcType=VARBINARY,typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+				</if>
+				<if test="approvalStatus != null">
+					APPROVAL_STATUS = #{approvalStatus,jdbcType=VARCHAR},
+				</if>
+			</set>
+		WHERE INFORMATION_ID = #{informationId,jdbcType=NUMERIC}
+	</update>
+	
+	<delete id="deleteInformation">
+		DELETE SB_INFORMATION WHERE INFORMATION_ID = #{informationId,jdbcType=NUMERIC}
+	</delete>
+	
+	<select id="getAllInformation" resultMap="BaseResultMap">
+		SELECT INFORMATION_ID, 
+		    REQUESTOR_NUMBER, 
+		    REQUESTOR_NAME,
+		    REQUEST_DATE,
+		    INFORMATION,
+		    SECRET_INFO,
+		    CREATED_DATE,
+		    CREATED_BY,
+		    LAST_UPDATED_DATE,
+		    LAST_UPDATED_BY,
+		    AVM_TRX_ID,
+		    APPROVAL_STATUS,
+		    ORGANIZATION_ID
+			FROM SB_INFORMATION
+	</select>
+	
+	<select id="getInformationByFilter" 
+		parameterType="co.id.fifgroup.domain.Information" resultMap="BaseResultMap">
+		SELECT INFORMATION_ID, 
+		    REQUESTOR_NUMBER, 
+		    REQUESTOR_NAME,
+		    REQUEST_DATE,
+		    INFORMATION,
+		    SECRET_INFO,
+		    CREATED_DATE,
+		    CREATED_BY,
+		    LAST_UPDATED_DATE,
+		    LAST_UPDATED_BY,
+		    AVM_TRX_ID,
+		    APPROVAL_STATUS,
+		    ORGANIZATION_ID
+		    FROM SB_INFORMATION
+		    <where>
+		    	LAST_UPDATED_DATE > TRUNC(TO_DATE('01-JAN-2000'))
+		    	<if test="requestorName != null">
+		    		AND REQUESTOR_NAME = (#{requestorName, jdbcType=VARCHAR})
+		    	</if>
+		    	<if test="createdDate != null">
+		    		AND REQUEST_DATE &gt;= (#{createdDate, jdbcType=VARCHAR})
+		    	</if>
+		    	<if test="lastUpdatedDate != null">
+		    		AND REQUEST_DATE &lt;= (#{lastUpdatedDate, jdbcType=VARCHAR})
+		    	</if>
+		    	<if test="inOrganizationId != null">
+					<if test="inOrganizationId.size() > 0">
+						and 
+						<foreach item="item" open="(" close=")" separator=" OR "
+							collection="inOrganizationId">
+							ORGANIZATION_ID = #{item}
+						</foreach>			
+					</if>
+				</if>
+				<if test="notInOrganizationId != null">
+					<if test="notInOrganizationId.size() > 0">
+						and 
+						<foreach item="item" open="(" close=")" separator=" AND "
+							collection="notInOrganizationId">
+							ORGANIZATION_ID &lt;&gt; #{item}
+						</foreach>			
+					</if>
+				</if>
+				<if test="managerNumber != null">
+		    		AND REQUESTOR_NUMBER != (#{managerNumber, jdbcType=NUMERIC})
+		    	</if>
+		    </where>
+		    ORDER BY LAST_UPDATED_DATE DESC
+	</select>
+	
+	<select id="getSupervisor" parameterType="String" resultType="String">
+		select supervisor_1 from supervisor_v where employee_number = #{employeeNumber, jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

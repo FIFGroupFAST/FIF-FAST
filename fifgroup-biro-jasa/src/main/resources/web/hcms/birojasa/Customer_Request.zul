@@ -1,0 +1,6 @@
+<?page title="Customer Request" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window title="Customer Request" border="normal">
+New Content Here!
+</window>
+</zk>

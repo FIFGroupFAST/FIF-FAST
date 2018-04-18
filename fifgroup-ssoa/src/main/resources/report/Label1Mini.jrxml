@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_1" pageWidth="201" pageHeight="55" orientation="Landscape" columnWidth="0" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="02b63faa-2b72-4201-bd84-777e36107045">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="inch"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="inch"/>
+	<property name="ireport.zoom" value="7.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="labelingId" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[select sa.asset_number,sa.description, sa.DATE_PLACED_IN_SERVICE,sa.serial_number from ssoa.SOC_ASSET_LABELING_DTL sald
+inner join ssoa.SOC_ASSETS sa on sald.asset_id = sa.asset_id
+where sald.labeling_id = $P{labelingId}]]>
+	</queryString>
+	<field name="ASSET_NUMBER" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="DATE_PLACED_IN_SERVICE" class="java.sql.Timestamp"/>
+	<field name="SERIAL_NUMBER" class="java.lang.String"/>
+	<detail>
+		<band height="51" splitType="Stretch">
+			<textField>
+				<reportElement x="6" y="1" width="107" height="16" uuid="babfb6df-64d3-4d4f-a860-0082b7671f9c"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='7'>"+"FIF - Jakarta"+"</style>"]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape">
+				<reportElement x="136" y="0" width="65" height="18" uuid="92f12ad0-2ffd-41c1-aa40-b849b6b3b919"/>
+				<imageExpression><![CDATA["C:/Users/Christian/Desktop/image001.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="99" y="18" width="99" height="16" uuid="693e1787-c5fa-4dc3-97e9-72661aaec559"/>
+				<textElement verticalAlignment="Top" markup="styled">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+$F{DESCRIPTION}+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="99" y="33" width="99" height="10" uuid="bd16b88e-a285-49e2-b2ab-b6909c4ab284"/>
+				<textElement verticalAlignment="Top" markup="styled">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+$F{SERIAL_NUMBER}+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement x="99" y="41" width="99" height="10" uuid="c681ee63-929d-42d7-8ed3-fc2f838a2fb0">
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="styled">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+
+new java.text.SimpleDateFormat("dd-MMM-yyyy").format($F{DATE_PLACED_IN_SERVICE})
++"</style>"]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="1" y="18" width="62" height="33" uuid="8e7fe025-267d-40c1-8e73-2357e136717b">
+					<property name="com.jaspersoft.studio.unit.barHeight" value="inch"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false" barWidth="0" barHeight="30">
+					<jr:codeExpression><![CDATA[$F{ASSET_NUMBER}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="66" y="18" width="27" height="16" uuid="557ce0e2-5b77-4b68-bd0a-039d421d0138"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+"Desc"+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="33" width="27" height="10" uuid="1c741e26-8efa-440f-9b18-bae37f700d1b"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+"S/N"+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="41" width="27" height="10" uuid="633bd6c9-0ae3-4d56-96bd-dc397a2cc0c2"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+"Tanggal"+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="18" width="8" height="16" uuid="110c630b-aa93-4042-87d9-f1a8c3411f1a"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+":"+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="33" width="8" height="10" uuid="2e7e10ed-916a-4436-83e5-2a9acb2f81dc"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+":"+"</style>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="41" width="8" height="10" uuid="4b73ba8c-3e75-4948-af10-3904c66afb42"/>
+				<textElement markup="styled">
+					<font fontName="Tahoma" size="5" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style size ='6'>"+":"+"</style>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

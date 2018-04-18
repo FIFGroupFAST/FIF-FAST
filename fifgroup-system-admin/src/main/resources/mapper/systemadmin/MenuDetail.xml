@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.dao.MenuDetailDao">
+
+	<sql id="menuDetailColumns">
+		MENU_DTL_ID,
+		MENU_ID,
+		MENU_ITEM_TYPE,
+		SEQUENCE,
+		PROMPT,
+		ACTION_ID,
+		DATE_FROM,
+		DATE_TO
+	</sql>
+			
+	<insert id="insert" parameterType="co.id.fifgroup.systemadmin.dto.MenuDetailDto">
+		<selectKey order="BEFORE" resultType="long" keyProperty="menuDetailId">
+			SELECT SAM_MENU_DTL_S.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO SAM_MENU_DTL(
+			<include refid="menuDetailColumns"/>
+		) VALUES (
+			#{menuDetailId, jdbcType=NUMERIC}, 
+			#{menu.itemId, jdbcType=NUMERIC}, 
+			#{itemType, jdbcType=VARCHAR}, 
+			#{sequence, jdbcType=NUMERIC},
+			#{prompt, jdbcType=VARCHAR}, 
+			#{menuItem.itemId, jdbcType=NUMERIC}, 
+			#{dateFrom, jdbcType=DATE},
+			#{dateTo, jdbcType=DATE}
+		)
+	</insert>
+	
+	<update id="update" parameterType="co.id.fifgroup.systemadmin.dto.MenuDetailDto">
+		update SAM_MENU_DTL set
+			MENU_ITEM_TYPE = #{itemType, jdbcType=VARCHAR},
+			SEQUENCE = #{sequence, jdbcType=NUMERIC},
+			PROMPT = #{prompt, jdbcType=VARCHAR},
+			ACTION_ID =  #{menuItem.itemId, jdbcType=NUMERIC},
+			DATE_FROM = #{dateFrom, jdbcType=DATE},
+			DATE_TO = #{dateTo, jdbcType=DATE}
+		where
+			MENU_DTL_ID = #{menuDetailId, jdbcType=NUMERIC}
+	</update>
+	
+	<select id="findFunctionByExample" resultMap="menuItemResults">
+		SELECT 
+  			FUNCTION_ID AS ACTION_ID, 
+  			FUNCTION_NAME AS ITEM_NAME
+		FROM SAM_FUNCTIONS
+		<if test="itemName != null">
+			WHERE UPPER(FUNCTION_NAME) LIKE (UPPER(#{itemName, jdbcType=VARCHAR}))
+		</if>
+	</select>
+	
+	<select id="findSubmenuByExample" resultMap="menuItemResults">
+		SELECT 
+  			MENU_ID AS ACTION_ID, 
+  			MENU_NAME AS ITEM_NAME
+		FROM SAM_MENU_HDR
+		<if test="itemName != null">
+			WHERE UPPER(MENU_NAME) LIKE (UPPER(#{itemName, jdbcType=VARCHAR}))
+			AND SYSDATE BETWEEN DATE_FROM AND DATE_TO
+		</if>
+	</select>
+	
+	<select id="findFunctionByExampleExceptThisId" parameterType="co.id.fifgroup.systemadmin.domain.MenuItem" resultMap="menuItemResults">
+		SELECT A.FUNCTION_ID AS ACTION_ID, A.FUNCTION_NAME AS ITEM_NAME
+		FROM SAM_FUNCTIONS A 
+    	WHERE A.FUNCTION_ID != (SELECT B.FUNCTION_ID FROM SAM_FUNCTIONS B 
+    	WHERE B.ACTION_ID = #{itemId, jdbcType=NUMERIC})
+	</select>
+	
+	<select id="findSubmenuByExampleExceptThisId" parameterType="co.id.fifgroup.systemadmin.domain.MenuItem" resultMap="menuItemResults">
+    	SELECT A.MENU_ID AS ACTION_ID, A.MENU_NAME AS ITEM_NAME
+		FROM SAM_MENU_HDR A
+    	WHERE A.MENU_ID != (SELECT B.MENU_ID FROM SAM_MENU_HDR B
+    	WHERE B.MENU_ID = #{itemId, jdbcType=NUMERIC})
+	</select>
+	
+	<select id="findByMenuId" parameterType="java.lang.Long" resultMap="menuDetailResults">
+		select 
+		  MENU_DTL_ID,
+		  MENU_ITEM_TYPE,
+		  MENU_ID,
+		  SEQUENCE,
+		  PROMPT,
+		  DATE_FROM,
+		  DATE_TO,
+		  ACTION_ID,
+		  FUNCTION_NAME ITEM_NAME
+		from sam_menu_dtl m left join sam_functions f on f.function_id = m.action_id 
+		where m.menu_item_type='Function' AND MENU_ID = #{menuId, jdbcType=NUMERIC}
+		UNION
+		select 
+		  MENU_DTL_ID,
+		  MENU_ITEM_TYPE,
+		  M.MENU_ID,
+		  SEQUENCE,
+		  PROMPT,
+		  m.DATE_FROM,
+		  m.DATE_TO,
+		  ACTION_ID,
+		  MENU_NAME ITEM_NAME
+		from sam_menu_dtl m left join sam_menu_hdr f on f.menu_id = m.action_id 
+		where m.menu_item_type='Submenu' AND m.MENU_ID = #{menuId, jdbcType=NUMERIC}
+	</select>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.domain.MenuItem" id="menuItemResults">
+		<id column="ACTION_ID" property="itemId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="ITEM_NAME" property="itemName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.MenuDetailDto" id="menuDetailResults">
+		<id column="MENU_DTL_ID" property="menuDetailId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="MENU_ITEM_TYPE" property="itemType" jdbcType="VARCHAR" />
+		<result column="SEQUENCE" property="sequence" jdbcType="NUMERIC" />
+		<result column="PROMPT" property="prompt" jdbcType="VARCHAR" />
+		<result column="ACTION_ID" property="menuItem.itemId" jdbcType="NUMERIC" />
+		<result column="ITEM_NAME" property="menuItem.itemName" jdbcType="VARCHAR" />
+		<result column="DATE_FROM" property="dateFrom" jdbcType="DATE" />
+		<result column="DATE_TO" property="dateTo" jdbcType="DATE" />	
+	</resultMap>
+	
+</mapper>

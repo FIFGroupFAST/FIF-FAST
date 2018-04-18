@@ -1,0 +1,143 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winHeadcountInformation"
+	apply="co.id.fifgroup.workstructure.controller.HeadcountInformationViewComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.headcountInformation}" >
+		<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.organizationCode}"></label>
+					<label id="organizationCode"></label>
+				</row>
+				<row>
+					<label value="${labels.wos.organizationName}" />
+					<label id="organizationName"></label>
+				</row>
+				<row>
+					<label value="${labels.wos.organizationDescription}" />
+					<label id="organizationDescription"></label>
+				</row>
+				<row>
+					<label value="${labels.wos.organizationLevel}" />
+					<label id="organizationLevel"></label>
+				</row>
+				<row>
+					<label value="${labels.common.effectiveDateFrom}" />
+					<label id="effectiveDateFrom"></label>
+				</row>
+				<row>
+					<label value="${labels.common.effectiveDateTo}" />
+					<label id="effectiveDateTo"></label>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox id="grbNpk" mold="default" visible="true" >
+			<caption label="${labels.common.employee }" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.mpp.periodSetName}" />
+						<label id="periodSetName"></label>
+					</row>
+					<row>
+						<label value="${labels.common.dateFrom}"></label>
+						<hbox>
+							<label id="periodSetFrom"></label>
+							<separator> </separator>
+							<label value="${labels.common.dateTo}"></label>
+							<label id="periodSetTo"></label>
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+			<!-- 			<paging id="pgTop" forward="pgTop.onPagingTop" autohide="true" detailed="true"/> -->
+			<listbox id="lstNpk" emptyMessage="${labels.common.noDataFound}">
+				<listhead menupopup="auto">
+					<listheader label="${labels.mpp.periodName}" align="center" sort="auto(periodName)" width="150px"/>
+					<listheader label="${labels.mpp.periodFrom}" align="center" sort="auto(periodFrom)" width="150px"/>
+					<listheader label="${labels.mpp.periodTo}" align="center" sort="auto(periodTo)" width="150px"/>
+					<listheader label="${labels.common.branch}" align="center" sort="auto(branchName)" width="150px"/>
+					<listheader label="${labels.common.job}" align="center" sort="auto(jobName)" width="150px"/>
+					<listheader label="${labels.mpp.optimum}" align="center" sort="auto(optimumBalance)" width="150px"/>
+					<listheader label="${labels.mpp.existing}" align="center" sort="auto(existing)" width="150px"/>
+					<listheader label="${labels.mpp.reserved}" align="center" sort="auto(reserved)" width="150px"/>
+					<listheader label="${labels.mpp.headcountExsRes}" align="center" sort="auto(headcount)" width="150px"/>
+					<listheader label="${labels.mpp.headcountAvailableOptExsRes}" align="center" sort="auto(availableHeadcount)" width="250px"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+					<listcell label="${each.periodName }"/>
+					<listcell label="${date:formatDate(each.periodFrom)}"/>
+					<listcell label="${date:formatDate(each.periodTo)}"/>
+					<listcell label="${each.branchName }"/>
+					<listcell label="${each.jobName }"/>
+					<listcell label="${each.optimumBalance }"/>
+					<listcell label="${each.existing }"/>
+					<listcell label="${each.reserved }"/>
+					<listcell label="${each.headcount }"/>
+					<listcell label="${each.availableHeadcount }"/>
+					</listitem>
+				</template>
+			</listbox>
+			<paging id="pgBottom" forward="pgBottom.onPagingBottom" autohide="true" detailed="true" />
+			<exporter referenceId="lstNpk" />
+		</groupbox>
+		<separator />
+		<groupbox id="grbCwk" mold="default" visible="true">
+			<caption label="${labels.mpp.cwk}" />
+<!-- 			<paging id="pgTopCwk" forward="pgTopCwk.onPagingTopCwk" autohide="true" detailed="true"/> -->
+			<listbox id="lstCwk" emptyMessage="${labels.common.noDataFound}">
+				<listhead menupopup="auto">
+					<listheader label="${labels.mpp.periodName}" align="center" sort="auto(periodName)" width="150px"/>
+					<listheader label="${labels.mpp.periodFrom}" align="center" sort="auto(periodFrom)" width="150px"/>
+					<listheader label="${labels.mpp.periodTo}" align="center" sort="auto(periodTo)" width="150px"/>
+					<listheader label="${labels.common.branch}" align="center" sort="auto(branchName)" width="150px"/>
+					<listheader label="${labels.common.job}" align="center" sort="auto(jobName)" width="150px"/>
+					<listheader label="${labels.mpp.optimum}" align="center" sort="auto(optimumBalance)" width="150px"/>
+					<listheader label="${labels.mpp.existing}" align="center" sort="auto(existing)" width="150px"/>
+					<listheader label="${labels.mpp.reserved}" align="center" sort="auto(reserved)" width="150px"/>
+					<listheader label="${labels.mpp.headcountExsRes}" align="center" sort="auto(headcount)" width="150px"/>
+					<listheader label="${labels.mpp.headcountAvailableOptExsRes}" align="center" sort="auto(availableHeadcount)" width="250px"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+					<listcell label="${each.periodName }"/>
+					<listcell label="${date:formatDate(each.periodFrom)}"/>
+					<listcell label="${date:formatDate(each.periodTo)}"/>
+					<listcell label="${each.branchName }"/>
+					<listcell label="${each.jobName }"/>
+					<listcell label="${each.optimumBalance }"/>
+					<listcell label="${each.existing }"/>
+					<listcell label="${each.reserved }"/>
+					<listcell label="${each.headcount }"/>
+					<listcell label="${each.availableHeadcount }"/>
+					</listitem>
+				</template>
+			</listbox>
+			<paging id="pgBotCwk" forward="pgBotCwk.onPagingBottomCwk" autohide="true" detailed="true"/>
+			<exporter referenceId="lstCwk" />
+		</groupbox>
+		<separator />
+		<hbox>
+			<cell align="right">
+				<button id="btnBack"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

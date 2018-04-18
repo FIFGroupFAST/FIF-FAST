@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.VitalStatisticFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.VitalStatisticDTO">
+		<id column="VITAL_STATISTIC_ID" property="vitalStatisticId" jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="PHYSICAL_HEIGHT" property="physicalHeight" jdbcType="DECIMAL" />
+	    <result column="PHYSICAL_WEIGHT" property="physicalWeight" jdbcType="DECIMAL" />
+	    <result column="SHOULDER_WIDTH" property="shoulderWidth" jdbcType="DECIMAL" />
+	    <result column="CHEST_WIDTH" property="chestWidth" jdbcType="DECIMAL" />
+	    <result column="WAIST_WIDTH" property="waistWidth" jdbcType="DECIMAL" />
+	    <result column="SPHERE_LEFT" property="sphereLeft" jdbcType="DECIMAL" />
+	    <result column="SPHERE_RIGHT" property="sphereRight" jdbcType="DECIMAL" />
+	    <result column="CYLINDER_LEFT" property="cylinderLeft" jdbcType="DECIMAL" />
+	    <result column="CYLINDER_RIGHT" property="cylinderRight" jdbcType="DECIMAL" />
+	    <result column="BIFOCAL_LEFT" property="bifocalLeft" jdbcType="DECIMAL" />
+	    <result column="BIFOCAL_RIGHT" property="bifocalRight" jdbcType="DECIMAL" />
+	    <collection property="apparels" ofType="co.id.fifgroup.personneladmin.domain.Apparel" javaType="java.util.List" >
+			<id column="APPAREL_ID" property="apparelId" jdbcType="DECIMAL" />
+		    <result column="APPAREL_TYPE" property="apparelType" jdbcType="VARCHAR" />
+		    <result column="APPAREL_SIZE" property="apparelSize" jdbcType="VARCHAR" />
+		    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+		</collection>
+	</resultMap>
+	
+	<select id="getVitalStatisticByPersonIdAndCompanyId" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  pvs.VITAL_STATISTIC_ID,
+		  pvs.PERSON_ID,
+		  pvs.COMPANY_ID,
+		  pvs.PHYSICAL_HEIGHT,
+		  pvs.PHYSICAL_WEIGHT,
+		  pvs.SHOULDER_WIDTH,
+		  pvs.CHEST_WIDTH,
+		  pvs.WAIST_WIDTH,
+		  pvs.SPHERE_LEFT,
+		  pvs.SPHERE_RIGHT,
+		  pvs.CYLINDER_LEFT,
+		  pvs.CYLINDER_RIGHT,
+		  pvs.BIFOCAL_LEFT,
+		  pvs.BIFOCAL_RIGHT,
+		  pa.APPAREL_ID,
+		  pa.APPAREL_TYPE,
+		  pa.APPAREL_SIZE
+		FROM PEA_VITAL_STATISTICS pvs
+		LEFT JOIN PEA_APPARELS pa
+			ON pa.VITAL_STATISTIC_ID = pvs.VITAL_STATISTIC_ID
+		<where>
+			<if test="personId != null">
+				AND pvs.PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND pvs.COMPANY_ID = #{companyId}
+			</if>
+		</where>
+	</select>
+</mapper>

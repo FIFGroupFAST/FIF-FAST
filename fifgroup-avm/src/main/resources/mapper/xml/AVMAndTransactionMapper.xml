@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.avm.dao.mybatis.mapper.AVMAndTransactionMapper">
+	<!-- Result Map -->
+  		<resultMap type="co.id.fifgroup.avm.domain.AVMAndTransactionMapping" id="avmMappingResultMap">
+    		<result column="AVM_ID" jdbcType="VARBINARY" property="avmId"
+    				typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+			<result column="TRX_TYPE" jdbcType="DECIMAL" property="trxType"/>
+    		<result column="AVM_STATUS" jdbcType="DECIMAL" property="avmStatus" />
+  		</resultMap>
+  	<!-- Result Map -->
+  	<!-- Select -->
+  		<select id="getAllAVMAndTransactionMappings" resultMap="avmMappingResultMap">
+  			select * from AVM_TRX_MAPPING
+  			where AVM_STATUS = 1
+  		</select>
+  		<select id="getMappedTrxTypeList" resultMap="avmMappingResultMap">
+  			select TRX_TYPE from AVM_TRX_MAPPING
+  			where AVM_ID = #{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 	typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+  			AVM_STATUS = 1
+  		</select>
+  		<!-- add yahya --> 
+  		<select id="getAVMByTrxType" resultMap="avmMappingResultMap">
+  			select * from AVM_TRX_MAPPING
+  			where TRX_TYPE = #{trxType, javaType=INTEGER, jdbcType=DECIMAL}
+  			AND AVM_STATUS = 1
+  		</select>
+  		<!-- end add yahya -->
+  	<!-- Select -->
+  	<!-- Insert -->
+  		<insert id="insertNewMapping" 
+  				parameterType="co.id.fifgroup.avm.domain.AVMAndTransactionMapping"> 
+  			insert into AVM_TRX_MAPPING (AVM_ID, TRX_TYPE, AVM_STATUS)
+  			values (#{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+					#{trxType},
+					#{avmStatus})
+  		</insert>
+  	<!-- Insert -->
+  	<!-- Update -->
+  		<!-- add yahya -->
+		<update id="updateMappedAVMAndTrxTypeList" parameterType="map">
+			update AVM_TRX_MAPPING
+			set AVM_ID = #{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 	typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			where TRX_TYPE in
+			<foreach collection="trxTypeList" index="index" open="(" separator="," close=")" item="item">
+				#{item, jdbcType=DECIMAL}
+  			</foreach>
+		</update>
+		<!-- end add yahya -->
+	<!-- Update -->
+	<!-- Delete -->
+		<delete id="deleteMappedAVMAndTrxTypeList" parameterType="map">
+			delete from AVM_TRX_MAPPING
+			where AVM_ID = #{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 	typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+<!--			and TRX_TYPE in-->
+<!--			<foreach collection="trxTypeList" index="index" open="(" separator="," close=")" item="item">-->
+<!--    			#{item, jdbcType=DECIMAL}-->
+<!--   			</foreach>-->
+		</delete>
+	<!-- Delete -->
+</mapper>

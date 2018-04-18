@@ -1,0 +1,67 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winTaskInquiry" apply="co.id.fifgroup.systemadmin.controller.TaskInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.task}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>	
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.common.name}" />
+					<searchtextbox id="txtName" use="co.id.fifgroup.core.ui.Searchtextbox" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label value="${labels.common.type}" />
+					<listbox id="cbType" mold="select" width="25%">
+						<template name="model">
+							<listitem value="${each}" label="${each.value}" />
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+<!-- 		<paging id="pgTaskTop" forward="onPaging" autohide="true" detailed="true" /> -->
+		<listbox id="taskListbox" mold="paging" pagingPosition="both" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader sort="auto(taskName)" label="${labels.common.name}" align="center" />
+				<listheader sort="auto(description)" label="${labels.common.description}" align="center"  />
+				<listheader sort="auto(taskType)" label="type" align="center"  />
+				<listheader sort="auto(lastUpdateDate)" label="${labels.common.lastUpdateDate}" align="center" />
+				<listheader sort="auto(userName)" label="${labels.common.lastUpdatedBy}" align="center" />
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.taskName}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.taskType}" />
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell label="${each.userName}" />
+					<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+				</listitem>
+			</template>
+		</listbox>
+<!-- 		<paging id="pgTask" forward="onPaging" autohide="true" detailed="true" /> -->
+		<exporter referenceId="taskListbox" />		
+	</groupbox>
+</window>

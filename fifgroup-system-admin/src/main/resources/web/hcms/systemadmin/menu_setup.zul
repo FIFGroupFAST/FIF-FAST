@@ -1,0 +1,59 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="dateboxmax" class="co.id.fifgroup.core.ui.DateBoxMax" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<window id="winMenuSetup" apply="co.id.fifgroup.systemadmin.controller.MenuSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.menu}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<formlabel value="${labels.sam.menuName}" required="true" />
+					<textbox id="txtMenuName" maxlength="50" width="250px" />
+					<formlabel value="${labels.sam.dateFrom}" required="true" />
+					<datebox id="dtbDateFrom" />
+				</row>
+				<row >
+					<formlabel value="${labels.common.description}" required="true"/>
+					<textbox id="txtDesc" maxlength="255" width="250px" rows="5"/>
+					<formlabel value="${labels.sam.dateTo}" />
+					<datebox id="dtbDateTo" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<label id="lblErrorMenu" style="color:red" />
+		<listbox id="tbnMenuDetail" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+			<listhead>
+				<listheader label="" width="30px"/>
+				<listheader label="${labels.common.type}" />
+				<listheader label="${labels.sam.seq}" />
+				<listheader label="${labels.sam.prompt}" />
+				<listheader label="${labels.sam.menuItem}" />
+				<listheader label="${labels.sam.dateFrom}" width="200px" />
+				<listheader label="${labels.sam.dateTo}" width="200px"/>
+			</listhead>
+		</listbox>
+		<hbox>
+			<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+			<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+		</hbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

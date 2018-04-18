@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemworkflow.dao.SupervisorFinder">
+
+    <resultMap id="baseResultMap" type="co.id.fifgroup.systemworkflow.dto.SupervisorDTO">
+    	<result column="SEQUENCE_NUMBER" jdbcType="DECIMAL" property="sequenceNumber" />
+	    <result column="APPROVER_ID" jdbcType="VARBINARY" property="approverId" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	    <result column="BRANCH_ID" jdbcType="DECIMAL" property="branchId" />
+	    <result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+	    <result column="APPROVER_NAME" jdbcType="VARCHAR" property="approverName" />
+	    <result column="APPROVER_TYPE" jdbcType="VARCHAR" property="approverType" />
+	    <result column="SEQUENCE" jdbcType="DECIMAL" property="sequence" />
+	    <result column="VACATION_APPROVER_ID" jdbcType="VARBINARY" property="vacationApproverId" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+	  </resultMap>
+
+  <select id="maxLevelSequence" parameterType="map" resultType="java.lang.Integer">
+  		select max(aah.level_sequence) from avm_approval_history aah
+			join avm_transaction at on at.avm_trx_id = aah.avm_trx_id
+			join avm_approver ap on ap.avm_id = at.avm_id 
+				and ap.avm_version_id = at.avm_version_id 
+				and aah.level_sequence = ap.level_sequence
+			join swf_approver_mapping sam on sam.approver_id = ap.approver_id 
+				and sam.approver_type = #{approverType}
+			where aah.approver_id &lt;&gt; 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+			and aah.avm_action_type = 1
+			and aah.avm_trx_id = #{avmTrxId, jdbcType=VARBINARY, typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+  </select>
+  
+  <select id="getPreviousSupervisor" parameterType="map" resultMap="baseResultMap">
+  	SELECT aah.sequence_number,
+	  aah.approver_id,
+	  aah.branch_id,
+	  aah.organization_id,
+	  sam.approver_name,
+	  sam.approver_type,
+	  sam.sequence,
+	  aah.vacation_approver_id
+	FROM avm_approval_history aah
+	JOIN avm_transaction at
+	ON at.avm_trx_id = aah.avm_trx_id
+	JOIN avm_approver ap
+	ON ap.avm_id           = at.avm_id
+	AND ap.avm_version_id  = at.avm_version_id
+	AND aah.level_sequence = ap.level_sequence
+	JOIN swf_approver_mapping sam
+	ON sam.approver_id      = ap.approver_id
+	AND sam.approver_type   = #{approverType}
+	WHERE aah.approver_id  &lt;&gt; 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+	AND aah.avm_action_type = 1
+	AND aah.level_sequence  = #{levelSequence}
+	and aah.avm_trx_id = #{avmTrxId, jdbcType=VARBINARY, typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+	and ap.based_on = #{basedOn, jdbcType=DECIMAL}
+  </select>  
+  
+</mapper>

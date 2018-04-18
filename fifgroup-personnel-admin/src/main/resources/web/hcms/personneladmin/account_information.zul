@@ -1,0 +1,208 @@
+<window id="winAccountInformation" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AccountInformationComposer">
+	<grid id="gridEffectiveDateFrom" sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<hbox>
+					<label value="${labels.pea.effectiveDateFrom }" />  
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<hbox>
+					<datebox id="dtbEffectiveStartDate" width="100px" />
+					<label value="to"/>
+					<datebox id="dtbEffectiveEndDate" width="100px" />
+				</hbox>							
+				
+			</row>
+		</rows>
+	</grid>
+	<groupbox closable="false">
+		<caption label="${labels.pea.nationalIdentifier }" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.pea.identifierNumber }" />   
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>					
+					<textbox id="txtIdentifierNumber" width="150px" maxlength="50"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.pea.identifierValidUntil }" /> 
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>					
+					<datebox id="dtbNationalIdValidUntil" width="100px"/>
+				</row>
+				<row>
+					<label value="${labels.common.file }"   />  
+					<hbox>
+						<textbox id="txtFileNationalIdentifier" maxlength="300" width="250px" readonly="true" />
+						<button id="btnBrowseNationalIdentifier" label="${labels.common.browse}"
+							mold="trendy" upload="true, maxsize=-1" />
+						<a id="linkDownloadFileNationalIdentifier" style="color:blue" visible="false" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>	
+	</groupbox>
+	<groupbox closable="false">
+		<caption label="${labels.pea.tax }" />
+		<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.npwp }" />
+				<textbox id="txtNpwp" width="150px" maxlength="20"/>
+			</row>			
+		</rows>
+	</grid>
+	</groupbox>	
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.jamsostek }" />
+		<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.kpjNumber }" />
+				<textbox id="txtKpjNumber" width="150px" maxlength="11"/>
+			</row>
+			<row>
+				<label value="${labels.common.file }"   />  
+				<hbox>
+					<textbox id="txtFileJamsostek" maxlength="300" width="250px" readonly="true" />
+					<button id="btnBrowseJamsostek" label="${labels.common.browse}"
+						mold="trendy" upload="true, maxsize=-1" />
+					<a id="linkDownloadFileJamsostek" style="color:blue" visible="false" />
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	</groupbox>
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.danaPensiunAstra }" />
+		<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.dpaNumber }" />
+				<textbox id="txtDpaNumber" width="150px" maxlength="20"/>
+			</row>
+			<row>
+				<label value="${labels.pea.dpaJoinDate }" />
+				<datebox id="dtbDpaJoinDate" width="100px" />
+			</row>
+		</rows>
+	</grid>
+	</groupbox>
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.medicalInsurance }" />
+		<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.insuranceNumber }" /> 
+				<textbox id="txtInsuranceNumber" width="150px" maxlength="25"/>
+			</row>
+		</rows>
+	</grid>
+	</groupbox>
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.passport }" />
+		<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.identifierNumber }" />
+				<textbox id="txtPassportNumber" width="150px" maxlength="50"/>
+			</row>
+			<row>
+				<label value="${labels.pea.identifierValidUntil }" />
+				<datebox id="dtbPassportValidUntil" width="100px"/>
+			</row>
+			<row>
+				<label value="${labels.common.file }"   /> 
+				<hbox>
+					<textbox id="txtFilePassport" maxlength="300" width="250px" readonly="true" />
+					<button id="btnBrowsePassport" label="${labels.common.browse}"
+						mold="trendy" upload="true, maxsize=-1" />
+					<a id="linkDownloadFilePassport" style="color:blue" visible="false" />
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	</groupbox>
+	<groupbox closable="false">
+		<caption label="${labels.pea.drivingLicense }" />
+		<panel>
+			<panelchildren>
+				<listbox id="lbxDrivingLicense" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.pea.licenseType}" />
+						<listheader label="${labels.pea.licenseNumber}" />
+						<listheader label="${labels.pea.licenseValidUntil}" />
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRow" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>	
+	<hbox pack="center" align="center">
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxNavigation">
+				<button id="btnBackPeopleInformation"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.back}" />
+				<space width="10px"></space>
+				<button id="btnNextBankInformation"
+					label="${labels.common.next}" mold="trendy"
+					image="${labels.image.link.next}" />
+			</hbox>
+			<hbox id="hboxSaveDelete">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+				<space width="10px"></space>
+				<button id="btnDelete"
+					label="${labels.common.delete}" mold="trendy"
+					image="${labels.image.link.delete}" />
+			</hbox>			
+		</cell>
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>
+</window>

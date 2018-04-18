@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.ssoa.dao.SystemPropertyFinder">
+
+	<resultMap type="co.id.fifgroup.ssoa.dto.SystemPropertyDTO" id="sysPropResult">
+		<id column="SYSTEM_PROPERTY_CODE" property="systemPropertyCode" jdbcType="VARCHAR"/>
+		<result column="SYSTEM_PROPERTY_NAME" property="systemPropertyName" jdbcType="VARCHAR"/>
+		<result column="SYSTEM_PROPERTY_VALUE" property="systemPropertyValue" jdbcType="VARCHAR"/>
+		<result column="USER_NAME" property="lastUpdateUserName" jdbcType="VARCHAR"/>
+		<result column="CREATED_BY" property="createdBy" javaType="LONG" jdbcType="NUMERIC"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="DATE"/>
+		<result column="LAST_UPDATE_BY" property="lastUpdateBy" javaType="LONG" jdbcType="NUMERIC"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="DATE"/>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.ssoa.dto.SystemPropertyDTO" id="systemPropertyResult">
+		<id column="SYSTEM_PROPERTY_CODE" property="systemPropertyCode" jdbcType="VARCHAR"/>
+		<result column="SYSTEM_PROPERTY_NAME" property="systemPropertyName" jdbcType="VARCHAR"/>
+		<result column="SYSTEM_PROPERTY_VALUE" property="systemPropertyValue" jdbcType="VARCHAR"/>
+		<result column="CREATED_BY" property="createdBy" javaType="LONG" jdbcType="NUMERIC"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="DATE"/>
+		<result column="LAST_UPDATE_BY" property="lastUpdateBy" javaType="LONG" jdbcType="NUMERIC"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="DATE"/>
+		<result column="USER_NAME" property="lastUpdateUserName" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="getSystemPropertyDtoBySystemPropertyCodeName" parameterType="map" resultMap="systemPropertyResult">
+		SELECT
+			SP.SYSTEM_PROPERTY_CODE,
+			SP.SYSTEM_PROPERTY_NAME,
+			SP.SYSTEM_PROPERTY_VALUE,
+			SP.CREATED_BY,
+			SP.CREATION_DATE,
+			SP.LAST_UPDATE_BY,
+			SP.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		FROM
+			SOC_SYSTEM_PROPERTIES SP LEFT JOIN SAM_USERS SU ON (SU.USER_ID = SP.LAST_UPDATE_BY)
+		<where>
+			<if test="systemPropertyCode != null">
+				AND UPPER(SP.SYSTEM_PROPERTY_CODE) LIKE UPPER(#{systemPropertyCode, jdbcType=VARCHAR})
+			</if>
+			<if test="systemPropertyName != null">
+				OR UPPER(SP.SYSTEM_PROPERTY_NAME) LIKE UPPER(#{systemPropertyName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+	
+	<select id="getCountSystemPropertyDtoBySystemPropertyCodeName" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			SOC_SYSTEM_PROPERTIES SP LEFT JOIN SAM_USERS SU ON (SU.USER_ID = SP.LAST_UPDATE_BY)
+		<where>
+			<if test="systemPropertyCode != null">
+				AND UPPER(SP.SYSTEM_PROPERTY_CODE) LIKE UPPER(#{systemPropertyCode, jdbcType=VARCHAR})
+			</if>
+			<if test="systemPropertyName != null">
+				OR UPPER(SP.SYSTEM_PROPERTY_NAME) LIKE UPPER(#{systemPropertyName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+</mapper>

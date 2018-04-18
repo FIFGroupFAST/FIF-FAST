@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.WorkingEquipmentFinder">
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="workingEquipmentBaseResult">
+		<id column="WORKING_EQUIPMENT_ID" jdbcType="DECIMAL" property="key" />
+		<result column="WORKING_EQUIPMENT" property="description" />
+		<result column="RETURNABLE" property="value" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.EquipmentAssignmentDTO" id="assignedList">
+			<result column="TYPE_NAME" jdbcType="VARCHAR" property="typeName"/>
+			<result column="EQUIPMENT_SIZE" jdbcType="VARCHAR" property="equipmentSize"/>
+			<result column="ASSIGNED_DATE" jdbcType="DECIMAL" property="assignedDate"/>
+			<result column="ASSIGNED_DATE_STR" jdbcType="DECIMAL" property="assignedDateStr" />
+			<result column="TYPE_ID" jdbcType="DECIMAL" property="typeId" />
+			
+	</resultMap>
+
+	<select id="findWorkingEquipmentByCompanyIdAndActive" resultMap="workingEquipmentBaseResult">
+		select
+		  we.working_equipment_id,
+		  we.working_equipment,
+		  we.returnable,
+		  we.inactive
+		from ben_working_equipments we 
+		<where>
+			<if test="companyId != null">
+				we.company_id = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="inactive != null">
+				we.inactive = #{inactive, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findWorkingEquipmentById" parameterType="map" resultMap="workingEquipmentBaseResult">
+		select
+		  we.working_equipment_id,
+		  we.working_equipment,
+		  we.returnable,
+		  we.inactive
+		from ben_working_equipments we 
+		<where>
+			<if test="workingEquipmentId != null">
+				we.working_equipment_id = #{workingEquipmentId, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+	
+		<select id="getWorkingEquipmentList" parameterType="map"
+		resultMap="assignedList">
+	Select Distinct wt.Name TYPE_NAME,
+              wrd.Equipment_Size EQUIPMENT_SIZE,
+              wa.Assigned_Date,
+              To_Char(Wa.Assigned_Date,'dd-MON-yyyy') ASSIGNED_DATE_STR,
+              wt.Type_Id TYPE_ID
+	From Weq_Types Wt
+  		Join Weq_Request_Dtl Wrd On wrd.Type_Id=wt.Type_Id
+  		Join Weq_Assignments Wa On Wa.Request_Dtl_Id=Wrd.Request_Dtl_Id
+  		Join Pea_Personal_Informations Ppi On Ppi.Person_Id =Wrd.Person_Id
+  			and TRUNC(sysdate) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+	Where ppi.person_id=#{personId}
+  			and ppi.company_id=#{companyId}
+	</select>
+</mapper>

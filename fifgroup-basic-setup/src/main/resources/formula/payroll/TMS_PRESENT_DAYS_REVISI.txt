@@ -1,0 +1,68 @@
+import groovy.transform.CompileStatic
+
+import co.id.fifgroup.basicsetup.service.ServiceModel;
+import co.id.fifgroup.core.util.DateUtil;
+import org.joda.time.DateTime;
+
+@CompileStatic
+class EmployeePresent {
+
+	Long personId;
+	Date processDate;
+	ServiceModel serviceModel;
+        Map<String, Object> additionalParam;
+	
+	public Long getEmployeePresent(){
+		boolean isRapel = false;
+                if(additionalParam.containsKey("isRapel") && (additionalParam.get("isRapel") instanceof Boolean && (Boolean) additionalParam.get("isRapel"))) {
+                     isRapel = true;
+                }
+		String processDateConv = DateUtil.format(DateUtil.truncate(processDate));
+		Long result;
+		
+		String sqlTmsFinalize = "";
+
+		if(isRapel) {
+			DateTime dtProcessDate = new DateTime(processDate);
+			dtProcessDate = dtProcessDate.minusMonths(1);
+			String processDateRapel = DateUtil.format(dtProcessDate.toDate());
+			sqlTmsFinalize = """
+					select
+						NVL(SUM(PRESENT_DAYS), 0) AS PRESENT_DAYS
+					from
+						TMS_FINALIZE_RESULTS
+					where
+						TO_CHAR(TO_DATE('${processDateRapel}', 'DD-MON-YYYY'), 'MMYYYY') = TO_CHAR(PERIOD_START, 'MMYYYY')
+						AND TO_CHAR(TO_DATE('${processDateRapel}', 'DD-MON-YYYY'), 'MMYYYY') = TO_CHAR(PERIOD_END, 'MMYYYY')
+						and    PERSON_ID = ${personId}
+					""";
+		} else {
+			sqlTmsFinalize = """
+					select
+						NVL(SUM(PRESENT_DAYS), 0) AS PRESENT_DAYS
+					from
+						TMS_FINALIZE_RESULTS
+					where
+						TO_DATE('${processDateConv}') > PERIOD_END
+						and is_processed_to_payroll = 0
+						and    PERSON_ID = ${personId}
+					""";
+		}
+
+		List<Map<String,Object>> resultList = serviceModel.getFromQuery(sqlTmsFinalize);
+        if (!resultList.isEmpty()){																	
+			Map<String,Object> resultMap = resultList.get(0);
+			result = Long.valueOf(resultMap.get("PRESENT_DAYS").toString());
+			return result;
+        }else{
+		    return Long.valueOf("0");
+        } 
+	}
+}
+
+EmployeePresent  subject = new EmployeePresent();
+subject.setPersonId(person_id);
+subject.setProcessDate(process_date);
+subject.setServiceModel(serviceModel);
+subject.setAdditionalParam(additionalParam);
+return subject.getEmployeePresent();

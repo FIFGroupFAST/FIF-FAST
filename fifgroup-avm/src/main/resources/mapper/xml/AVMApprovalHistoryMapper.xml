@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.avm.dao.mybatis.mapper.AVMApprovalHistoryMapper">
+  	<!-- Result Map -->
+  	<resultMap type="co.id.fifgroup.avm.domain.AVMApprovalHistory" id="avmApprovalHistoryResultMap">
+    	<result column="SEQUENCE_NUMBER" jdbcType="DECIMAL" property="sequenceNumber"/>
+    	<result column="APPROVER_ID" jdbcType="VARBINARY" property="approverId"
+    					typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+    	<result column="AVM_TRX_ID" jdbcType="VARBINARY" property="avmTrxId"
+    					typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+    	<result column="LEVEL_SEQUENCE" jdbcType="DECIMAL" property="levelSequence" />
+    	<result column="AVM_ACTION_TYPE" jdbcType="DECIMAL" property="avmActionType" />
+    	<result column="AVM_ACTION_TIMESTAMP" jdbcType="TIMESTAMP" property="avmActionTimeStamp" />
+    	<result column="REMARKS" jdbcType="VARCHAR" property="remarks" />
+    	<result column="PRIORITY" jdbcType="DECIMAL" property="priority" />
+    	
+    	<result column="AVM_RECEIVED_TIMESTAMP" jdbcType="TIMESTAMP" property="avmReceivedTimeStamp" />
+    	<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+    	<result column="BRANCH_ID" jdbcType="DECIMAL" property="branchId" />
+    	<result column="VACATION_APPROVER_ID" jdbcType="VARBINARY" property="vacationApproverId"
+    					typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.avm.domain.AVMApplicationData" id="applicationDataResultMap">
+		<result column="SEQUENCE_NUMBER" jdbcType="DECIMAL" property="sequenceNumber"/>
+		<result column="AVM_TRX_ID" jdbcType="VARBINARY" property="avmTrxId"
+    					typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+    	<result column="SERIALIZED_DATA" jdbcType="BLOB" property="serializedData" />
+    	<result column="TRX_TYPE" jdbcType="DECIMAL" property="trxType"/>
+    	<result column="AVM_TIMESTAMP" jdbcType="TIMESTAMP" property="actionTime"/>
+    	
+    	<result column="SUBJECT" jdbcType="VARCHAR" property="subject" />
+    	<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+    	
+  </resultMap>
+  <resultMap type="map" id="submitterMap">
+		<result column="APPROVER_ID" jdbcType="VARBINARY" property="submitterId"
+    					typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+  </resultMap>
+  <resultMap type="co.id.fifgroup.avm.domain.AVMApprovalProcessData" id="approvalProcessResultMap">
+  		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId"/>
+  		<result column="SEQUENCE_NUMBER" jdbcType="NUMERIC" property="sequenceNumber"/>
+  		<result column="APPROVER_ID" jdbcType="VARBINARY" property="approverId"
+    					typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler" />
+    	<result column="TRX_TYPE" jdbcType="NUMERIC" property="trxType"/>
+    	<result column="AVM_ACTION_TYPE" jdbcType="NUMERIC" property="actionType"/>
+    	<result column="AVM_RECEIVED_TIMESTAMP" jdbcType="TIMESTAMP" property="avmReceivedTimestamp"/>
+    	<result column="AVM_ACTION_TIMESTAMP" jdbcType="TIMESTAMP" property="avmActionTimestamp"/>
+    	<result column="SUBJECT" jdbcType="VARCHAR" property="subject"/>
+    	<result column="AVM_TRX_STATUS" jdbcType="NUMERIC" property="trxStatus"/>
+    	<result column="REMARKS" jdbcType="VARCHAR" property="remarks"/>
+  </resultMap>
+	<!-- Result Map -->
+	<!-- Select -->
+		<select id="getTransactionSubmitter" parameterType="map" resultMap="submitterMap">
+			select APPROVER_ID from AVM_APPROVAL_HISTORY
+			where AVM_TRX_ID = #{avmTrxId,javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and AVM_ACTION_TYPE = 3
+		</select>
+		<select id="getRecentApproversHistory" parameterType="map" resultMap="avmApprovalHistoryResultMap">
+			select * from AVM_APPROVAL_HISTORY
+			where AVM_TRX_ID = #{avmTrxId,javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			<if test="approverId != null">
+			and APPROVER_ID = #{approverId,javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			</if>
+			<if test="sequenceNumber != null">
+			and SEQUENCE_NUMBER = #{sequenceNumber}
+			</if>  
+			and AVM_ACTION_TYPE = 0 
+			and ROWNUM &lt;= 1
+			order by SEQUENCE_NUMBER desc
+		</select>
+		<select id="getApproversPriority" parameterType="map"
+  				resultType="int">
+  			select PRIORITY from AVM_APPROVAL_HISTORY
+  			where AVM_TRX_ID=#{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+  			and LEVEL_SEQUENCE=#{levelSequence}
+  			and APPROVER_ID=#{approverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and ROWNUM &lt; 2
+  		</select>
+  		<select id="countApproversStillDoNothing" parameterType="map" resultType="int">
+  			select count(*) from AVM_APPROVAL_HISTORY
+  			where AVM_TRX_ID=#{avmTrxId,javaType=java.util.UUID, jdbcType=VARBINARY,
+			 				typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and LEVEL_SEQUENCE=#{levelSequence}  
+  			and AVM_ACTION_TYPE=0
+  		</select>
+  		
+		<select id="getPendingApproval" parameterType="map" resultMap="applicationDataResultMap">
+			select AVM_APPROVAL_HISTORY.SEQUENCE_NUMBER, 
+				   AVM_TRANSACTION.AVM_TRX_ID, 
+				   AVM_TRANSACTION.SERIALIZED_DATA,
+				   AVM_TRANSACTION.TRX_TYPE,
+				   AVM_TIMESTAMP,
+				   
+				   AVM_TRANSACTION.SUBJECT,
+				   AVM_TRANSACTION.COMPANY_ID
+			from AVM_APPROVAL_HISTORY
+      		inner join AVM_TRANSACTION
+      		ON AVM_APPROVAL_HISTORY.AVM_TRX_ID = AVM_TRANSACTION.AVM_TRX_ID
+<!--      		inner join AVM_TRX_MAPPING-->
+<!--      		ON AVM_TRANSACTION.AVM_ID = AVM_TRX_MAPPING.AVM_ID-->
+			<where>
+				AVM_ACTION_TYPE = 0 and AVM_TRANSACTION.AVM_TRX_STATUS = 0
+				<if test="subject != null">
+					and UPPER(AVM_TRANSACTION.SUBJECT) like UPPER(#{subject})
+				</if>
+				<if test="trxType != 0">
+					and AVM_TRANSACTION.TRX_TYPE = #{trxType}
+				</if>
+				<if test="companyId != 0">
+					and AVM_TRANSACTION.COMPANY_ID = #{companyId}
+				</if>
+				<if test="submitedDateFrom != null" >
+					and trunc(AVM_TRANSACTION.avm_timestamp) &gt; = #{submitedDateFrom, jdbcType=TIMESTAMP}
+				</if>
+				<if test="submitedDateTo != null" >
+					and trunc(AVM_TRANSACTION.avm_timestamp) &lt; = #{submitedDateTo, jdbcType=TIMESTAMP}
+				</if>
+				<if test="approverId != null or personUUID != null">
+				and ( 1 &lt;&gt; 1
+					<if test="approverId != null">
+						or APPROVER_ID = #{approverId,javaType=java.util.UUID, jdbcType=VARBINARY,
+				 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+					</if>
+					<if test="personUUID != null">
+						or approver_id = #{personUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+							 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+					</if>
+				)
+				</if> 
+			</where>
+			order by AVM_TIMESTAMP desc
+		</select>
+		
+		<!-- add yahya -->
+		<select id="getApprovalHistoryByAVMTrxId" parameterType="map" resultMap="avmApprovalHistoryResultMap">
+			select *
+			from AVM_APPROVAL_HISTORY
+			where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and AVM_ACTION_TYPE IN (0, 1, -1, -3)
+			order by AVM_ACTION_TIMESTAMP asc
+		</select>
+		
+		<select id="getLastApprovalHistory" parameterType="map" resultMap="avmApprovalHistoryResultMap">
+		  select b.* from (Select a.*, RANK() OVER (order by AVM_ACTION_TIMESTAMP desc) AS val_rank 
+		  					from AVM_APPROVAL_HISTORY a where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler} 
+		  					and AVM_ACTION_TYPE NOT IN (0, 3, 4, 2)) b where val_rank = 1
+		</select>
+		<select id="getPendingApprovalCriteria" parameterType="map" resultMap="applicationDataResultMap">
+			select AVM_APPROVAL_HISTORY.SEQUENCE_NUMBER, 
+				   AVM_TRANSACTION.AVM_TRX_ID, 
+				   AVM_TRANSACTION.SERIALIZED_DATA,
+				   AVM_TRANSACTION.TRX_TYPE,
+				   AVM_TIMESTAMP,
+				   
+				   AVM_TRANSACTION.SUBJECT,
+				   AVM_TRANSACTION.COMPANY_ID
+			from AVM_APPROVAL_HISTORY
+      		inner join AVM_TRANSACTION
+      		ON AVM_APPROVAL_HISTORY.AVM_TRX_ID = AVM_TRANSACTION.AVM_TRX_ID
+<!--      		inner join AVM_TRX_MAPPING-->
+<!--      		ON AVM_TRANSACTION.AVM_ID = AVM_TRX_MAPPING.AVM_ID-->
+			<where>
+				AVM_ACTION_TYPE = 0 and AVM_TRANSACTION.AVM_TRX_STATUS = 0
+				<if test="subject != null">
+					and UPPER(AVM_TRANSACTION.SUBJECT) like UPPER(#{subject})
+				</if>
+				<if test="trxType != 0">
+					and AVM_TRANSACTION.TRX_TYPE = #{trxType}
+				</if>
+				and ( 1 &lt;&gt; 1
+				<if test="jobUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{jobUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			 			and AVM_APPROVAL_HISTORY.ORGANIZATION_ID = #{organizationId})
+				</if>
+				<if test="rolesUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID
+						<foreach collection="rolesUUID" item="role" open="IN (" close=")" separator=",">
+							#{role, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+						</foreach> and AVM_TRANSACTION.COMPANY_ID 
+						<foreach collection="companiesGroup" item="company" open="IN (" close=")" separator=",">
+							#{company}
+						</foreach>
+						)
+				</if> 
+				<if test="jobRolesUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID
+						<foreach collection="jobRolesUUID" item="jobRole" open="IN (" close=")" separator=",">
+							#{jobRole, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+						</foreach> and AVM_APPROVAL_HISTORY.BRANCH_ID = #{branchId}
+						)
+				</if> 
+				<if test="deptOwnerUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{deptOwnerUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler} 
+			 				and AVM_APPROVAL_HISTORY.ORGANIZATION_ID = #{organizationId}
+						)
+				</if> 
+				<if test="employeeUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{employeeUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler} 
+						)
+				</if> 
+				<if test="jobGroupUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{jobGroupUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			 			and AVM_APPROVAL_HISTORY.ORGANIZATION_ID = #{organizationId})
+			 		or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{jobGroupUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			 			and AVM_APPROVAL_HISTORY.BRANCH_ID = #{branchId})
+				</if>
+				)
+			</where>
+			order by AVM_TIMESTAMP desc			
+		</select>
+		
+		<select id="getApproverIdByAVMTrxId" parameterType="map" resultMap="avmApprovalHistoryResultMap">
+			select DISTINCT APPROVER_ID from AVM_APPROVAL_HISTORY
+			where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and AVM_ACTION_TYPE NOT IN (3, 4)
+		</select>
+		<select id="getApproverReadyByAVMTrxId" parameterType="map" resultMap="avmApprovalHistoryResultMap">
+			select APPROVER_ID, SEQUENCE_NUMBER, LEVEL_SEQUENCE from AVM_APPROVAL_HISTORY
+			where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and AVM_ACTION_TYPE = 0
+		</select>
+		
+		<select id="getApprovalProcess" parameterType="map" resultMap="approvalProcessResultMap">
+			select * from (select trx.company_id,
+					aph.sequence_number, 
+					aph.approver_id, 
+					trx.trx_type, 
+					aph.avm_action_type, 
+					aph.avm_received_timestamp, 
+					aph.avm_action_timestamp 
+			from avm_approval_history aph
+				join avm_transaction trx on trx.avm_trx_id = aph.avm_trx_id
+			where	aph.avm_action_type in (1, -1)
+			and aph.approver_id not in ('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF', '44444444444444444444444444444444')
+			<if test="listEmployee != null">
+				<if test="listEmployee.size() > 0">
+					and aph.approver_id in
+					<foreach collection="listEmployee" open="(" close=")" separator="," item="employee">
+						#{employee, javaType=java.util.UUID, jdbcType=VARBINARY,
+						 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+					</foreach>				
+				</if>
+			</if>
+      		)
+      		where 1 = 1
+			<if test="companyId != 0" >
+				and company_id = #{companyId}
+			</if>
+			<if test="trxType != 0" >
+				and trx_Type = #{trxType}
+			</if>
+			<if test="actionType != -2" >
+				and avm_action_type = #{actionType}
+			</if>			
+			<if test="receivedDateFrom != null" >
+				and trunc(avm_received_timestamp) &gt; = #{receivedDateFrom, jdbcType=TIMESTAMP}
+			</if>
+			<if test="receivedDateTo != null" >
+				and trunc(avm_received_timestamp) &lt; = #{receivedDateTo, jdbcType=TIMESTAMP}
+			</if>			
+		</select>
+		<select id="getCompletedTaskByApproverId" parameterType="map" resultMap="approvalProcessResultMap">
+			select * from (select 	aph.sequence_number, 
+					aph.approver_id, 
+					aph.avm_action_type, 
+					aph.avm_received_timestamp, 
+					aph.avm_action_timestamp,
+					aph.remarks, 
+					trx.trx_type,
+					trx.avm_trx_status,
+					trx.subject 
+			from avm_approval_history aph
+				join avm_transaction trx on trx.avm_trx_id = aph.avm_trx_id
+			where
+				aph.avm_action_type in (1, -1)
+			<if test="approverId != null">
+				and aph.approver_id = #{approverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			</if> 
+			)
+			where upper(subject) like upper(#{subject})
+			<if test="trxType != 0" >
+				and trx_type = #{trxType}
+			</if>
+			<if test="trxStatus != -3" >
+				and avm_trx_status = #{trxStatus}
+			</if>
+			<if test="approvedDateFrom != null" >
+				and trunc(avm_action_timestamp) &gt; = #{approvedDateFrom, jdbcType=TIMESTAMP}
+			</if>
+			<if test="approvedDateTo != null" >
+				and trunc(avm_action_timestamp) &lt; = #{approvedDateTo, jdbcType=TIMESTAMP}
+			</if>
+						
+		</select>
+		
+		<select id="getLastCompletedActionApproval" parameterType="map" resultType="java.util.Date">
+			select max(AVM_ACTION_TIMESTAMP) from AVM_APPROVAL_HISTORY
+  				where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+		</select>
+		
+		<select id="getPendingApprovalInquiry" parameterType="map" resultMap="applicationDataResultMap">
+			select AVM_APPROVAL_HISTORY.SEQUENCE_NUMBER, 
+				   AVM_TRANSACTION.AVM_TRX_ID, 
+				   AVM_TRANSACTION.SERIALIZED_DATA,
+				   AVM_TRANSACTION.TRX_TYPE,
+				   AVM_TIMESTAMP,
+				   
+				   AVM_TRANSACTION.SUBJECT,
+				   AVM_TRANSACTION.COMPANY_ID
+			from AVM_APPROVAL_HISTORY
+      		inner join AVM_TRANSACTION
+      		ON AVM_APPROVAL_HISTORY.AVM_TRX_ID = AVM_TRANSACTION.AVM_TRX_ID
+<!--      		inner join AVM_TRX_MAPPING-->
+<!--      		ON AVM_TRANSACTION.AVM_ID = AVM_TRX_MAPPING.AVM_ID-->
+			<where>
+				AVM_ACTION_TYPE = 0 and AVM_TRANSACTION.AVM_TRX_STATUS = 0
+				<if test="subject != null">
+					and UPPER(AVM_TRANSACTION.SUBJECT) like UPPER(#{subject})
+				</if>
+				<if test="trxType != 0">
+					and AVM_TRANSACTION.TRX_TYPE = #{trxType}
+				</if>
+				<if test="submitDateFrom != null" >
+					and trunc(AVM_TRANSACTION.avm_timestamp) &gt; = #{submitDateFrom, jdbcType=TIMESTAMP}
+				</if>
+				<if test="submitDateTo != null" >
+					and trunc(AVM_TRANSACTION.avm_timestamp) &lt; = #{submitDateTo, jdbcType=TIMESTAMP}
+				</if>
+				<if test="companyTrx != 0">
+					and AVM_TRANSACTION.COMPANY_ID = #{companyTrx, jdbcType=NUMERIC}
+				</if>
+				and ( 1 &lt;&gt; 1
+				<if test="jobUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{jobUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			 			and AVM_APPROVAL_HISTORY.ORGANIZATION_ID = #{organizationId})
+				</if>
+				<if test="rolesUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID
+						<foreach collection="rolesUUID" item="role" open="IN (" close=")" separator=",">
+							#{role, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+						</foreach> and AVM_TRANSACTION.COMPANY_ID 
+						<foreach collection="companiesGroup" item="company" open="IN (" close=")" separator=",">
+							#{company}
+						</foreach>
+						)
+				</if> 
+				<if test="jobRolesUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID
+						<foreach collection="jobRolesUUID" item="jobRole" open="IN (" close=")" separator=",">
+							#{jobRole, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+						</foreach> and AVM_APPROVAL_HISTORY.BRANCH_ID = #{branchId}
+						)
+				</if> 
+				<if test="deptOwnerUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{deptOwnerUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 							typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler} 
+			 				and AVM_APPROVAL_HISTORY.ORGANIZATION_ID = #{organizationId}
+						)
+				</if> 
+				<if test="approverId != null">
+					or APPROVER_ID = #{approverId,javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+				</if>
+				<if test="employeeUUID != null">
+					or approver_id = #{employeeUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+						 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+				</if>
+				<if test="jobGroupUUID != null">
+					or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{jobGroupUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			 			and AVM_APPROVAL_HISTORY.ORGANIZATION_ID = #{organizationId})
+			 		or (AVM_APPROVAL_HISTORY.APPROVER_ID = #{jobGroupUUID, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 									typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			 			and AVM_APPROVAL_HISTORY.BRANCH_ID = #{branchId})
+				</if>
+				)
+			</where>
+			order by AVM_TIMESTAMP desc			
+		</select>
+		<!-- end add yahya -->
+	<!-- Select -->
+  	<!-- Insert -->
+  		<insert id="doTrxSubmission" parameterType="co.id.fifgroup.avm.domain.AVMApprovalHistory">
+  			<selectKey keyProperty="sequenceNumber" order="BEFORE" resultType="int">
+				select AUTO_INCREMENT.NEXTVAL from dual
+			</selectKey>
+  			insert into AVM_APPROVAL_HISTORY (SEQUENCE_NUMBER, AVM_TRX_ID, APPROVER_ID, LEVEL_SEQUENCE,
+  								AVM_ACTION_TYPE, 
+  								AVM_ACTION_TIMESTAMP, 
+  								AVM_RECEIVED_TIMESTAMP,
+  								REMARKS,
+  								ORGANIZATION_ID,
+  								BRANCH_ID,
+  								VACATION_APPROVER_ID)
+  			values (#{sequenceNumber},#{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+			 		#{approverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+			 		#{levelSequence}, #{avmActionType}, 
+			 		#{avmActionTimeStamp},
+					#{avmReceivedTimeStamp, jdbcType=TIMESTAMP},
+					#{remarks, jdbcType=VARCHAR},
+			 		#{organizationId, jdbcType=NUMERIC},
+			 		#{branchId, jdbcType=NUMERIC},
+			 		#{vacationApproverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler})
+  		</insert>
+  		<insert id="doTrxCancellation" parameterType="co.id.fifgroup.avm.domain.AVMApprovalHistory">
+  			<selectKey keyProperty="sequenceNumber" order="BEFORE" resultType="int">
+				select AUTO_INCREMENT.NEXTVAL from dual
+			</selectKey>
+  			insert into AVM_APPROVAL_HISTORY (SEQUENCE_NUMBER, AVM_TRX_ID, APPROVER_ID, LEVEL_SEQUENCE,
+  								AVM_ACTION_TYPE, AVM_ACTION_TIMESTAMP, REMARKS,
+  								AVM_RECEIVED_TIMESTAMP)
+  			values (#{sequenceNumber},#{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+			 		#{approverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+			 		#{levelSequence}, #{avmActionType}, #{avmActionTimeStamp},#{remarks}, 
+			 		#{avmReceivedTimeStamp, jdbcType=TIMESTAMP})
+  		</insert>
+  		<insert id="insertNewAVMApprovalHistory" parameterType="co.id.fifgroup.avm.domain.AVMApprovalHistory">
+  			<!-- <selectKey keyProperty="sequenceNumber" order="AFTER" resultType="int">
+				select AUTO_INCREMENT.CURRVAL from dual
+			</selectKey> -->
+			<selectKey keyProperty="sequenceNumber" order="BEFORE" resultType="int">
+				select AUTO_INCREMENT.NEXTVAL from dual
+			</selectKey>
+  			insert into AVM_APPROVAL_HISTORY (SEQUENCE_NUMBER, AVM_TRX_ID, APPROVER_ID, 
+  				LEVEL_SEQUENCE, AVM_ACTION_TYPE, 
+<!--   				AVM_ACTION_TIMESTAMP,  -->
+				PRIORITY,
+				
+				AVM_RECEIVED_TIMESTAMP,
+  				ORGANIZATION_ID,
+  				BRANCH_ID,
+  				VACATION_APPROVER_ID)
+  			values (#{sequenceNumber},#{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+			 		#{approverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler},
+			 		#{levelSequence}, 
+			 		#{avmActionType},
+<!-- 			 		#{avmActionTimeStamp, jdbcType=TIMESTAMP}, -->
+			 		#{priority},
+			 		
+					#{avmReceivedTimeStamp, jdbcType=TIMESTAMP},
+			 		#{organizationId, jdbcType=NUMERIC},
+			 		#{branchId, jdbcType=NUMERIC},
+			 		#{vacationApproverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler})
+  		</insert>
+  	<!-- Insert -->
+  	<!-- Update -->
+  		<update id="updateAVMApprovalHistory" parameterType="co.id.fifgroup.avm.domain.AVMApprovalHistory">
+<!--   			update (select *  -->
+<!--   				from AVM_APPROVAL_HISTORY h -->
+<!--   				inner join AVM_TRANSACTION t -->
+<!--   				on h.AVM_TRX_ID = t.AVM_TRX_ID -->
+<!--   				where h.AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY, -->
+<!-- 			 					typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler} -->
+<!-- 				and h.SEQUENCE_NUMBER=#{sequenceNumber} -->
+<!-- 				and h.AVM_ACTION_TYPE=0 -->
+<!-- 				and t.AVM_TRX_STATUS = 0) -->
+			update AVM_APPROVAL_HISTORY 				
+			set AVM_ACTION_TYPE = #{avmActionType},
+			AVM_ACTION_TIMESTAMP = #{avmActionTimeStamp}
+			<if test="remarks!=null">
+				,REMARKS = #{remarks}
+			</if>
+			<!-- edit approverId / add yahya-->
+			<if test="approverId != null">
+				, APPROVER_ID = #{approverId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 					typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			</if>
+			where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 					typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+				and SEQUENCE_NUMBER=#{sequenceNumber}
+				and AVM_ACTION_TYPE=0
+  		</update>
+  		<update id="alterOtherApproversAction" parameterType="map">
+  			update AVM_APPROVAL_HISTORY
+  			set AVM_ACTION_TYPE = #{avmActionType},
+			AVM_ACTION_TIMESTAMP = #{avmActionTimeStamp},
+			REMARKS = #{remarks} 
+			where AVM_TRX_ID = #{avmTrxId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and AVM_ACTION_TYPE = 0
+  		</update>
+  	<!-- Update -->
+</mapper>

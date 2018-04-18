@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BAST_MUTASI" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="317a5823-553f-4a31-a299-08e6555f3131">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="transferId" class="java.lang.Long">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="avmTrxId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[/* Formatted on 8/25/2016 10:54:12 AM (QP5 v5.256.13226.35538) */
+SELECT DISTINCT
+    (SELECT TO_CHAR (request_date, 'YYYY') FROM soc_transfer_hdr where transfer_id = $P{transferId}) AS tahun,
+    (SELECT TO_CHAR (request_date, 'dd') FROM soc_transfer_hdr where transfer_id = $P{transferId}) AS tanggal,
+    (SELECT TO_CHAR (request_date, 'MONTH') FROM soc_transfer_hdr where transfer_id = $P{transferId} ) AS bulan,
+(SELECT  DISTINCT
+      ppi.full_name
+        FROM AVM_APPROVAL_HISTORY AAH
+            left join pea_people pp on PP.PERSON_UUID =AAH.APPROVER_ID
+            left JOIN pea_personal_informations ppi ON ppi.person_id = pp.person_id
+       WHERE     aah.AVM_TRX_ID like (UPPER(REGEXP_REPLACE ($P{avmTrxId},'[^[:alnum:]'' '']', null)))
+             AND aah.AVM_ACTION_TYPE IN(0,1,-1,-3)
+             and aah.level_sequence = '3') as gs_kor_penerima,
+(SELECT  DISTINCT
+      ppi.full_name
+        FROM AVM_APPROVAL_HISTORY AAH
+            left join pea_people pp on PP.PERSON_UUID =AAH.APPROVER_ID
+            left JOIN pea_personal_informations ppi ON ppi.person_id = pp.person_id
+       WHERE     aah.AVM_TRX_ID like (UPPER(REGEXP_REPLACE ($P{avmTrxId},'[^[:alnum:]'' '']', null)))
+             AND aah.AVM_ACTION_TYPE IN(0,1,-1,-3)
+             and aah.level_sequence = '0') as gs_kor_asal,
+    th.request_no,
+    th.bast_doc_no,
+    th.branch_destination,
+    a.asset_number,
+    a.description,
+     (SELECT branch_name
+          FROM BRANCH_HIERARCHY_V
+         WHERE branch_id = th.branch_origin AND ROWNUM = 1)
+          BRANCH_NAME,
+       (SELECT branch_name
+          FROM BRANCH_HIERARCHY_V
+         WHERE branch_id = th.branch_destination AND ROWNUM = 1)
+          BRANCH_DESTINATION_NAME
+  FROM soc_assets a
+       INNER JOIN soc_transfer_dtl td ON td.asset_id = a.asset_id
+       INNER JOIN soc_transfer_hdr th ON th.transfer_id = td.transfer_id
+ WHERE th.transfer_id = $P{transferId}]]>
+	</queryString>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="BULAN" class="java.lang.String"/>
+	<field name="GS_KOR_PENERIMA" class="java.lang.String"/>
+	<field name="GS_KOR_ASAL" class="java.lang.String"/>
+	<field name="REQUEST_NO" class="java.lang.String"/>
+	<field name="BAST_DOC_NO" class="java.lang.String"/>
+	<field name="BRANCH_DESTINATION" class="java.math.BigDecimal"/>
+	<field name="ASSET_NUMBER" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="BRANCH_DESTINATION_NAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="124" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="9027d4c4-3d7f-4b8c-83a0-ea53f9fcad29" x="114" y="15" width="295" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[BERITA ACARA SERAH TERIMA BARANG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="06ec6c17-c57b-4636-b95a-1ba53fef238f" x="80" y="36" width="23" height="14"/>
+				<textElement/>
+				<text><![CDATA[NO.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="7d57f203-90dc-4aa8-aea6-1e88b969bbda" x="114" y="35" width="309" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BAST_DOC_NO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="3" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d678dea9-7211-4d94-b336-a371d96597af" x="49" y="-63" width="108" height="20"/>
+				<textElement/>
+				<text><![CDATA[Pada hari ini, tanggal ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0376aa6d-e956-4f34-b650-2ea874308bc7" x="154" y="-63" width="20" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TANGGAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c12e5d09-3a31-45b5-8eb5-000521e44052" x="170" y="-63" width="34" height="20"/>
+				<textElement/>
+				<text><![CDATA[bulan]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="42d6b671-5d42-420d-a8f7-3fef75bb8752" x="200" y="-63" width="72" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BULAN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c157e53b-e73b-4da9-8b8e-363554dd0f97" x="272" y="-63" width="34" height="20"/>
+				<textElement/>
+				<text><![CDATA[tahun]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="7a9867be-71e0-4493-8689-6b1901bf5cdd" x="303" y="-63" width="53" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TAHUN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="de8fc599-3f2f-4ebd-bfe3-693006f1f178" x="352" y="-63" width="189" height="20"/>
+				<textElement/>
+				<text><![CDATA[telah dilakukan serah terima barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="98757262-463d-44ac-a984-e0ecf19a400b" x="49" y="-43" width="65" height="20"/>
+				<textElement/>
+				<text><![CDATA[dari cabang]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="932cec6d-fc92-487b-9aa0-29e1793df12c" x="111" y="-43" width="121" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d532edd4-b6a1-4f53-9ee1-94b0a0384ed2" x="235" y="-43" width="108" height="20"/>
+				<textElement/>
+				<text><![CDATA[kepada cabang]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9845e0bb-93c1-4ae0-8f26-e7ab9d5f164f" x="316" y="-43" width="125" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BRANCH_DESTINATION_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1aaae3ed-6868-4f72-9e55-b4d2768cf500" x="452" y="-43" width="87" height="20"/>
+				<textElement/>
+				<text><![CDATA[sesuai dengan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6c7ff6ac-5544-42b4-8488-3d1680a8644e" x="49" y="-23" width="76" height="20"/>
+				<textElement/>
+				<text><![CDATA[pengajuan No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6bfd7a09-4518-45ec-8195-d96009618ade" x="127" y="-23" width="241" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{REQUEST_NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2ad15ec0-3649-456b-acfd-2212e72b531c" x="368" y="-23" width="159" height="20"/>
+				<textElement/>
+				<text><![CDATA[dengan rincian sebagai berikut :]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="e0c28de1-a293-4e2a-94db-a4e32360755b" x="66" y="0" width="433" height="28" backcolor="#FF9966"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="586698f3-99cf-4b0f-9863-d44465f9ca37" x="107" y="6" width="59" height="20"/>
+				<textElement/>
+				<text><![CDATA[NO ASSET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2268e76b-3b2a-47ec-a7f2-1f4f375e3f27" x="455" y="6" width="45" height="20"/>
+				<textElement/>
+				<text><![CDATA[JUMLAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="15e91e38-f2cd-4ced-b010-5594d6835e6b" x="74" y="6" width="23" height="18"/>
+				<textElement/>
+				<text><![CDATA[NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f726e765-3f06-41ec-b683-afe24f87f0b4" x="273" y="6" width="82" height="20"/>
+				<textElement/>
+				<text><![CDATA[NAMA BARANG]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="6cf77aea-5fc0-40fe-8ac3-3595690999b3" x="103" y="0" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="fc7fa450-ee94-4f09-b1c1-a6b0d2b4c75d" x="162" y="0" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="e9ecded7-962c-43c6-baf1-07cd861511d8" x="449" y="0" width="1" height="28"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="3f5c114a-d42d-49b4-b246-17776eb3fab2" x="66" y="0" width="433" height="26"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="66fb4964-3ec1-4e0c-ab62-86ec204c4193" x="70" y="0" width="31" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dbee67d8-6476-491a-a820-073944318318" x="107" y="0" width="50" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ASSET_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8f52c6f6-b52e-4329-9ec2-4e769260ddaa" x="464" y="0" width="22" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="32e874d5-5aab-498a-a2ee-e4c1bcac5a75" x="166" y="0" width="283" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="52c477b8-648d-4c15-929c-b449f39ed615" x="103" y="0" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="9cc969d4-b9bc-42dc-9970-9a87dd7ad90e" x="162" y="0" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="14a814fa-ad20-45e5-8aba-a940cf6dddb6" x="449" y="0" width="1" height="26"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="4" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="119" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="884e0f98-4811-46e2-99e0-35c4d2a4f931" x="90" y="98" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[GS Coordinator]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="aae2dc19-14b1-4d02-8422-41b3bd337745" x="345" y="83" width="156" height="20"/>
+				<textElement textAlignment="Center">
+					<font isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GS_KOR_ASAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="03e2b0df-345e-4be3-b77c-be80036ff916" x="50" y="21" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Yang Menerima :]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="50bca6ae-0130-4f45-aadf-bbaf86d339cc" x="351" y="99" width="147" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="74263d06-0160-491e-8d9d-76bc78960591" x="377" y="99" width="100" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[GS Coordinator]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ed81b1e0-6353-4e15-ba0d-d3c864c7955c" x="498" y="86" width="4" height="20"/>
+				<textElement/>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b896e6d8-2ace-4653-9c06-709b7353a288" x="369" y="23" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Yang Menyerahkan :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="55e45eae-0928-4458-a18d-1e05993e3e2f" x="348" y="86" width="4" height="20"/>
+				<textElement/>
+				<text><![CDATA[(]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="a3b92112-c262-4928-89ff-91fd20fcdc40" x="56" y="97" width="147" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6bdc6699-c530-4090-b683-4c32d81e35c5" x="53" y="83" width="154" height="20"/>
+				<textElement textAlignment="Center">
+					<font isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GS_KOR_PENERIMA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="cb6949b0-77ff-4755-a378-281537c764b9" x="204" y="83" width="4" height="20"/>
+				<textElement/>
+				<text><![CDATA[)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="29ad542a-c97f-4374-a3e0-83df25e85d4f" x="53" y="83" width="4" height="20"/>
+				<textElement/>
+				<text><![CDATA[(]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="804d0545-295c-42db-93dc-1964e9840f6c" x="49" y="0" width="461" height="18"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Demikian berita acara ini dibuat dengan sebenarnya.
+
+]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

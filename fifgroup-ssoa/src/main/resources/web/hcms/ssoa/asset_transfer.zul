@@ -1,0 +1,132 @@
+<?page title="Asset Transfer"?>
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)"?>
+<window id="winAssetTransfer" apply="co.id.fifgroup.ssoa.controller.AssetTransferComposer" title="">	
+	<style>
+		.zrow{}
+		.zrow:hover {background-color:#fff; color:#000;}
+	
+	</style>
+	<groupbox  id="gbAssetTransfer" mold="3d" width="auto">
+		<caption label="Asset Transfer"/>
+		<grid>
+			<columns>
+				<column width="210px" align="right"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row class="margin-left zrow">
+						<label>Document No</label>
+						<textbox width="200px" id="txtSearchDocumentNo"/>
+						<label/><label/>
+				</row>
+				<row>
+					<label value="Branch" />
+						<bandbox id="bnbBranch" readonly="true" width="270px" use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox" 
+										title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" headerLabel="Branch Code"
+								        descLabel="Branch Name">
+				    </bandbox>
+				    <textbox width="200px" id="txtBranchName" style="display:none"/>
+				    <textbox width="200px" id="txtBranchId" style="display:none"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}" />
+						<button id="btnNew" label="${labels.common.create}" mold="trendy" 
+						image="${labels.image.link.add}" style="margin-left:15px;" />
+					</hbox>
+					<label/><label/>
+				</row>
+			</rows>	
+		</grid>
+						
+		<separator></separator>
+		<paging id="pgListOfValueTop"  />	
+		<listbox id="lbxAssetTransfer" emptyMessage="No data found">
+			<listhead sizable="true" menupopup="auto">
+				<listheader label="Action" width="100px"/>
+				<listheader id="hdrDocNo" label="Document No" sort="auto(requestNo)" width="200px"/>
+				<listheader id="hdrRequestDate" label="Request Date" sort="auto(requestDate)" width="120px"/>
+				<listheader id="hdrBranchCodeOri" label="Branch Code Origin" sort="auto(branchCodeOrigin)" width="170px"/>
+				<listheader id="hdrBranchNameOri" label="Branch Name Origin" sort="auto(branchNameOrigin)" width="170px"/>
+				<listheader id="hdrBranchCodeDest" label="Branch Code Destination" sort="auto(branchCodeDestination)" width="210px"/>
+				<listheader id="hdrBranchNameDest" label="Branch Name Destination" sort="auto(branchNameDestination)" width="210px"/>
+				<listheader id="hdrReason" label="Reason" sort="auto(reason)" width="120px"/>
+				<listheader id="hdrStatus" label="Status" sort="auto(statusName)" width="100px"/>
+				<listheader id="hdrLastUpdateBy" label="Last Updated By" sort="auto(fullName)" width="190px"/>
+				<listheader id="hdrLastUpdateDate" label="Last Updated Date" sort="auto(lastUpdateDate)" width="170px"/>
+			</listhead>
+			
+			<template name="model">
+				<listitem>
+					<listcell>
+						<a label="Detail" forward="onDetail(${each})"  style="color:blue" />
+						<span style="color:blue;" visible="${each.statusCode == 'ASSET_TRANSFER_APPROVED' and each.branchId ==  win$composer.bnbBranchId ? true : false}"> || </span>
+					    <a label="BAST" forward="onBAST(${each})"  style="color:blue" visible="${each.statusCode == 'ASSET_TRANSFER_APPROVED' and each.branchId ==  win$composer.bnbBranchId ? true : false}"/>
+						<span style="color:blue;" visible="${each.statusCode == 'ASSET_TRANSFER_APPROVED' and each.branchId ==  win$composer.bnbBranchId ? true : false}"> || </span>
+					    <a label="Print BAST" forward="onPrintBast(${each})"  style="color:blue" visible="${each.statusCode == 'ASSET_TRANSFER_APPROVED' and each.branchId ==  win$composer.bnbBranchId ? true : false}"/>
+					    
+					</listcell>
+					<listcell label="${each.requestNo}"></listcell>
+					<listcell label="${date:format(each.requestDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.branchCodeOrigin}"></listcell>
+					<listcell label="${each.branchNameOrigin}"></listcell>
+					<listcell label="${each.branchCodeDestination }"></listcell>
+					<listcell label="${each.branchNameDestination }"></listcell>
+					<listcell label="${each.reason }"></listcell>
+					<listcell> <a forward="onStatus(${each})" style="color:blue" label="${each.statusName }"/></listcell>
+					<listcell label="${each.fullName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		
+		<listbox id="lbxAssetTransferDownload" visible="false" emptyMessage="No data found">
+			<listhead sizable="true" menupopup="auto">
+				<listheader label="Document No" sort="auto(requestNo)" width="200px"/>
+				<listheader label="Request Date" sort="auto(requestDate)" width="170px"/>
+				<listheader label="Branch Code Origin" sort="auto(branchCodeOrigin)" width="200px"/>
+				<listheader label="Branch Name Origin" sort="auto(branchNameOrigin)" width="200px"/>
+				<listheader label="Branch Code Destination" sort="auto(branchCodeDestination)" width="240px"/>
+				<listheader label="Branch Name Destination" sort="auto(branchNameDestination)" width="240px"/>
+				<listheader label="Reason" sort="auto(reason)" width="120px"/>
+				<listheader label="Status" sort="auto(statusName)" width="120px"/>
+				<listheader label="Last Updated By" sort="auto(fullName)" width="190px"/>
+				<listheader label="Last Updated Date" sort="auto(lastUpdateDate)" width="190px"/>
+			</listhead>
+			
+			<template name="model">
+				<listitem>
+					<listcell label="${each.requestNo}"></listcell>
+					<listcell label="${date:format(each.requestDate,'dd MMM yyyy')}"></listcell>
+					<listcell label="${each.branchCodeOrigin}"></listcell>
+					<listcell label="${each.branchNameOrigin}"></listcell>
+					<listcell label="${each.branchCodeDestination }"></listcell>
+					<listcell label="${each.branchNameDestination }"></listcell>
+					<listcell label="${each.reason }"></listcell>
+					<listcell> <a forward="onStatus(${each})" style="color:blue" label="${each.statusName }"/></listcell>
+					<listcell label="${each.fullName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<separator/>
+		<!--  <exporter id="downloadSearch" referenceId="lbxAssetTransferDownload"/>-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+				
+	<separator></separator>
+	
+	
+</window>

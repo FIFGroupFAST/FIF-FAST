@@ -1,0 +1,38 @@
+<window id="winUploadPtkpDetail" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.UploadPtkpDetailComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.uploadPtkpDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top"  />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.batchNumber}" />
+					<label id="lblBatchNumber" />
+				</row>
+			</rows>	
+		</grid>
+		<separator />
+		<groupbox closable="false">
+			<listbox id="lstUploadPtkpDetail" mold="paging" emptyMessage="${labels.common.noDataFound}">
+				<listhead>
+					<listheader label="${labels.common.processDate}" align="center" />
+					<listheader label="${labels.common.uploadedBy}" align="center" />
+					<listheader label="${labels.common.totalRecord}" align="center" />
+					<listheader label="${labels.common.totalSucceedRecord}" align="center" />
+					<listheader label="${labels.common.totalFailedRecord}" align="center" />
+				</listhead>
+			</listbox>
+			<hbox pack="end" align="center" style="width:100%;">
+				<button id="btnDownloadCloseBatchError" label="${labels.common.downloadCloseBatchError}" 
+					mold="trendy" />
+			</hbox>
+		</groupbox>
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnBack" label="${labels.common.back}" 
+				mold="trendy" image="${labels.image.link.cancel}" />
+		</hbox>		
+	</groupbox>
+</window>

@@ -1,0 +1,125 @@
+@font-face {
+	font-family: 'DINRegular';
+	src: url('../fonts/ff_din_regular-webfont.eot');
+	src: url('../fonts/ff_din_regular-webfont.eot?#iefix')
+		format('embedded-opentype'),
+		url('../fonts/ff_din_regular-webfont.woff') format('woff'),
+		url('../fonts/ff_din_regular-webfont.ttf') format('truetype'),
+		url('../fonts/ff_din_regular-webfont.svg#DINRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+* {
+	font-family: 'DINRegular', arial, tahoma, sans-serif;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	background-color: #FCFCFC;
+	vertical-align: baseline;
+}
+
+.title-container {
+	padding: 10px;
+	height: 60px;
+	background-image: url("../images/fifgroup_banner_top.png");
+}
+
+.title {
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+	font-size: 1.7em;
+	height: 50px;
+	color: #fff;
+}
+
+.title-menu {
+	display: block;
+	float: right;
+	padding-top: 5px;
+	text-align: right;
+}
+
+.z-tabs-cnt li {
+	margin-right: 7px;
+}
+
+.form-label {
+	font-weight: normal;
+}
+
+.button-box {
+	padding: 5px;
+}
+
+
+.title-menu a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
+
+.z-tabs-cnt li {
+	margin-right: 7px;
+}
+
+.form-label {
+	font-weight: bold;
+}
+
+.form-entry {
+	font-weight: bold;
+}
+
+.button-box {
+	padding: 5px;
+}
+
+.footer {
+	background-image: url("../images/fifgroup_banner_bottom.jpg");
+	color: #fff;
+	padding-top: 10px;
+	padding-left: 10px;
+	text-align: right;
+}
+
+tr.z-row-over>td.z-row-inner {
+	background-color: white;
+}
+
+tr.z-row-over.z-grid-odd>td.z-row-inner,tr.z-row-over>.z-cell {
+	border: 1px solid #F0FAFF;
+	border-left: 1px solid #FFF;
+	border-right: 1px solid transparent;
+	background-color: #F0FAFF;
+}
+
+tr.z-row-over>td.z-row-inner,tr.z-row-over>.z-cell {
+	border: 1px solid white;
+	background-color: white;
+}
+
+tr.z-row-over>td.z-row-inner>.z-row-cnt {
+	border: none;
+	background-color: white;
+	color: #00547A;
+}
+
+tr.z-row-over.z-grid-odd>td.z-row-inner>.z-row-cnt {
+	border: none;
+	background-color: #F0FAFF;
+	color: #00547A;
+}
+
+.container-message {
+	font-size:14px;
+	font-weight: normal;
+	/* color: #00547A; */	
+}
+
+.label-image {
+	color: red;	
+}

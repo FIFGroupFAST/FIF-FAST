@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.LocationFinder">
+
+	<resultMap type="co.id.fifgroup.workstructure.dto.LocationDTO"
+		id="LocationDtoResult">
+		<id column="LOCATION_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="LOCATION_CODE" property="locationCode"
+			jdbcType="VARCHAR" />
+		<result column="LOCATION_NAME" property="locationName"
+			jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+		<result column="VERSION_ID" property="versionId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="VERSION_NUMBER" property="versionNumber"
+			javaType="Integer" jdbcType="NUMERIC" />
+		<result column="DATE_FROM" property="dateFrom" jdbcType="DATE" />
+		<result column="DATE_TO" property="dateTo" jdbcType="DATE" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="COUNTRY_CODE" property="countryCode" jdbcType="VARCHAR" />
+		<result column="PROVINCE_CODE" property="provinceCode"
+			jdbcType="VARCHAR" />
+		<result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+		<result column="ZONE_CODE" property="zoneCode" jdbcType="VARCHAR" />
+		<result column="WORKING_SCHEDULE_ID" property="workingScheduleId"
+			javaType="Long" jdbcType="NUMERIC" />
+		<result column="BRANCH_OWNER_ID" property="branchOwnerId"
+			javaType="Long" jdbcType="NUMERIC" />
+		<collection property="otherInfos"
+			ofType="co.id.fifgroup.workstructure.dto.OtherInfoDTO" javaType="java.util.List">
+			<id column="INFO_ID" property="infoId" javaType="Long" jdbcType="NUMERIC" />
+			<result column="LOCATION_ID" property="id" javaType="Long"
+				jdbcType="NUMERIC" />
+			<result column="VERSION_ID" property="versionId" javaType="Long"
+				jdbcType="NUMERIC" />
+			<result column="INFO_VALUE" property="infoValue" jdbcType="VARCHAR" />
+			<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+			<result column="CREATION_DATE" property="creationDate"
+				jdbcType="TIMESTAMP" />
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+				jdbcType="VARCHAR" />
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+				jdbcType="TIMESTAMP" />
+		</collection>
+	</resultMap>
+
+	<sql id="whereClause">
+		<if test="id!=null">
+			AND (L.LOCATION_ID) = (#{id,jdbcType=NUMERIC})
+		</if>
+		<if test="companyId != null">
+			AND (L.COMPANY_ID) = (#{companyId, jdbcType=VARCHAR})
+		</if>
+		<if test="locationCode != null">
+			AND UPPER(L.LOCATION_CODE) like UPPER(#{locationCode,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="locationName != null">
+			AND UPPER(L.LOCATION_NAME) like UPPER(#{locationName,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="countryCode != null">
+			AND (LV.COUNTRY_CODE) = (#{countryCode, jdbcType=VARCHAR})
+		</if>
+		<if test="provinceCode != null">
+			AND (LV.PROVINCE_CODE) = (#{provinceCode,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="cityCode != null">
+			AND (LV.CITY_CODE) = (#{cityCode, jdbcType=VARCHAR})
+		</if>
+		<if test="zoneCode != null">
+			AND (LV.ZONE_CODE) = (#{zoneCode, jdbcType=VARCHAR})
+		</if>
+		<if test="effectiveDate != null">
+			AND TRUNC(#{effectiveDate, jdbcType=DATE}) BETWEEN
+			LV.DATE_FROM AND LV.DATE_TO
+		</if>
+	</sql>
+
+	<select id="findByInquiry" parameterType="co.id.fifgroup.workstructure.dto.LocationDTO"
+		resultMap="LocationDtoResult">
+		SELECT
+		L.LOCATION_ID,
+		L.LOCATION_CODE,
+		L.LOCATION_NAME,
+		L.CREATED_BY,
+		L.CREATION_DATE,
+		L.LAST_UPDATE_DATE,
+		LV.DESCRIPTION,
+		dpd_country.description country_code,
+		dpd_zone.description ZONE_CODE,
+		prov.PROVINSI PROVINCE_CODE,
+		city.CITY CITY_CODE,
+		LV.VERSION_NUMBER,
+		us.user_name
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		JOIN sam_users us ON lv.last_updated_by = us.user_id
+		left JOIN fs_mst_provinsi prov ON prov.prov_code = LV.province_code
+		left JOIN fs_mst_cities city ON city.city_code = LV.city_code
+		join
+		bse_lookup_hdr hdr on hdr.name = 'MST_COUNTRY'
+		JOIN
+		bse_lookup_dependents dpd_country ON hdr.lookup_id =
+		dpd_country.lookup_id
+		AND dpd_country.detail_code = LV.country_code
+		AND dpd_country.company_scope IN (-1, L.company_id)
+		left join
+		bse_lookup_hdr hdr_zone on hdr_zone.name = 'MST_ZONE'
+		left JOIN
+		bse_lookup_dependents dpd_zone ON hdr_zone.lookup_id =
+		dpd_zone.lookup_id
+		AND dpd_zone.detail_code = lv.zone_code
+		AND dpd_zone.company_scope IN (-1, L.company_id)
+		where 1 = 1
+		<include refid="whereClause" />
+	</select>
+
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.LocationDTO"
+		resultMap="LocationDtoResult">
+		SELECT
+		L.LOCATION_ID,
+		L.LOCATION_CODE,
+		L.LOCATION_NAME,
+		L.CREATED_BY,
+		L.CREATION_DATE,
+		L.LAST_UPDATED_BY,
+		L.LAST_UPDATE_DATE,
+		LV.DESCRIPTION,
+		LV.COUNTRY_CODE,
+		LV.PROVINCE_CODE,
+		LV.CITY_CODE,
+		LV.ZONE_CODE,
+		LV.VERSION_NUMBER,
+		LI.INFO_ID,
+		LI.INFO_VALUE
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		LEFT JOIN WOS_LOCATION_INFOS LI ON LV.VERSION_ID =
+		LI.VERSION_ID
+		where 1 = 1
+		<include refid="whereClause" />
+		ORDER BY L.LOCATION_CODE ASC
+	</select>
+
+	<select id="countByExample" parameterType="co.id.fifgroup.workstructure.dto.LocationDTO"
+		resultType="Integer">
+		SELECT
+		count(*)
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		where 1 = 1
+		<include refid="whereClause" />
+		ORDER BY L.LOCATION_CODE ASC
+	</select>
+
+	<select id="findByIdAndVersionNumber" parameterType="map"
+		resultMap="LocationDtoResult">
+		SELECT
+		L.COMPANY_ID,
+		L.LOCATION_ID,
+		L.LOCATION_CODE,
+		L.LOCATION_NAME,
+		L.CREATED_BY,
+		L.CREATION_DATE,
+		L.LAST_UPDATED_BY,
+		L.LAST_UPDATE_DATE,
+		LV.VERSION_ID,
+		LV.DESCRIPTION,
+		LV.COUNTRY_CODE,
+		LV.PROVINCE_CODE,
+		LV.CITY_CODE,
+		LV.ZONE_CODE,
+		LV.VERSION_NUMBER,
+		LV.WORKING_SCHEDULE_ID,
+		LV.DATE_FROM,
+		LV.DATE_TO,
+		LV.BRANCH_OWNER_ID,
+		LI.INFO_ID,
+		LI.INFO_VALUE
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		LEFT JOIN WOS_LOCATION_INFOS LI ON LV.VERSION_ID =
+		LI.VERSION_ID
+		WHERE L.LOCATION_ID = (#{id, jdbcType=NUMERIC})
+		AND
+		LV.VERSION_NUMBER = (#{versionNumber, jdbcType=DECIMAL})
+	</select>
+
+	<select id="findByIdAndDate" parameterType="map" resultMap="LocationDtoResult">
+		SELECT
+		L.LOCATION_ID,
+		L.LOCATION_CODE,
+		L.LOCATION_NAME,
+		L.CREATED_BY,
+		L.CREATION_DATE,
+		L.LAST_UPDATED_BY,
+		L.LAST_UPDATE_DATE,
+		LV.VERSION_ID,
+		LV.DESCRIPTION,
+		LV.COUNTRY_CODE,
+		LV.PROVINCE_CODE,
+		LV.CITY_CODE,
+		LV.ZONE_CODE,
+		LV.VERSION_NUMBER,
+		LV.WORKING_SCHEDULE_ID,
+		LV.DATE_FROM,
+		LV.DATE_TO,
+		LI.INFO_ID,
+		LI.INFO_VALUE
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		LEFT JOIN WOS_LOCATION_INFOS LI ON LV.VERSION_ID =
+		LI.VERSION_ID
+		<where>
+			<if test="id != null">
+				AND L.LOCATION_ID = (#{id, jdbcType=NUMERIC})
+			</if>
+			<if test="effectiveDate != null">
+				AND TRUNC(#{effectiveDate, jdbcType=DATE}) between
+				LV.DATE_FROM and LV.DATE_TO
+			</if>
+		</where>
+	</select>
+
+	<select id="findVersionsById" parameterType="Long" resultType="Integer">
+		SELECT
+		LV.VERSION_NUMBER
+		FROM WOS_LOCATIONS L
+		LEFT JOIN WOS_LOCATION_VERSIONS LV
+		ON L.LOCATION_ID = LV.LOCATION_ID
+		WHERE
+		L.LOCATION_ID = #{id, jdbcType=NUMERIC}
+		ORDER BY LV.VERSION_NUMBER
+	</select>
+
+	<select id="findLastVersionByCode" parameterType="map"
+		resultMap="LocationDtoResult">
+		SELECT
+		L.LOCATION_ID,
+		L.LOCATION_CODE,
+		L.LOCATION_NAME,
+		L.CREATED_BY,
+		L.CREATION_DATE,
+		L.LAST_UPDATED_BY,
+		L.LAST_UPDATE_DATE,
+		LV.DESCRIPTION,
+		LV.COUNTRY_CODE,
+		LV.PROVINCE_CODE,
+		LV.CITY_CODE,
+		LV.ZONE_CODE,
+		LV.VERSION_NUMBER,
+		LI.INFO_ID,
+		LI.INFO_VALUE
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID = LV.LOCATION_ID
+		JOIN
+		WOS_LOCATION_INFOS LI ON LV.VERSION_ID = LI.VERSION_ID
+		WHERE
+		LV.VERSION_NUMBER = (SELECT COUNT(LV.VERSION_NUMBER)
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID = LV.LOCATION_ID
+		AND L.LOCATION_CODE = (#{locationCode, jdbcType=VARCHAR}))
+		AND L.LOCATION_CODE = (#{locationCode, jdbcType=VARCHAR})
+		AND L.COMPANY_ID = (#{companyId, jdbcType=NUMERIC})
+	</select>
+
+	<select id="findById" parameterType="Long" resultMap="LocationDtoResult">
+		SELECT
+		L.LOCATION_ID,
+		L.LOCATION_CODE,
+		L.LOCATION_NAME,
+		L.CREATED_BY,
+		L.CREATION_DATE,
+		L.LAST_UPDATED_BY,
+		L.LAST_UPDATE_DATE,
+		LV.DESCRIPTION,
+		LV.COUNTRY_CODE,
+		LV.PROVINCE_CODE,
+		LV.CITY_CODE,
+		LV.ZONE_CODE,
+		LV.VERSION_NUMBER,
+		LI.INFO_ID,
+		LI.INFO_VALUE
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		LEFT JOIN WOS_LOCATION_INFOS LI ON LV.VERSION_ID =
+		LI.VERSION_ID
+		where l.location_id = #{id, jdbcType=NUMERIC}
+	</select>
+
+	<select id="isHaveFuture" parameterType="Long" resultType="int">
+		SELECT
+		COUNT(LV.VERSION_NUMBER)
+		FROM WOS_LOCATION_VERSIONS LV JOIN WOS_LOCATIONS L ON(LV.LOCATION_ID =
+		L.LOCATION_ID)
+		<where>
+			<if test="id != null">
+				LV.LOCATION_ID = #{id, jdbcType=DECIMAL}
+				and lv.version_number >
+				(SELECT LV.VERSION_NUMBER
+				FROM
+				WOS_LOCATION_VERSIONS LV
+				JOIN WOS_LOCATIONS L ON(LV.LOCATION_ID = L.LOCATION_ID)
+				<where>
+					L.LOCATION_ID = #{id, jdbcType=DECIMAL}
+					AND TRUNC(SYSDATE)
+					BETWEEN LV.DATE_FROM AND LV.DATE_TO)
+				</where>
+			</if>
+		</where>
+	</select>
+
+	<select id="findByCode" parameterType="map" resultMap="LocationDtoResult">
+		select
+		loc.location_id,
+		loc.location_code,
+		loc.location_name
+		from wos_locations loc
+		join wos_location_versions ver on loc.location_id = ver.location_id
+		where upper(loc.location_code) = upper(#{locationCode})
+		and loc.company_id = #{companyId}
+		and trunc(#{effectiveDate}) between ver.date_from and ver.date_to
+	</select>
+
+	<select id="findIndexColaOnOtherInfo" parameterType="map"
+		resultType="String">
+		select
+		info_value
+		from wos_location_infos
+		where version_id = (select version_id
+		from wos_location_versions
+		where location_id = #{locationId}
+		and #{effectiveOnDate, jdbcType=TIMESTAMP} between date_from and date_to)
+		and info_id = (select
+		other_info_dtl_id
+		from bse_other_info_dtl
+		where upper(detail_code) = upper('COLA_INDEX')
+		and other_info_hdr_id = (select
+		other_info_hdr_id
+		from bse_other_info_hdr
+		where upper(form_name) = upper('location')))
+	</select>
+
+	<select id="isFutureExist" parameterType="Long" resultType="Integer">
+		select count(ver.version_id) from wos_location_versions ver
+		where ver.location_id = #{id}
+		and ver.date_from > trunc(sysdate)
+	</select>
+
+	<select id="findVersionIdByIdAndDate" parameterType="map"
+		resultType="Long">
+		SELECT
+		LV.VERSION_ID
+		FROM WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON L.LOCATION_ID =
+		LV.LOCATION_ID
+		<where>
+			<if test="id != null">
+				AND L.LOCATION_ID = (#{id, jdbcType=NUMERIC})
+			</if>
+			<if test="effectiveDate != null">
+				AND TRUNC(#{effectiveDate, jdbcType=DATE}) between
+				LV.DATE_FROM and LV.DATE_TO
+			</if>
+		</where>
+	</select>
+
+	<select id="getLocationHomeBase" parameterType="map"
+		resultMap="LocationDtoResult">
+		SELECT
+		L.LOCATION_ID,
+		LV.VERSION_ID,
+		LV.PROVINCE_CODE
+		FROM
+		WOS_LOCATIONS L
+		JOIN WOS_LOCATION_VERSIONS LV ON (LV.LOCATION_ID = L.LOCATION_ID)
+		WHERE
+		upper(L.LOCATION_CODE) = upper(#{locationCode, jdbcType=VARCHAR}) AND
+		L.COMPANY_ID = #{companyId, jdbcType=DECIMAL} AND
+		#{effectiveOnDate, jdbcType=TIMESTAMP} BETWEEN LV.DATE_FROM AND LV.DATE_TO
+	</select>
+
+	<select id="findActiveLocationForLov" parameterType="co.id.fifgroup.workstructure.dto.LocationDTO"
+		resultMap="LocationDtoResult">
+		select distinct
+		loc.location_id,
+		loc.location_code,
+		loc.location_name
+		from wos_locations loc
+		join wos_location_versions ver on loc.location_id = ver.location_id
+		where loc.company_id = #{companyId}
+		<if test="effectiveDate != null">
+			and trunc(#{effectiveDate, jdbcType=DATE}) between ver.date_from and
+			ver.date_to
+		</if>
+		<if test="locationCode != null">
+			AND UPPER(loc.LOCATION_CODE) like UPPER(#{locationCode,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="locationName != null">
+			AND UPPER(loc.LOCATION_NAME) like UPPER(#{locationName,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="branchOwnerId!=null">
+			AND ver.branch_owner_id=#{branchOwnerId}
+		</if>
+		ORDER BY loc.location_code asc
+	</select>
+
+	<select id="countActiveLocationForLov" parameterType="co.id.fifgroup.workstructure.dto.LocationDTO"
+		resultType="Integer">
+		select
+		count(distinct loc.location_id)
+		from wos_locations loc
+		join wos_location_versions ver on loc.location_id = ver.location_id
+		where loc.company_id = #{companyId}
+		<if test="effectiveDate != null">
+			and trunc(#{effectiveDate, jdbcType=DATE}) between ver.date_from and
+			ver.date_to
+		</if>
+		<if test="locationCode != null">
+			AND UPPER(loc.LOCATION_CODE) like UPPER(#{locationCode,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="locationName != null">
+			AND UPPER(loc.LOCATION_NAME) like UPPER(#{locationName,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="branchOwnerId!=null">
+			AND ver.branch_owner_id=#{branchOwnerId}
+		</if>
+
+	</select>
+
+	<select id="getLocationName" parameterType="co.id.fifgroup.workstructure.dto.LocationDTO"
+		resultMap="LocationDtoResult">
+	Select Wl.location_name 
+	From Wos_Locations Wl 
+		Join Wos_Location_Versions Wlv  On Wl.Location_Id=Wlv.Location_Id
+      	Join Branch_Hierarchy_V Bhv On Wlv.Branch_owner_Id=bhv.branch_id
+      	<where>
+      	<if test="branchOwnerId!=null">
+      	wlv.branch_owner_id=#{branchOwnerId}
+      	</if>
+      	</where>
+	</select>
+	
+	<select id="findLocationByOrganizationId" parameterType="map"
+		resultMap="LocationDtoResult">
+		select wl.location_id, wl.location_code, wl.location_name 
+		from wos_organization_versions wov
+		  join wos_locations wl on wov.location_id = wl.location_id
+		  <where>
+		  	wov.organization_id = #{organizationId}
+		 	 and trunc(#{effectiveDate}) between wov.date_from and wov.date_to	
+		  </where>
+	</select>
+</mapper>

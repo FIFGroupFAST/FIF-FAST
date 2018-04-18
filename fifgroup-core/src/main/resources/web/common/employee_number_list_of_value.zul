@@ -1,0 +1,47 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window title="${labels.common.listOfEmployee}" border="normal" width="500px" height="650px" closable="true" apply="co.id.fifgroup.core.controller.EmployeeNumberListOfValueComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.common.lovEmployeeNumber}"/>
+				<textbox id="txtEmployeeNumber" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label value="${labels.common.lovEmployeeName}"></label>
+				<textbox id="txtEmployeeName" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hlayout>
+				<button id="btnFind" label="Find" mold="trendy" />
+				<button id="btnDeselect" label="${labels.common.deselect}" mold="trendy" />
+				</hlayout>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader label="${labels.common.lovEmployeeNumber}"></listheader>
+			<listheader label="${labels.common.lovEmployeeName}"></listheader>
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.value}"></listcell>
+				<listcell label="${each.description}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue"></paging>
+</groupbox>
+</window>
+</zk>

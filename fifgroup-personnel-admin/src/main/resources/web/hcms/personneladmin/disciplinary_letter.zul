@@ -1,0 +1,41 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winDisciplinaryLetter" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.DisciplinaryLetterComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.disciplinaryLetterList }" />
+		<listbox id="lbxDisciplinaryLetter" mold="paging" pagingPosition="both" emptyMessage="${labels.common.err.noDataFound}">
+			<listhead>
+				<listheader label="${labels.common.branch }" width="200px" sort="auto(LOWER(branchName))"/>
+				<listheader label="${labels.common.organization }" width="200px" sort="auto(LOWER(organizationName))"/>
+				<listheader label="${labels.common.job }" width="200px" sort="auto(LOWER(jobName))"/>
+				<listheader label="${labels.dcl.letterNumber }" width="200px" sort="auto(LOWER(spNumber))"/>
+				<listheader label="${labels.dcl.disciplinaryType }" width="200px" sort="auto(LOWER(disciplinaryType))"/>
+				<listheader label="${labels.dcl.disciplinaryReason }" width="200px" sort="auto(LOWER(reasonName))"/>
+				<listheader label="${labels.dcl.disciplinaryletterlevel }" width="200px" sort="auto(LOWER(disciplinaryLetterLevel))"/>
+				<listheader label="${labels.dcl.levelSource }" width="200px" sort="auto(LOWER(levelSource))"/>
+				<listheader label="${labels.common.startDate }" sort="auto(startDate)" width="200px"/>
+				<listheader label="${labels.common.endDate }" width="200px" sort="auto(endDate)"/>
+				<listheader label="${labels.dcl.cronologies }" width="200px" sort="auto(LOWER(cronologies))"/>
+				<listheader label="${labels.dcl.target }" width="200px" sort="auto(target)"/>
+				<listheader label="${labels.dcl.achievement }" width="200px" sort="auto(achievement)"/>
+			</listhead>
+			<template name="model">
+				<listitem value="${each}">
+					<listcell label="${each.branchName }" />
+					<listcell label="${each.organizationName }" />
+					<listcell label="${each.jobName }" />
+					<listcell label="${each.spNumber }" />
+					<listcell label="${each.disciplinaryType }" />
+					<listcell label="${each.reasonName }" />
+					<listcell label="${each.disciplinaryLetterLevel }" />
+					<listcell label="${each.levelSource }" />
+					<listcell label="${date:formatDate(each.startDate)}" />
+					<listcell label="${date:formatDate(each.endDate)}" />
+					<listcell label="${each.cronologies }" />
+					<listcell label="${each.target }" />
+					<listcell label="${each.achievement }" />
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+</window>

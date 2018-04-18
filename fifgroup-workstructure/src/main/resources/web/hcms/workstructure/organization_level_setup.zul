@@ -1,0 +1,69 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winOrganizationLevelSetup"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationLevelSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.organizationLevelSetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="200px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationLevelCode}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtOrgLevelCode" width="200px" maxlength="30" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationLevelName}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtOrgLevelName" width="200px" maxlength="30" />
+				</row>
+				<row>
+					<label value="${labels.wos.organizationLevelDescription}" />
+					<textbox id="txtOrgLevelDesc" width="200px" maxlength="150" rows="2"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationLevelColor}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<hbox>
+						<div id="divColor" width="20px" height="20px" />
+						<label id="lblColor" />
+						<slider id="sliderRed" mold="sphere" slidingtext="R" width="75px" maxpos="99" />
+						<slider id="sliderGreen" mold="sphere" slidingtext="G" width="75px" maxpos="99" />
+						<slider id="sliderBlue" mold="sphere" slidingtext="B" width="75px" maxpos="99" />
+					</hbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.startDate}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<datebox id="dtbFrom" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+				</row>
+				<row>
+					<label value="${labels.common.endDate}" />
+					<datebox id="dtbTo" use="co.id.fifgroup.core.ui.DateBoxMax"/>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

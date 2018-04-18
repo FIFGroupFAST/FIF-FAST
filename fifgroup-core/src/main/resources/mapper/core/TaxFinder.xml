@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.finder.TaxFinder">
+
+	<resultMap type="co.id.fifgroup.core.dto.SupplierDTO" id="supplierDtoResult">
+		<id column="VENDOR_ID" property="vendorId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="SUPL_OPEX_CODE" property="suplOpexCode" jdbcType="VARCHAR" />
+		<result column="ATTRIBUTE1" property="npwpNo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.TaxRate" id="taxRateDtoResult">
+		<result column="END_AMOUNT" property="endAmount" javaType="BigDecimal" jdbcType="NUMERIC" />
+		<result column="START_AMOUNT" property="startAmount" javaType="BigDecimal" jdbcType="NUMERIC" />
+		<result column="TAX_NAME" property="taxName" jdbcType="VARCHAR" />
+		<result column="TAX_RATE" property="taxRate" javaType="float" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<select id="getSupplier" parameterType="map" resultMap="supplierDtoResult">
+		select  vendor_id,attribute1 npwp
+            from po_vendor_sites_all@gl.us.oracle.com
+            where upper(vendor_site_code_alt) = upper(#{supplierCode, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="isSupplierPrivate" statementType="CALLABLE">
+		{ 
+			#{privateSupplier, jdbcType=VARCHAR, mode=OUT} = call fif_pph21_individual_pkg.is_vendor_individual@gl.us.oracle.com
+			(
+				#{vendorId, mode=IN}
+			)
+		}
+	</select>
+		
+	<select id="getPpnRate" parameterType="map" resultType="String">
+		select
+			tax_rate
+		from   AP_TAX_CODES_ALL@GL.us.oracle.com
+		where  name like '%PPN%'
+		and org_id = #{orgId}
+	</select>
+	
+	<select id="getTaxRates" parameterType="map" resultType="String">
+		SELECT  
+			tax_rate
+   	 	FROM AP_AWT_TAX_RATES_ALL@GL.us.oracle.com
+   	 	WHERE tax_name = #{taxCode}
+		AND org_id = #{orgId}
+	</select>
+	
+	<select id="getCummulativeTransactionAmount" parameterType="map" resultType="BigDecimal">
+		select sum(ap_supplier_inv_amount)
+		from AP.AP_TRN_SUPL_INDV_AMT@FIFAPPS.us.oracle.com
+		where AP_SUPPLIER_CODE = #{supplierCode}
+<!-- Start modified for Career, by Jatis -->
+		<if test="branchCode != null">
+		and AP_SUPPLIER_OFFICE = #{branchCode}
+<!-- End modified for Career, by Jatis -->
+		</if>
+		and ap_coy_id = #{companyId}
+	</select>
+	
+	<select id="getProgressiveTaxAmount" statementType="CALLABLE">
+		{ 
+			#{taxAmount, jdbcType=VARCHAR, mode=OUT} = call fifapps.FS_F_PROGRESSIVE_TAX_AMT_NEW@fifapps.us.oracle.com
+			(
+				#{taxCode, mode=IN},
+				#{amount, mode=IN},
+				#{cummAmount, mode=IN}
+			)
+		}
+	</select>
+</mapper>

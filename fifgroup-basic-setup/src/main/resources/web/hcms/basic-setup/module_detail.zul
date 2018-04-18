@@ -1,0 +1,54 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winModuleDetail"
+	apply="co.id.fifgroup.basicsetup.controller.ModuleDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.moduleDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.moduleCode}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtModuleCode" maxlength="30" width="250px"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.moduleName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtModuleName" maxlength="50" width="250px"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.dateFrom}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<datebox id="dtbDateFrom" use="co.id.fifgroup.core.ui.DateBoxFrom" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.dateTo}" />
+					</hbox>
+					<datebox id="dtbDateTo" use="co.id.fifgroup.core.ui.DateBoxMax" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

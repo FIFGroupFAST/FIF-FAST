@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.ProbationReviewFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.ProbationReviewDTO">
+		<id column="PROBATION_REVIEW_ID" jdbcType="NUMERIC" property="probationReviewId" />
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId" />
+		<result column="PERSON_UUID" jdbcType="VARBINARY" property="personUUID" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="NOTES" jdbcType="VARCHAR" property="notes" />
+		<result column="PROBATION_STATUS" jdbcType="VARCHAR" property="probationStatus" />
+		<result column="EVALUATION_RESULT" jdbcType="VARCHAR" property="evaluationResult" />
+		<result column="TERMINATION_DATE" jdbcType="TIMESTAMP" property="terminationDate" />
+		<result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="NUMERIC" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="ORGANIZATION_ID" jdbcType="NUMERIC" property="organizationId" />
+		<result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode" />
+		<result column="ORGANIZATION_NAME" jdbcType="VARCHAR" property="organizationName" />
+		<result column="JOB_ID" jdbcType="NUMERIC" property="jobId" />
+		<result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />	
+		<result column="GRADE_ID" jdbcType="NUMERIC" property="gradeId" />
+		<result column="GRADE" jdbcType="VARCHAR" property="gradeName" />
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+		<result column="FULL_NAME" jdbcType="VARCHAR" property="fullName" />
+		<result column="PROBATION_END_DATE" jdbcType="DATE" property="probationEndDate" />
+		<result column="BRANCH_ID" jdbcType="NUMERIC" property="branchId" />
+		<result column="BRANCH_NAME" jdbcType="VARCHAR" property="branchName" />
+		<result column="LOCATION_ID" jdbcType="NUMERIC" property="locationId" />
+		<result column="LOCATION_NAME" jdbcType="VARCHAR" property="locationName" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />		
+	</resultMap>
+	
+	<select id="selectPersonProbationBySecurityFilterExample" parameterType="map" resultMap="baseResult">
+		SELECT DISTINCT pt.person_id,
+		  pt.company_id,
+		  pt.people_type,
+		  pt.employment_category,
+		  pp.person_uuid,
+		  pi.employee_number,
+		  pi.full_name
+		FROM pea_people_types pt
+		JOIN pea_people pp
+		ON pp.person_id = pt.person_id
+		JOIN pea_personal_informations pi
+		ON pi.person_id = pt.person_id
+		 <!--start remark BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+<!-- 		AND pt.effective_start_date BETWEEN pi.effective_start_date AND pi.effective_end_date -->
+		<!-- end remark by icha -->
+		
+		 <!--start Add BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+		AND trunc(sysdate)  BETWEEN pi.effective_start_date AND pi.effective_end_date
+		<!-- 		end add by icha -->
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id = pt.person_id
+		<!--start remark BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+<!-- 		AND pt.effective_start_date BETWEEN ppa.effective_start_date AND ppa.effective_end_date -->
+		<!-- end remark by icha -->
+		
+ 		<!--start Add BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+		AND trunc(sysdate)  BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		<!-- 		end add by icha -->
+		where
+		  pt.employment_category = 'PROBATION'
+		  and pt.people_type = 'EMPLOYEE'
+			<if test="companyId != null">
+				and pt.company_id = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="employeeNumber != null">
+				AND UPPER(PI.EMPLOYEE_NUMBER) like UPPER(#{employeeNumber})
+			</if>
+			<if test="fullName != null">
+				AND UPPER(PI.FULL_NAME) like UPPER(#{fullName})
+			</if>
+			<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+						ppa.ORGANIZATION_ID = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId">
+						ppa.ORGANIZATION_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="gradeExclusions">
+						ppa.GRADE_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+		ORDER BY to_number(pi.employee_number) asc
+	</select>
+	
+	<select id="countPersonProbationBySecurityFilterExample" parameterType="map" resultType="Integer">
+		select count(*) from (
+		SELECT DISTINCT pt.person_id,
+		  pt.company_id,
+		  pt.people_type,
+		  pt.employment_category,
+		  pp.person_uuid,
+		  pi.employee_number,
+		  pi.full_name
+		FROM pea_people_types pt
+		JOIN pea_people pp
+		ON pp.person_id = pt.person_id
+		JOIN pea_personal_informations pi
+		ON pi.person_id = pt.person_id
+		<!--start remark BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+<!-- 	AND pt.effective_start_date BETWEEN pi.effective_start_date AND pi.effective_end_date -->
+		<!-- end remark by icha -->
+		
+ 		<!--start Add BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+		AND trunc(sysdate)  BETWEEN pi.effective_start_date AND pi.effective_end_date
+		<!-- 		end add by icha -->
+		
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id = pt.person_id
+		<!--start remark BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+<!-- 		AND pt.effective_start_date BETWEEN ppa.effective_start_date AND ppa.effective_end_date -->
+		<!-- end remark by icha -->
+		
+		<!--start Add BY icha 16032117405955_Gagal Find Manager untuk Probation Review-->
+		AND trunc(sysdate) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		<!-- 		end add by icha -->
+		where
+		  pt.employment_category = 'PROBATION'
+		  and pt.people_type = 'EMPLOYEE'
+			<if test="companyId != null">
+				and pt.company_id = #{companyId}
+			</if>
+			<if test="employeeNumber != null">
+				AND UPPER(PI.EMPLOYEE_NUMBER) like UPPER(#{employeeNumber})
+			</if>
+			<if test="fullName != null">
+				AND UPPER(PI.FULL_NAME) like UPPER(#{fullName})
+			</if>	
+			<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+						ppa.ORGANIZATION_ID = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId">
+						ppa.ORGANIZATION_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND" collection="gradeExclusions">
+						ppa.GRADE_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+		)
+	</select>
+	
+	<sql id="findPeopleProbation">
+		SELECT pt.person_id,
+          pt.company_id,
+          pt.people_type,
+          pt.employment_category,
+          pp.person_uuid,
+          pi.employee_number,
+          pi.full_name,
+          bh.branch_id,
+          bh.branch_name,
+          wo.organization_id,
+          wo.organization_name,
+          wl.location_name,
+          wj.job_id,
+          wj.job_name,
+          wg.grade_id,
+          wg.grade || '-' || wg.sub_grade grade,
+          pi.probation_end_date,
+          ppr.probation_review_id,
+          NVL(ppr.probation_status, 'OPEN') probation_status,
+          ppr.evaluation_result,
+          ppr.notes,
+          ppr.termination_date,
+          ppr.creation_date,
+          ppr.created_by,
+          ppr.last_updated_by,
+          ppr.last_update_date,
+          su.user_name
+        FROM pea_people_types pt
+        JOIN pea_people pp
+        ON pp.person_id = pt.person_id
+        JOIN pea_personal_informations pi
+        ON pi.person_id = pt.person_id
+        <!-- start remark BY Irs
+        AND pt.effective_start_date BETWEEN pi.effective_start_date AND pi.effective_end_date 
+        end remark BY Irs-->
+        <!--start Add BY Irs 16032117405955_Gagal Find Manager untuk Probation Review-->
+        AND trunc(sysdate) BETWEEN pi.effective_start_date AND pi.effective_end_date
+        <!--and Add BY Irs 16032117405955_Gagal Find Manager untuk Probation Review-->
+        
+        JOIN pea_primary_assignments ppa
+        ON ppa.person_id = pt.person_id
+        
+        <!-- start remark BY Irs
+        AND pt.effective_start_date BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+        end remark BY Irs-->
+        <!--start Add BY Irs 16032117405955_Gagal Find Manager untuk Probation Review-->
+        AND trunc(sysdate) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+        <!--end Add BY Irs 16032117405955_Gagal Find Manager untuk Probation Review-->
+        
+        JOIN wos_organizations wo
+        ON wo.organization_id = ppa.organization_id
+        JOIN wos_organization_versions wov
+        ON wov.organization_id = wo.organization_id
+        
+        <!-- start remark BY Irs
+        AND pt.effective_start_date BETWEEN wov.date_from AND wov.date_to
+        end remark BY Irs-->
+        <!--start Add BY Irs 16032117405955_Gagal Find Manager untuk Probation Review-->
+        AND trunc(sysdate) BETWEEN wov.date_from AND wov.date_to
+        <!--end Add BY Irs 16032117405955_Gagal Find Manager untuk Probation Review-->
+        
+        JOIN wos_jobs wj
+        ON wj.job_id = ppa.job_id
+        JOIN wos_grades wg
+        ON wg.grade_id = ppa.grade_id
+        JOIN wos_locations wl
+        ON wl.location_id = wov.location_id
+        LEFT JOIN (select bh.* from branch_hierarchy_v bh
+            join wos_organization_hier woh on woh.org_hier_id = bh.org_hier_id
+              AND upper(org_hier_type) = upper('STRUCTURAL')) bh
+        ON bh.organization_id = ppa.organization_id and bh.company_id = pt.company_id
+        LEFT JOIN pea_probation_reviews ppr
+        ON ppr.person_id = pt.person_id
+        LEFT JOIN sam_users su
+        ON su.user_id                = ppr.last_updated_by
+        WHERE pt.employment_category = 'PROBATION'
+        and pt.people_type = 'EMPLOYEE'	
+	</sql>
+	
+	<select id="getProbationReviewPeople" resultMap="baseResult" parameterType="map">
+		<include refid="findPeopleProbation" />
+		<if test="companyId != null">
+			and pt.company_id = #{companyId, jdbcType=NUMERIC}
+		</if>
+		<if test="organizationId != null">
+			and ppa.organization_id = #{organizationId, jdbcType=NUMERIC}
+		</if>
+		<if test="jobId != null">
+			and ppa.job_id = #{jobId, jdbcType=NUMERIC}
+		</if>
+		<if test="gradeId != null">
+			and ppa.grade_id = #{gradeId, jdbcType=NUMERIC}
+		</if>
+		<if test="personId != null">
+			and ppa.person_id = #{personId, jdbcType=NUMERIC}
+		</if>
+		<if test="probationStatus != null">
+			and upper(NVL(ppr.probation_status, 'OPEN')) = upper(#{probationStatus, jdbcType=VARCHAR})
+		</if>
+		<if test="dateFrom != null">
+			and pi.probation_end_date &gt;= #{dateFrom, jdbcType=DATE}
+		</if>
+		<if test="dateTo != null">
+			and pi.probation_end_date &lt;= #{dateTo, jdbcType=DATE}
+		</if>
+		<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+						ppa.ORGANIZATION_ID = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId">
+						ppa.ORGANIZATION_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="gradeExclusions">
+						ppa.GRADE_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+	</select>
+	
+	<select id="getActiveProbationPeople" resultMap="baseResult" parameterType="map">
+		<include refid="findPeopleProbation" />
+		AND NVL(ppr.probation_status, 'OPEN') = 'OPEN'
+		AND TRUNC(sysdate) between pt.effective_start_date and pt.effective_end_date
+		AND pt.company_id = #{companyId}
+		AND (TRUNC(sysdate) = TRUNC(pi.probation_end_date - 14) 
+				OR TRUNC(sysdate) = TRUNC(pi.probation_end_date - 7)
+				OR TRUNC(sysdate) = TRUNC(pi.probation_end_date))
+		ORDER BY to_number(pi.employee_number) asc
+	</select>
+	
+	<select id="countProbationReviewPeople" resultType="Integer" parameterType="map">
+		SELECT count(*)
+		FROM pea_people_types pt
+		JOIN pea_people pp
+		ON pp.person_id = pt.person_id
+		JOIN pea_personal_informations pi
+		ON pi.person_id = pt.person_id
+		AND pt.effective_start_date BETWEEN pi.effective_start_date AND pi.effective_end_date
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id = pt.person_id
+		AND pt.effective_start_date BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		JOIN wos_organizations wo
+		ON wo.organization_id = ppa.organization_id
+		JOIN wos_organization_versions wov
+		ON wov.organization_id = wo.organization_id
+		AND pt.effective_start_date BETWEEN wov.date_from AND wov.date_to
+		JOIN wos_jobs wj
+		ON wj.job_id = ppa.job_id
+		JOIN wos_grades wg
+		ON wg.grade_id = ppa.grade_id
+		JOIN wos_locations wl
+		ON wl.location_id = wov.location_id
+		LEFT JOIN (select bh.* from branch_hierarchy_v bh
+			join wos_organization_hier woh on woh.org_hier_id = bh.org_hier_id
+			  AND upper(org_hier_type) = upper('STRUCTURAL')) bh
+		ON bh.organization_id = ppa.organization_id and bh.company_id = pt.company_id
+		LEFT JOIN pea_probation_reviews ppr
+		ON ppr.person_id = pt.person_id
+		LEFT JOIN sam_users su
+		ON su.user_id                = ppr.last_updated_by
+		WHERE pt.employment_category = 'PROBATION'
+		and pt.people_type = 'EMPLOYEE'
+		<if test="companyId != null">
+			and pt.company_id = #{companyId, jdbcType=NUMERIC}
+		</if>
+		<if test="organizationId != null">
+			and ppa.organization_id = #{organizationId, jdbcType=NUMERIC}
+		</if>
+		<if test="jobId != null">
+			and ppa.job_id = #{jobId, jdbcType=NUMERIC}
+		</if>
+		<if test="gradeId != null">
+			and ppa.grade_id = #{gradeId, jdbcType=NUMERIC}
+		</if>
+		<if test="personId != null">
+			and ppa.person_id = #{personId, jdbcType=NUMERIC}
+		</if>
+		<if test="probationStatus != null">
+			and upper(NVL(ppr.probation_status, 'OPEN')) = upper(#{probationStatus, jdbcType=VARCHAR})
+		</if>
+		<if test="dateFrom != null">
+			and pi.probation_end_date &gt;= #{dateFrom, jdbcType=DATE}
+		</if>
+		<if test="dateTo != null">
+			and pi.probation_end_date &lt;= #{dateTo, jdbcType=DATE}
+		</if>
+		<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+						ppa.ORGANIZATION_ID = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId">
+						ppa.ORGANIZATION_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() > 0">
+					AND 
+					<foreach item="item" open="(" close=")" separator=" AND " collection="gradeExclusions">
+						ppa.GRADE_ID &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+	</select>
+	
+	<select id="getProbationEndPeople" resultMap="baseResult" parameterType="map">
+		<include refid="findPeopleProbation" />
+		AND NVL(ppr.probation_status, 'OPEN') = 'OPEN'
+		AND TRUNC(sysdate) between pt.effective_start_date and pt.effective_end_date
+		AND pt.company_id = #{companyId}
+		AND TRUNC(sysdate) &gt; TRUNC(pi.probation_end_date)
+		AND (select people_type from pea_people_types where person_id = pt.person_id and company_id = pt.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+				and people_type = 'EMPLOYEE' and employment_category = 'PROBATION') = 'EMPLOYEE'
+		ORDER BY to_number(pi.employee_number) asc
+	</select>	
+	
+	<resultMap id="competencyReviewMap" type="co.id.fifgroup.personneladmin.dto.ProbationCompetencyReviewDTO" >
+		<id column="COMPETENCY_REVIEW_ID" jdbcType="DECIMAL" property="competencyReviewId"/>
+		<result column="PROBATION_REVIEW_ID" jdbcType="DECIMAL" property="probationReviewId"/>
+		<result column="JOB_COMPETENCY_DETAIL_ID" jdbcType="DECIMAL" property="jobCompetencyDtlId"/>
+		<result column="COMP_GROUP_DTL_ID" jdbcType="DECIMAL" property="compGroupDtlId"/>
+		<result column="group_name" jdbcType="DECIMAL" property="compGroupName"/>
+		<result column="COMPETENCY_CODE" jdbcType="VARCHAR" property="competencyCode"/>
+		<result column="COMPETENCY_NAME" jdbcType="VARCHAR" property="competencyName"/>
+		<result column="PARENT_COMPETENCY_NAME" jdbcType="VARCHAR" property="parentName"/>
+		<result column="PARENT_NAME" jdbcType="VARCHAR" property="parentName"/>
+		<result column="MANDATORY" jdbcType="DECIMAL" property="mandatory" javaType="boolean"/>
+		<result column="MINIMUM_LEVEL_NAME" jdbcType="VARCHAR" property="minimumLevelName"/>
+		<result column="MINIMUM_LEVEL_DESCRIPTION" jdbcType="VARCHAR" property="minimumLevelDescription"/>
+		<result column="MINIMUM_SEQUENCE" jdbcType="DECIMAL" property="minimumSequence"/>
+		<result column="CURRENT_LEVEL" jdbcType="VARCHAR" property="currentLevel"/>
+		<result column="ACHIEVMENT_SOURCE" jdbcType="VARCHAR" property="achievmentSource"/>
+		<result column="COMPETENCY_TYPE" jdbcType="DECIMAL" property="competencyType"/>
+		<result column="ACHIEVMENT_BEHAVIOUR_ID" jdbcType="DECIMAL" property="achievmentBehaviourId"/>
+		<result column="ACTUAL_LEVEL_NAME" jdbcType="VARCHAR" property="actualLevelName"/>
+		<result column="ACTUAL_LEVEL_DESCRIPTION" jdbcType="VARCHAR" property="actualLevelDescription"/>
+		<result column="ACTUAL_SEQUENCE" jdbcType="DECIMAL" property="actualSequence"/>
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy"/>
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate"/>
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy"/>
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate"/>
+	</resultMap>
+	
+	<!-- start modified by JTS; bugzilla no 16470 -->
+	<select id="getCompetencyBasedJobId" resultMap="competencyReviewMap" parameterType="map">
+		SELECT  
+      	  cjcd.job_competency_dtl_id JOB_COMPETENCY_DETAIL_ID,
+		  cjcd.comp_group_dtl_id,
+		  cg.group_name,
+		  nvl(cgv.competency_type,'TECHNICAL_COMPETENCY') COMPETENCY_TYPE,
+		  ccd.competency_code,
+		  ccd.competency_name,
+		  parcom.competency_name parent_competency_name,
+		  cjcd.is_mandatory mandatory,
+		  cjcd.minimum_requirement,
+		  cpd.level_name MINIMUM_LEVEL_NAME,
+		  cpd.description MINIMUM_LEVEL_DESCRIPTION,
+		  cpd.sequence MINIMUM_SEQUENCE,
+		  rec.CURRENT_LEVEL
+		FROM com_job_competencies cjc
+		JOIN com_job_competency_versions cjcv
+		ON cjc.job_competency_id = cjcv.job_competency_id
+		AND TRUNC(sysdate) BETWEEN cjcv.date_from AND cjcv.date_to
+		JOIN com_job_competency_dtl cjcd
+		ON cjcv.version_id = cjcd.version_id
+		JOIN com_group_dtl cgd
+		ON cgd.group_dtl_id = cjcd.comp_group_dtl_id
+		JOIN com_competency_dtl ccd
+		ON ccd.competency_code = cgd.competency_code
+		AND ccd.version_id     = cgd.comp_version_id
+		LEFT JOIN com_proficiency_dtl cpd
+		ON cjcd.minimum_requirement = cpd.proficiency_detail_id
+		left join COM.com_group_versions cgv
+			on cgv.version_id = cgd.version_id
+		left join com_groups cg on cg.comp_group_id = cgv.comp_group_id
+		left join com_competency_dtl parcom
+			on parcom.competency_id = ccd.parent_competency_id
+			
+		left join (select distinct rca.job_competency_dtl_id, cpd.level_name ||' - '|| cpd.description CURRENT_LEVEL from rec_competency_assesment rca
+					  join REC_APPL_SUB_PROCESSES ras on rca.sub_process_status_id = ras.sub_process_status_id
+					  join rec_applicant_employments rae on ras.applicant_vacancy_id = rae.applicant_vacancy_id
+					  join rec_transactions rt on rt.applicant_id = rae.applicant_id
+					  join pea_people_types ppt on ppt.ref_id = rt.trn_id
+					  join pea_personal_informations ppi on ppt.person_id = ppi.person_id
+					  left join com_behavioural_indicators cbi on cbi.behaviour_id = rca.achievment_behaviour_id
+					  left join com_proficiency_dtl cpd on  cpd.proficiency_detail_id = cbi.proficiency_detail_id
+					  where ppi.person_id = #{personId}) rec on rec.job_competency_dtl_id = cjcd.job_competency_dtl_id
+		
+		WHERE job_id               = #{jobId}
+		ORDER BY cjcd.sequence
+	</select>
+	<!-- end modified by JTS; bugzilla no 16470 -->
+	
+	<select id="getCompetencyReviewByProbationReviewId" resultMap="competencyReviewMap" parameterType="map">
+		SELECT 
+		  pca.competency_review_id,
+		  pca.probation_review_id,
+		  pca.job_competency_dtl_id JOB_COMPETENCY_DETAIL_ID,
+		  cjcd.comp_group_dtl_id,
+		  cg.group_name,
+		  nvl(cgv.competency_type,'TECHNICAL_COMPETENCY') COMPETENCY_TYPE,
+		  ccd.competency_code,
+		  ccd.competency_name,
+		  parcom.competency_name parent_competency_name,
+		  cjcd.is_mandatory mandatory,
+		  cjcd.minimum_requirement,
+		  cpd.level_name MINIMUM_LEVEL_NAME,
+		  cpd.description MINIMUM_LEVEL_DESCRIPTION,
+		  cpd.sequence MINIMUM_SEQUENCE,
+		  pca.ACHIEVMENT_BEHAVIOUR_ID,
+		  cpd.level_name ACTUAL_LEVEL_NAME,
+		  cpd.description ACTUAL_LEVEL_DESCRIPTION,
+		  cpd.sequence ACTUAL_SEQUENCE,
+		  pca.CREATED_BY,
+		  pca.CREATION_DATE,
+		  pca.LAST_UPDATED_BY,
+		  pca.LAST_UPDATE_DATE,
+		  rec.CURRENT_LEVEL
+		FROM pea_competency_reviews pca
+		JOIN com_job_competency_dtl cjcd
+		ON cjcd.job_competency_dtl_id = pca.job_competency_dtl_id
+		JOIN com_group_dtl cgd
+		ON cgd.group_dtl_id = cjcd.comp_group_dtl_id
+		JOIN com_competency_dtl ccd
+		ON ccd.competency_code = cgd.competency_code
+		AND ccd.version_id     = cgd.comp_version_id
+		LEFT JOIN com_proficiency_dtl cpd
+		ON cgd.minimum_requirement = cpd.proficiency_detail_id
+		LEFT JOIN com_proficiency_dtl cpd2
+		ON pca.ACHIEVMENT_BEHAVIOUR_ID = cpd2.proficiency_detail_id
+		left join COM.com_group_versions cgv
+			on cgv.version_id = cgd.version_id
+		left join com_groups cg on cg.comp_group_id = cgv.comp_group_id
+		left join com_competency_dtl parcom
+			on parcom.competency_id = ccd.parent_competency_id
+		
+		left join (select distinct rca.job_competency_dtl_id, cpd.level_name ||' - '|| cpd.description CURRENT_LEVEL from rec_competency_assesment rca
+					  join REC_APPL_SUB_PROCESSES ras on rca.sub_process_status_id = ras.sub_process_status_id
+					  join rec_applicant_employments rae on ras.applicant_vacancy_id = rae.applicant_vacancy_id
+					  join rec_transactions rt on rt.applicant_id = rae.applicant_id
+					  join pea_people_types ppt on ppt.ref_id = rt.trn_id
+					  join pea_personal_informations ppi on ppt.person_id = ppi.person_id
+					  left join com_behavioural_indicators cbi on cbi.behaviour_id = rca.achievment_behaviour_id
+					  left join com_proficiency_dtl cpd on  cpd.proficiency_detail_id = cbi.proficiency_detail_id
+					  where ppi.person_id = #{personId}) rec on rec.job_competency_dtl_id = cjcd.job_competency_dtl_id
+		
+		where pca.probation_review_id = #{probationReviewId}
+		ORDER BY cjcd.sequence
+	</select>
+	
+	<select id="getProficiencyDetail" parameterType="map" resultType="Integer">
+		select PROFICIENCY_DETAIL_ID from COM_BEHAVIOURAL_INDICATORS where BEHAVIOUR_ID = #{achievmentBehaviourId}
+	</select>
+	
+	<select id="getBehaviour" parameterType="map" resultType="Integer">
+		SELECT BEHAVIOUR_INDICATOR FROM COM_BEHAVIOURAL_INDICATORS WHERE BEHAVIOUR_ID = #{achievmentBehaviourId}
+	</select>
+	
+	
+</mapper>

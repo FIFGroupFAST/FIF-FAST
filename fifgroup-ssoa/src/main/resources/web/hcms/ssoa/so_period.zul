@@ -1,0 +1,135 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)"?>
+<window id="winSOPeriod" apply="co.id.fifgroup.ssoa.controller.SOPeriodComposer">
+	<groupbox closable="false" mold="3d" id="grbSearch">
+		<caption label="Stock Opname Period">
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right"/>
+				<column/>
+			</columns>
+			<rows>
+				<row>
+					<label value="Period Name"/>
+					<searchtextbox id="txtDesc" width="25%"/>
+				</row>
+				<row>
+					<label value="Period Date" />
+					<div>
+						<datebox id="dtSearchPeriodStartDateFrom" format="dd-MMM-yyyy"  />
+						<label value="To" />
+						<datebox id="dtSearchPeriodStartDateTo" format="dd-MMM-yyyy"   />
+					</div>
+				</row>
+				<row>
+					<label value="Status"/>
+					<listbox id="cmbStatus" style="background-color:#fff;" mold="select" >
+						<template name="model">
+							<listitem label="${each.description}" value="${each.key}" />
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label/>
+					<hbox pack="center" align="center">
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}"/>
+						<space width="20px"/>
+						<button id="btnNew" label="${labels.common.create}" mold="trendy" image="${labels.image.link.add}"/>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator/>
+        <paging id="pgListOfValueTop"  />
+		<listbox id="soPeriodListbox" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+			    <listheader label="${labels.common.action}" align="" width="160px"/>
+				<listheader id="hdrPeriodName" label="Period Name" align="" sort="auto(description)" width="210px"/>
+				<listheader id="hdrPeriodStartDate" label="Period Start Date" align="" sort="auto(startDate)" width="160px"/>
+				<listheader id="hdrPeriodEndDate" label="Period End Date" align="" sort="auto(endDate)" width="160px"/>
+				<listheader id="hdrInvolvedBranch" label="Involved Branch" align="right" sort="auto(involveBranch)" width="130px"/>
+				<listheader id="hdrNotStartedBranch" label="Not Started Branch" align="right" sort="auto(notStartedBranch)" width="150px"/>
+				<listheader id="hdrInProcessBranch" label="In Process Branch" align="right" sort="auto(inProcessBranch)" width="150px"/>
+				<listheader id="hdrSubmitBranch" label="Submit Branch" align="right" sort="auto(submitBranch)" width="130px"/>
+				<listheader id="hdrApproveBranch" label="Approved Branch" align="right" sort="auto(approveBranch)" width="150px"/>
+				<listheader id="hdrClosedBranch" label="Closed Branch" align="right" sort="auto(closedBranch)" width="130px"/>
+				<listheader id="hdrStatus" label="Status" align="" sort="auto(statusName)" width="90px"/>
+				<listheader id="hdrLastNotificationDate" label="Last Notification Date" align="" sort="auto(lastNotificationDate)" width="170px"/>
+				<listheader id="hdrLastUpdateBy" label="${labels.common.lastUpdatedBy}" align="" sort="auto(fullName)" width="200px"/>
+				<listheader id="hdrLastUpdateDate" label="${labels.common.lastUpdateDate}" align="" sort="auto(lastUpdateDate)" width="160px"/>
+				
+			</listhead>
+			<template name="model">
+				<listitem>
+				    <listcell><a label="Detail" forward="onDetail(${each})" style="color:blue;"/>  
+				    <span visible="${each.notStartedBranch > 0 ? true:false }" style="color:blue;"> || </span>
+				    <a label="Resend Notification" forward="onResendNotification(${each})" visible="${each.notStartedBranch > 0 ? true:false }" style="color:blue;" /></listcell>
+					<listcell label="${each.description}"/>					
+					<listcell label="${date:format(each.startDate,'dd-MMM-yyyy')}"/>
+					<listcell label="${date:format(each.endDate,'dd-MMM-yyyy')}"/>
+					<listcell><a label="${each.involveBranch}" forward="onInvolve(${each})" /></listcell>
+					<listcell><a label="${each.notStartedBranch}" forward="onNotStarted(${each})" /></listcell>
+					<listcell><a label="${each.inProcessBranch}" forward="onInProcess(${each})" /></listcell>
+					<listcell><a label="${each.submitBranch}" forward="onSubmit(${each})" /> </listcell>
+					<listcell><a label="${each.approveBranch}" forward="onApproved(${each})" /></listcell>
+					<listcell><a label="${each.closedBranch}" forward="onFinish(${each})" /></listcell>
+					<listcell label="${each.statusName}"/>
+					<listcell label="${date:format(each.lastNotificationDate,'dd-MMM-yyyy HH:mm')}"/>
+					<listcell label="${each.fullName}"/>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"/>
+				</listitem>
+			</template>
+		</listbox>
+		
+		<listbox id="soPeriodListboxForDownload" emptyMessage="${labels.common.noDataFound}" visible="false">
+			<listhead menupopup="auto">
+			    
+				<listheader label="Period Name" align="" sort="auto(description)" width="210px"/>
+				<listheader label="Period Start Date" align="" sort="auto(startDate)" width="190px"/>
+				<listheader label="Period End Date" align="" sort="auto(endDate)" width="190px"/>
+				<listheader label="Involved Branch" align="right" sort="auto(involveBranch)" width="190px"/>
+				<listheader label="Not Started Branch" align="right" sort="auto(notStartedBranch)" width="190px"/>
+				<listheader label="In Process Branch" align="right" sort="auto(inProcessBranch)" width="190px"/>
+				<listheader label="Submit Branch" align="right" sort="auto(submitBranch)" width="190px"/>
+				<listheader label="Approved Branch" align="right" sort="auto(approveBranch)" width="190px"/>
+				<listheader label="Closed Branch" align="right" sort="auto(closedBranch)" width="190px"/>
+				<listheader label="Status" align="" sort="auto(statusName)" width="130px"/>
+				<listheader label="Last Notification Date" align="" sort="auto(lastNotificationDate)" width="230px"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="" sort="auto(fullName)" width="250px"/>
+				<listheader label="${labels.common.lastUpdateDate}" align="" sort="auto(lastUpdateDate)" width="190px"/>
+				
+			</listhead>
+			<template name="model">
+				<listitem>
+				    <listcell label="${each.description}"/>
+					<listcell label="${date:format(each.startDate,'dd MMM yyyy')}"/>
+					<listcell label="${date:format(each.endDate,'dd MMM yyyy')}"/>
+					<listcell label="${each.involveBranch}"></listcell>
+					<listcell label="${each.notStartedBranch}"></listcell>
+					<listcell label="${each.inProcessBranch}"></listcell>
+					<listcell label="${each.submitBranch}"> </listcell>
+					<listcell label="${each.approveBranch}"></listcell>
+					<listcell label="${each.closedBranch}"></listcell>
+					<listcell label="${each.statusName}"/>
+					<listcell label="${date:format(each.lastNotificationDate,'dd MMM yyyy')}"/>
+					<listcell label="${each.fullName}"/>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}"/>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<!--  <exporter id="downloadSearch" referenceId="soPeriodListboxForDownload"/>-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+
+</window>

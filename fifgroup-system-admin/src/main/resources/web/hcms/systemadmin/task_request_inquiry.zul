@@ -1,0 +1,97 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winTaskRequestInquiry" apply="co.id.fifgroup.systemadmin.controller.TaskRequestInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.taskRequest}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.sam.requestId}" />
+					<textbox id="txtRequestId"  width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label value="${labels.sam.taskRunner}" />
+					<bandbox id="txtTaskRunnerName" width="25%" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" />
+				</row>
+				<row>
+					<label value="${labels.sam.phase}" />
+					<listbox id="lstPhase" mold="select" width="25%">
+						<template name="model">
+							<listitem value="${each}" label="${each.value}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.common.status}" />
+					<listbox id="lstStatus" mold="select" width="25%">
+						<template name="model">
+							<listitem value="${each}" label="${each.value}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="${labels.sam.dateSubmitted}" />
+					<datebox id="dtbDateSubmitted"  />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+<!-- 		<paging id="pgTaskRequestTop" forward="onPaging" autohide="true" detailed="true" /> -->
+		<listbox id="lstTaskRequest" mold="paging" pagingPosition="both" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader label="${labels.sam.requestId}" sort="auto(id)" width="100px" />
+				<listheader label="${labels.sam.taskRunner}" sort="auto(taskRunner.taskRunnerName)" width="200px" />
+				<listheader label="${labels.sam.task}" sort="auto(taskName)" width="200px"/>
+				<listheader label="${labels.sam.dateSubmitted}" sort="auto(dateSubmitted)" width="200px" />
+				<listheader label="${labels.sam.taskDateStart}" sort="auto(taskRequestDetail.dateStarted)" width="200px" />
+				<listheader label="${labels.sam.taskDateEnd}" sort="auto(taskRequestDetail.dateCompleted)" width="200px" />
+				<listheader label="${labels.sam.phase}" sort="auto(taskRequestDetail.taskPhase)" width="100px" />
+				<listheader label="${labels.common.status}" sort="auto(taskRequestDetail.taskStatus)" width="100px" />
+				<listheader label="${labels.common.action}" width="200px" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell value="${each}" label="${each.id}"></listcell>
+					<listcell value="${each}" label="${each.taskRunner.taskRunnerName}"></listcell>
+					<listcell value="${each}" label="${each.taskName}"></listcell>
+					<listcell label="${date:format(each.dateSubmitted,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell label="${date:format(each.taskRequestDetail.dateStarted,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell label="${date:format(each.taskRequestDetail.dateCompleted,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell value="${each}" label="${each.taskRequestDetail.taskPhase}"></listcell>
+					<listcell value="${each}" label="${each.taskRequestDetail.taskStatus}"></listcell>
+					<listcell>
+					<hbox pack="center" align="center" spacing="10px">
+						<a label="${labels.common.cancel}" forward="onCancel(${each})" style="color:red" if="${each.taskRequestDetail.taskPhase == 'RUNNING' }" />
+						<a label="${labels.common.delete}" forward="onDelete(${each})" style="color:red" if="${each.taskRequestDetail.taskPhase == 'RUNNING' || each.taskRequestDetail.taskPhase == 'PENDING' }" />
+						<a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" />
+						<a label="${labels.common.output}" forward="onOutput(${each})" style="color:blue" />
+						<a label="${labels.common.log}" forward="onLog(${each})" style="color:blue" />
+					</hbox>
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+<!-- 		<paging id="pgTaskRequest" forward="onPaging" autohide="true" detailed="true" />	 -->
+		<exporter referenceId="lstTaskRequest" />		
+	</groupbox>
+</window>

@@ -1,0 +1,68 @@
+<window id="winOtherInfoSetup"
+	apply="co.id.fifgroup.basicsetup.controller.OtherInfoSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.otherInfoSetup}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.formName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstFormName" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.value}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox id="grbOtherInfo">
+			<label id="lblErrOtherInfo" style="color:red" />
+			<listbox id="lstOtherInfo" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" emptyMessage="${labels.common.noDataFound}">
+				<listhead>
+					<listheader label="" width="30px"></listheader>
+					<listheader label="${labels.bse.code}" width="200px"></listheader>
+					<listheader label="${labels.bse.promptName}" width="300px"></listheader>
+					<listheader label="${labels.bse.dataType}" width="100px"></listheader>
+					<listheader label="${labels.bse.mandatory}" width="100px"></listheader>
+					<listheader label="${labels.bse.lookup}" width="300px"></listheader>
+					<listheader label="${labels.bse.enabled}" width="100px"></listheader>
+					<listheader label="${labels.bse.display}" width="100px"></listheader>
+					<listheader label="${labels.bse.maxLength}" width="100px"></listheader>
+					<listheader label="${labels.bse.scope}" width="300px"></listheader>
+				</listhead>
+			</listbox>
+			<hbox>
+				<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowOtherInfo" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRowOtherInfo" />
+			</hbox>
+		</groupbox>			
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

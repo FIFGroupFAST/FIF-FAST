@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AccountInfoUploadsFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.AccountInfoUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="FORMAT_REFERENCE_ID" jdbcType="DECIMAL" property="formatReferenceId"/>
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<select id="getAccountInfoUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PAIU.BATCH_NUMBER,
+		  PAIU.COMPANY_ID,
+		  PAIU.FORMAT_REFERENCE_ID,
+		  PAIU.STATUS,
+		  PAIU.CREATED_BY,
+		  PAIU.CREATION_DATE,
+		  PAIU.LAST_UPDATED_BY,
+		  PAIU.LAST_UPDATE_DATE,
+		  (
+			SELECT 
+				MIN(PAE_1.UPLOAD_DATE) 
+			FROM 
+				PEA_ACCOUNT_INFO_ELEMENTS PAE_1
+				WHERE 
+					PAE_1.BATCH_NUMBER = PAIU.BATCH_NUMBER
+		  ) AS PROCESS_DATE_FROM,
+		  (
+			SELECT 
+				MAX(PAE_2.UPLOAD_DATE) 
+			FROM 
+				PEA_ACCOUNT_INFO_ELEMENTS PAE_2
+				WHERE 
+					PAE_2.BATCH_NUMBER = PAIU.BATCH_NUMBER
+		  ) AS PROCESS_DATE_TO,
+		  SU.USER_NAME
+		FROM PEA_ACCOUNT_INFO_UPLOADS PAIU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PAIU.LAST_UPDATED_BY)
+		WHERE
+		 PAIU.BATCH_NUMBER IN (
+			SELECT 
+				PAIE.BATCH_NUMBER 
+			FROM 
+				PEA_ACCOUNT_INFO_ELEMENTS PAIE
+				<where>
+					<if test="dateFrom != null">
+						AND PAIE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PAIE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="accountType != null">
+			AND PAIU.FORMAT_REFERENCE_ID = #{accountType}
+		</if>
+		<if test="batchNumberFrom != null">
+			AND PAIU.BATCH_NUMBER &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND PAIU.BATCH_NUMBER &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PAIU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<select id="getAccountInfoBatchUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PAIU.BATCH_NUMBER,
+		  PAIU.COMPANY_ID,
+		  PAIU.FORMAT_REFERENCE_ID,
+		  PAIU.STATUS,
+		  PAIU.CREATED_BY,
+		  PAIU.CREATION_DATE,
+		  PAIU.LAST_UPDATED_BY,
+		  PAIU.LAST_UPDATE_DATE,
+		  (
+			SELECT 
+				MIN(PAE_1.UPLOAD_DATE) 
+			FROM 
+				PEA_ACCOUNT_INFO_ELEMENTS PAE_1
+				WHERE 
+					PAE_1.BATCH_NUMBER = PAIU.BATCH_NUMBER
+		  ) AS PROCESS_DATE_FROM,
+		  (
+			SELECT 
+				MAX(PAE_2.UPLOAD_DATE) 
+			FROM 
+				PEA_ACCOUNT_INFO_ELEMENTS PAE_2
+				WHERE 
+					PAE_2.BATCH_NUMBER = PAIU.BATCH_NUMBER
+		  ) AS PROCESS_DATE_TO,
+		  SU.USER_NAME
+		FROM PEA_ACCOUNT_INFO_UPLOADS PAIU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PAIU.LAST_UPDATED_BY)
+		WHERE
+		 PAIU.BATCH_NUMBER IN (
+			SELECT 
+				PAIE.BATCH_NUMBER 
+			FROM 
+				PEA_ACCOUNT_INFO_ELEMENTS PAIE
+				<where>
+					<if test="dateFrom != null">
+						AND PAIE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PAIE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="accountType != null">
+			AND PAIU.FORMAT_REFERENCE_ID = #{accountType}
+		</if>
+		<if test="batchNumberFrom != null">
+			AND TO_NUMBER(PAIU.BATCH_NUMBER) &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND TO_NUMBER(PAIU.BATCH_NUMBER) &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PAIU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.AccountInfoStageDTO" id="resultStage">
+		<result column="UPLOAD_ID" jdbcType="DECIMAL" property="uploadId" />
+	    <result column="ACCOUNT_TYPE" jdbcType="VARCHAR" property="accountType" />
+	    <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+	    <result column="RELATIONSHIP_CODE" jdbcType="VARCHAR" property="relationshipCode" />
+	    <result column="INSURANCE_NUMBER" jdbcType="VARCHAR" property="insuranceNumber" />
+	    <result column="DPA_NUMBER" jdbcType="VARCHAR" property="dpaNumber" />
+	    <result column="DPA_JOIN_DATE" jdbcType="DATE" property="dpaJoinDate" />
+	    <result column="KPJ_NUMBER" jdbcType="VARCHAR" property="kpjNumber" />
+	    <result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+	    <result column="ROW_NUMBER" jdbcType="DECIMAL" property="rowNumber" />
+	    <result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+	    <result column="IS_CLOSED" jdbcType="DECIMAL" property="isClosed" />
+	</resultMap>
+	
+	<select id="getStageObjectByUploadId" parameterType="map" resultMap="resultStage">
+		SELECT
+			UPLOAD_ID, 
+			ACCOUNT_TYPE, 
+			EMPLOYEE_NUMBER, 
+			RELATIONSHIP_CODE, 
+			INSURANCE_NUMBER, 
+			DPA_NUMBER, 
+    		DPA_JOIN_DATE, 
+    		KPJ_NUMBER, 
+    		EFFECTIVE_START_DATE, 
+    		ROW_NUMBER, 
+    		RAW_DATA, 
+    		IS_CLOSED
+    	FROM 
+    		PEA_ACCOUNT_INFO_STG
+    	WHERE
+    		UPLOAD_ID = #{uploadId}
+    	ORDER BY UPLOAD_ID ASC
+	</select>	
+</mapper>

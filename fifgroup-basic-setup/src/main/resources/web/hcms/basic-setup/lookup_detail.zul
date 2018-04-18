@@ -1,0 +1,124 @@
+<?xel-method prefix="global" name="pageSize" class="co.id.fifgroup.core.ui.GlobalVariable" signature="int getMaxRowPerPage()" ?>
+<window id="winLookupDetail"
+	apply="co.id.fifgroup.basicsetup.controller.LookupDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.lookupDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.lookupName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtLookupName" maxlength="30" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.description}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtDesc" rows="2" width="220px" maxlength="255"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.type}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstType" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row id="rowParent" visible="false">
+					<hbox>
+						<label value="${labels.bse.parent}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstParent" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.name}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row id="rowDataType" visible="false">
+					<hbox>
+						<label value="${labels.bse.dataType}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstDataType" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox id="grbLookupDependent" visible="false">
+			<div id="divEmptyLookupDependent"></div>
+			<listbox id="lstLookupDependent" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" mold="paging"
+				pageSize="${global:pageSize()}">
+				<listhead>
+					<listheader label="" width="30px"></listheader>
+					<listheader label="${labels.bse.detailCode}"></listheader>
+					<listheader label="${labels.bse.meaning}"></listheader>
+					<listheader label="${labels.common.description}"></listheader>
+					<listheader label="${labels.bse.scope}"></listheader>
+					<listheader label="${labels.bse.parentDetailCode}"></listheader>
+					<listheader label="${labels.bse.dateFrom}"></listheader>
+					<listheader label="${labels.bse.dateTo}"></listheader>
+				</listhead>
+			</listbox>
+			<hbox>
+				<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowLookupDependent" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRowLookupDependent" />
+			</hbox>
+		</groupbox>
+		<groupbox id="grbLookupDynamic" visible="false">
+			<div id="divEmptyLookupDynamic"></div>
+			<listbox id="lstLookupDynamic" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="" width="30px"></listheader>
+					<listheader label="${labels.bse.scope}"></listheader>
+					<listheader label="${labels.common.action}"></listheader>
+				</listhead>
+			</listbox>
+			<hbox>
+				<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowLookupDynamic" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRowLookupDynamic" />
+			</hbox>
+		</groupbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

@@ -1,0 +1,23 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winTrainingInformation" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.TrainingInformationComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.trainingList }" />
+		<listbox id="lbxTrainingInformation">
+			<listhead>
+				<listheader label="${labels.pea.idpCategory }" />
+				<listheader label="${labels.pea.trainingName }" />
+				<listheader label="${labels.pea.objective }" />
+				<listheader label="${labels.pea.eventDate }" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each }">
+					<listcell label="${each.idpCategory }"/>
+					<listcell label="${each.title }"/>
+					<listcell label="${each.objective }"/>
+					<listcell label="${date:formatDate(each.trainingStartDate)} - ${date:formatDate(each.trainingEndDate)}"/>
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+</window>

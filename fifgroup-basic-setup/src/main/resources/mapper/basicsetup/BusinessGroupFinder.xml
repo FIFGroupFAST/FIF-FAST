@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.BusinessGroupFinder">
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.BusinessGroupDTO" id="BaseResultMapInquiry">
+		<id property="businessGroup.groupId" column="GROUP_ID" jdbcType="DECIMAL"/>
+		<result property="businessGroup.groupCode" column="GROUP_CODE" jdbcType="VARCHAR"/>
+		<result property="businessGroup.groupName" column="GROUP_NAME" jdbcType="VARCHAR"/>
+		<result property="businessGroup.description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="businessGroup.createdBy" column="CREATED_BY" jdbcType="DECIMAL"/>
+		<result property="businessGroup.creationDate" column="CREATION_DATE" jdbcType="TIMESTAMP"/>
+		<result property="businessGroup.lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="businessGroup.lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"/>
+		<result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="getBusinessGroupDtoByGroupName" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			BBG.GROUP_ID,
+			BBG.GROUP_CODE,
+			BBG.GROUP_NAME,
+			BBG.DESCRIPTION,
+			BBG.CREATED_BY,
+			BBG.CREATION_DATE,
+			BBG.LAST_UPDATED_BY,
+			BBG.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		FROM
+			BSE_BUSINESS_GROUPS BBG LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BBG.LAST_UPDATED_BY)
+		<where>
+			<if test="groupName != null">
+				UPPER(GROUP_NAME) LIKE UPPER(#{groupName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+	<select id="getCountBusinessGroupDtoByGroupName" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_BUSINESS_GROUPS BBG LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BBG.LAST_UPDATED_BY)
+		<where>
+			<if test="groupName != null">
+				UPPER(GROUP_NAME) LIKE UPPER(#{groupName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+</mapper>

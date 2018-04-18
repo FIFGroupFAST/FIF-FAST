@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+	<context:component-scan base-package="co.id.fifgroup.core.dao.mybatis" />
+	<context:component-scan base-package="co.id.fifgroup.core.service.impl" />
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="co.id.fifgroup.core.dao;
+											co.id.fifgroup.core.util;
+											co.id.fifgroup.core.finder" />
+		<property name="sqlSessionTemplateBeanName" value="sqlSession"></property>
+	</bean>
+	
+	<bean class="co.id.fifgroup.core.util.ApplicationContextUtil" />
+	
+	<bean id="modelMapper" class="org.modelmapper.ModelMapper" lazy-init="false"/>
+
+</beans>

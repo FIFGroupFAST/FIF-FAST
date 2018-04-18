@@ -1,0 +1,47 @@
+<window id="winCommunicationMedia" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.CommunicationMediaComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.communicationMediaList }" />
+		<panel>
+			<panelchildren>
+				<div id="errCommunications"></div>
+				<listbox id="lbxCommunications" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.pea.communicationType}" />
+						<listheader label="${labels.pea.information}" />
+						<listheader label="${labels.common.startDate}" />
+						<listheader label="${labels.common.endDate}" />
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxNavigation">
+				<button id="btnBackAssignment"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.back}" />
+				<space width="10px"></space>
+				<button id="btnNextAddress"
+					label="${labels.common.next}" mold="trendy"
+					image="${labels.image.link.next}" />
+			</hbox>
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>	
+</window>

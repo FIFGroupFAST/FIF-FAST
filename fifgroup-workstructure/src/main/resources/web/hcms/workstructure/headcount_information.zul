@@ -1,0 +1,69 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winHeadcountInformation"
+	apply="co.id.fifgroup.workstructure.controller.HeadcountInformationComposer">
+	<groupbox closable="false" mold="3d">
+		<caption
+			label="${labels.wos.headcountInformation}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label
+						value="${labels.wos.organizationcode}" />
+					<label id="lblOrganizationCode" />
+				</row>
+				<row>
+					<label
+						value="${labels.wos.organizationName}" />
+					<label id="lblOrganizationName" />
+				</row>
+				<row>
+					<label
+						value="${labels.wos.organizationDescription}" />
+					<label id="lblOrganizationDesc" />
+				</row>
+				<row>
+					<label
+						value="${labels.wos.organizationLevel}" />
+					<label id="lblOrganizationLevel" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstEmployee">
+			<auxhead>
+				<auxheader label="${labels.common.employee}"
+					colspan="4" align="center" />
+			</auxhead>
+			<listhead>
+				<listheader label="${labels.common.job}" align="center" />
+				<listheader label="${labels.wos.existing}" align="center" />
+				<listheader label="${labels.wos.optimum}" align="center" />
+				<listheader label="${labels.wos.existingOptimum}"
+					align="center" />
+			</listhead>
+		</listbox>
+		<separator />
+		<listbox id="lstContingentWorker">
+			<auxhead>
+				<auxheader label="${labels.wos.contingentWorker}"
+					colspan="4" align="center" />
+			</auxhead>
+			<listhead>
+				<listheader label="${labels.common.job}" align="center" />
+				<listheader label="${labels.wos.existing}" align="center" />
+				<listheader label="${labels.wos.optimum}" align="center" />
+				<listheader label="${labels.wos.existingOptimum}"
+					align="center" />
+			</listhead>
+		</listbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnBack" label="${labels.common.back}"
+				mold="trendy" image="${labels.image.link.back}" />
+		</hbox>
+	</groupbox>
+</window>

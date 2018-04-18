@@ -1,0 +1,52 @@
+<window id="winDecisionTableTest"
+	apply="co.id.fifgroup.eligibility.controller.DecisionTableTestComposer">
+	
+	<grid>
+		<rows>
+			<row>Decision Table Model : 
+				<listbox id="lstModel" mold="select">
+					<template name="model">
+						<listitem value="${each }" label="${each.name }" />
+					</template>
+				</listbox>
+			</row>
+			<row>Version : <listbox id="lstVersion" mold="select"/></row> 
+		</rows>
+	</grid>
+	<separator/>
+	<listbox id="decisionTable" use="co.id.fifgroup.eligibility.ui.Decisiontable"/>
+	
+	<separator/>
+	<hlayout>
+		<button id="btnAddRow" label="Add"/>
+		<button id="btnRemoveRow" label="Remove"/>
+	</hlayout>
+	<hlayout>
+		<button id="btnSave" label="Save"/>
+	</hlayout>
+	<grid>
+		<rows>
+		
+			<row>
+			Person Id: <textbox id="txtPersonId" />
+			</row>
+			<row>
+			Effective on Date : <datebox id="dtbEffectiveOnDate" />
+			</row>
+			<row>
+				<space/>
+				<button id="btnTest" label="Test"/>
+			</row>
+			<row>
+				<space/>
+				<button id="btnTestBatch" label="Test Batch"/>
+			</row>
+			<row>
+			Decision Table Id: <textbox id="txtDecisionTableId" />
+			</row>
+			<row>
+				<space/><button id="btnSearch" label="Search" />
+			</row>
+		</rows>
+	</grid>
+</window>

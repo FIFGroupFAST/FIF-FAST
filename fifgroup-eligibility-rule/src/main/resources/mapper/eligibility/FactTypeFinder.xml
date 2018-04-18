@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.eligibility.finder.FactTypeFinder" >
+
+	<resultMap type="co.id.fifgroup.eligibility.dto.FactTypeDTO" id="factType">
+		<id column="FACT_TYPE_ID" property="id" jdbcType="VARCHAR" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="FACT_TYPE_NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="RETRIEVAL_MODE" property="retrievalMode" jdbcType="VARCHAR" />
+	    <result column="SQL_QUERY" property="sqlQuery" jdbcType="CLOB" />
+	    <result column="EDITABLE" property="editable" jdbcType="NUMERIC" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <collection property="fields" ofType="co.id.fifgroup.eligibility.dto.FactTypeFieldDTO" resultMap="factTypeField" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.eligibility.dto.FactTypeFieldDTO" id="factTypeField">
+		<id column="FACT_TYPE_ID" property="factTypeId" jdbcType="VARCHAR" />
+	    <id column="FIELD_ID" property="id" jdbcType="VARCHAR" />
+	    <result column="FIELD_NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="FIELD_TYPE" property="fieldType" jdbcType="VARCHAR" />
+	    <result column="LOOKUP_NAME" property="lookupName" jdbcType="VARCHAR" />
+	    <result column="LOOKUP_VALUE_FROM" property="lookupValueFrom" jdbcType="VARCHAR" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="EDITABLE" property="editable" jdbcType="NUMERIC" />
+	</resultMap>
+
+
+	<select id="findByExample" parameterType="co.id.fifgroup.eligibility.dto.FactTypeDTO" resultMap="factType">
+		select
+			t.FACT_TYPE_ID,
+			COMPANY_ID,
+			FACT_TYPE_NAME,
+			RETRIEVAL_MODE,
+			SQL_QUERY,
+			FIELD_ID,
+			FIELD_NAME,
+			FIELD_TYPE,
+			LOOKUP_NAME,
+			LOOKUP_VALUE_FROM,
+			0 "EDITABLE",
+			t.CREATED_BY,
+			t.CREATION_DATE,
+			t.LAST_UPDATED_BY,
+			t.LAST_UPDATE_DATE
+		from ELR_FACT_TYPES t
+		left join ELR_FACT_TYPE_FIELDS f
+			on t.FACT_TYPE_ID = f.FACT_TYPE_ID
+		<where>
+			<if test="id != null">
+				upper(t.FACT_TYPE_ID) = upper(#{id, jdbcType=VARCHAR})  
+			</if>
+			<if test="name != null">
+				AND upper(FACT_TYPE_NAME) like upper('%' || #{name, jdbcType=VARCHAR} || '%') 
+			</if>
+			<if test="companyId != null">
+				AND company_id = #{companyId, jdbcType=NUMERIC} 
+			</if>
+			<if test="retrievalMode != null">
+				AND RETRIEVAL_MODE = #{retrievalMode, jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by t.CREATION_DATE
+	</select>
+	
+	<select id="countByExample" parameterType="co.id.fifgroup.eligibility.dto.FactTypeDTO" resultType="Integer">
+		select
+			count(1)
+		from ELR_FACT_TYPES t
+		left join ELR_FACT_TYPE_FIELDS f
+			on t.FACT_TYPE_ID = f.FACT_TYPE_ID
+		<where>
+			<if test="id != null">
+				upper(t.FACT_TYPE_ID) = upper(#{id, jdbcType=VARCHAR})  
+			</if>
+			<if test="name != null">
+				AND upper(FACT_TYPE_NAME) like upper('%' || #{name, jdbcType=VARCHAR} || '%') 
+			</if>
+			<if test="companyId != null">
+				AND company_id = #{companyId, jdbcType=NUMERIC} 
+			</if>
+			<if test="retrievalMode != null">
+				AND RETRIEVAL_MODE = #{retrievalMode, jdbcType=VARCHAR}
+			</if>
+		</where>
+		order by t.CREATION_DATE
+	</select>
+</mapper>

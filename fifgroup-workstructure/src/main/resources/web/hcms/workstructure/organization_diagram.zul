@@ -1,0 +1,189 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winOrganizationDiagramInquiry"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationDiagramComposer">
+	<groupbox closable="false" mold="3d">
+		<caption
+			label="${labels.wos.organizationDiagram}" />
+		<hbox>
+			<div width="550px" style="overflow:auto">
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label
+								value="${labels.wos.organizationHierarchyName}" />
+							<label id="lblHierName" />
+						</row>
+						<row>
+							<label
+								value="${labels.wos.organizationHierarchyDescription}" />
+							<label id="lblHierDesc" />
+						</row>
+						<row>
+							<label
+								value="${labels.common.version}" />
+							<listbox id="lstVersion" mold="select" />
+						</row>
+						<row>
+							<label
+								value="${labels.common.effectiveDateFrom}" />
+							<datebox id="dtbDateFrom" use="co.id.fifgroup.core.ui.DateBoxFrom"/>
+						</row>
+						<row>
+							<label
+								value="${labels.common.effectiveDateTo}" />
+							<datebox id="dtbDateTo" use="co.id.fifgroup.core.ui.DateBoxMax"/>
+						</row>
+						<row>
+							<label />
+							<button id="btnView"
+								label="${labels.wos.view}" mold="trendy"
+								image="${labels.image.link.view}" />
+						</row>
+						<row>
+							<label value="${labels.wos.searchByName}" />
+							<bandbox id="bnbOrgName" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganization}" searchText1="${labels.wos.organizationCode}" searchText2="${labels.wos.organizationName}" headerLabel1="${labels.wos.organizationCode}" headerLabel2="${labels.wos.organizationName}" />
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<panel border="normal">
+					<panelchildren
+						style="background:white; overflow:auto;">
+						<tree id="tree">
+						</tree>
+					</panelchildren>
+				</panel>
+			</div>
+			<separator />
+			<div width="850px" style="overflow:auto">
+				<tabbox>
+					<tabs>
+						<tab
+							label="${labels.wos.organizationInfo}" />
+						<tab label="${labels.wos.otherInfo}" />
+					</tabs>
+					<tabpanels>
+						<tabpanel id="tpOrganizationInfo">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label
+											value="${labels.common.effectiveDateFrom}" />
+										<label id="lblDateFrom" />
+									</row>
+									<row>
+										<label
+											value="${labels.common.effectiveDateTo}" />
+										<label id="lblDateTo" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.organizationCode}" />
+										<label id="lblOrgCode" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.organizationName}" />
+										<label id="lblOrgName" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.organizationDescription}" />
+										<label id="lblOrgDesc" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.organizationLevel}" />
+										<label
+											id="lblOrgLevel" />
+									</row>
+									<row>
+										<label value="${labels.wos.kpp}" />
+										<label id="lblKpp" />
+									</row>
+									<row>
+										<label
+											value="${labels.common.location}" />
+										<label id="lblLocation" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.headOfOrganization}" />
+										<label id="lblHoo" />
+									</row>
+									<row>
+										<label />
+										<a id="linkHooHistory"
+											label="${labels.wos.hooHistory}" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.isHeadOffice}" />
+										<label id="lblHo" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.headcount}" />
+											<a id="linkHeadCount"><label id="lblHeadCount" /></a>
+									</row>
+								</rows>
+							</grid>
+							<separator />
+							<groupbox mold="default">
+								<caption
+									label="${labels.wos.detailHeadCount}" />
+								<grid sclass="form-entry">
+									<columns>
+										<column width="180px"
+											align="right" />
+										<column />
+									</columns>
+									<rows>
+										<row>
+											<label
+												value="${labels.wos.employeeHeadCount}" />
+											<label
+												id="lblEmployeeHeadcount" />
+										</row>
+										<row>
+											<label
+												value="${labels.wos.cwkHeadCount}" />
+											<label id="lblCwkHeadcount" />
+										</row>
+									</rows>
+								</grid>
+							</groupbox>
+						</tabpanel>
+						<tabpanel id="tpOtherInfo">
+
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</div>
+		</hbox>
+		<separator />
+		<hbox>
+			<cell align="center" style="width:1250px;">
+				<button id="btnPrint"
+					label="${labels.wos.print}" mold="trendy"
+					image="${labels.image.link.print}" />
+				<space width="20px" />
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

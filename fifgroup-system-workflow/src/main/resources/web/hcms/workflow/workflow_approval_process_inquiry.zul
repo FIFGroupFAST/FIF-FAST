@@ -1,0 +1,67 @@
+<window id="winWorkflowApprovalProcessInquiry" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalProcessInquiryComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption label="${ labels.swf.approvalProcess}">	
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>			
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right"/>
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.company}" />
+							<listbox id="cmbCompany" />
+						</row>
+						<row>
+							<label value="${labels.swf.approverName}" />
+							<bandbox id="bnbEmployee" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.employee}" searchText1="${labels.pea.employeeNumber}" searchText2="${labels.pea.employeeName}" headerLabel1="${labels.pea.employeeNumber}" headerLabel2="${labels.pea.employeeName}"></bandbox>
+						</row>
+						<row>
+							<label value="${labels.swf.transactionType}" />
+							<listbox id="cmbTrxType" />
+						</row>
+						<row>
+							<label value="${labels.swf.actionType}" />
+							<listbox id="cmbActionType" />
+						</row>
+						<row>
+							<label value="${labels.swf.receivedDate}" />
+							<hbox>
+								<datebox id="dtbReceivedFrom" width="100px" />
+								<label value="${labels.common.to}" />
+								<datebox id="dtbReceivedTo" width="100px" />
+							</hbox>							 
+						</row>
+						<row>
+							<label></label>
+							<hbox>
+								<button id="btnFind" label="${ labels.common.find }"
+									mold="trendy" image="${ labels.image.link.search }" />
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxApprovalProcess" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader label="${labels.swf.company}" width="150px" align="center" sort="auto(companyId)"/>
+						<listheader label="${labels.swf.approverName}" width="250px" align="center" />
+						<listheader label="${labels.swf.transactionType}" width="200px" align="center" sort="auto(trxType)"/>
+						<listheader label="${labels.swf.actionType}" width="150px" align="center" sort="auto(actionType)"/>
+						<listheader label="${labels.swf.receivedTime}" hflex="min" align="center" sort="auto(avmReceivedTimestamp)"/>
+						<listheader label="${labels.swf.completedTime}" hflex="min" align="center" sort="auto(avmActionTimestamp)"/>
+						<listheader label="${labels.swf.progressTime}" hflex="min" align="center" />
+						<listheader label="${labels.common.action}" width="80px" align="center" />
+					</listhead>
+				</listbox>
+				<exporter referenceId="lbxApprovalProcess" />
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

@@ -1,0 +1,28 @@
+<window id="winWorkflowAddParameterMessage" apply="co.id.fifgroup.systemworkflow.controller.WorkflowAddParameterMessageComposer" 
+	border="normal">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption label="${labels.swf.addParameter }"></caption>
+			
+			<separator />			
+			<listbox id="lbxParameter" checkmark="true" emptyMessage="${labels.common.noDataFound}" mold="paging">
+				<listhead>
+					<listheader label="" width="30px"/>
+					<listheader label="${labels.swf.parameterName}" align="center" />
+				</listhead>
+				<template name="model">
+				<listitem value="${each}">
+					<listcell label=""></listcell>
+					<listcell label="${each.parameterName}"></listcell>
+				</listitem>
+				</template>
+			</listbox>
+			<hbox>
+				<button label="${labels.swf.select}" mold="trendy" id="btnSelect" />
+				<button label="${labels.common.cancel}" mold="trendy" id="btnBack" />
+			</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

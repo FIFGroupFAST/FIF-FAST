@@ -1,0 +1,55 @@
+<window id="winTerminateTrainee" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.TerminateTraineeComposer">
+	<groupbox mold="3d" >
+		<caption label="${labels.pea.terminateTrainee }" />
+		<label value="${labels.pea.terminateTraineeBelow }"/>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.number }"/>
+					<label id="lblEmployeeNumber"/>
+				</row>
+				<row>
+					<label value="${labels.pea.fullName }"/>
+					<label id="lblFullName"/>
+				</row>
+				<row>
+					<label value="${labels.pea.peopleType }"/>
+					<label id="lblPeopleType"/>
+				</row>
+				<row>
+					<label value="${labels.pea.employmentCategory }"/>
+					<label id="lblEmploymentCategory"/>
+				</row>
+				<row>
+					<label value="${labels.pea.traineeEndDate }"/>
+					<label id="lblTraineeEndDate"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.pea.onTerminationDate }"/>
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<datebox id="dtbTerminationDate" width="100px"/>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox>
+			<cell align="center" style="width:1250px;">
+				<button id="btnSubmit"
+					label="${labels.common.submit}" mold="trendy" 
+					image="${labels.image.link.submit}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

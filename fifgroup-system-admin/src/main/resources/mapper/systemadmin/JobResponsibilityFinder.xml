@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemadmin.finder.JobResponsibilityFinder">
+
+	<select id="getJobResponsibilityByJobIdAndResponsibilityId" parameterType="co.id.fifgroup.systemadmin.domain.JobResponsibility" resultMap="jobResponsibilityResult">
+		SELECT DISTINCT A.JOB_ID, A.CREATED_BY, A.CREATION_DATE,
+		A.LAST_UPDATED_BY, A.LAST_UPDATE_DATE,
+		B.JOB_NAME, C.COMPANY_NAME, D.USER_NAME
+		FROM SAM_JOB_RESPONSIBILITIES A JOIN WOS_JOBS B
+		ON B.JOB_ID = A.JOB_ID
+		LEFT JOIN BSE_COMPANIES C ON C.COMPANY_ID = B.COMPANY_ID and (trunc(sysdate) between c.effective_start_date and c.effective_end_date)
+		JOIN SAM_USERS D ON D.USER_ID = A.LAST_UPDATED_BY
+		<where>
+			<if test="jobId != null">
+				A.JOB_ID = #{jobId, jdbcType=NUMERIC}
+			</if>
+			<if test="responsibilityId != null">
+				AND A.RESPONSIBILITY_ID = #{responsibilityId, jdbcType=NUMERIC}
+			</if>
+		</where>
+		ORDER BY A.LAST_UPDATE_DATE DESC
+	</select>
+		
+	<select id="countJobResponsibilityByJobIdAndResponsibilityId" parameterType="co.id.fifgroup.systemadmin.domain.JobResponsibility" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS TOTAL from(
+		SELECT DISTINCT A.JOB_ID, A.CREATED_BY, A.CREATION_DATE,
+		A.LAST_UPDATED_BY, A.LAST_UPDATE_DATE,
+		B.JOB_NAME, C.COMPANY_NAME, D.USER_NAME
+		FROM SAM_JOB_RESPONSIBILITIES A JOIN WOS_JOBS B
+		ON B.JOB_ID = A.JOB_ID
+		LEFT JOIN BSE_COMPANIES C ON C.COMPANY_ID = B.COMPANY_ID and (trunc(sysdate) between c.effective_start_date and c.effective_end_date)
+		JOIN SAM_USERS D ON D.USER_ID = A.LAST_UPDATED_BY
+		<where>
+			<if test="jobId != null">
+				A.JOB_ID = #{jobId, jdbcType=NUMERIC}
+			</if>
+			<if test="responsibilityId != null">
+				AND A.RESPONSIBILITY_ID = #{responsibilityId, jdbcType=NUMERIC}
+			</if>
+		</where>
+		ORDER BY A.LAST_UPDATE_DATE DESC)
+	</select>
+
+	<select id="getJobResponsibilityByJobId" parameterType="co.id.fifgroup.systemadmin.domain.JobResponsibility" resultMap="jobResponsibilityDetailResult">
+		SELECT A.JOB_ID, A.RESPONSIBILITY_ID, A.DATE_FROM, A.DATE_TO, 
+		A.CREATED_BY, A.CREATION_DATE, A.LAST_UPDATED_BY, A.LAST_UPDATE_DATE, D.RESPONSIBILITY_NAME
+		FROM SAM_JOB_RESPONSIBILITIES A LEFT JOIN WOS_JOBS B ON B.JOB_ID = A.JOB_ID
+		LEFT JOIN BSE_COMPANIES C ON C.COMPANY_ID = B.COMPANY_ID and (trunc(sysdate) between c.effective_start_date and c.effective_end_date)
+		LEFT JOIN SAM_RESPONSIBILITIES D ON D.RESPONSIBILITY_ID = A.RESPONSIBILITY_ID
+		<where>
+			<if test="jobId != null">
+				A.JOB_ID = #{jobId, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+
+	<resultMap type="co.id.fifgroup.systemadmin.dto.JobResponsibilityDTO" id="jobResponsibilityResult">
+		<result column="JOB_ID" jdbcType="NUMERIC" property="jobId" />
+		<result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="NUMERIC" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
+		<result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.JobResponsibilityDetailDTO" id="jobResponsibilityDetailResult">
+		<result column="JOB_ID" jdbcType="NUMERIC" property="jobId" />
+		<result column="RESPONSIBILITY_ID" jdbcType="NUMERIC" property="responsibilityId" />
+		<result column="DATE_FROM" jdbcType="TIMESTAMP" property="dateFrom" />
+		<result column="DATE_TO" jdbcType="TIMESTAMP" property="dateTo" />	
+		<result column="CREATED_BY" jdbcType="NUMERIC" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="TIMESTAMP" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="RESPONSIBILITY_NAME" jdbcType="VARCHAR" property="responsibilityName" />
+	</resultMap>
+	
+	<delete id="deleteByJobId" parameterType="Map" >
+		DELETE FROM SAM_JOB_RESPONSIBILITIES WHERE JOB_ID = #{jobId, jdbcType=NUMERIC}
+	</delete>
+	
+	<select id="selectJobResponsibilityByResponsibility" parameterType="co.id.fifgroup.systemadmin.domain.Responsibility" resultMap="jobResponsibilityByResponsibilityResult">
+		SELECT JR.RESPONSIBILITY_ID, R.RESPONSIBILITY_NAME
+		FROM SAM_JOB_RESPONSIBILITIES JR
+		JOIN SAM_RESPONSIBILITIES R ON R.RESPONSIBILITY_ID = JR.RESPONSIBILITY_ID
+		AND SYSDATE BETWEEN JR.DATE_FROM AND JR.DATE_TO
+		AND SYSDATE BETWEEN R.DATE_FROM AND R.DATE_TO
+		<where>
+			<if test="responsibilityName != null">
+				R.RESPONSIBILITY_NAME LIKE #{responsibilityName, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.JobResponsibilityDTO" id="jobResponsibilityByResponsibilityResult">
+		<result column="RESPONSIBILITY_ID" jdbcType="NUMERIC" property="responsibilityId" />
+		<result column="RESPONSIBILITY_NAME" jdbcType="VARCHAR" property="jobResponsibilityName" />
+	</resultMap>
+	
+	<select id="selectActiveJobResponsibilityByJobId" parameterType="java.lang.Long" resultMap="jobResponsibilityDetailResult" >
+		select 
+			job_id, 
+			responsibility_id, 
+			date_from, 
+			date_to 
+		from 
+			sam_job_responsibilities 
+		where 
+			job_id = #{jobId, jdbcType=NUMERIC}
+	</select>
+	
+</mapper>

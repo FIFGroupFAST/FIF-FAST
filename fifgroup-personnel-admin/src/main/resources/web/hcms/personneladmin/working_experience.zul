@@ -1,0 +1,35 @@
+<window id="winWorkingExperience" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.WorkingExperienceComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.workingExperienceList }"/>
+		<panel>
+			<panelchildren>
+				<listbox id="lbxWorkingExperience" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.common.startDate}" />
+						<listheader label="${labels.common.endDate}" />
+						<listheader label="${labels.pea.company}" />
+						<listheader label="${labels.pea.position}" />
+						<listheader label="${labels.pea.referenceName}" />
+						<listheader label="${labels.pea.referenceContact}" />
+						<listheader label="${labels.pea.referencePosition}" />						
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRow" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>	
+</window>

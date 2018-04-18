@@ -1,0 +1,147 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?page title="Asset Retirement"?>
+<window id="winAssetRetirementApproval" apply="co.id.fifgroup.ssoa.controller.AssetRetirementNonEBSApprovalComposer">
+	
+	<groupbox id="gbAssetRetirementDetail" closable="false" mold="3d" >
+		<caption label="Asset Non EBS Retirement - Detail" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="150px" align="right"/>
+				<column/>
+				<column width="150px" align="right"/>
+				<column/>
+			</columns>
+			<rows>
+				<row>
+					<label value="Document No" />
+					<textbox id="txtDocNo" width="300px"  disabled="true" style="background-color:#fff;"  />
+					<label value="Retirement Type" />
+					<listbox mold="select" disabled="true" id="cbRetirementType" style="background-color:#e3e3e3;">
+								<template name="model">
+									<listitem label="${each.description}" value="${each.key}" />
+								</template>
+								
+				    </listbox>
+				</row>
+				<row>
+					<label value="Request Date" />
+					<datebox id="dtRequestDate" disabled="true" format="dd-MMM-yyyy" style="background-color:#fff;"  />
+					<label value="Remark" />
+					<textbox id="txtNotes" disabled="true" width="300px" tabindex="6" rows="5" style="background-color:#fff;" 
+					 />
+				</row>
+				
+			</rows>
+		</grid>
+		<separator/>
+		<groupbox id="gbBast" mold="3d" visible="false">
+			<caption label="BAST" />
+			<listbox id="lstRetirementBast" checkmark="true" emptyMessage="${labels.common.noDataFound}" 
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="" width="35px" />
+					<listheader label="Doc Name" width="" />
+				</listhead>
+			</listbox>
+			<separator/>
+			<!-- 
+			<hbox>
+				<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowBast" 
+				image="${labels.image.link.add}" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDeleteBast" />
+			</hbox>
+			 -->
+		</groupbox>
+		<separator/>
+		<groupbox closable="false" mold="3d">
+			<caption label="Asset(s)" />
+			<listbox id="lstdetail" style="margin-bottom:5px;" width="auto"
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+			    <listhead>
+			        <listheader label="" width="30px" />
+			        <listheader label="Image" width="120px" />
+				    <listheader label="No Asset" width="120px" />
+					<listheader label="Type" width="120px" />
+					<listheader label="Branch Code" width="120px" />
+					<listheader label="Branch Name" width="120px" />
+					<listheader label="Location Code" width="120px" />
+					<listheader label="Location Name" width="120px" />
+					<listheader label="Item Category" width="120px" />
+					<listheader label="Date Of Service" width="120px" />
+					<listheader label="Description" width="300px" />
+					<listheader label="Serial Number" width="120px" />
+					<listheader label="Recomendation" width="300px;" />
+					<listheader label="Recomendation HO" width="150px;" />
+				</listhead>
+				<template name="model">
+				<listitem>
+				    <listcell label="" />
+				    <listcell>
+				    <a label="Image" forward="onViewImage(${each})"  style="color:blue" />
+				    </listcell>
+					<listcell label="${each.assetNumber}"></listcell>
+					<listcell label="${each.assetType}"></listcell>
+					<listcell label="${each.branchCode}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${each.locationCode}"></listcell>
+					<listcell label="${each.locationName}"></listcell>
+					<listcell label="${each.categoryName}"></listcell>
+					<listcell label="${date:format(each.datePlacedInService,'dd MMM yyyy')}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.serialNumber}"></listcell>
+					<listcell label="${each.stockOpnameSugest}"></listcell>
+					<listcell label="${each.stockOpnameHoSugest}"></listcell>
+					</listitem>
+			</template>
+			</listbox>
+			<!-- 
+			<hbox>
+				<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" 
+				image="${labels.image.link.add}" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+			</hbox>
+			 -->
+		</groupbox>
+		
+		<separator/>
+		<radiogroup id="rdgroup" />
+		<groupbox id="gbQuotationsDetail" mold="3d" visible="false">
+			<caption label="Quotations" />
+			<listbox id="lstRetirementQuotation" width="auto" emptyMessage="${labels.common.noDataFound}" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+				    <listheader label="" width="30px" />
+					<listheader label="Vendor" style="text-align:left;"/>
+					<listheader label="Price" style="text-align:right;" />
+					<listheader label="Document" style="text-align:left;" />
+					<listheader label="Winner" style="text-align:left;" />
+				</listhead>
+			</listbox>
+			<separator/>
+				<!-- 
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddQuotation" 
+					image="${labels.image.link.add}" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteQuotation" />
+				</hbox>
+				 -->
+		</groupbox>
+		
+		<separator/>
+		<listbox id="lstRetirementImg" width="auto" emptyMessage="${labels.common.noDataFound}" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" visible="false">
+				<listhead>
+				    <listheader label="" width="30px" />
+					<listheader label="Vendor" style="text-align:left;"/>
+					<listheader label="Price" style="text-align:right;" />
+					<listheader label="Document" style="text-align:left;" />
+					<listheader label="Winner" style="text-align:left;" />
+				</listhead>
+	    </listbox>
+		<groupbox id="gbButton">
+		    <div align="center">
+			<button id="btnClose" label="Close" mold="trendy" style="float:right;"
+			image="${labels.image.link.back}" />
+			</div>
+		</groupbox>
+	</groupbox>
+	
+</window>

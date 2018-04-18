@@ -1,0 +1,65 @@
+<?page title="FIF HCMS Login"?>
+<!-- Title could be modified by providing zk-label: login.l_title -->
+<window id="winLogin" title="HCMS Login" border="normal" width="600px"
+	position="center" mode="overlapped">
+	<style src="/styles/css/default.css" />
+	<style src="/styles/css/supersized.core.css" />
+	<script type="text/javascript" src="/scripts/jquery-1.8.1.min.js" />
+	<script type="text/javascript"
+		src="/scripts/supersized.core.3.2.1.min.js" />
+	<script type="text/javascript">
+		jQuery(function(a) { a.supersized({ start_slide : 0,
+		vertical_center : 0, horizontal_center : 0, min_width : 1000,
+		min_height : 700, fit_portrait : 1, fit_landscape : 0,
+		image_protect : 1, slides : [ { image :
+		"styles/images/fifgroup_bg1.jpg" } ] }); });
+	</script>
+
+	<groupbox>
+		<h:form id="f" name="f" action="j_spring_security_check"
+			method="POST" xmlns:h="native">
+			<grid style="border:none;">
+				<columns>
+					<column width="120px" align="right" valign="top" />
+					<column />
+				</columns>
+				<rows>
+					<!-- User could be modified by using login.l_user -->
+					<row>
+						<label id="l_user" value="Username"
+							sclass="form-label" />
+						<textbox id="u" name="j_username" width="180px" value="bayu" />
+					</row>
+					<!-- User could be modified by using login.l_password -->
+					<row>
+						<label id="l_password" value="Password"
+							sclass="form-label" />
+						<textbox id="p" type="password"
+							name="j_password" width="180px" value="password"/>
+					</row>
+					<row>
+						<label></label>
+						<hbox id="buttons">
+							<h:input type="submit" value="Login"
+								style="width: 80px;" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</h:form>
+		<!-- this form-login-page form is also used as the
+			form-error-page to ask for a login again. -->
+		<html style="color:red; font-size: 12px"
+			if="${not empty param.login_error}">
+
+
+			
+			<![CDATA[ <p style="margin:0; padding-left:105px;">Invalid
+			username or password<br/>
+			${SPRING_SECURITY_LAST_EXCEPTION.message} </p> ]]>
+			
+			
+			
+    </html>
+	</groupbox>
+</window>

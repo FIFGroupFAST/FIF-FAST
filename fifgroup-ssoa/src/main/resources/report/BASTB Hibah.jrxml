@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BASTB Hibah" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c105ac3e-d7de-4162-989b-5371969703c8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="202"/>
+	<parameter name="retirementId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="companyId" class="java.lang.Long"/>
+	<parameter name="avmTrxId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[/* Formatted on 8/25/2016 10:54:12 AM (QP5 v5.256.13226.35538) */
+SELECT DISTINCT
+    (SELECT TO_CHAR (request_date, 'YYYY') FROM soc_retirement_hdr where retirement_id=rh.retirement_id) AS tahun,
+    (SELECT TO_CHAR (request_date, 'dd') FROM soc_retirement_hdr where retirement_id=rh.retirement_id) AS tanggal,
+    (SELECT TO_CHAR (request_date, 'MONTH') FROM soc_retirement_hdr where retirement_id=rh.retirement_id ) AS bulan,
+   (SELECT  DISTINCT
+      ppi.full_name
+        FROM AVM_APPROVAL_HISTORY AAH
+            left join pea_people pp on PP.PERSON_UUID =AAH.APPROVER_ID
+            left JOIN pea_personal_informations ppi ON ppi.person_id = pp.person_id
+       WHERE     aah.AVM_TRX_ID like (UPPER(REGEXP_REPLACE ($P{avmTrxId},'[^[:alnum:]'' '']', null)))
+             AND aah.AVM_ACTION_TYPE IN(0,1,-1,-3)
+             and aah.level_sequence = '0') as gs_kor,
+    rh.request_no,
+    rh.bast_doc_no,
+    a.asset_number,
+    a.description,
+     (SELECT branch_name
+          FROM BRANCH_HIERARCHY_V
+         WHERE branch_id = rh.branch_id AND ROWNUM = 1)
+          BRANCH_NAME,
+          rh.recipient,
+    (select company_name
+        from bse_companies where company_id = $P{companyId}
+            and sysdate between effective_start_date and effective_end_date) as Perusahaan
+  FROM soc_assets a
+       INNER JOIN soc_retirement_dtl rd ON rd.asset_id = a.asset_id
+       INNER JOIN soc_retirement_hdr rh ON rh.retirement_id = rd.retirement_id
+ WHERE rh.retirement_id = $P{retirementId}]]>
+	</queryString>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="BULAN" class="java.lang.String"/>
+	<field name="GS_KOR" class="java.lang.String"/>
+	<field name="REQUEST_NO" class="java.lang.String"/>
+	<field name="BAST_DOC_NO" class="java.lang.String"/>
+	<field name="ASSET_NUMBER" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="RECIPIENT" class="java.lang.String"/>
+	<field name="PERUSAHAAN" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="270" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="76ed6fc8-8a17-4b7a-af5e-b07c70b688aa" x="124" y="24" width="295" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[BERITA ACARA SERAH TERIMA BARANG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9e7af7ac-a242-4f32-aece-fddf1ff8c269" x="97" y="41" width="24" height="22"/>
+				<textElement/>
+				<text><![CDATA[NO.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="021705ff-a637-497e-9382-9cc1bfcfce1e" x="124" y="43" width="310" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BAST_DOC_NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1711a85a-0eca-4880-91ad-e93185d7b168" x="34" y="64" width="108" height="20"/>
+				<textElement/>
+				<text><![CDATA[Pada hari ini, tanggal ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ba25bab7-7e5a-413e-a7fc-993f1bf2e98b" x="155" y="65" width="34" height="20"/>
+				<textElement/>
+				<text><![CDATA[bulan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="87894839-a639-4e40-8c2b-a107d67cba05" x="34" y="174" width="91" height="20"/>
+				<textElement/>
+				<text><![CDATA[2.     Nama Instansi		 :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="53f26c05-6097-4061-8418-2cdabfe96c68" x="55" y="131" width="70" height="20"/>
+				<textElement/>
+				<text><![CDATA[Cabang	               	      :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="ea28c9d9-de50-46c1-9a2d-42cc4811c39b" x="211" y="131" width="170" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9458ee2f-b4d8-4692-9594-b6104e18450d" x="34" y="111" width="91" height="20"/>
+				<textElement/>
+				<text><![CDATA[1.     Perusahaan 			:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5b7cd09e-6bb7-4b0e-8f5c-0a0ebbd6c596" x="199" y="131" width="20" height="21"/>
+				<textElement/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="47703c16-8df1-47e6-918d-df6793945747" x="34" y="228" width="460" height="20"/>
+				<textElement/>
+				<text><![CDATA[PIHAK PERTAMA telah menyerahkan barang inventaris kepada PIHAK KEDUA sesuai dengan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ba396b72-133b-4b30-8037-c560395a9de4" x="257" y="65" width="34" height="20"/>
+				<textElement/>
+				<text><![CDATA[tahun]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0eb0a7cd-8624-4d85-984e-e224bfe2b0ca" x="211" y="176" width="170" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{RECIPIENT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="fea1e36d-5244-46a0-887e-87442273defe" x="34" y="82" width="91" height="20"/>
+				<textElement/>
+				<text><![CDATA[oleh dan di antara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f0408c12-8350-4865-98e4-0ffa0382006d" x="199" y="111" width="20" height="21"/>
+				<textElement/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="3efaef4f-632a-448b-bb15-1f6e7d497597" x="291" y="65" width="46" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{TAHUN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aee97c94-d809-4c59-9fa9-98e841170b96" x="137" y="64" width="29" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TANGGAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0f7b01c8-4ced-4505-bc65-bbb361f8c0dc" x="181" y="65" width="74" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BULAN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7a36a8dd-5355-4d37-9241-02d1a26d91fb" x="34" y="152" width="174" height="20"/>
+				<textElement/>
+				<text><![CDATA[Disebut sebagai PIHAK PERTAMA]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f4a1bb23-d5aa-4e27-a069-5c5b53d9a22d" x="212" y="112" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PERUSAHAAN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e3952899-291f-4790-b31a-4dc61b6e83aa" x="34" y="248" width="108" height="20"/>
+				<textElement/>
+				<text><![CDATA[Penjualan No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c9f088d0-1230-4de6-a829-b00f41e9ac97" x="108" y="248" width="204" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{REQUEST_NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="93ab12a1-cfa9-4d2a-8b46-f7afb54ba012" x="337" y="65" width="189" height="20"/>
+				<textElement/>
+				<text><![CDATA[telah dilakukan serah terima barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cf4167d4-8090-44fe-9535-2d9b3c5fcdfe" x="312" y="248" width="182" height="20"/>
+				<textElement/>
+				<text><![CDATA[dengan rincian sebagai berikut :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="60d729fa-76bc-46ff-9c0c-f1e813ea89d7" x="34" y="196" width="155" height="20"/>
+				<textElement/>
+				<text><![CDATA[Disebut sebagai PIHAK KEDUA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7a8d9fcf-cda8-4c37-b500-dcc66d58bb03" x="200" y="176" width="20" height="21"/>
+				<textElement/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="3" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="38" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="a3c9ad3e-469b-4840-8b49-6e52718c2342" x="59" y="10" width="433" height="28" backcolor="#FF9966"/>
+			</rectangle>
+			<line>
+				<reportElement uuid="1d6cbce9-65cf-44d9-9899-8cb3501f4496" x="445" y="10" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="a0f5e672-afc2-4da2-9fe7-b45af3309e68" x="449" y="16" width="45" height="20"/>
+				<textElement/>
+				<text><![CDATA[JUMLAH]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="c569ca25-a655-4d36-ab75-93f81035210c" x="96" y="10" width="1" height="28"/>
+			</line>
+			<line>
+				<reportElement uuid="a79e7eda-a780-4612-be17-271c429c7e95" x="155" y="10" width="1" height="28"/>
+			</line>
+			<staticText>
+				<reportElement uuid="a2a0e045-7d06-4dfc-b669-9f6430549b26" x="100" y="16" width="60" height="20"/>
+				<textElement/>
+				<text><![CDATA[NO ASSET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5f02400-bffe-4288-a1ea-85b5c72400f9" x="67" y="16" width="23" height="18"/>
+				<textElement/>
+				<text><![CDATA[NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cc88a68b-c3af-4a40-9bbd-a779cd23fd1b" x="245" y="17" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[NAMA BARANG]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="ea4c55cb-4f98-4bf6-ab4d-eb0baf4345f1" x="59" y="1" width="433" height="26"/>
+			</rectangle>
+			<line>
+				<reportElement uuid="0135461c-478a-4d22-a5fd-691333ea5495" x="96" y="1" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="0c4298a5-c7e0-47d6-a1d2-72714982c516" x="155" y="1" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement uuid="7799ef65-5816-497e-88d4-e14250cfe8a0" x="445" y="1" width="1" height="26"/>
+			</line>
+			<textField>
+				<reportElement uuid="9bd06f96-e4af-48fc-b0f0-98f5c590ac90" x="100" y="1" width="54" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ASSET_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="60aefee7-0c80-4698-af52-39b1eb30da3d" x="159" y="1" width="286" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="478ccd5f-5b17-4d3b-a790-4b784d8065f7" x="460" y="1" width="22" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8006c2f8-8db4-4d00-a152-bf75d6d17436" x="59" y="1" width="37" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="1" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="147" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="a679deb9-c6ae-4e90-b799-65ae0b729e75" x="34" y="11" width="368" height="16"/>
+				<textElement/>
+				<text><![CDATA[Demikian berita acara ini dibuat dengan sebenarnya.
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2440695-01a2-46b6-9808-3ecb8290e384" x="34" y="45" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[PIHAK KEDUA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5b559e8d-1798-4047-9d35-3a825432abb9" x="402" y="45" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[PIHAK PERTAMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="33125025-9dae-427e-889b-4c3979071033" x="34" y="105" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Nama	:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="62c8c340-2d4f-4e7e-95c9-24b933f3133c" x="34" y="125" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Jabatan	:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="64956dc1-228e-4fbd-90dc-6cd1dba8f4cc" x="402" y="125" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[GS Coordinator]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e574b6b3-2f62-486c-8015-09d824abd386" x="402" y="105" width="154" height="20"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GS_KOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

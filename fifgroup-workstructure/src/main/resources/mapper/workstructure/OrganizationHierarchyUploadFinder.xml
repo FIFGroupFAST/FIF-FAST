@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.OrganizationHierarchyUploadFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.workstructure.dto.OrganizationHierarchyUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="BRANCH_ID" jdbcType="NUMERIC" property="branchId" />
+		<result column="FORMAT_REFERENCE_ID" jdbcType="NUMERIC" property="formatReferenceId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	    <result column="ORG_HIER_NAME" property="orgHierName" jdbcType="VARCHAR"/>
+	    <result column="DATE_FROM" property="dateFrom" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<resultMap id="stageResult" type="co.id.fifgroup.workstructure.dto.OrganizationHierarchyStageDTO">
+		<result column="UPLOAD_ID" jdbcType="NUMERIC" property="uploadId" />
+		<result column="DATE_FROM" property="dateFrom" jdbcType="DATE"/>
+		<result column="ORG_HIER_TYPE" property="orgHierType" jdbcType="VARCHAR"/>
+		<result column="IS_DEPT_OWNER" property="isDeptOwner" jdbcType="NUMERIC"/>
+		<result column="ORG_HIER_NAME" property="orgHierName" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="PARENT_ID" property="parentId" jdbcType="VARCHAR"/>
+		<result column="ORGANIZATION_ID" property="organizationId" jdbcType="VARCHAR"/>
+		<result column="ROW_NUMBER" jdbcType="NUMERIC" property="rowNumber" />
+		<result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+		<result column="IS_CLOSED" javaType="Boolean" jdbcType="NUMERIC" property="isClosed" />
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.UploadError" id="errorResult">
+		<id column="ERROR_ID" property="errorId" jdbcType="DECIMAL"/>
+		<result column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="ROW_NUMBER" property="rowNumber" jdbcType="DECIMAL"/>
+		<result column="RAW_DATA" property="rawData" jdbcType="VARCHAR"/>
+		<result column="ERROR_MESSAGE" property="errorMessage" jdbcType="VARCHAR"/>
+		<result column="SOURCE" property="source" jdbcType="VARCHAR" javaType="co.id.fifgroup.core.constant.UploadErrorStatus"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<if test="batchNumber != null">
+			AND UPL.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+		</if>
+		<if test="companyId != null">
+			AND UPL.COMPANY_ID = #{companyId, jdbcType=DECIMAL}
+		</if>
+		<if test="branchId != null">
+			AND UPL.BRANCH_ID = #{branchId, jdbcType=DECIMAL}
+		</if>
+		<if test="formatReferenceId != null">
+			AND UPL.FORMAT_REFERENCE_ID = #{formatReferenceId, jdbcType=DECIMAL}
+		</if>
+		<if test="status != null">
+			AND UPL.STATUS = #{status, jdbcType=VARCHAR}
+		</if>
+		<if test="createdBy != null">
+			AND UPL.CREATED_BY = #{createdBy, jdbcType=DECIMAL}
+		</if>
+		<if test="creationDate != null">
+			AND UPL.CREATION_DATE = #{creationDate, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdatedBy != null">
+			AND UPL.LAST_UPDATED_BY = #{lastUpdatedBy, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdateDate != null">
+			AND UPL.LAST_UPDATE_DATE = #{lastUpdateDate, jdbcType=TIMESTAMP}
+		</if>
+		<if test="batchNumberFrom != null">
+			<if test="!batchNumberFrom.trim().equals('')">
+				AND UPL.BATCH_NUMBER &gt;= #{batchNumberFrom, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="batchNumberTo != null">
+			<if test="!batchNumberTo.trim().equals('')">
+				AND UPL.BATCH_NUMBER &lt;= #{batchNumberTo, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="orgHierName != null">
+			AND STG.ORG_HIER_NAME = #{orgHierName, jdbcType=VARCHAR}
+		</if>
+	</sql>
+
+	<select id="getOrganizationHierarchyUploads" parameterType="map" resultMap="baseResult" >
+		SELECT UPL.BATCH_NUMBER ,
+		  UPL.COMPANY_ID ,
+		  UPL.BRANCH_ID ,
+		  UPL.FORMAT_REFERENCE_ID ,
+		  UPL.STATUS ,
+		  UPL.CREATED_BY ,
+		  UPL.CREATION_DATE ,
+		  UPL.LAST_UPDATED_BY ,
+		  UPL.LAST_UPDATE_DATE ,
+		  LMN.UPLOAD_ID ,
+		  STG.ORG_HIER_NAME ,
+		  STG.DATE_FROM ,
+		  (SELECT MIN(LMN1.UPLOAD_DATE)
+		  FROM WOS_ORG_HIER_LMENTS LMN1
+		  WHERE LMN1.BATCH_NUMBER = UPL.BATCH_NUMBER
+		  ) AS PROCESS_DATE_FROM ,
+		  (SELECT MAX(LMN2.UPLOAD_DATE)
+		  FROM WOS_ORG_HIER_LMENTS LMN2
+		  WHERE LMN2.BATCH_NUMBER = UPL.BATCH_NUMBER
+		  ) AS PROCESS_DATE_TO,
+		  SU.USER_NAME
+		FROM WOS_ORG_HIER_LMENTS LMN
+		RIGHT OUTER JOIN WOS_ORG_HIER_UPLOADS UPL
+		ON UPL.BATCH_NUMBER = LMN.BATCH_NUMBER
+		LEFT JOIN WOS_ORG_HIER_STG STG
+		ON STG.UPLOAD_ID = LMN.UPLOAD_ID
+		LEFT JOIN SAM_USERS SU
+		ON(SU.USER_ID        = UPL.LAST_UPDATED_BY)
+		WHERE LMN.UPLOAD_ID IN
+		  (SELECT MIN(LMN2.UPLOAD_ID)
+		  FROM WOS_ORG_HIER_LMENTS LMN2
+		  RIGHT OUTER JOIN WOS_ORG_HIER_UPLOADS UPL2
+		  ON UPL2.BATCH_NUMBER = LMN2.BATCH_NUMBER
+		  LEFT JOIN WOS_ORG_HIER_STG STG2
+		  ON STG2.UPLOAD_ID       = LMN2.UPLOAD_ID
+		  WHERE UPL.BATCH_NUMBER  = UPL2.BATCH_NUMBER
+		  AND ((STG.ORG_HIER_NAME = STG2.ORG_HIER_NAME)
+		  OR(STG.ORG_HIER_NAME   IS NULL
+		  AND STG2.ORG_HIER_NAME IS NULL))
+		  )
+			AND UPL.BATCH_NUMBER IN (
+										SELECT 
+											LMN.BATCH_NUMBER 
+										FROM 
+											WOS_ORG_HIER_LMENTS LMN
+											<where>
+												<if test="processDateFrom != null">
+													AND TRUNC(LMN.UPLOAD_DATE) &gt;= #{processDateFrom, jdbcType=TIMESTAMP}
+												</if>
+												<if test="processDateTo != null">
+													AND TRUNC(LMN.UPLOAD_DATE) &lt;= #{processDateTo, jdbcType=TIMESTAMP}
+												</if>
+											</where>
+									)
+			<include refid="whereClause"/>
+		ORDER BY UPL.BATCH_NUMBER ASC
+	</select>
+	
+	<select id="getOrganizationHierarchyStageByUploadId" parameterType="map" resultMap="stageResult" >
+		select 
+		  UPL.COMPANY_ID,		  
+		  STG.UPLOAD_ID,
+		  STG.DATE_FROM,
+		  STG.ORG_HIER_TYPE,
+		  STG.IS_DEPT_OWNER,
+		  STG.ORG_HIER_NAME,
+		  STG.DESCRIPTION,
+		  STG.PARENT_ID,
+		  STG.ORGANIZATION_ID,
+		  STG.ROW_NUMBER,
+		  STG.RAW_DATA,
+		  STG.IS_CLOSED	  
+		FROM WOS_ORG_HIER_STG STG
+		JOIN WOS_ORG_HIER_LMENTS ELE ON ELE.UPLOAD_ID = STG.UPLOAD_ID
+		JOIN WOS_ORG_HIER_UPLOADS UPL ON UPL.BATCH_NUMBER = ELE.BATCH_NUMBER
+		where STG.UPLOAD_ID = #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getOrganizationHierarchyStageByBatchNumber" parameterType="map" resultMap="stageResult" >
+		select 
+		  UPL.COMPANY_ID,		  
+		  STG.UPLOAD_ID,
+		  STG.DATE_FROM,
+		  STG.ORG_HIER_TYPE,
+		  STG.IS_DEPT_OWNER,
+		  STG.ORG_HIER_NAME,
+		  STG.DESCRIPTION,
+		  STG.PARENT_ID,
+		  STG.ORGANIZATION_ID,
+		  STG.ROW_NUMBER,
+		  STG.RAW_DATA,
+		  STG.IS_CLOSED
+		FROM WOS_ORG_HIER_STG STG
+		JOIN WOS_ORG_HIER_LMENTS ELE ON ELE.UPLOAD_ID = STG.UPLOAD_ID
+		JOIN WOS_ORG_HIER_UPLOADS UPL ON UPL.BATCH_NUMBER = ELE.BATCH_NUMBER
+		WHERE UPL.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getOrganizationHierarchyStageByExample" parameterType="map" resultMap="stageResult" >
+		select 
+		  UPL.COMPANY_ID,		  
+		  STG.UPLOAD_ID,
+		  STG.DATE_FROM,
+		  STG.ORG_HIER_TYPE,
+		  STG.IS_DEPT_OWNER,
+		  STG.ORG_HIER_NAME,
+		  STG.DESCRIPTION,
+		  STG.PARENT_ID,
+		  STG.ORGANIZATION_ID,
+		  STG.ROW_NUMBER,
+		  STG.RAW_DATA,
+		  STG.IS_CLOSED
+		FROM WOS_ORG_HIER_STG STG
+		JOIN WOS_ORG_HIER_LMENTS ELE ON ELE.UPLOAD_ID = STG.UPLOAD_ID
+		JOIN WOS_ORG_HIER_UPLOADS UPL ON UPL.BATCH_NUMBER = ELE.BATCH_NUMBER
+		WHERE 
+		UPL.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+		<if test="orgHierName != null">
+			AND STG.ORG_HIER_NAME = #{orgHierName, jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND STG.PARENT_ID = #{parentId, jdbcType=VARCHAR}
+		</if>
+		<if test="organizationId != null">
+			AND STG.ORGANIZATION_ID = #{organizationId, jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="getOrganizationHierarchyErrorByUploadId" parameterType="map" resultMap="errorResult" >
+		SELECT ERR.UPLOAD_ID,
+		  ERR.ROW_NUMBER,
+		  ERR.RAW_DATA,
+		  ERR.ERROR_MESSAGE,
+		  ERR.ERROR_ID,
+		  ERR.CREATED_BY,
+		  ERR.CREATION_DATE,
+		  ERR.LAST_UPDATED_BY,
+		  ERR.LAST_UPDATE_DATE,
+		  ERR.SOURCE,
+		  ERR.IS_CLOSED
+		FROM WOS_ORG_HIER_ERRORS ERR
+		WHERE ERR.UPLOAD_ID = #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getHierarchyStageInOneBatchNumberByUploadId" parameterType="map" resultType="int" >
+		SELECT COUNT(1) FROM WOS_ORG_HIER_STG STG
+			JOIN WOS_ORG_HIER_LMENTS LMN ON STG.UPLOAD_ID = LMN.UPLOAD_ID
+			JOIN WOS_ORG_HIER_UPLOADS UPL ON LMN.BATCH_NUMBER = UPL.BATCH_NUMBER
+			<where>
+				STG.IS_CLOSED = 0
+				<if test="organizationHierarchyStage.code != null">
+					AND UPPER(STG.job_code) = UPPER(#{jobStage.code})
+				</if>
+				<if test="organizationHierarchyStage.orgHierName != null">
+					AND UPPER(STG.ORG_HIER_NAME) = UPPER(#{orgHierName.activityName})
+				</if>
+			</where>
+	</select>
+	
+	<select id="findAllOrgHierName" resultType="String">
+		SELECT DISTINCT(ORG_HIER_NAME) FROM WOS_ORG_HIER_STG
+	</select>
+</mapper>

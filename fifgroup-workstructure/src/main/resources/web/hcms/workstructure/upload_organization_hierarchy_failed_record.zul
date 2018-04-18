@@ -1,0 +1,66 @@
+<window id="windowUploadOrganizationHierarchyFailedRecord"
+	apply="co.id.fifgroup.workstructure.controller.UploadOrganizationHierarchyFailedComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Upload Organization Hierarchy - Failed Record" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Organization Hierarchy" />
+					<label id="labelOrganizationHierarchy" />
+				</row>
+				<row>
+					<label value="Batch Number" />
+					<label id="lblBatchNumber" />
+				</row>
+				<row>
+					<label value="Effective Date From" />
+					<hbox>
+						<label id="labelDateFrom" />
+						<label value="To" />
+						<label id="labelDateTo" />
+					</hbox>
+				</row>
+				<row>
+					<label value="Process Date" />
+					<label id="labelProcessDate" />
+				</row>
+				<row>
+					<label value="Uploaded By" />
+					<label id="labelUploadedBy" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox>
+			<caption label="Failed Record" />
+			<listbox id="lstUploadOrganizationHierarchyFailed"
+				mold="paging" pageSize="10">
+				<listhead>
+					<listheader id="listHeaderRowNum" label="Row Number"
+						align="center" />
+					<listheader label="Error Message" align="center" />
+				</listhead>
+				<!-- 				<template name="model"> -->
+				<!-- 					<listitem> -->
+				<!-- 						<listcell id="listcellRowNum" value="${each}" label="${each.rowNumber}"></listcell> -->
+				<!-- 						<listcell value="${each}" label="${each.errorMessage}"></listcell> -->
+				<!-- 					</listitem> -->
+				<!-- 				</template> -->
+			</listbox>
+		</groupbox>
+		<separator />
+		<hbox pack="center" align="center" style="width:100%;">
+			<button id="btnDownload" label="Download" mold="trendy"
+				disabled="true" />
+		</hbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnBack" label="${labels.common.back}"
+				mold="trendy" image="${labels.image.link.back}" />
+		</hbox>
+	</groupbox>
+</window>

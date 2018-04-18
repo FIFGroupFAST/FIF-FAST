@@ -1,0 +1,49 @@
+<window id="winWorkflowNotificationMessageDetail" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowNotificationMessageDetailComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption label="${labels.swf.notificationMessageDetail}" />
+				<grid id="grdMessage" sclass="form-grid" width="100%" vflex="min">
+					<columns hflex="min">
+						<column width="180px" align="right" />
+						<column hflex="min"/>
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.subject}" />
+							<label id="lblSubject" />
+						</row>
+						<row>
+							<label value="${labels.swf.from}" />
+							<label id="lblFrom" />
+						</row>
+						<row>
+							<label value="${labels.swf.receivedTime}" />
+							<label id="lblReceivedTime" />
+						</row>
+						<row>
+							<label value="${labels.common.to}" />
+							<label id="lblTo" />
+						</row>
+						<row valign="top">
+							<label value="${labels.swf.messageContent}" />
+							<div  style="overflow:auto" width="800px">
+								<html id="htmlDetailMessage" style="overflow:auto" width="800px" sclass="container-message"/>
+							</div>
+						</row>									
+					</rows>
+				</grid>
+				<separator />
+				<hbox id="hboxLinkDetail" visible="false">
+					<label value="${labels.swf.please}" />
+					<a id="linkDetailTrx" label="${labels.swf.clickHere}" />
+					<label value="${labels.swf.viewDetailInformation}" />
+				</hbox>		
+				<div align="center">
+					<button label="${labels.swf.close}" id="btnClose" mold="trendy" />
+				</div>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.finder.HcstgSyncMapper">
+	<resultMap id="HcstgNonCoreResultMap"
+		type="co.id.fifgroup.systemadmin.domain.HcstgTable">
+		<result column="TABLE_NAME" property="tableName" jdbcType="VARCHAR" />
+		<result column="TABLE_NAME_PORTAL" property="tableNamePortal" jdbcType="VARCHAR" />
+		<result column="ROW_NUM" property="rowNum" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<select id="getHcstgTables" resultMap="HcstgNonCoreResultMap">
+		select table_name, table_name || '@HCSTG.FIF.CO.ID' as table_name_portal 
+		  from sam_sync_tables
+	</select>
+
+	<delete id="truncateTable" parameterType="co.id.fifgroup.systemadmin.domain.HcstgTable">
+		delete from
+		${tableName}
+	</delete>
+	
+	<delete id="truncateTableWithRowNum" parameterType="co.id.fifgroup.systemadmin.domain.HcstgTable">
+		delete from
+		${tableName}
+		where rownum &lt;= ${rowNum}
+	</delete>
+
+	<insert id="insertTable" parameterType="co.id.fifgroup.systemadmin.domain.HcstgTable">
+		insert into
+		${tableName}
+		select * from ${tableNamePortal}
+	</insert>
+
+    <select id="getRowNum" parameterType="co.id.fifgroup.systemadmin.domain.HcstgTable" resultMap="HcstgNonCoreResultMap">
+		select count(1) row_num from ${tableName}
+	</select>
+
+
+</mapper>

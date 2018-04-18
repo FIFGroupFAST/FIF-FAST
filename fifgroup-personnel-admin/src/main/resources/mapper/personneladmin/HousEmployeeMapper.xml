@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.dao.HousEmployeeMapper">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.HousEmployeeDTO">
+		<result column="empl_code" property="employeeNumber" jdbcType="VARCHAR" />
+	    <result column="empl_branch" property="branchCode" jdbcType="VARCHAR" />
+	    <result column="empl_pospop_id" property="posCode" jdbcType="VARCHAR" />
+	    <result column="empl_name" property="employeeName" jdbcType="VARCHAR" />
+	    <result column="empl_job" property="jobCode" jdbcType="VARCHAR" />
+	    <result column="empl_status" property="emplStatus" jdbcType="VARCHAR" />
+	    <result column="empl_area" property="emplArea" jdbcType="VARCHAR" />
+	    <result column="empl_userid" property="emplUserid" jdbcType="VARCHAR" />
+	    <result column="empl_eff_date" property="assignmentEffectiveDate" jdbcType="TIMESTAMP" />
+	    <result column="empl_secujob" property="employeeJobCode" jdbcType="VARCHAR" />
+	    <result column="empl_flag" property="employeeFlag" jdbcType="VARCHAR" />
+	    <result column="empl_hp" property="employeeHp" jdbcType="VARCHAR" />
+	    <result column="empl_organization_mutation" property="organizationMutationCode" jdbcType="TIMESTAMP" />
+	    <result column="empl_branch_mutation" property="branchMutationCode" jdbcType="VARCHAR" />
+	    <result column="empl_job_mutation" property="jobMutationCode" jdbcType="VARCHAR" />
+	    <result column="empl_sms_flag" property="employeeSmsFlag" jdbcType="VARCHAR" />
+	    <result column="empl_updated_date" property="employeeUpdatedDate" jdbcType="TIMESTAMP" />
+	    <result column="empl_updated_by" property="employeeUpdatedBy" jdbcType="VARCHAR" />
+	    <result column="empl_organization" property="organization" jdbcType="VARCHAR"/>
+	    
+	</resultMap>
+	
+	<select id="insert" parameterType="co.id.fifgroup.personneladmin.dto.HousEmployeeDTO" >
+		insert into hous_employee@fifapps.us.oracle.com
+		 (
+		 	empl_code,
+		 	empl_branch,
+		 	empl_pospop_id,
+		 	empl_name,
+		 	empl_job,
+		 	empl_status,
+		 	empl_area,
+		 	empl_userid,
+		 	empl_eff_date,
+		 	empl_secujob,
+		 	empl_flag,
+		 	empl_hp,
+		 	empl_organization_mutation,
+		 	empl_branch_mutation,
+		 	empl_sms_flag,
+		 	empl_updated_date,
+		 	empl_updated_by,
+		 	empl_organization,
+		 	empl_job_mutation
+		 ) 
+		 values 
+		 (
+		 	#{employeeNumber, jdbcType=VARCHAR},
+		 	#{branchCode, jdbcType=VARCHAR},
+		 	#{posCode, jdbcType=VARCHAR},
+		 	#{employeeName, jdbcType=VARCHAR},
+		 	#{jobCode, jdbcType=VARCHAR},
+		 	#{emplStatus, jdbcType=VARCHAR},
+		 	#{emplArea, jdbcType=VARCHAR},
+		 	#{emplUserid, jdbcType=VARCHAR},
+		 	#{assignmentEffectiveDate},
+		 	#{employeeJobCode, jdbcType=VARCHAR},
+		 	#{employeeFlag, jdbcType=VARCHAR},
+		 	#{employeeHp, jdbcType=VARCHAR},
+		 	#{organizationMutationCode, jdbcType=VARCHAR},
+		 	#{branchMutationCode, jdbcType=VARCHAR},
+		 	#{employeeSmsFlag, jdbcType=VARCHAR},
+		 	#{employeeUpdatedDate},
+		 	#{employeeUpdatedBy, jdbcType=VARCHAR},
+		 	#{organization, jdbcType=VARCHAR},
+		 	#{jobMutationCode, jdbcType=VARCHAR}
+		 )
+	</select>
+	
+	<update id="update" parameterType="co.id.fifgroup.personneladmin.dto.HousEmployeeDTO">
+		update hous_employee@fifapps.us.oracle.com
+		<set>
+			empl_branch = #{branchCode, jdbcType=VARCHAR},
+		 	empl_pospop_id = #{posCode, jdbcType=VARCHAR},
+		 	empl_name = #{employeeName, jdbcType=VARCHAR},
+		 	empl_job = #{jobCode, jdbcType=VARCHAR},
+		 	empl_status = #{emplStatus, jdbcType=VARCHAR},
+		 	empl_area = #{emplArea, jdbcType=VARCHAR},
+		 	empl_userid = #{emplUserid, jdbcType=VARCHAR},
+		 	empl_eff_date = #{assignmentEffectiveDate},
+		 	empl_secujob = #{employeeJobCode, jdbcType=VARCHAR},
+		 	empl_flag = #{employeeFlag, jdbcType=VARCHAR},
+		 	empl_hp = #{employeeHp, jdbcType=VARCHAR},
+		 	empl_organization_mutation = #{organizationMutationCode, jdbcType=VARCHAR},
+		 	empl_branch_mutation = #{branchMutationCode, jdbcType=VARCHAR},
+		 	empl_sms_flag = #{employeeSmsFlag, jdbcType=VARCHAR},
+		 	empl_updated_date = #{employeeUpdatedDate},
+		 	empl_updated_by = #{employeeUpdatedBy, jdbcType=VARCHAR},
+		 	empl_organization = #{organization, jdbcType=VARCHAR},
+		 	empl_job_mutation = #{jobMutationCode, jdbcType=VARCHAR}
+		</set>
+		where empl_code = #{employeeNumber}
+	</update>
+	
+	<select id="countHouseEmployee" parameterType="map" resultType="Integer">
+		select count(*) from hous_employee@fifapps.us.oracle.com where empl_code = #{employeeNumber}
+	</select>
+	
+	<insert id="insertUser" parameterType="map">
+		insert into sam_users values
+		(
+			sam_users_s.nextval,
+			#{userName},
+			#{personId},
+			#{dateFrom},
+			#{dateTo},
+			-1,
+			sysdate,
+			-1,
+			sysdate,
+			null,
+			0
+		)
+	</insert>
+	
+	<select id="countUser" parameterType="map" resultType="Integer">
+		select count(*) from sam_users where user_name = #{userName}
+	</select>
+	
+	<update id="updateUser" parameterType="map">
+		update sam_users
+		<set>
+			person_id = #{personId}, 
+			last_update_date = sysdate,
+			last_updated_by = -1 
+		</set>
+		where user_name = #{userName}
+	</update>
+</mapper>

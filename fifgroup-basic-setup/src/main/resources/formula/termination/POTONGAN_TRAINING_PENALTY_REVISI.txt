@@ -1,0 +1,68 @@
+import groovy.transform.CompileStatic
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+import co.id.fifgroup.core.ui.lookup.KeyValue
+
+@CompileStatic
+public class TrainingPenalty{
+	ServiceModel serviceModel;
+	Long personId;
+	Date processDate;
+	Long companyId;
+	Long terTypeId;
+
+	public Object getParam(){
+		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
+		String sqlTrainingPenalty = """
+					SELECT
+						sum(TO_NUMBER (segment26)) as AMOUNT,
+						pac.segment15 as EMPLOYEE_NUMBER,
+						bhv.branch_name as BRANCH
+					FROM
+						hr.per_analysis_criteria@HRMSDEV.FIF.CO.ID pac
+						join pea_personal_informations ppi on(ppi.employee_number = pac.segment15)
+						join pea_primary_assignments ppa on(ppa.person_id = ppi.person_id and ppa.company_id = ppi.company_id)
+						join branch_hierarchy_v bhv on(bhv.organization_id = ppa.organization_id and bhv.company_id = ppi.company_id)
+					WHERE
+						TO_DATE (SUBSTR (pac.segment25, 1, 11), 'DD-MON-RRRR') <= TRUNC(sysdate)
+						AND trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+						AND trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+						AND pac.segment28 = 'SETUJU'
+						AND id_flex_num   =
+						(
+						SELECT
+							id_flex_num
+						FROM
+							applsys.fnd_id_flex_structures@HRMSDEV.FIF.CO.ID
+						WHERE
+							application_id       = '800'
+							AND id_flex_structure_code = 'FIF_PERJANJIAN_TRAINING'
+						)
+						AND ppi.person_id = ${personId}
+						AND ppi.company_id = ${companyId}
+					group by pac.segment15, bhv.branch_name
+					""";
+		List<Map<String, Object>> results = serviceModel.getFromQuery(sqlTrainingPenalty);
+		
+		if(!results.isEmpty()){
+			for(Map<String, Object> result : results){
+				KeyValue KeyValue = new KeyValue();
+				KeyValue.setValue(result.get("AMOUNT"));
+				KeyValue.setDescription(result.get("BRANCH"));
+                                keyvalues.add(KeyValue);
+			}
+			println("result : "+results.size()+" records");
+		} else
+			println("result : 0 record");
+		
+		return keyvalues;
+	 };
+}
+
+
+
+TrainingPenalty subject = new TrainingPenalty();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setCompanyId(company_id);
+return subject.getParam();

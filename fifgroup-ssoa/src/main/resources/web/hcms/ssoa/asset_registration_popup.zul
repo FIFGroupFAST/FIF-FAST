@@ -1,0 +1,76 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssetRegistrationPopup" title="Asset" border="normal" width="1000px" height="auto"
+closable="true" position="center,center" action="show: slideDown;hide: slideUp"
+apply="co.id.fifgroup.ssoa.ui.AssetRegistrationPopupComposer">
+	<groupbox>
+	<separator/>
+		<groupbox mold="3d">
+			<caption label="Search Asset" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="150px" align="right" />
+					<column/>
+				</columns>
+				<rows>
+					<row>
+						<label value="Description" />
+						<textbox id="txtDescription" width="250px" rows="3" cols="20"/>
+					</row>
+					<row>
+						<label value="" />
+						<button id="btnFindPopup" label="${labels.common.find}" mold="trendy" 
+							image="${labels.image.link.search}" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator/>
+		
+		<groupbox mold="3d">
+			<label id="lblErrAsserregistrationSearch" style="color:red" />
+			<separator/>
+			<listbox id="lbxAssetPopup"  emptyMessage="${labels.common.noDataFound}" 
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead >
+					<listheader label="" width="50px" />
+					<listheader label="Stock Opname Unreg Asset Id" sort="auto(stockOpnameUnregAssetId)" width="100px" visible="false"/>
+					<listheader id="hdrAssetType" label="Asset Type" sort="auto(assetTypeName)" width="100px" />
+					<listheader id="hdrBranchCode" label="Branch Code" sort="auto(branchCode)" width="140px"/> 
+					<listheader id="hdrBranchName" label="Branch Name" sort="auto(branchName)" width="160px" />
+					<listheader id="hdrLocationCode" label="Kode Outlet" sort="auto(locationCode)" width="140px" />
+					<listheader id="hdrLocationName" label="Nama Outlet" sort="auto(locationName)" width="160px" />
+					<listheader id="hdrCategoryName" label="Asset Category" sort="auto(categoryName)" width="180px" />
+					<listheader id="hdrDatePlaceInService" label="Tanggal Perolehan" sort="auto(datePlacedInService)" width="160px" />
+					<listheader id="hdrDescription" label="Description" sort="auto(description)" width="250px" />
+					<listheader id="hdrSerialNumber" label="Serial Number" sort="auto(serialNumber)" width="160px" />
+				</listhead>
+				<template name="model">
+				<listitem>
+					<listcell style="text-align:center;"/>
+					<listcell label="${each.stockOpnameUnregAssetId}" visible="false" />
+					<listcell label="${each.assetTypeName}" />
+					<listcell label="${each.branchCode}" />
+					<listcell label="${each.branchName}" />
+					<listcell label="${each.locationCode}" />
+					<listcell label="${each.locationName}" />
+					<listcell label="${each.categoryName}" />	
+					<listcell label="${date:format(each.datePlacedInService,'dd MMM yyyy')}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.serialNumber}" />
+					<listcell visible="false" label="${each.stockOpnameResult}" />	
+					<listcell visible="false" label="${each.stockOpnameSugest}" />
+					<listcell visible="false" label="${each.stockOpnameHoSugest}" />
+				</listitem>
+			</template>
+			</listbox>
+			 <paging id="pgListOfValue"  /> 
+		</groupbox>
+		<separator/>
+		<div align="center">
+			<button id="btnSave" label="${labels.common.save}" mold="trendy" 
+			image="${labels.image.link.save}" />
+			<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" 
+			image="${labels.image.link.cancel}" style="float:right;" />
+		</div>
+	</groupbox>
+</window>

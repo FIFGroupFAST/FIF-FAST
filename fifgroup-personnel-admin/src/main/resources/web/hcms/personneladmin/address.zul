@@ -1,0 +1,56 @@
+<window id="winAddress" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AddressComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.addressList }" />
+<!-- 		<vbox> -->
+			<div id="errListbox" />
+			<listbox id="lbxAddress" checkmark="true" emptyMessage="${labels.common.err.noDataFound}"> 
+				<listhead>
+					<listheader label="" width="30px"/>
+					<listheader label="${labels.common.startDate }" width="150px"/>
+					<listheader label="${labels.common.endDate }" width="150px"/>
+					<listheader label="${labels.pea.country }" width="150px"/>
+					<listheader label="${labels.pea.province }" width="150px"/>
+					<listheader label="${labels.pea.city}" width="150px"/>
+					<listheader label="${labels.pea.kecamatan}" width="150px"/>
+					<listheader label="${labels.pea.kelurahan}" width="150px"/>
+					<listheader label="${labels.pea.zipcode}" width="150px"/>
+					<listheader label="${labels.pea.address}" width="150px"/>
+					<listheader label="${labels.pea.isPhysicalAddress}" width="200px"/>
+					<listheader label="${labels.pea.isKtpAddress}" width="200px"/>
+					<listheader label="${labels.common.action}" width="80px"/>
+				</listhead>				
+			</listbox>
+			<separator></separator>
+			<hbox>
+				<button label="${labels.common.addRow}"
+								id="btnAdd" mold="trendy" image="${labels.image.link.add}"/>
+				<button label="${labels.common.delete}"
+								id="btnDelete" mold="trendy" image="${labels.image.link.delete}"/>		
+			</hbox>
+<!-- 		</vbox>		 -->
+	</groupbox>
+	<hbox pack="center" align="center">
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxNavigation">
+				<button id="btnBackCommunicationMedia"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.back}" />
+				<space width="10px"></space>
+				<button id="btnNextEducation"
+					label="${labels.common.next}" mold="trendy"
+					image="${labels.image.link.next}" />
+			</hbox>
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>		
+</window>

@@ -1,0 +1,157 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>co.id.fifgroup</groupId>
+    <artifactId>fifgroup-project</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <artifactId>fifgroup-biro-jasa</artifactId>
+  <name>fifgroup-biro-jasa</name>
+  <description>fifgroup-biro-jasa</description>
+  
+  <properties>
+		<mybatis.generator.overwrite>true</mybatis.generator.overwrite>
+	</properties>
+
+	<dependencies>
+		<!-- Module Dependencies -->
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-basic-setup</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-workstructure</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-audit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-personnel-admin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.id.fifgroup</groupId>
+			<artifactId>fifgroup-system-workflow</artifactId>
+		</dependency>
+		<!-- JUnit Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<!-- Spring Dependency -->
+		 <dependency>
+            <groupId>org.springframework</groupId>
+		    <artifactId>spring-orm</artifactId>
+		    <version>5.0.5.RELEASE</version>
+        </dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
+		<!-- Oracle Dependencies -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+		</dependency>
+
+		<!-- MyBatis Dependencies -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+		</dependency>
+
+		<!-- ZK Dependency -->
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zk</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkplus</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zul</artifactId>
+		</dependency>
+
+		<!-- Commons IO -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-oracle</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>5.0.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>eclipse</groupId>
+					<artifactId>jdtcore</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1.6</version>
+			<exclusions>
+				<exclusion>
+					<groupId>maven-plugins</groupId>
+					<artifactId>maven-cobertura-plugin</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>maven-plugins</groupId>
+					<artifactId>maven-findbugs-plugin</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xeustechnologies</groupId>
+			<artifactId>jcl-core</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>net.sourceforge.barbecue</groupId>
+                <artifactId>barbecue</artifactId>
+                <version>1.0.0</version>
+		</dependency>
+		<dependency>
+            <groupId>net.sf.barcode4j</groupId>
+                <artifactId>barcode4j</artifactId>
+                <version>2.1</version>
+		</dependency>
+	</dependencies>
+	
+	
+</project>

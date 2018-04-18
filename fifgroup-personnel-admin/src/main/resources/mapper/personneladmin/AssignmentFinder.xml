@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AssignmentFinder">
+	
+	<resultMap id="baseResultAssignment" type="co.id.fifgroup.personneladmin.dto.AssignmentDTO">
+		<result column="ASSIGNMENT_ID" property="assignmentId" jdbcType="DECIMAL" />
+		<result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="ASSIGNMENT_TYPE" property="assignmentType" jdbcType="VARCHAR" />
+	    <result column="SECONDARY_TYPE" property="secondaryType" jdbcType="VARCHAR" />
+	    <result column="ORGANIZATION_ID" property="organizationId" jdbcType="DECIMAL" />
+	    <result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR" />
+	    <result column="JOB_ID" property="jobId" jdbcType="DECIMAL" />
+	    <result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+	    <result column="LOCATION_ID" property="locationId" jdbcType="DECIMAL" />
+	    <result column="LOCATION_NAME" property="locationName" jdbcType="VARCHAR" />
+	    <result column="IS_FIFAPPS_ACCESS" property="fifappsAccess" jdbcType="DECIMAL" />
+	    <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+	    <result column="IS_INTERNSHIP" property="internship" jdbcType="DECIMAL" />
+	    <result column="GRADE" property="grade" jdbcType="VARCHAR" />
+	    <result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getAssignmentByEffectiveOnDate" parameterType="map" resultMap="baseResultAssignment">
+		  SELECT a.assignment_id,
+		         a.person_id,
+		         a.company_id,
+		         a.assignment_type,
+		         a.secondary_type,
+		         a.organization_id,
+		         org.organization_name,
+		         COALESCE (
+		            (SELECT location_id
+		               FROM wos_organization_versions orgv
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to),
+		            (SELECT location_id
+		               FROM wos_organization_versions orgv
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (a.start_date) BETWEEN orgv.date_from
+		                                                 AND orgv.date_to))
+		            location_id,
+		         COALESCE (
+		            (SELECT loc.location_name
+		               FROM wos_organization_versions orgv
+		                    JOIN wos_locations loc
+		                       ON orgv.location_id = loc.location_id
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to),
+		            (SELECT loc.location_name
+		               FROM wos_organization_versions orgv
+		                    JOIN wos_locations loc
+		                       ON orgv.location_id = loc.location_id
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (a.start_date) BETWEEN orgv.date_from
+		                                                 AND orgv.date_to))
+		            location_name,
+		         a.job_id,
+		         j.job_name,
+		         a.is_fifapps_access,
+		         a.start_date,
+		         a.end_date,
+		         a.is_internship,
+		         a.grade,
+		         a.sub_grade
+		    FROM (SELECT ppa.assignment_id,
+		                 ppa.person_id,
+		                 ppa.company_id,
+		                 'PRIMARY' assignment_type,
+		                 NULL secondary_type,
+		                 ppa.organization_id,
+		                 ppa.job_id,
+		                 0 is_fifapps_access,
+		                 ppa.effective_start_date start_date,
+		                 ppa.effective_end_date end_date,
+		                 ppa.is_internship,
+		                 wg.grade grade,
+		                 wg.sub_grade
+		            FROM pea_primary_assignments ppa, wos_grades wg
+		           WHERE     ppa.effective_start_date &lt;= #{effectiveOnDate}
+		                 AND ppa.grade_id = wg.grade_id
+		          UNION
+		          SELECT psa.assignment_id,
+		                 psa.person_id,
+		                 psa.company_id,
+		                 'SECONDARY' assignment_type,
+		                 psa.secondary_type,
+		                 psa.organization_id,
+		                 psa.job_id,
+		                 psa.is_fifapps_access,
+		                 psa.start_date,
+		                 psa.end_date,
+		                 0 is_internship,
+		                 NULL grade,
+		                 NULL sub_grade
+		            FROM pea_secondary_assignments psa) a
+		         LEFT JOIN wos_organizations org
+		            ON org.organization_id = a.organization_id
+		         LEFT JOIN wos_organization_versions orgv
+		            ON     orgv.organization_id = org.organization_id
+		               AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to
+		         LEFT JOIN wos_locations l ON l.location_id = orgv.location_id
+		         LEFT JOIN wos_jobs j ON j.job_id = a.job_id
+		   WHERE a.person_id = #{personId} 
+		     AND a.company_id = #{companyId}
+		     
+		<if test="assignmentType != null">
+			and a.assignment_type = #{assignmentType}		  
+		</if>
+		
+		ORDER BY a.start_date DESC
+	</select>
+	
+	<resultMap id="baseResultPrimary" type="co.id.fifgroup.personneladmin.dto.PrimaryAssignmentDTO">
+		<id column="ASSIGNMENT_ID" jdbcType="DECIMAL" property="assignmentId" />
+	    <result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+	    <result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName"/>
+	    <result column="ORGANIZATION_ID" property="organizationId" jdbcType="DECIMAL" />
+		<result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR" />
+		<result column="BRANCH_ID" property="branchId" jdbcType="NUMERIC" />
+		<result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR" />
+		<result column="GRADE_ID" property="gradeId" jdbcType="DECIMAL" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="GRADE_NAME" property="gradeName" jdbcType="VARCHAR" />
+		<result column="ACTION_TYPE" property="actionType" jdbcType="VARCHAR" />
+		<result column="LOCATION_ID" property="locationId" jdbcType="NUMERIC" />
+		<result column="LOCATION_NAME" property="locationName" jdbcType="VARCHAR" />
+		<result column="JOB_ID" property="jobId" jdbcType="NUMERIC" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+		<result column="JOB_GROUP_CODE" property="jobGroupCode" jdbcType="VARCHAR" />
+		<result column="PERSONAL_GRADE_CODE" property="personalGradeCode" jdbcType="VARCHAR" />
+	    <result column="TRANSFERED_BY" jdbcType="VARCHAR" property="transferedBy" />
+	    <result column="ASSIGNMENT_STATUS" jdbcType="VARCHAR" property="assignmentStatus" />
+	    <result column="HOUSING_ALLOWANCE" jdbcType="VARCHAR" property="housingAllowance" />
+	    <result column="MENTOR_ID" jdbcType="DECIMAL" property="mentorId" />
+	    <result column="IS_INTERNSHIP" jdbcType="DECIMAL" property="internship" />
+	    <result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+	    <result column="EFFECTIVE_END_DATE" jdbcType="DATE" property="effectiveEndDate" />	  
+	    <result column="SOURCE" jdbcType="VARCHAR" property="source"/>
+	    <result column="REF_ID" jdbcType="DECIMAL" property="refId"/>  
+	    <result column="CREATION_DATE" jdbcType="DATE" property="creationDate"/>  
+	</resultMap>
+	
+	<select id="getPrimaryAssignmentByEffectiveOnDate" parameterType="map" resultMap="baseResultPrimary">
+		SELECT a.assignment_id,
+		  a.person_id,
+		  a.company_id,
+		  bc.company_name COMPANY_NAME,
+		  a.organization_id,
+		  org.organization_name,
+		  bh.branch_id,
+		  bh.branch_name,
+		  a.job_id,
+		  jb.job_name,
+      	  jobv.job_group_code,
+		  A.grade_id,
+      	  grade.grade || ' - ' || grade.sub_grade grade_name,
+		  a.action_type,
+		  a.transfered_by,
+		  a.assignment_status,
+		  a.housing_allowance,
+		  a.mentor_id,
+		  a.is_internship,
+		  a.effective_start_date,
+		  a.effective_end_date,
+		  a.source,
+		  a.ref_id,
+		  l.location_id,
+		  l.location_name
+		FROM pea_primary_assignments a
+		LEFT JOIN wos_grades grade ON grade.grade_id = A.grade_id
+    	LEFT JOIN wos_jobs jb
+		ON jb.job_id = A.job_id
+    	LEFT JOIN wos_job_versions jobv
+    	ON jobv.job_id = jb.job_id
+    	AND SYSDATE BETWEEN JOBV.DATE_FROM AND JOBV.DATE_TO
+		LEFT JOIN wos_organizations org
+		ON org.organization_id = a.organization_id
+		LEFT JOIN wos_organization_versions orgv
+		ON orgv.organization_id = org.organization_id
+		AND trunc(sysdate) BETWEEN orgv.date_from AND orgv.date_to
+		LEFT JOIN wos_locations l
+		ON l.location_id = orgv.location_id
+		LEFT JOIN (select * from BRANCH_HIERARCHY_V bh WHERE bh.org_hier_id  =
+		  (SELECT org_hier_id
+		  FROM wos_organization_hier
+		  WHERE company_id         = #{companyId}
+		  AND upper(org_hier_type) = upper('STRUCTURAL')
+		  )) bh
+		ON bh.organization_id = a.organization_id
+		LEFT JOIN bse_companies bc ON bc.company_id=a.company_id
+		<where>			
+			<if test="personId != null">
+				AND a.PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND a.COMPANY_ID = #{companyId}
+			</if>
+			<if test="effectiveOnDate != null">
+				AND #{effectiveOnDate} between a.EFFECTIVE_START_DATE and a.EFFECTIVE_END_DATE
+			</if>
+		</where>
+	</select>
+	
+	<select id="findPrimaryAssignmentById" parameterType="map" resultMap="baseResultPrimary">
+		select
+			a.assignment_id,
+			a.person_id,
+			a.company_id,
+			a.organization_id,
+			org.organization_name,
+			bh.branch_id,
+			bh.branch_name,
+			a.job_id,
+			jb.job_name,
+			a.grade_id,
+			a.action_type,
+			a.transfered_by,
+			a.assignment_status,
+			a.housing_allowance,
+			a.mentor_id,
+			a.is_internship,
+			a.effective_start_date,
+			a.effective_end_date ,
+			a.ref_id,
+			a.creation_date,
+			a.source
+			FROM pea_primary_assignments a left join wos_jobs jb ON jb.job_id = a.job_id 
+			left join wos_organizations org ON org.organization_id = a.organization_id
+			left join wos_organization_hier woh on woh.company_id = a.company_id  AND upper(org_hier_type) = upper('STRUCTURAL')
+			LEFT JOIN BRANCH_HIERARCHY_V bh on bh.org_hier_id = woh.org_hier_id and bh.organization_id = a.organization_id 
+			WHERE a.assignment_id = #{assignmentId}	
+	</select>
+	
+	<resultMap id="baseResultSecondary" type="co.id.fifgroup.personneladmin.dto.SecondaryAssignmentDTO">
+		<id column="ASSIGNMENT_ID" jdbcType="DECIMAL" property="assignmentId" />
+		<result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="SECONDARY_TYPE" jdbcType="VARCHAR" property="secondaryType" />
+		<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+		<result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR" />
+		<result column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+		<result column="BRANCH_ID" property="branchId" jdbcType="NUMERIC" />
+		<result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR" />
+		<result column="LOCATION_ID" property="locationId" jdbcType="NUMERIC" />
+		<result column="LOCATION_NAME" property="locationName" jdbcType="VARCHAR" />   
+		<result column="TRANSFERED_BY" jdbcType="VARCHAR" property="transferedBy" />
+		<result column="IS_FIFAPPS_ACCESS" jdbcType="DECIMAL" property="fifappsAccess" />
+		<result column="START_DATE" jdbcType="TIMESTAMP" property="startDate" />
+		<result column="END_DATE" jdbcType="TIMESTAMP" property="endDate" />
+		<result column="SOURCE" jdbcType="VARCHAR" property="source" />
+	   	<result column="REF_ID" jdbcType="DECIMAL" property="refId" />	   	    
+	</resultMap>
+	
+	<select id="getSecondaryAssignmentByEffectiveOnDate" parameterType="map" resultMap="baseResultSecondary">
+		select
+			psa.assignment_id,
+			psa.person_id,
+			psa.company_id,
+			psa.secondary_type,
+			psa.organization_id,
+			org.organization_name,
+			psa.job_id,
+			jb.job_name,
+			bh.branch_id,
+			bh.branch_name,
+			psa.transfered_by,
+			psa.is_fifapps_access,
+			psa.source,
+			psa.ref_id,
+			psa.start_date,
+			psa.end_date
+		from pea_secondary_assignments psa
+		left join wos_jobs jb on jb.job_id = psa.job_id
+		left join wos_organizations org on org.organization_id = psa.organization_id
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = psa.organization_id
+		<where>
+			<if test="personId != null">
+				AND psa.PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND psa.COMPANY_ID = #{companyId}
+			</if>
+			<if test="effectiveOnDate != null">
+				AND #{effectiveOnDate} between psa.START_DATE and psa.END_DATE
+			</if>
+			<if test="secondaryAssignmentType != null">
+				AND psa.secondary_type = #{secondaryAssignmentType}  
+			</if>
+		</where>
+	</select>
+	
+	<select id="countSecondaryAssignmentByEffectiveDate" resultType="Long" parameterType="co.id.fifgroup.personneladmin.dto.SecondaryAssignmentDTO">
+		select count(*) from pea_secondary_assignments
+		where secondary_type = #{secondaryType}
+		<if test="assignmentId != null">
+			and assignment_id &lt;&gt; #{assignmentId}
+		</if>
+		and person_id = #{personId}
+		and company_id = #{companyId}
+		and (#{startDate} between start_date and end_date
+			or #{endDate} between start_date and end_date
+			or start_date between #{startDate} and #{endDate}
+			or end_date between #{startDate} and #{endDate})
+	</select>
+	
+	<select id="countFutureSecondaryAssignment" resultType="Long" parameterType="co.id.fifgroup.personneladmin.dto.SecondaryAssignmentDTO">
+		select count(*) from pea_secondary_assignments
+		where secondary_type = #{secondaryType}
+		<if test="assignmentId != null">
+			and assignment_id &lt;&gt; #{assignmentId}
+		</if>
+		and person_id = #{personId}
+		and company_id = #{companyId}
+		and start_date &gt; trunc(sysdate)
+	</select>
+	
+	<select id="getLastPromotionDate" resultType="java.util.Date" parameterType="map">
+		select max(effective_start_date) from pea_primary_assignments
+			where action_type = 'PROMOTION' 
+			and person_id = #{personId} 
+			and company_id = #{companyId}
+	</select>
+	
+	<select id="getPrimaryAssignmentActiveByJobAndOrganization" parameterType="map" resultType="Integer">
+		select count(*)
+		FROM pea_primary_assignments ppa
+		JOIN pea_people_types ppt ON ppt.person_id = ppa.person_id 
+		AND ppt.people_type = 'EMPLOYEE'
+		<where>
+			<if test="companyId != null">
+				and ppa.company_id = #{companyId}			
+			</if>
+			<if test="organizationId != null">
+				and ppa.organization_id = #{organizationId}
+			</if>
+			<if test="jobId != null">
+				and ppa.job_id = #{jobId}
+			</if> 
+			<if test="effectiveOnDate != null">
+				AND #{effectiveOnDate} BETWEEN ppa.effective_start_date AND ppa.effective_end_date 
+				AND #{effectiveOnDate} BETWEEN ppt.effective_start_date AND ppt.effective_end_date 
+			</if>
+		</where>
+	</select>
+	
+	<select id="countFutureTermination" resultType="Integer" parameterType="map">
+		select count(*) from pea_primary_assignments
+		where person_id = #{personId}
+		and company_id = #{companyId}
+		and effective_start_date &gt; trunc(sysdate)
+   		and action_type = 'TERMINATION'
+	</select>
+	
+	<select id="getPrimaryAssignmentByEffectiveOnDateForEpmd" parameterType="map" resultMap="baseResultPrimary">
+		SELECT 
+		  a.organization_id,
+		  a.effective_start_date,
+		  a.effective_end_date,
+		  l.location_id
+		FROM pea_primary_assignments a
+		LEFT JOIN wos_jobs jb
+		ON jb.job_id = a.job_id
+		LEFT JOIN wos_organizations org
+		ON org.organization_id = a.organization_id
+		LEFT JOIN wos_organization_versions orgv
+		ON orgv.organization_id = org.organization_id
+		AND trunc(#{effectiveOnDate}) BETWEEN orgv.date_from AND orgv.date_to
+		LEFT JOIN wos_locations l
+		ON l.location_id = orgv.location_id
+		LEFT JOIN (select * from BRANCH_HIERARCHY_V bh WHERE bh.org_hier_id  =
+		  (SELECT org_hier_id
+		  FROM wos_organization_hier
+		  WHERE company_id         = #{companyId}
+		  AND upper(org_hier_type) = upper('STRUCTURAL')
+		  )) bh
+		ON bh.organization_id = a.organization_id
+		<where>			
+			<if test="personId != null">
+				AND a.PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND a.COMPANY_ID = #{companyId}
+			</if>
+			<if test="effectiveOnDate != null">
+				AND #{effectiveOnDate} between a.EFFECTIVE_START_DATE and a.EFFECTIVE_END_DATE
+			</if>
+		</where>
+	</select>
+	
+	<select id="getAssignmentIdByEffectiveOnDate" parameterType="map" resultMap="baseResultPrimary">
+		SELECT 
+			a.assignment_id,
+			a.effective_start_date,
+ 			a.effective_end_date,
+			WOV.LOCATION_ID,
+			WJV.JOB_GROUP_CODE
+		FROM pea_primary_assignments a
+		JOIN WOS_ORGANIZATION_VERSIONS WOV ON(WOV.ORGANIZATION_ID = a.organization_id and #{effectiveOnDate} between WOV.DATE_FROM AND WOV.DATE_TO)
+		JOIN WOS_JOB_VERSIONS WJV ON(WJV.JOB_ID = a.job_id and #{effectiveOnDate} between WJV.DATE_FROM AND WJV.DATE_TO)
+		<where>			
+			<if test="personId != null">
+				AND a.PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND a.COMPANY_ID = #{companyId}
+			</if>
+			<if test="effectiveOnDate != null">
+				AND #{effectiveOnDate} between a.EFFECTIVE_START_DATE and a.EFFECTIVE_END_DATE
+			</if>
+		</where>
+	</select>
+	
+	<select id="getPersonChangeAssignment" parameterType="map" resultType="Long">
+		SELECT *
+		FROM pea_primary_assignments
+		WHERE TRUNC(sysdate) = effective_start_date
+		AND company_id = #{companyId}
+		AND (source         &lt;&gt; 'TERMINATION'
+		AND source           &lt;&gt; 'RECRUITMENT')
+	</select>
+	
+	
+	
+	<!-- add by rnp
+		query to get is requested employee have homebased radius assignment during supplied date to current date
+	 -->
+	<select id="findHomebasedRadiusAssignmentFromDateToCurrent" parameterType="map" resultMap="baseResultAssignment">
+	SELECT a.assignment_id,
+		         a.person_id,
+		         a.company_id,
+		         a.assignment_type,
+		         a.secondary_type,
+		         a.organization_id,
+		         org.organization_name,
+		         COALESCE (
+		            (SELECT location_id
+		               FROM wos_organization_versions orgv
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to),
+		            (SELECT location_id
+		               FROM wos_organization_versions orgv
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (a.start_date) BETWEEN orgv.date_from
+		                                                 AND orgv.date_to))
+		            location_id,
+		         COALESCE (
+		            (SELECT loc.location_name
+		               FROM wos_organization_versions orgv
+		                    JOIN wos_locations loc
+		                       ON orgv.location_id = loc.location_id
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to),
+		            (SELECT loc.location_name
+		               FROM wos_organization_versions orgv
+		                    JOIN wos_locations loc
+		                       ON orgv.location_id = loc.location_id
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (a.start_date) BETWEEN orgv.date_from
+		                                                 AND orgv.date_to))
+		            location_name,
+		         a.job_id,
+		         j.job_name,
+		         a.is_fifapps_access,
+		         a.start_date,
+		         a.end_date,
+		         a.is_internship,
+		         a.grade,
+		         a.sub_grade
+		    FROM (SELECT ppa.assignment_id,
+		                 ppa.person_id,
+		                 ppa.company_id,
+		                 'PRIMARY' assignment_type,
+		                 NULL secondary_type,
+		                 ppa.organization_id,
+		                 ppa.job_id,
+		                 0 is_fifapps_access,
+		                 ppa.effective_start_date start_date,
+		                 ppa.effective_end_date end_date,
+		                 ppa.is_internship,
+		                 wg.grade grade,
+		                 wg.sub_grade
+		            FROM pea_primary_assignments ppa, wos_grades wg
+		           WHERE     ppa.effective_start_date between #{fromDate, jdbcType=TIMESTAMP} and sysdate
+		                 AND ppa.grade_id = wg.grade_id
+		          UNION
+		          SELECT psa.assignment_id,
+		                 psa.person_id,
+		                 psa.company_id,
+		                 'SECONDARY' assignment_type,
+		                 psa.secondary_type,
+		                 psa.organization_id,
+		                 psa.job_id,
+		                 psa.is_fifapps_access,
+		                 psa.start_date,
+		                 psa.end_date,
+		                 0 is_internship,
+		                 NULL grade,
+		                 NULL sub_grade
+		            FROM pea_secondary_assignments psa) a
+		         LEFT JOIN wos_organizations org
+		            ON org.organization_id = a.organization_id
+		         LEFT JOIN wos_organization_versions orgv
+		            ON     orgv.organization_id = org.organization_id
+		               AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to
+		         LEFT JOIN wos_locations l ON l.location_id = orgv.location_id
+		         LEFT JOIN wos_jobs j ON j.job_id = a.job_id
+		   WHERE a.person_id = #{personId}
+		     AND a.company_id = #{companyId}
+         AND l.location_id  in 
+				<foreach item="item" open="(" close=")" separator=","
+					collection="listLocationId">
+					#{item}
+				</foreach>
+	
+	</select>
+	
+	<!-- add by rnp
+		query to get is requested employee have homebased radius assignment during supplied date to current date
+	 -->
+	<select id="countHomebasedRadiusAssignmentFromDateToCurrent" parameterType="map" resultType="int" >
+	SELECT count(1)
+		    FROM (SELECT ppa.assignment_id,
+		                 ppa.person_id,
+		                 ppa.company_id,
+		                 'PRIMARY' assignment_type,
+		                 NULL secondary_type,
+		                 ppa.organization_id,
+		                 ppa.job_id,
+		                 0 is_fifapps_access,
+		                 ppa.effective_start_date start_date,
+		                 ppa.effective_end_date end_date,
+		                 ppa.is_internship,
+		                 wg.grade grade,
+		                 wg.sub_grade
+		            FROM pea_primary_assignments ppa, wos_grades wg
+		           WHERE (ppa.effective_start_date BETWEEN #{fromDate, jdbcType=TIMESTAMP} AND #{toDate, jdbcType=TIMESTAMP}
+                            or ppa.effective_end_date BETWEEN #{fromDate, jdbcType=TIMESTAMP} AND #{toDate, jdbcType=TIMESTAMP})
+		                 AND ppa.grade_id = wg.grade_id
+		          UNION
+		          SELECT psa.assignment_id,
+		                 psa.person_id,
+		                 psa.company_id,
+		                 'SECONDARY' assignment_type,
+		                 psa.secondary_type,
+		                 psa.organization_id,
+		                 psa.job_id,
+		                 psa.is_fifapps_access,
+		                 psa.start_date,
+		                 psa.end_date,
+		                 0 is_internship,
+		                 NULL grade,
+		                 NULL sub_grade
+		            FROM pea_secondary_assignments psa
+		            WHERE    (psa.start_date BETWEEN #{fromDate, jdbcType=TIMESTAMP} AND #{toDate, jdbcType=TIMESTAMP}
+                       	     or psa.end_date between #{fromDate, jdbcType=TIMESTAMP} and #{toDate, jdbcType=TIMESTAMP})) a
+		         LEFT JOIN wos_organizations org
+		            ON org.organization_id = a.organization_id
+		         LEFT JOIN wos_organization_versions orgv
+		            ON     orgv.organization_id = org.organization_id
+		               AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to
+		         LEFT JOIN wos_locations l ON l.location_id = orgv.location_id
+		         LEFT JOIN wos_jobs j ON j.job_id = a.job_id
+		   WHERE a.person_id = #{personId}
+		     AND a.company_id = #{companyId}
+         AND l.location_id  in 
+				<foreach item="item" open="(" close=")" separator=","
+					collection="listLocationId">
+					#{item}
+				</foreach>
+	
+	</select>
+	
+	<select id="findLastNonHomebasedRadiusAssignment" parameterType="map" resultMap="baseResultAssignment">
+	
+	select * from
+	(SELECT a.assignment_id,
+		         a.person_id,
+		         a.company_id,
+		         a.assignment_type,
+		         a.secondary_type,
+		         a.organization_id,
+		         org.organization_name,
+		         COALESCE (
+		            (SELECT location_id
+		               FROM wos_organization_versions orgv
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to),
+		            (SELECT location_id
+		               FROM wos_organization_versions orgv
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (a.start_date) BETWEEN orgv.date_from
+		                                                 AND orgv.date_to))
+		            location_id,
+		         COALESCE (
+		            (SELECT loc.location_name
+		               FROM wos_organization_versions orgv
+		                    JOIN wos_locations loc
+		                       ON orgv.location_id = loc.location_id
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to),
+		            (SELECT loc.location_name
+		               FROM wos_organization_versions orgv
+		                    JOIN wos_locations loc
+		                       ON orgv.location_id = loc.location_id
+		              WHERE     orgv.organization_id = org.organization_id
+		                    AND TRUNC (a.start_date) BETWEEN orgv.date_from
+		                                                 AND orgv.date_to))
+		            location_name,
+		         a.job_id,
+		         j.job_name,
+		         a.is_fifapps_access,
+		         a.start_date,
+		         a.end_date,
+		         a.is_internship,
+		         a.grade,
+		         a.sub_grade
+		    FROM (SELECT ppa.assignment_id,
+		                 ppa.person_id,
+		                 ppa.company_id,
+		                 'PRIMARY' assignment_type,
+		                 NULL secondary_type,
+		                 ppa.organization_id,
+		                 ppa.job_id,
+		                 0 is_fifapps_access,
+		                 ppa.effective_start_date start_date,
+		                 ppa.effective_end_date end_date,
+		                 ppa.is_internship,
+		                 wg.grade grade,
+		                 wg.sub_grade
+		            FROM pea_primary_assignments ppa, wos_grades wg
+		           WHERE     ppa.effective_start_date &lt;= sysdate
+		                 AND ppa.grade_id = wg.grade_id
+		          UNION
+		          SELECT psa.assignment_id,
+		                 psa.person_id,
+		                 psa.company_id,
+		                 'SECONDARY' assignment_type,
+		                 psa.secondary_type,
+		                 psa.organization_id,
+		                 psa.job_id,
+		                 psa.is_fifapps_access,
+		                 psa.start_date,
+		                 psa.end_date,
+		                 0 is_internship,
+		                 NULL grade,
+		                 NULL sub_grade
+		            FROM pea_secondary_assignments psa) a
+		         LEFT JOIN wos_organizations org
+		            ON org.organization_id = a.organization_id
+		         LEFT JOIN wos_organization_versions orgv
+		            ON     orgv.organization_id = org.organization_id
+		               AND TRUNC (SYSDATE) BETWEEN orgv.date_from AND orgv.date_to
+		         LEFT JOIN wos_locations l ON l.location_id = orgv.location_id
+		         LEFT JOIN wos_jobs j ON j.job_id = a.job_id
+		   WHERE a.person_id = #{personId}
+		     AND a.company_id = #{companyId}
+         AND l.location_id not in 
+				<foreach item="item" open="(" close=")" separator=","
+					collection="listLocationId">
+					#{item}
+				</foreach>
+		order by a.start_date desc
+		) where rownum &lt;= 1 
+	
+	</select>
+	
+	<select id="getPrimaryAssignmentByEffectiveOnDateHousing" parameterType="map" resultMap="baseResultPrimary">
+		SELECT a.assignment_id,
+		  a.person_id,
+		  a.company_id,
+		  a.organization_id,
+		  org.organization_name,
+		  bh.branch_id,
+		  bh.branch_name,
+		  a.job_id,
+		  jb.job_name,
+		  a.grade_id,
+		  a.action_type,
+		  a.transfered_by,
+		  a.assignment_status,
+		  a.housing_allowance,
+		  a.mentor_id,
+		  a.is_internship,
+		  a.effective_start_date,
+		  a.effective_end_date,
+		  a.source,
+		  a.ref_id,
+		  l.location_id,
+		  l.location_name
+		FROM pea_primary_assignments a
+		LEFT JOIN wos_jobs jb
+		ON jb.job_id = a.job_id
+		LEFT JOIN wos_organizations org
+		ON org.organization_id = a.organization_id
+		LEFT JOIN wos_organization_versions orgv
+		ON orgv.organization_id = org.organization_id
+		AND trunc(#{effectiveOnDate}) BETWEEN orgv.date_from AND orgv.date_to
+		LEFT JOIN wos_locations l
+		ON l.location_id = orgv.location_id
+		LEFT JOIN BRANCH_HIERARCHY_V bh 
+		ON bh.organization_id = a.organization_id
+		<where>			
+			<if test="personId != null">
+				AND a.PERSON_ID = #{personId}
+			</if>
+			<if test="effectiveOnDate != null">
+				AND #{effectiveOnDate} between a.EFFECTIVE_START_DATE and a.EFFECTIVE_END_DATE
+			</if>
+		</where>
+	</select>
+</mapper>

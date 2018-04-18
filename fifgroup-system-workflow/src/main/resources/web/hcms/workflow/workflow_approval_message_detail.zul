@@ -1,0 +1,120 @@
+<window id="winWorkflowApprovalMessageDetail" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalMessageDetailComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption label="${labels.swf.approvalMessageDetail}">
+				</caption>
+				<groupbox>
+					<caption
+						label="${labels.swf.notificationMessage}">
+					</caption>
+					<grid sclass="form-entry">
+						<columns hflex="min">
+							<column width="180px" align="right" />
+							<column hflex="min"/>
+						</columns>
+						<rows>
+							<row>
+								<label value="${labels.swf.subject}" />
+								<label id="lblSubject" />
+							</row>
+							<row>
+								<label value="${labels.swf.from}" />
+								<label id="lblFrom" />
+							</row>
+							<row>
+								<label
+									value="${labels.swf.receivedTime}" />
+								<label id="lblReceivedTime" />
+							</row>
+							<row>
+								<label value="${labels.common.to}" />
+								<label id="lblTo" />
+							</row>
+							<row valign="top">
+								<label
+									value="${labels.swf.messageContent}" />
+								<html id="htmlDetailMessage"
+									sclass="container-message" />
+							</row>
+						</rows>
+					</grid>
+					<separator />
+					<hbox id="hboxLinkDetail" visible="false">
+						<label value="${labels.swf.please}" />
+						<a id="linkDetailTrx"
+							label="${labels.swf.clickHere}" />
+						<label
+							value="${labels.swf.viewDetailInformation}" />
+					</hbox>
+				</groupbox>
+				<groupbox>
+					<caption
+						label="${labels.swf.informationApprovalHistory}">
+					</caption>
+					<hbox>
+						<label value="${labels.swf.approvalPath}" />
+						<label id="lblPath" />
+					</hbox>
+					<separator />
+					<listbox id="lbxApprovalHistory">
+						<listhead>
+							<listheader label="${labels.common.rowNum}"
+								align="center" width="50px" />
+							<listheader
+								label="${labels.swf.approverName}" align="center" />
+							<listheader label="${labels.swf.remarks}"
+								align="center" />
+							<listheader
+								label="${labels.swf.approvedTime}" align="center" />
+						</listhead>
+					</listbox>
+				</groupbox>
+				<separator />
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.remarks}" />
+							<textbox id="txtRemarks" rows="5"
+								width="600px" maxlength="255" />
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<hbox>
+					<cell align="center" style="width:1250px;">
+						<button id="btnApprove"
+							label="${labels.swf.approve}" mold="trendy" />
+						<space width="20px" />
+						<button id="btnReject"
+							label="${labels.swf.reject}" mold="trendy" />
+						<space width="20px" />
+						<button id="btnPrev" label="Prev" mold="trendy"
+							image="${labels.image.link.back}" />
+						<space width="5px" />
+						<label id="lblPage" />
+						<space width="5px" />
+						<button id="btnNext" label="Next" mold="trendy"
+							image="${labels.image.link.next}" />
+					</cell>
+					<div style="float:right;">
+						<button id="btnCancel"
+							label="${labels.common.cancel}" />
+					</div>
+				</hbox>
+				<hbox height="10px"/>
+				<hbox id="hbxInfo">
+					<cell align="center" style="width:1250px;">
+						<label id="lblInfo"
+							value="(Perubahan data hanya terjadi pada saat Approve atau Reject)" />
+					</cell>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

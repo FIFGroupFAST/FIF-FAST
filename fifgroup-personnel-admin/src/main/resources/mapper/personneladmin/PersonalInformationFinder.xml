@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.PersonalInformationFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.PersonalInformationDTO">
+		<id column="INFORMATION_ID" property="informationId" jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="EMPLOYEE_NUMBER" property="employeeNumber" jdbcType="VARCHAR" />
+	    <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+	    <result column="BIRTH_PLACE" property="birthPlace" jdbcType="VARCHAR" />
+	    <result column="BIRTH_DATE" property="birthDate" jdbcType="TIMESTAMP" />
+	    <result column="PHOTO_FILE_PATH" property="photoFilePath" jdbcType="VARCHAR" />
+	    <result column="GENDER_CODE" property="genderCode" jdbcType="VARCHAR" />
+	    <result column="NATIONALITY_CODE" property="nationalityCode" jdbcType="VARCHAR" />
+	    <result column="RELIGION_CODE" property="religionCode" jdbcType="VARCHAR" />
+	    <result column="BLOOD_TYPE" property="bloodType" jdbcType="VARCHAR" />
+	    <result column="BLOOD_TYPE_RHESUS" property="bloodTypeRhesus" jdbcType="VARCHAR" />
+	    <result column="MOTHER_NAME" property="motherName" jdbcType="VARCHAR" />
+	    <result column="DISABILITY_CODE" property="disabilityCode" jdbcType="VARCHAR" />
+	    <result column="DISABILITY_REMARK" property="disabilityRemark" jdbcType="VARCHAR" />
+	    <result column="HOBBY" property="hobby" jdbcType="VARCHAR" />
+	    <result column="IS_PILGRIMAGE" property="pilgrimage" jdbcType="DECIMAL" />
+	    <result column="IS_SMOKER" property="smoker" jdbcType="DECIMAL" />
+	    <result column="ASTRA_JOIN_DATE" property="astraJoinDate" jdbcType="DATE" />
+	    <result column="HIRE_DATE" property="hireDate" jdbcType="DATE" />
+	    <result column="HOME_BASE_CODE" property="homeBaseCode" jdbcType="VARCHAR" />
+	    <result column="PROBATION_END_DATE" property="probationEndDate" jdbcType="DATE" />
+	    <result column="TRAINING_END_DATE" property="trainingEndDate" jdbcType="DATE" />
+	    <result column="MARITAL_STATUS" property="maritalStatus" jdbcType="VARCHAR" />
+	    <result column="MARITAL_DATE" property="maritalDate" jdbcType="DATE" />
+	    <result column="INTERNAL_MARRIED_WITH" property="internalMarriedWith" jdbcType="DECIMAL" />
+	    <result column="PTKP_STATUS" property="ptkpStatus" jdbcType="VARCHAR" />
+	    <result column="WORKING_SCHEDULE_ID" property="workingScheduleId" jdbcType="DECIMAL" />
+	    <result column="EFFECTIVE_START_DATE" property="effectiveStartDate" jdbcType="DATE" />
+	    <result column="EFFECTIVE_END_DATE" property="effectiveEndDate" jdbcType="DATE" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.EquipmentAssignmentDTO" id="assignedList">
+			<id column="EQUIPMENT_ID" jdbcType="DECIMAL" property="equipmentId"/>
+			<result column="TYPE_NAME" jdbcType="VARCHAR" property="typeName"/>
+			<result column="EQUIPMENT_SIZE" jdbcType="VARCHAR" property="equipmentSize"/>
+			<result column="ASSIGNED_DATE" jdbcType="DECIMAL" property="assignedDate"/>
+			<result column="ASSIGNED_DATE_STR" jdbcType="DECIMAL" property="assignedDateStr" />
+			<result column="TYPE_ID" jdbcType="DECIMAL" property="typeId" />
+			
+	</resultMap>	
+	
+	<sql id="findPersonalInformation">
+		select 
+			INFORMATION_ID, 
+			PERSON_ID, 
+			COMPANY_ID, 
+			EMPLOYEE_NUMBER, 
+			FULL_NAME, 
+			BIRTH_PLACE, 
+			BIRTH_DATE, 
+    		PHOTO_FILE_PATH, 
+    		GENDER_CODE, 
+    		NATIONALITY_CODE, 
+    		RELIGION_CODE, 
+    		BLOOD_TYPE, 
+    		BLOOD_TYPE_RHESUS, 
+    		MOTHER_NAME, 
+    		DISABILITY_CODE, 
+    		DISABILITY_REMARK, 
+    		HOBBY, 
+    		IS_PILGRIMAGE, 
+    		IS_SMOKER, 
+    		ASTRA_JOIN_DATE, 
+    		HIRE_DATE, 
+    		HOME_BASE_CODE, 
+    		PROBATION_END_DATE, 
+    		TRAINING_END_DATE, 
+    		MARITAL_STATUS, 
+    		MARITAL_DATE, 
+    		INTERNAL_MARRIED_WITH, 
+    		PTKP_STATUS, 
+    		WORKING_SCHEDULE_ID, 
+    		EFFECTIVE_START_DATE, 
+    		EFFECTIVE_END_DATE,
+    		CREATED_BY, 
+    		CREATION_DATE, 
+    		LAST_UPDATED_BY, 
+    		LAST_UPDATE_DATE
+		from PEA_PERSONAL_INFORMATIONS A		
+	</sql>
+	
+	<select id="getPersonalInformationByEffectiveOnDate" parameterType="map" resultMap="baseResult">
+		<include refid="findPersonalInformation"/>
+			<where>
+				<if test="personId != null">
+					AND PERSON_ID = #{personId}
+				</if>
+				<if test="companyId != null">
+					AND COMPANY_ID = #{companyId}
+				</if>
+				<if test="employeeNumber != null">
+					AND EMPLOYEE_NUMBER = #{employeeNumber}
+				</if>
+				<if test="effectiveOnDate != null">
+					AND trunc(#{effectiveOnDate}) between EFFECTIVE_START_DATE and EFFECTIVE_END_DATE
+					<!-- Add By RIM on Ticket 15031011321984 - [Bug Fixing] Perbaikan Upload Amount DPA untuk Employee Pindah Company*/ -->
+					AND EXISTS (
+								select 1 
+								  from pea_people_types B 
+								 where A.person_id = B.person_id
+								   and A.company_id = B.company_id
+								   and trunc(#{effectiveOnDate}) between B.effective_start_date and B.effective_end_date
+								   and B.people_type = 'EMPLOYEE'
+							)
+					<!-- End Add By RIM on Ticket 15031011321984 - [Bug Fixing] Perbaikan Upload Amount DPA untuk Employee Pindah Company*/ -->
+				</if>
+			</where>	
+	</select>	
+	
+	<select id="getMaritalStatusByEffectiveOnDate" parameterType="map" resultType="String">
+		select marital_status from pea_personal_informations
+		<where>
+			<if test="effectiveOnDate != null">
+				trunc(#{effectiveOnDate, jdbcType=DATE}) between effective_start_date and effective_end_date
+			</if>
+			<if test="personId != null">
+				and person_id = #{personId}
+			</if>
+			<if test="companyId != null">
+				and company_id = #{companyId}
+			</if>
+		</where>			
+	</select>
+	
+	<select id="getMaxHireDate" parameterType="map" resultType="java.util.Date">
+		select max(hire_date) from pea_personal_informations
+		where person_id = #{personId} and company_id = #{companyId}
+	</select>
+	
+	<resultMap type="co.id.fifgroup.workstructure.dto.LocationDTO" id="resultLocation">
+		<id column="LOCATION_ID" property="id" jdbcType="NUMERIC"/>
+		<result column="LOCATION_CODE" property="locationCode" jdbcType="VARCHAR"/>
+		<result column="LOCATION_NAME" property="locationName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getLocationByHomebase" parameterType="map" resultMap="resultLocation">
+		SELECT wl.location_id, wl.location_code, wl.location_name 
+		FROM pea_personal_informations ppi
+		JOIN wos_locations wl
+		ON wl.company_id       = ppi.company_id
+		AND ppi.home_base_code = wl.location_code
+		WHERE ppi.person_id    = #{personId}
+		AND ppi.company_id     = #{companyId}
+		AND TRUNC(#{effectiveOnDate}) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+	</select>
+	
+	<select id="getWorkingEquipmentList" parameterType="map"
+		resultMap="assignedList">
+	SELECT DISTINCT
+  		we.equipment_id EQUIPMENT_ID,
+  		wt.name TYPE_NAME,
+  		wrd.equipment_size EQUIPMENT_SIZE,
+  		we.date_assigned ASSIGNED_DATE,
+  		TO_CHAR(we.date_assigned,'dd-MON-yyyy') ASSIGNED_DATE_STR,
+  		we.equipment_type TYPE_ID
+	FROM pea_working_equipments we
+  	LEFT JOIN weq_assignments wa
+  	ON TRUNC(wa.assigned_date) = TRUNC(we.date_assigned)
+  	LEFT JOIN weq_request_dtl wrd
+  	ON wrd.person_id = we.person_id
+  	AND wrd.type_id = we.equipment_type
+  	LEFT JOIN weq_types wt
+  	ON wt.type_id = wrd.type_id
+  	LEFT JOIN weq_request_hdr wrh
+  	ON wrd.request_id = wrh.request_id
+  	AND we.company_id = wrh.company_id
+	WHERE 
+  		we.person_id=#{personId}
+  		AND we.company_id=#{companyId}
+	</select>
+	
+</mapper>

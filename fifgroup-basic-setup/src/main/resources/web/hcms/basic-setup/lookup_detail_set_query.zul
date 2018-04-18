@@ -1,0 +1,65 @@
+<window id="winLookupDetailSetQuery" width="800px" apply="co.id.fifgroup.basicsetup.controller.LookupDetailSetQueryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.lookupDetailSetQuery}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="100px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.scope}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstScope" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.companyName}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.selectQuery}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtSelect" maxlength="255" width="350px"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.from}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtFromTable" maxlength="4000" width="350px" />
+				</row>
+				<row>
+					<label value="${labels.bse.where}" />
+					<textbox id="txtWhereCondition" rows="3" width="350px" maxlength="1000" />
+				</row>
+				<row>
+					<label value="${labels.bse.orderBy}" />
+					<textbox id="txtOrderBy" width="350px" maxlength="255" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnValidate" label="${labels.bse.validate}" mold="trendy" />
+				<space width="20px" />
+				<button id="btnOk" label="${labels.common.ok}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

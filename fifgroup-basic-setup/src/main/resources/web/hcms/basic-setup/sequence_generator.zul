@@ -1,0 +1,97 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winSequenceGenerator"
+	apply="co.id.fifgroup.basicsetup.controller.SequenceGeneratorComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.sequenceGenerator}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.scope}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<listbox id="lstScope" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.companyName}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.trxType}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<listbox id="lstTrxType" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.trxType}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.length}" />
+						<label value="${labels.common.required}"
+							style="color:red" />
+					</hbox>
+					<intbox id="intLength" maxlength="2" />
+				</row>
+				<row>
+					<label value="${labels.bse.padding}" />
+					<checkbox id="chkPadding" />
+				</row>
+				<row>
+					<label value="${labels.bse.paddingChar}" />
+					<textbox id="txtPaddingChar" maxlength="1" disabled="true" />
+				</row>
+				<row>
+					<label value="${labels.bse.prefix}" />
+					<textbox id="txtPrefix" maxlength="10" />
+				</row>
+				<row>
+					<label value="${labels.bse.resetPerYear}"></label>
+					<checkbox id="chkResetPerYear"></checkbox>
+				</row>
+				<row>
+					<label value="${labels.bse.sequenceNumber}" />
+					<label />
+				</row>
+				<row>
+					<label value="${labels.bse.startFrom}" />
+					<hbox>
+						<intbox id="intStartFrom" value="1" maxlength="5" />
+						<space />
+						<label value="${labels.bse.increment}" />
+						<intbox id="intIncrement" value="1" maxlength="5" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}"
+					mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

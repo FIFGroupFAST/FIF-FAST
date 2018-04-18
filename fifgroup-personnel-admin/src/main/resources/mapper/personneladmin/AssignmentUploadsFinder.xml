@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AssignmentUploadsFinder">
+
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.AssignmentUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<select id="getAssignmentUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PAU.BATCH_NUMBER,
+		  PAU.COMPANY_ID,
+		  PAU.STATUS,
+		  PAU.CREATED_BY,
+		  PAU.CREATION_DATE,
+		  PAU.LAST_UPDATED_BY,
+		  PAU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PAE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_ASSIGNMENT_ELEMENTS PAE_1
+					WHERE 
+						PAE_1.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PAE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_ASSIGNMENT_ELEMENTS PAE_2
+					WHERE 
+						PAE_2.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_ASSIGNMENT_UPLOADS PAU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PAU.LAST_UPDATED_BY)
+		WHERE
+		 PAU.BATCH_NUMBER IN (
+			SELECT 
+				PAE.BATCH_NUMBER 
+			FROM 
+				PEA_ASSIGNMENT_ELEMENTS PAE
+				<where>
+					<if test="dateFrom != null">
+						AND PAE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PAE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND PAU.BATCH_NUMBER &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND PAU.BATCH_NUMBER &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PAU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<select id="getAssignmentBatchUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PAU.BATCH_NUMBER,
+		  PAU.COMPANY_ID,
+		  PAU.STATUS,
+		  PAU.CREATED_BY,
+		  PAU.CREATION_DATE,
+		  PAU.LAST_UPDATED_BY,
+		  PAU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PAE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_ASSIGNMENT_ELEMENTS PAE_1
+					WHERE 
+						PAE_1.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PAE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_ASSIGNMENT_ELEMENTS PAE_2
+					WHERE 
+						PAE_2.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_ASSIGNMENT_UPLOADS PAU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PAU.LAST_UPDATED_BY)
+		WHERE
+		 PAU.BATCH_NUMBER IN (
+			SELECT 
+				PAE.BATCH_NUMBER 
+			FROM 
+				PEA_ASSIGNMENT_ELEMENTS PAE
+				<where>
+					<if test="dateFrom != null">
+						AND PAE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PAE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND TO_NUMBER(PAU.BATCH_NUMBER) &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND TO_NUMBER(PAU.BATCH_NUMBER) &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PAU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.AssignmentStageDTO" id="resultStage">
+		<result column="UPLOAD_ID" jdbcType="DECIMAL" property="uploadId" />
+	   <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+	   <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode" />
+	   <result column="JOB_CODE" jdbcType="VARCHAR" property="jobCode" />
+	   <result column="GRADE" jdbcType="VARCHAR" property="grade" />
+	   <result column="SUB_GRADE" jdbcType="VARCHAR" property="subGrade" />
+	   <result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+	   <result column="TYPE" jdbcType="VARCHAR" property="type" />
+	   <result column="ROW_NUMBER" jdbcType="DECIMAL" property="rowNumber" />
+	   <result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+	   <result column="IS_CLOSED" jdbcType="DECIMAL" property="isClosed" />
+	</resultMap>
+	
+	<select id="getStageObjectByUploadId" parameterType="map" resultMap="resultStage">
+		SELECT
+			UPLOAD_ID, 
+			EMPLOYEE_NUMBER, 
+			ORGANIZATION_CODE, 
+			JOB_CODE, 
+			GRADE,
+			SUB_GRADE, 
+			EFFECTIVE_START_DATE, 
+    		TYPE, 
+    		ROW_NUMBER, 
+    		RAW_DATA, 
+    		IS_CLOSED
+    	FROM 
+    		PEA_ASSIGNMENT_STG
+    	WHERE
+    		UPLOAD_ID = #{uploadId}
+    	ORDER BY UPLOAD_ID ASC
+	</select>
+	
+	<select id="isGradeValid" parameterType="map" resultType="int">
+		select count(*) from (
+	    SELECT WGSE.GRADE_ID, WGSE.GRADE_SEQUENCE , WJVG.GRADE_ID valid_grade_id FROM WOS_JOBS WJ
+	    JOIN WOS_JOB_VERSIONS WJV ON WJ.JOB_ID = WJV.JOB_ID AND (TRUNC(SYSDATE) BETWEEN WJV.DATE_FROM AND WJV.DATE_TO)
+	    JOIN WOS_GRADE_SETS WGS ON WGS.GRADE_SET_ID = WJV.GRADE_SET_ID
+	    JOIN WOS_GRADE_SET_ELEMENTS WGSE ON WGSE.GRADE_SET_ID = WGS.GRADE_SET_ID
+	    left join WOS_JOB_VALID_GRADES wjvg on WJVG.JOB_ID = WJ.JOB_ID and WJVG.VERSION_ID = WJV.VERSION_ID and WJVG.GRADE_ID = WGSE.GRADE_ID
+	    WHERE WJ.COMPANY_ID = #{companyId}
+	    AND WJ.JOB_ID = #{jobId}
+	    and WGSE.GRADE_SEQUENCE &lt;= ( SELECT max(WGSE.GRADE_SEQUENCE) max FROM WOS_JOBS WJ
+	    JOIN WOS_JOB_VERSIONS WJV ON WJ.JOB_ID = WJV.JOB_ID AND (TRUNC(SYSDATE) BETWEEN WJV.DATE_FROM AND WJV.DATE_TO)
+	    JOIN WOS_GRADE_SETS WGS ON WGS.GRADE_SET_ID = WJV.GRADE_SET_ID
+	    JOIN WOS_GRADE_SET_ELEMENTS WGSE ON WGSE.GRADE_SET_ID = WGS.GRADE_SET_ID
+	    join WOS_JOB_VALID_GRADES wjvg on WJVG.JOB_ID = WJ.JOB_ID and WJVG.VERSION_ID = WJV.VERSION_ID and WJVG.GRADE_ID = WGSE.GRADE_ID
+	    WHERE WJ.COMPANY_ID = #{companyId}
+	    AND WJ.JOB_ID = #{jobId})
+	    ORDER BY 2 ASC) VG
+	    join wos_grades wg on wg.grade_id = vg.grade_id where wg.grade = #{grade} and wg.sub_grade= #{subGrade} and wg.company_id = #{companyId}
+	</select>
+	
+	<update id="updateBatchUpload" parameterType="co.id.fifgroup.core.domain.BatchUpload">
+		UPDATE PEA_ASSIGNMENT_UPLOADS
+		SET
+			STATUS = #{status, jdbcType=VARCHAR}, 
+			LAST_UPDATED_BY = #{lastUpdatedBy, jdbcType=DECIMAL}, 
+			LAST_UPDATE_DATE = #{lastUpdateDate, jdbcType=TIMESTAMP}
+		WHERE
+			BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+	</update>
+</mapper>

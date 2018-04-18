@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.finder.UploadErrorFinder">
+
+	<resultMap type="co.id.fifgroup.core.domain.UploadError" id="BaseResultMap">
+		<id column="ERROR_ID" property="errorId" jdbcType="DECIMAL"/>
+		<result column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="ROW_NUMBER" property="rowNumber" jdbcType="DECIMAL"/>
+		<result column="RAW_DATA" property="rawData" jdbcType="VARCHAR"/>
+		<result column="ERROR_MESSAGE" property="errorMessage" jdbcType="VARCHAR"/>
+		<result column="SOURCE" property="source" jdbcType="VARCHAR" javaType="co.id.fifgroup.core.constant.UploadErrorStatus"/>
+		<result column="IS_CLOSED" property="isClosed" jdbcType="DECIMAL"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<sql id="whereClause">
+		<where>
+			<if test="criteria.errorId != null">
+				AND ERROR_ID = #{criteria.errorId, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.uploadId != null">
+				AND UPLOAD_ID = #{criteria.uploadId, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.rowNumber != null">
+				AND ROW_NUMBER = #{criteria.rowNumber, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.rawData != null">
+				AND RAW_DATA = #{criteria.rawData, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.errorMessage != null">
+				AND ERROR_MESSAGE = #{criteria.errorMessage, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.source != null">
+				AND SOURCE = #{criteria.source, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.isClosed != null">
+				AND IS_CLOSED = #{criteria.isClosed, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.createdBy != null">
+				AND CREATED_BY = #{criteria.createdBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.creationDate != null">
+				AND CREATION_DATE = #{criteria.creationDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.lastUpdatedBy != null">
+				AND LAST_UPDATED_BY = #{criteria.lastUpdatedBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.lastUpdateDate != null">
+				AND LAST_UPDATE_DATE = #{criteria.lastUpdateDate, jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- START ITSM 15052708450385 by: HS
+	 menambahkan method untuk insert bulk ke database -->
+	<insert id="insertBulk" parameterType="map">
+		INSERT INTO ${tableName} 
+			(
+				ERROR_ID, UPLOAD_ID, ROW_NUMBER, RAW_DATA, ERROR_MESSAGE, SOURCE, IS_CLOSED, CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE
+			)
+		SELECT ${sequenceName}.NEXTVAL, A.* FROM (
+		<foreach collection="uploadErrors" item="uploadError" index="index" separator=" UNION ALL ">
+		SELECT  
+				#{uploadError.uploadId, jdbcType=DECIMAL},
+				#{uploadError.rowNumber, jdbcType=DECIMAL},
+				#{uploadError.rawData, jdbcType=VARCHAR},
+				#{uploadError.errorMessage, jdbcType=VARCHAR},
+				#{uploadError.source, jdbcType=VARCHAR},
+				#{uploadError.isClosed, jdbcType=DECIMAL},
+				#{uploadError.createdBy, jdbcType=DECIMAL},
+				#{uploadError.creationDate, jdbcType=TIMESTAMP},
+				#{uploadError.lastUpdatedBy, jdbcType=DECIMAL},
+				#{uploadError.lastUpdateDate, jdbcType=TIMESTAMP} FROM DUAL
+		</foreach> ) A
+	</insert>
+	<!-- END ITSM 15052708450385-->
+
+	<insert id="insert" parameterType="map">
+		<selectKey keyProperty="uploadError.errorId" resultType="Long" order="BEFORE">
+			SELECT ${sequenceName}.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ${tableName} 
+			(
+				ERROR_ID, UPLOAD_ID, ROW_NUMBER, RAW_DATA, ERROR_MESSAGE, SOURCE, IS_CLOSED, CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE
+			)
+		VALUES
+			(
+				#{uploadError.errorId, jdbcType=DECIMAL},
+				#{uploadError.uploadId, jdbcType=DECIMAL},
+				#{uploadError.rowNumber, jdbcType=DECIMAL},
+				#{uploadError.rawData, jdbcType=VARCHAR},
+				#{uploadError.errorMessage, jdbcType=VARCHAR},
+				#{uploadError.source, jdbcType=VARCHAR},
+				#{uploadError.isClosed, jdbcType=DECIMAL},
+				#{uploadError.createdBy, jdbcType=DECIMAL},
+				#{uploadError.creationDate, jdbcType=TIMESTAMP},
+				#{uploadError.lastUpdatedBy, jdbcType=DECIMAL},
+				#{uploadError.lastUpdateDate, jdbcType=TIMESTAMP}
+			)
+	</insert>
+
+	<delete id="deleteByExample" parameterType="map">
+		DELETE FROM ${tableName}
+		<include refid="whereClause"/>
+	</delete>
+
+	<delete id="deleteByUploadElements" parameterType="map">
+		DELETE FROM ${tableName}
+		<where>
+			UPLOAD_ID IN
+			<foreach collection="uploadElements" open="(" close=")" separator="," item="item">
+				#{item.uploadId, jdbcType=DECIMAL}
+			</foreach>
+		</where>
+	</delete>
+
+	<select id="selectByExample" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			ERROR_ID, UPLOAD_ID, ROW_NUMBER, RAW_DATA, ERROR_MESSAGE, SOURCE, CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE
+		FROM
+			${tableName}
+		<include refid="whereClause"/>
+	</select>
+
+	<select id="countByExample" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			${tableName}
+		<include refid="whereClause"/>
+	</select>
+
+	<update id="updateStatusToClosedUploadErrorByUploadId" parameterType="map">
+		UPDATE
+			${tableName}
+		SET
+			IS_CLOSED = 1
+		WHERE
+			UPLOAD_ID = #{uploadId, jdbcType=DECIMAL}
+	</update>
+	
+	<update id="deleteUploadErrorByUploadId" parameterType="map">
+		delete from
+			${tableName}
+		WHERE
+			UPLOAD_ID = #{uploadId, jdbcType=DECIMAL}
+	</update>
+
+	<select id="getUploadError" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			UE.*
+		FROM
+			${tableNameUploadError} UE
+		WHERE
+			UE.SOURCE = #{status, jdbcType=VARCHAR}
+			AND UE.IS_CLOSED = 1
+			AND UE.UPLOAD_ID IN (
+									SELECT
+										UL.UPLOAD_ID
+									FROM
+										${tableNameUploadElement} UL
+									WHERE
+										UL.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+								)
+	</select>
+
+</mapper>

@@ -1,0 +1,51 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winFormulaGetParameter" width="800px" title="${labels.bse.parameterFormula}" apply="co.id.fifgroup.basicsetup.controller.FormulaGetParameterComposer" closable="true">
+	<groupbox>
+		<caption label="${labels.bse.formulaGetParameter}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="300px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.parameterName}" />
+					</hbox>
+					<textbox id="txtParameterName" width="220px" use="co.id.fifgroup.core.ui.Searchtextbox" maxlength="30" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.description}" />
+					</hbox>
+					<textbox id="txtDescription" width="220px" use="co.id.fifgroup.core.ui.Searchtextbox" maxlength="255" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator></separator>
+		<listbox id="lstFormulaParameter" mold="paging" pagingPosition="both" emptyMessage="${labels.notif.emptyMessage }">
+			<listhead>
+				<listheader label="${labels.bse.parameterName}" align="center" />
+				<listheader label="${labels.bse.formulaReturnType}" align="center" />
+				<listheader label="${labels.common.description}" align="center" />
+				<listheader label="${labels.common.action}" align="center"/>
+			</listhead>
+			<template name="model">
+				<listitem value="${each}">
+					<listcell label="${each.parameterName}"></listcell>
+					<listcell label="${each.returnType}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell><a label="${labels.bse.get}" forward="lstFormulaParameter.onGet(${each})"></a></listcell>
+				</listitem>
+			</template>
+		</listbox>
+	</groupbox>
+</window>

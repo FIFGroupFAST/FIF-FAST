@@ -1,0 +1,146 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox"?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel"?>
+<?component name="dateboxmax" class="co.id.fifgroup.core.ui.DateBoxMax"?>
+<window id="winSOPeriodAdd"
+	apply="co.id.fifgroup.ssoa.controller.SOPeriodAddComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Stock Opname Period Add" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<formlabel value="Period Name" required="true" />
+					<textbox id="txtDesc" width="200px" maxlength="128" />
+				</row>
+				<row>
+					<formlabel value="Period Date From"
+						required="true" />
+					<datebox id="dbStart" format="dd-MMM-yyyy"
+						  />
+				</row>
+				<row>
+					<formlabel value="Period Date To" required="true" />
+					<datebox id="dbEnd" format="dd-MMM-yyyy"
+						  />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<label id="lblErrorSOPeriod" style="color:red" />
+		<panel title="Branch">
+			<panelchildren>
+			<groupbox width="50%">
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" /><column />
+						</columns>
+						<rows>
+							<row>
+								<formlabel value="Branch Code" />
+								<textbox id="txtSearchBranchCode" width="200px" maxlength="128" />
+							</row>
+							<row>
+								<formlabel value="Branch Name" />
+								<textbox id="txtSearchBranchName" width="200px" maxlength="128" />
+							</row>
+							<row>
+								<label/>
+								<hbox pack="center" align="center">
+									<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}"/>
+								</hbox>
+							</row>
+						</rows>
+					</grid>
+				</groupbox>
+				<div
+					style="width:50%; float: left; padding-left:10px; background-color:#e3e3e3; color:#555;">
+					<label>Available Branch</label>
+				</div>
+				<div style="width:50%; float: left; padding-left:10px; background-color:#e3e3e3; color:#555">
+					<label>Selected Branch</label>
+				</div>
+				<label id="errMsgDtl"/>
+				<hlayout height="480px" style="padding:10px">
+					<listbox id="availableBranchListbox" hflex="1"
+						vflex="true" multiple="true" mold="paging" pagingPosition="both"
+						pageSize="10"
+						use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+						<listhead>
+							<listheader label="Branch Code" width="50%" />
+							<listheader label="Branch Name" width="50%" />
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${each.branchCode}" />
+								<listcell label="${each.branchName}" />
+							</listitem>
+						</template>
+					</listbox>
+					<vbox spacing="10px" width="24px">
+						<image style="cursor:pointer" id="chooseAllBtn"
+							src="styles/images/rightrightarrow_g.png" />
+						<image style="cursor:pointer" id="chooseBtn"
+							src="styles/images/rightarrow_g.png" />
+						<image style="cursor:pointer" id="removeBtn"
+							src="styles/images/leftarrow_g.png" />
+						<image style="cursor:pointer" id="removeAllBtn"
+							src="styles/images/leftleftarrow_g.png" />
+					</vbox>
+					
+					<listbox id="selectedBranch" hflex="1" vflex="true"
+						multiple="true" mold="paging" pagingPosition="both"
+						pageSize="10" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+						<listhead>
+							<listheader label="Branch Code" width="50%" />
+							<listheader label="Branch Name" width="50%" />
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${each.branchCode}" />
+								<listcell label="${each.branchName}" />
+							</listitem>
+						</template>
+					</listbox>
+				    
+				    
+					<listbox id="selectedBranchListbox" visible="false"
+						hflex="1" vflex="true" multiple="true" rows="8"
+						use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+						<listhead>
+							<listheader label="Branch Id" width="50%" />
+							<listheader label="Branch Code" width="50%" />
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${each.branchId}" />
+								<listcell label="${each.branchCode}" />
+							</listitem>
+						</template>
+					</listbox>
+					<vbox spacing="10px" width="24px">
+						<image style="cursor:pointer" id="topBtn"
+							src="styles/images/upuparrow_g.png" />
+						<image style="cursor:pointer" id="upBtn"
+							src="styles/images/uparrow_g.png" />
+						<image style="cursor:pointer" id="downBtn"
+							src="styles/images/downarrow_g.png" />
+						<image style="cursor:pointer" id="bottomBtn"
+							src="styles/images/downdownarrow_g.png" />
+					</vbox>
+				</hlayout>
+				<separator></separator>
+			</panelchildren>
+		</panel>
+		<div align="center">
+			<button id="btnSave" label="Submit" mold="trendy" 
+			image="${labels.image.link.save}" />
+			<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" 
+			image="${labels.image.link.cancel}" style="float:right;" />
+		</div>
+
+	</groupbox>
+
+</window>

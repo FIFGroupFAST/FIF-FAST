@@ -1,0 +1,6 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window apply="co.id.fifgroup.personneladmin.controller.ContainerImageComposer" title="Full image" border="normal">
+	<image id="imgPhoto" width="auto" height="auto"/>
+</window>
+</zk>

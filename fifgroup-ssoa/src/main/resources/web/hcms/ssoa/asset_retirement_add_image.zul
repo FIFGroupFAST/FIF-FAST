@@ -1,0 +1,29 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winPopupImage" title="Asset" border="normal" width="1000px" height="auto" closable="true" 
+apply="co.id.fifgroup.ssoa.controller.AssetRetirementAddImageComposer" position="center,center" 
+action="show:slideDown; hide:slideUp">
+	<groupbox mold="3d">
+		<caption label="Add Photo" />
+		<listbox id="lstRetirementImg" checkmark="true" emptyMessage="${labels.common.noDataFound}" 
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="" width="35px" />
+					<listheader label="Photo Name" width="" />
+				</listhead>
+			</listbox>
+			<separator/>
+			<hbox>
+				<button label="Add Photo" mold="trendy" id="btnAddRow" 
+				image="${labels.image.link.add}" />
+				<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+			</hbox>
+	</groupbox>
+	<groupbox id="gbButton">
+		    <div align="center">
+			<button id="btnOK" label="${labels.common.save}" mold="trendy" 
+			image="${labels.image.link.save}" />
+			<button id="btnBack" label="${labels.common.back}" mold="trendy" style="float:right;"
+			image="${labels.image.link.back}" />
+			</div>
+		</groupbox>
+</window>

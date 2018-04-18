@@ -1,0 +1,120 @@
+<window id="winGenericDoubleLov" title="Asset" border="normal" width="1000px" height="auto" closable="true"
+apply="co.id.fifgroup.ssoa.controller.AssetComposer">
+
+	<groupbox>
+			<hbox>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="210px" align="right" />
+						<column/>
+					</columns>				
+					<rows>
+						<row>
+							<label value="Asset Number" />
+							<textbox id="assetNumber" />
+						</row>
+						<row>
+							<div>
+								<label value="Date Of Service" />
+							</div>
+							<div>
+								<datebox format="dd-MMM-yyyy" id="startDate"></datebox>
+								<span style="margin:0px 5px 0px 5px">-</span>
+								<datebox format="dd-MMM-yyyy" id="endDate"></datebox>
+							</div>
+						</row>
+						<row>
+							<label value="Has Printed" />
+							<checkbox id="isPrinted" label="Border" value="Y"/>
+						</row>
+						<row>
+							<label value="Location" />
+							<combobox id="cmbLocation" width="200px"
+								value="Kantor Pusat" style="background-color:#fff;"
+								readonly="true">
+									<comboitem label="Kantor Pusat" />
+									<comboitem label="Cabang Jakarta 1" />
+									<comboitem label="Cabang Jakarta 2" />
+									<comboitem label="Bogor" />
+							</combobox>
+				</row>
+						<row>
+							<div></div>
+							<div>
+								<button id="btnFindAdd"
+									label="${labels.common.find}" mold="trendy"
+									image="${labels.image.link.search}" />
+							</div>
+						</row>		
+					</rows>	
+				</grid>
+			</hbox>
+			<separator/>
+			<listbox id="lbxAssetSearch" height="auto">
+				<listhead>
+					<listheader label="" width="40px"></listheader>
+					<listheader label="Asset Number" width="120px"></listheader>
+					<listheader label="Book Type Code" width="120px"></listheader>
+					<listheader label="Branch Code" width="120px"></listheader>
+					<listheader label="Branch Name" width="120px"></listheader>
+					<listheader label="Location Code" width="120px"></listheader>
+					<listheader label="Location Name" width="120px"></listheader>
+					<listheader label="Asset Category" width="120px"></listheader>
+					<listheader label="Date Of Service" width="120px"></listheader>
+					<listheader label="Description" width="300px"></listheader>
+					<listheader label="Serial Number" width="120px"></listheader>
+					
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell style="text-align:center;">
+							<checkbox checked="${each.check}"></checkbox> 
+						</listcell>
+						<listcell>
+							<label value="${each.no_asset}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.type}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.branch_code}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.branch_name}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.location_code}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.location_name}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.item_category}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.date_of_service}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.description}"></label>
+						</listcell>
+						<listcell>
+							<label value="${each.serial_number}"></label>
+						</listcell>
+					</listitem>
+				</template>
+			</listbox>
+			<separator/>
+			<separator/>
+			<div align="center">
+				<button id="btnSaveAsset" 
+						label="Save"
+						image="${labels.image.link.save}"
+						onClick="winGenericDoubleLov.detach()" />
+				<button id="btnClose" 
+						style="float:right;" 
+						label="Back" 
+						image="${labels.image.link.close}"
+						onClick="winGenericDoubleLov.detach()"/>
+			</div>
+		</groupbox>
+</window>

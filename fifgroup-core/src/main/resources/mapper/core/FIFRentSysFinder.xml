@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.FIFRentSysFinder">
+	
+	<select id="getBuyer" statementType="CALLABLE">
+		{ #{buyer, jdbcType=NUMERIC, mode=OUT} = call fifrentsys.fifrs_rental_request.get_buyer@gl.us.oracle.com 
+			(
+				#{companyGlCode, mode=IN, jdbcType=VARCHAR},
+				#{inventoryItemId, mode=IN, jdbcType=NUMERIC},
+				#{glLocationId, mode=IN, jdbcType=NUMERIC}
+			)
+		}
+	</select>
+	
+	<select id="getGlLocationId" parameterType="map" resultType="java.lang.Long">
+		select distinct location_id 
+		FROM hr_locations@gl.us.oracle.com 
+		where location_code = #{locationCode}
+	</select>
+	
+	<select id="getInventoryItemId" parameterType="map" resultType="java.lang.Long">
+		SELECT frit.inventory_item_id
+           FROM fif_rs_item_types@gl.us.oracle.com frit
+          WHERE frit.item_type_code = #{itemTypeCode}
+            AND frit.organization_id = #{companyCodeGl}
+	</select>
+	
+	<select id="getAgentId" parameterType="map" resultType="java.lang.Long">
+		SELECT pa.agent_id
+           FROM po_agents@gl.us.oracle.com pa
+          WHERE pa.agent_id = #{buyerAgentId}
+            AND (   TRUNC (SYSDATE) BETWEEN TRUNC (pa.start_date_active)
+                                        AND TRUNC (pa.end_date_active)
+                 OR pa.end_date_active IS NULL
+                )
+	</select>
+	
+	<select id="getAgentLocationId" parameterType="map" resultType="java.lang.Long">
+		 SELECT hl.location_id
+           FROM hr_locations@gl.us.oracle.com hl,
+                per_assignments_f@gl.us.oracle.com paf
+          WHERE hl.location_id = paf.location_id
+            AND paf.person_id = #{buyerPersonId}
+            AND TRUNC (SYSDATE) BETWEEN TRUNC (paf.effective_start_date)
+                                    AND TRUNC (paf.effective_end_date)
+	</select>
+	
+	<resultMap id="vehicaleInformationMap" type="co.id.fifgroup.core.domain.interfacing.OcopVehicleInformation">
+		<result column="unit_of_measure" property="unitOfMeasure" jdbcType="VARCHAR" />
+		<result column="item_type_code" property="itemTypeCode" jdbcType="VARCHAR" />
+		<result column="attribute1" property="attribute1" jdbcType="VARCHAR" />
+		<result column="attribute2" property="attribute2" jdbcType="VARCHAR" />
+		<result column="attribute3" property="attribute3" jdbcType="VARCHAR" />
+		<result column="attribute4" property="attribute4" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getVehicleInformation" parameterType="map" resultMap="vehicaleInformationMap">
+		 SELECT unit_of_measure, item_type_code, attribute1,
+                attribute2, attribute3, attribute4
+           FROM fifrentsys.fif_rs_item_types@gl.us.oracle.com
+          WHERE organization_id = #{companyCodeGl}
+            AND inventory_item_id = #{inventoryItemId}
+            AND item_type_code = #{itemTypeCode}
+	</select>
+	
+	<select id="getInventoryItemCode" parameterType="map" resultType="String">
+		SELECT msi.segment1
+           FROM apps.mtl_system_items_vl@gl.us.oracle.com msi
+          WHERE inventory_item_id = #{inventoryItemId}
+            AND msi.organization_id = #{companyCodeGl}
+	</select>
+	
+	<select id="getGlExpenseCcid" statementType="CALLABLE">
+		{ #{glCcId, jdbcType=NUMERIC, mode=OUT} = call fifrs_rental_request.get_gl_expense_ccid@gl.us.oracle.com
+			(
+				#{companyGlCode, mode=IN, jdbcType=VARCHAR},
+				#{personId, mode=IN, jdbcType=NUMERIC},
+				#{inventoryItemCode, mode=IN, jdbcType=NUMERIC}
+			)
+		}
+	</select>
+	
+	<select id="getLocationIdByCodeCombination" parameterType="map" resultType="String">
+		 SELECT segment2
+           FROM gl_code_combinations@gl.us.oracle.com
+          WHERE code_combination_id = #{glCcId}
+	</select>
+	
+	<select id="getConversionType" resultType="String">
+		 SELECT gdct.conversion_type
+           FROM GL_DAILY_CONVERSION_TYPES@GL.US.ORACLE.COM GDCT
+          WHERE gdct.user_conversion_type = 'ASTRA'
+	</select>
+	
+	<insert id="insert" parameterType="co.id.fifgroup.core.dto.OcopInterfaceDTO">
+    <selectKey keyProperty="rsOcopInterfaceId" order="BEFORE" resultType="java.lang.Long">
+      select fif_rs_ocop_interface_s.NEXTVAL from dual
+    </selectKey>
+    insert into FIF_RS_OCOP_INTERFACE@gl.us.oracle.com (RS_OCOP_INTERFACE_ID, ORGANIZATION_ID, 
+      RENTAL_TYPE_ID, AGENT_ID, AGENT_LOCATION_ID, 
+      INVENTORY_ITEM_ID, ITEM_TYPE_ID, SHIP_TO_LOCATION_ID, 
+      PIC_ID, GL_LOCATION_ID, CODE_COMBINATION_ID, 
+      RATE_TYPE, RATE_DATE, RATE, 
+      QUANTITY, UNIT_MEAS_LOOKUP_CODE, VAT_TAX_NAME, 
+      PPH_TAX_NAME, HAS_PARENT_FLAG, PARENT_RENTED_ITEM_ID, 
+      COMMENTS, AUTHORIZATION_STATUS, INTERFACE_STATUS, 
+      ERR_REFERENCE, CREATED_BY, CREATION_DATE, 
+      LAST_UPDATED_BY, LAST_UPDATE_DATE, LAST_UPDATE_LOGIN, 
+      REQUEST_ID, PROGRAM_APPLICATION_ID, PROGRAM_UPDATE_DATE, 
+      OCOP_REQUEST_ID, ATTRIBUTE1, ATTRIBUTE2, 
+      ATTRIBUTE3, ATTRIBUTE4, ATTRIBUTE5, 
+      ORDER_HEADER_ID, RENT_PERIODS, ATTRIBUTE6
+      )
+    values (#{rsOcopInterfaceId,jdbcType=DECIMAL}, #{organizationId,jdbcType=DECIMAL}, 
+      #{rentalTypeId,jdbcType=DECIMAL}, #{agentId,jdbcType=DECIMAL}, #{agentLocationId,jdbcType=DECIMAL}, 
+      #{inventoryItemId,jdbcType=DECIMAL}, #{itemTypeId,jdbcType=VARCHAR}, #{shipToLocationId,jdbcType=DECIMAL}, 
+      #{picId,jdbcType=DECIMAL}, #{glLocationId,jdbcType=VARCHAR}, #{codeCombinationId,jdbcType=DECIMAL}, 
+      #{rateType,jdbcType=VARCHAR}, #{rateDate,jdbcType=TIMESTAMP}, #{rate,jdbcType=DECIMAL}, 
+      #{quantity,jdbcType=DECIMAL}, #{unitMeasLookupCode,jdbcType=VARCHAR}, #{vatTaxName,jdbcType=VARCHAR}, 
+      #{pphTaxName,jdbcType=VARCHAR}, #{hasParentFlag,jdbcType=VARCHAR}, #{parentRentedItemId,jdbcType=DECIMAL}, 
+      #{comments,jdbcType=VARCHAR}, #{authorizationStatus,jdbcType=VARCHAR}, #{interfaceStatus,jdbcType=VARCHAR}, 
+      #{errReference,jdbcType=VARCHAR}, #{createdBy,jdbcType=DECIMAL}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{lastUpdatedBy,jdbcType=DECIMAL}, #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdateLogin,jdbcType=DECIMAL}, 
+      #{requestId,jdbcType=DECIMAL}, #{programApplicationId,jdbcType=DECIMAL}, #{programUpdateDate,jdbcType=TIMESTAMP}, 
+      #{ocopRequestId,jdbcType=DECIMAL}, #{attribute1,jdbcType=VARCHAR}, #{attribute2,jdbcType=VARCHAR}, 
+      #{attribute3,jdbcType=VARCHAR}, #{attribute4,jdbcType=VARCHAR}, #{attribute5,jdbcType=VARCHAR}, 
+      #{orderHeaderId,jdbcType=DECIMAL}, #{rentPeriods,jdbcType=DECIMAL}, #{attribute6,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <resultMap id="glPersonInfoMap" type="co.id.fifgroup.core.domain.interfacing.GlPersonInfo">
+		<result column="person_id" property="personId" jdbcType="DECIMAL" />
+		<result column="org_id" property="companyCodeGl" jdbcType="DECIMAL" />
+		<result column="location_id" property="locationId" jdbcType="DECIMAL" />
+		<result column="location_code" property="locationCode" jdbcType="VARCHAR" />
+	</resultMap>
+  
+  <select id="getGlPersonInfo" parameterType="map" resultMap="glPersonInfoMap">
+  	SELECT ppf.person_id,TO_NUMBER (DECODE (paf.ass_attribute19,
+                                   '01', 82,
+                                   '02', 83,
+                                   82
+                                  )
+                          ) org_id, hla.location_id, hla.location_code
+           FROM PER_PEOPLE_F@GL.US.ORACLE.COM PPF, 
+           PER_ASSIGNMENTS_F@GL.US.ORACLE.COM PAF, 
+           hr_locations_all@gl.us.oracle.com hla
+          WHERE ppf.person_id = paf.person_id
+            AND PAF.LOCATION_ID = HLA.LOCATION_ID
+            AND ppf.employee_number = #{employeeNumber}
+            AND hla.inactive_date IS NULL
+            AND TRUNC (SYSDATE) BETWEEN ppf.effective_start_date
+                                    AND ppf.effective_end_date
+            AND TRUNC (SYSDATE) BETWEEN paf.effective_start_date
+                                    AND paf.effective_end_date
+  </select>
+  
+  <insert id="insertMovementHeader" parameterType="co.id.fifgroup.core.domain.interfacing.OcopMovementHeader" >
+    <selectKey resultType="java.lang.Long" keyProperty="movementHeaderId" order="BEFORE" >
+      select fif_rs_movement_header_s.NEXTVAL from dual
+    </selectKey>
+    insert into FIF_RS_MOVEMENT_HEADERS@gl.us.oracle.com (MOVEMENT_HEADER_ID, MOVEMENT_TYPE, ORGANIZATION_ID, 
+      RENTAL_TYPE_ID, SOURCE_LOCATION_ID, TARGET_LOCATION_ID, 
+      COMMENTS, REQUESTOR, REQUEST_DATE, 
+      AUTHORIZATION_STATUS, APPROVED_FLAG, APPROVED_DATE, 
+      RECEIVED_ALL_FLAG, LAST_RECEIVED_DATE, CANCEL_FLAG, 
+      CANCEL_DATE, CLOSED_CODE, CLOSED_DATE, 
+      CREATED_BY, CREATION_DATE, LAST_UPDATE_BY, 
+      LAST_UPDATE_DATE, LAST_UPDATE_LOGIN)
+    values (#{movementHeaderId,jdbcType=DECIMAL}, #{movementType,jdbcType=VARCHAR}, #{organizationId,jdbcType=DECIMAL}, 
+      #{rentalTypeId,jdbcType=DECIMAL}, #{sourceLocationId,jdbcType=DECIMAL}, #{targetLocationId,jdbcType=DECIMAL}, 
+      #{comments,jdbcType=VARCHAR}, #{requestor,jdbcType=DECIMAL}, #{requestDate,jdbcType=TIMESTAMP}, 
+      #{authorizationStatus,jdbcType=VARCHAR}, #{approvedFlag,jdbcType=VARCHAR}, #{approvedDate,jdbcType=TIMESTAMP}, 
+      #{receivedAllFlag,jdbcType=VARCHAR}, #{lastReceivedDate,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=VARCHAR}, 
+      #{cancelDate,jdbcType=TIMESTAMP}, #{closedCode,jdbcType=VARCHAR}, #{closedDate,jdbcType=TIMESTAMP}, 
+      #{createdBy,jdbcType=DECIMAL}, #{creationDate,jdbcType=TIMESTAMP}, #{lastUpdateBy,jdbcType=DECIMAL}, 
+      #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdateLogin,jdbcType=DECIMAL})
+  </insert>
+  
+  <select id="getRentedItemId" parameterType="map" resultType="java.lang.Long">
+  	  SELECT 
+  	  	rented_item_id 
+  	  FROM fif_rs_rented_items@gl.us.oracle.com frri 
+  	  where 
+  	  	frri.po_number = #{poNumber} 
+  	  	and frri.pic_id = #{personId}
+  </select>
+  
+   <insert id="insertMovementLine" parameterType="co.id.fifgroup.core.domain.interfacing.OcopMovementLine" >
+    <selectKey resultType="java.lang.Long" keyProperty="movementLineId" order="BEFORE" >
+      select fif_rs_movement_line_s.NEXTVAL from dual
+    </selectKey>
+    insert into FIF_RS_MOVEMENT_LINES@gl.us.oracle.com (MOVEMENT_LINE_ID, MOVEMENT_HEADER_ID, 
+      RENTED_ITEM_ID, SOURCE_PIC, SOURCE_CODE_COMBINATION_ID, 
+      TARGET_PIC, TARGET_GL_LOCATION_ID, TARGET_CODE_COMBINATION_ID, 
+      PENALTY, RECEIVED_FLAG, RECEIVED_DATE, 
+      RECEIVED_BY, CREATED_BY, CREATION_DATE, 
+      LAST_UPDATE_BY, LAST_UPDATE_DATE, LAST_UPDATE_LOGIN, 
+      LINE_NUMBER, SOURCE_GL_LOCATION_ID, RETIRED_DATE
+      )
+    values (#{movementLineId,jdbcType=DECIMAL}, #{movementHeaderId,jdbcType=DECIMAL}, 
+      #{rentedItemId,jdbcType=DECIMAL}, #{sourcePic,jdbcType=DECIMAL}, #{sourceCodeCombinationId,jdbcType=DECIMAL}, 
+      #{targetPic,jdbcType=DECIMAL}, #{targetGlLocationId,jdbcType=VARCHAR}, #{targetCodeCombinationId,jdbcType=DECIMAL}, 
+      #{penalty,jdbcType=DECIMAL}, #{receivedFlag,jdbcType=VARCHAR}, #{receivedDate,jdbcType=TIMESTAMP}, 
+      #{receivedBy,jdbcType=DECIMAL}, #{createdBy,jdbcType=DECIMAL}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{lastUpdateBy,jdbcType=DECIMAL}, #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdateLogin,jdbcType=DECIMAL}, 
+      #{lineNumber,jdbcType=DECIMAL}, #{sourceGlLocationId,jdbcType=VARCHAR}, #{retiredDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <update id="updateRentItemToRetired" parameterType="map">
+  	UPDATE fif_rs_rented_items@gl.us.oracle.com
+            SET item_status = 'RETIRED',
+                retire_flag = 'Y',
+                retire_date = SYSDATE,
+                last_update_by = -1,
+                last_update_date = SYSDATE,
+                exported_to_csv_flag = 'N'
+          WHERE rented_item_id = #{rentedItemId}
+  </update>
+  
+  <insert id="insertMovementHistory" parameterType="co.id.fifgroup.core.domain.interfacing.OcopMovementHistory" >
+    <selectKey resultType="java.lang.Long" keyProperty="movementHistoryId" order="BEFORE" >
+      select fif_rs_item_mvmnt_hstry_s.NEXTVAL from dual
+    </selectKey>
+    insert into FIF_RS_RNTD_ITEM_MVMNT_HSTRY@gl.us.oracle.com (MOVEMENT_HISTORY_ID, ORGANIZATION_ID, 
+      RENTED_ITEM_ID, MOVEMENT_HEADER_ID, MOVEMENT_LINE_ID, 
+      MOVEMENT_TYPE, SOURCE_LOCATION_ID, TARGET_LOCATION_ID, 
+      REQUESTOR, REQUEST_DATE, APPROVER, 
+      APPROVER_DATE, RECEIVER, RECEIVE_DATE
+      )
+    values (#{movementHistoryId,jdbcType=DECIMAL}, #{organizationId,jdbcType=DECIMAL}, 
+      #{rentedItemId,jdbcType=DECIMAL}, #{movementHeaderId,jdbcType=DECIMAL}, #{movementLineId,jdbcType=DECIMAL}, 
+      #{movementType,jdbcType=VARCHAR}, #{sourceLocationId,jdbcType=DECIMAL}, #{targetLocationId,jdbcType=DECIMAL}, 
+      #{requestor,jdbcType=DECIMAL}, #{requestDate,jdbcType=TIMESTAMP}, #{approver,jdbcType=DECIMAL}, 
+      #{approverDate,jdbcType=TIMESTAMP}, #{receiver,jdbcType=DECIMAL}, #{receiveDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <sql id="selectRentedItem">
+  		SELECT 
+			FROI.OCOP_REQUEST_ID TRANSACTION_ID,
+			OT.COMPANY_ID,
+			OT.PERSON_ID,
+			FROI.INTERFACE_STATUS,
+			FROH.DOCUMENT_NUM,
+			FROH.AUTHORIZATION_STATUS, 
+			FRRI.ITEM_STATUS,
+			FRRI.ITEM_TYPE_CODE,
+			FRRI.RENTAL_TYPE_ID,
+			FRRI.INVENTORY_ITEM_ID,
+			FRRI.PIC_ID,
+			FROL.UNIT_PRICE,
+			FRRI.RENTAL_START_DATE,
+			FRRI.RENTAL_END_DATE,
+			FRRI.TOTAL_RENT_PERIODS,
+			FRRI.ATTRIBUTE1 VEHICLE_BRAND,
+			FRRI.ATTRIBUTE2 VEHICLE_TYPE,
+			FRRI.RECEIVED_DATE,
+			FRRI.PRIMARY_ID_NUMBER LICENSE_PLAT_NO,
+			FRRI.LAST_UPDATE_DATE,
+			FROI.INTERFACE_STATUS
+		FROM OCO_TRANSACTIONS OT 
+		JOIN FIF_RS_OCOP_INTERFACE@GL.US.ORACLE.COM FROI ON OT.TRANSACTION_ID = FROI.OCOP_REQUEST_ID
+		LEFT JOIN FIF_RS_ORDER_HEADERS@GL.US.ORACLE.COM FROH ON FROI.ORDER_HEADER_ID = FROH.ORDER_HEADER_ID
+		LEFT JOIN FIF_RS_ORDER_LINES@GL.US.ORACLE.COM FROL ON FROH.ORDER_HEADER_ID = FROL.ORDER_HEADER_ID
+		LEFT JOIN FIF_RS_RENTED_ITEMS@GL.US.ORACLE.COM FRRI ON FRRI.ORDER_HEADER_ID = FROH.ORDER_HEADER_ID AND FRRI.ORDER_LINE_ID = FROL.ORDER_LINE_ID
+  </sql>
+  
+  <resultMap id="rentedItemResultMap" type="co.id.fifgroup.core.domain.interfacing.OcopRentedItem">
+		<result column="TRANSACTION_ID" property="transactionId" jdbcType="DECIMAL" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+		<result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+		<result column="DOCUMENT_NUM" property="documentNumber" jdbcType="VARCHAR" />
+		<result column="INTERFACE_STATUS" property="interfaceStatus" jdbcType="VARCHAR" />
+		<result column="AUTHORIZATION_STATUS" property="authorizationStatus" jdbcType="VARCHAR" />
+		<result column="ITEM_STATUS" property="itemStatus" jdbcType="VARCHAR" />
+		<result column="ITEM_TYPE_CODE" property="itemTypeCode" jdbcType="VARCHAR" />
+		<result column="RENTAL_TYPE_ID" property="rentalTypeId" jdbcType="DECIMAL" />
+		<result column="INVENTORY_ITEM_ID" property="inventoryItemId" jdbcType="DECIMAL" />
+		<result column="PIC_ID" property="picId" jdbcType="DECIMAL" />
+		<result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+		<result column="RENTAL_START_DATE" property="rentalStartDate" jdbcType="DATE" />
+		<result column="RENTAL_END_DATE" property="rentalEndDate" jdbcType="DATE" />
+		<result column="TOTAL_RENT_PERIODS" property="totalRentPeriods" jdbcType="DECIMAL" />
+		<result column="VEHICLE_BRAND" property="vehicleBrand" jdbcType="VARCHAR" />
+		<result column="VEHICLE_TYPE" property="vehicleType" jdbcType="VARCHAR" />
+		<result column="RECEIVED_DATE" property="receivedDate" jdbcType="DATE" />
+		<result column="LICENSE_PLAT_NO" property="licensePlatNo" jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="DATE" />
+	</resultMap>
+	
+  <select id="selectRentedItemByExample" parameterType="co.id.fifgroup.core.domain.interfacing.OcopRentedItem" resultMap="rentedItemResultMap">
+  	<include refid="selectRentedItem" />
+  	<where>
+  		<if test="companyId">
+  			AND OT.COMPANY_ID = #{companyId}
+  		</if>
+  		<if test="rentsysStatus != null">
+  			AND OT.RENTSYS_STATUS = #{rentsysStatus}
+  		</if>
+  		<if test="transactionStatus != null">
+  			AND OT.TRANSACTION_STATUS = #{transactionStatus}
+  		</if>
+  		<if test="itemStatus != null">
+  			AND FRRI.ITEM_STATUS = #{itemStatus}
+  		</if>
+  		<if test="rentsysStatusIsNull">
+  			AND OT.RENTSYS_STATUS is null
+  		</if>
+  		<if test="receivedDateIsNotNull">
+  			AND FRRI.RECEIVED_DATE is not null
+  		</if>
+  		<if test="interfaceStatus != null">
+  			AND FROI.INTERFACE_STATUS = #{interfaceStatus}
+  		</if>
+  	</where>
+  </select>
+  
+   <resultMap id="glCombinationResultMap" type="co.id.fifgroup.core.domain.interfacing.GlCodeCombination">
+		<result column="SEGMENT1" property="segment1" jdbcType="VARCHAR" />
+		<result column="SEGMENT4" property="segment4" jdbcType="VARCHAR" />
+		<result column="SEGMENT5" property="segment5" jdbcType="VARCHAR" />
+		<result column="SEGMENT6" property="segment6" jdbcType="VARCHAR" />
+		<result column="SEGMENT7" property="segment7" jdbcType="VARCHAR" />
+		<result column="SEGMENT8" property="segment8" jdbcType="VARCHAR" />
+	</resultMap>
+	
+  <select id="getGlCombination" parameterType="map" resultMap="glCombinationResultMap">
+  	SELECT gl.segment1, gl.segment4, gl.segment5, gl.segment6,
+             gl.segment7, gl.segment8
+        FROM apps.mtl_system_items_vl@gl.us.oracle.com item, gl.gl_code_combinations@gl.us.oracle.com gl
+       WHERE item.organization_id = #{companyId}
+         AND item.segment1 = #{itemCode}
+         AND item.expense_account = gl.code_combination_id
+  </select>
+  
+  <select id="getCodeCombinationId" parameterType="co.id.fifgroup.core.domain.interfacing.GlCodeCombination" resultType="java.lang.Long">
+  	 SELECT code_combination_id
+        INTO v_result
+        FROM gl.gl_code_combinations@gl.us.oracle.com
+       WHERE segment1 = #{segment1}
+         AND segment2 = #{segment2}
+         AND segment3 = #{segment3}
+         AND segment4 = #{segment4}
+         AND segment5 = #{segment5}
+         AND segment6 = #{segment6}
+         AND segment7 = #{segment7}
+         AND segment8 = #{segment8}
+  </select>
+  
+  <select id="getChartOfAccountId" parameterType="map" resultType="java.lang.Long">
+  	 SELECT MIN (sob.chart_of_accounts_id)
+           INTO v_chart_account_id
+           FROM gl.gl_sets_of_books@gl.us.oracle.com sob
+          WHERE short_name = #{shortName}
+  </select>
+  
+  <insert id="insertGlCodeCombination" parameterType="co.id.fifgroup.core.domain.interfacing.GlCodeCombination">
+  	   <selectKey resultType="java.lang.Long" keyProperty="codeCombinationId" order="BEFORE" >
+      		SELECT gl.gl_code_combinations_s.NEXTVAL@gl.us.oracle.com  FROM DUAL
+    	</selectKey>
+         INSERT INTO gl.gl_code_combinations@gl.us.oracle.com
+                     (code_combination_id, 
+                      last_update_date, 
+                      last_updated_by,
+                      chart_of_accounts_id, 
+                      detail_posting_allowed_flag,
+                      detail_budgeting_allowed_flag, 
+                      account_type,
+                      enabled_flag, 
+                      summary_flag,
+                      segment1, 
+                      segment2, 
+                      segment3, 
+                      segment4,
+                      segment5, 
+                      segment6, 
+                      segment7, 
+                      segment8
+                     )
+              VALUES (#{codeCombinationId}, 
+              		#{lastUpdateDate}, 
+              		#{lastUpdatedBy},
+                     #{chartOfAccountId}, 
+                     #{detailPostingAllowedFlag},
+                     #{detailBudgetingAllowedFlag}, 
+                     #{accountType},
+                     #{enabledFlag}, 
+                     #{summaryFlag},
+                     #{segment1}, 
+                     #{segment2}, 
+                     #{segment3}, 
+                     #{segment4},
+                     #{segment5}, 
+                     #{segment6}, 
+                     #{segment7}, 
+                     #{segment8}
+                     )
+  </insert>
+  
+  <update id="updateRentedItemById" parameterType="co.id.fifgroup.core.domain.interfacing.OcopRentedItem">
+  		 UPDATE fif_rs_rented_items
+               SET location_id = #{locationId},
+                   prev_location_id = #{prevLocationId},
+                   gl_location_id = #{glLocationId},
+                   prev_gl_location_id = #{prevGlLocationId},
+                   pic_id = #{picId},
+                   prev_pic_id = #{prevPicId},
+                   code_combination_id = #{codeCombinationId},
+                   prev_code_combination_id = #{prevCodeCombinationId},
+                   exported_to_csv_flag = #{exportedToCsvFlag},
+                   last_update_date = #{lastUpdateDate},
+                   last_update_by = #{lastUpdatedBy},
+                   organization_id = #{organizationId}
+             WHERE rented_item_id = #{rentedItemId}
+  </update>
+  
+  <select id="getCodeCombinationByPerson" parameterType="map" resultMap="glCombinationResultMap">
+  	SELECT gl.segment2, gl.segment3
+        FROM hr.per_all_assignments_fs@gl.us.oracle.com paaf, gl.gl_code_combinationss@gl.us.oracle.com gl
+       WHERE paaf.person_id = #{personId}
+         AND paaf.effective_end_date = #{processDate}
+         AND paaf.default_code_comb_id = gl.code_combination_id
+  </select>
+  
+</mapper>

@@ -1,0 +1,37 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssTrackHistory" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AssignmentTrackHistoryComposer"
+	width="520px" closable="true">
+	<caption label="${labels.pea.dateTrackHistory}" />
+	<listbox id="lbxAssignments"
+		emptyMessage="${labels.common.err.noDataFound}" rows="10">
+		<listhead menupopup="auto">
+			<listheader label="${labels.pea.assTrackHistory.fromDate}"
+				sort="auto(effectiveStartDate)" width="100px" />
+			<listheader label="${labels.pea.assTrackHistory.toDate}"
+				sort="auto(effectiveEndDate)" width="100px" />
+			<listheader
+				label="${labels.pea.assTrackHistory.changeFieldSummary}"
+				sort="auto(dateTrackChange)" width="200px" />
+			<listheader
+				label="${labels.pea.assTrackHistory.isEffective}"
+				sort="auto(isEffective)" width="90px" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell
+					label="${date:format(each.effectiveStartDate,'dd-MMM-yyyy')}" />
+				<listcell
+					label="${date:format(each.effectiveEndDate,'dd-MMM-yyyy')}" />
+				<listcell label="${each.dateTrackChange}" />
+				<listcell label="${each.isEffective}" />
+			</listitem>
+		</template>
+	</listbox>
+	<exporter referenceId="lbxAssignments" />
+	<hlayout>
+		<space hflex="1" />
+		<button label="${labels.common.ok}" id="btnOk" mold="trendy" />
+		<space hflex="1" />
+	</hlayout>
+</window>

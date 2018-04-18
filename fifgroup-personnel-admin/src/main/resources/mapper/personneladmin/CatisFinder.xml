@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.CatisFinder">
+
+	<resultMap id="trainingResult" type="co.id.fifgroup.personneladmin.dto.TrainingDTO">
+		<result column="TRAINEE_NAME" property="traineeName" jdbcType="VARCHAR" />
+		<result column="TRAINEE_EMPLOYEE_NUMBER" property="traineeEmployeeNumber"
+			jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="TRAINING_START_DATE" property="trainingStartDate"
+			jdbcType="TIMESTAMP" />
+		<result column="TRAINING_END_DATE" property="trainingEndDate"
+			jdbcType="TIMESTAMP" />
+		<result column="OBJECTIVE" property="objective" jdbcType="VARCHAR" />
+		<result column="SCORE" property="score" jdbcType="VARCHAR" />
+		<result column="CTM_SETUPIRREGCLASS_ID" property="idpCategory"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.PerformanceReviewDTO" id="performanceResult">
+			<result column="PERIOD" jdbcType="DECIMAL" property="period"/>
+			<result column="FINAL_PERFORMANCE_GRADE" jdbcType="VARCHAR" property="performanceGrade"/>
+			<result column="MULTIPLIER_AMOUNT" jdbcType="DECIMAL" property="multiplierAmount"/>
+			<result column="BONUS_AMOUNT" jdbcType="DECIMAL" property="bonusAmount"/>
+			<result column="SEQUENCE" jdbcType="DECIMAL" property="sequence"/>
+			
+	</resultMap>	
+
+	<select id="getPerformanceAppraisalInquiry" parameterType="map" resultMap="performanceResult">
+		select rev.period, rev.person_id,nvl(coalesce (dtl1.grade_name, dtl.grade_name),0) as final_performance_grade,
+     		nvl(coalesce (DTL1.SEQUENCE, DTL.SEQUENCE),0) as SEQUENCE, NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(PAS.AMOUNT),0) AS SALARY, 
+		  	NVL(BNS.BONUS,0) as BONUS_AMOUNT, NVL(BNS.BONUS/PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(PAS.AMOUNT),0) as MULTIPLIER_AMOUNT
+		FROM PEM_PERFORMANCE_REVIEW REV 
+		LEFT JOIN (SELECT TO_CHAR(PPT.PROCESS_DATE,'YYYY') AS PERIOD, PPTE.PERSON_ID, PPT.PROCESS_DATE,
+		              PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(PPTED.DEBIT) AS BONUS
+		          FROM PAY_PAYROLL_TRN PPT
+		          LEFT JOIN PAY_PAYROLL_TRN_EMP PPTE
+		            ON PPT.TRN_ID = PPTE.TRN_ID
+		          JOIN PAY_PAYROLL_TRN_EMP_DTL PPTED
+		            ON PPTED.TRN_EMP_ID = PPTE.TRN_EMP_ID
+		            and ppted.paycode_id in (select paycode_id from pay_paycodes where paycode = 'BP003')
+              where upper(ppt.status) = upper('CLOSED')
+		          ) BNS
+		  ON BNS.PERIOD = REV.PERIOD
+		  AND BNS.PERSON_ID = REV.PERSON_ID
+		LEFT JOIN PAY_SALARIES PAS 
+		  ON REV.PERSON_ID = PAS.PERSON_ID 
+		  and trunc(bns.process_date) between trunc(pas.effective_start_date) and trunc(pas.effective_end_date)
+		left join pem_grade_dtl dtl on dtl.grade_detail_id = rev.performance_grade
+   		left join pem_grade_dtl dtl1 on dtl1.grade_detail_id = rev.override_performance_grade
+		WHERE REV.PERSON_ID = #{personId}
+		ORDER BY REV.PERSON_ID, REV.PERIOD
+	</select>
+	
+	<select id="getTrainingInformationByEmployeeNumber"
+		parameterType="map" resultMap="trainingResult">
+		SELECT trn.trainee_name,
+		trn.trainee_emp_num,
+		trn.title,
+		trn.training_start_date,
+		trn.training_end_date,
+		trn.objective,
+		trn.score,
+		trn.ctm_setupirregclass_id
+		FROM
+		( SELECT DISTINCT
+		ftird.TRAINEE_PERSON_ID,
+		ftird.trainee_name,
+		ftird.trainee_emp_num,
+		oe.title,
+		ftp.training_start_date,
+		ftp.training_end_date,
+		ftp.objective,
+		ftird.score,
+		ftp.ctm_setupirregclass_id
+		FROM
+		fifota.fif_ota_trn_irreg_result@hrms_prod.fif.co.id ftir,
+		fifota.fif_ota_trn_irreg_result_dtl@hrms_prod.fif.co.id ftird,
+		ota.ota_events@hrms_prod.fif.co.id oe,
+		fifota.fif_ota_trn_proposal@hrms_prod.fif.co.id ftp
+		WHERE
+		ftird.trn_irreg_result_id = ftir.trn_irreg_result_id
+		AND ftp.event_id =
+		ftir.event_id
+		AND oe.activity_version_id = ftp.activity_version_id
+		AND
+		oe.event_id = ftp.event_id
+		UNION ALL
+		SELECT DISTINCT
+		fotr.learner_person_id AS TRAINEE_PERSON_ID,
+		fotr.learner_name,
+		fotr.learner_emp_num,
+		oe.title,
+		ftp.training_start_date,
+		ftp.training_end_date,
+		ftp.objective,
+		NULL score,
+		flv.meaning
+		FROM
+		fifota.fif_ota_trn_reg_result@hrms_prod.fif.co.id fotr,
+		fifota.fif_ota_trn_proposal@hrms_prod.fif.co.id ftp,
+		ota.ota_events@hrms_prod.fif.co.id oe,
+		ota_activity_versions@hrms_prod.fif.co.id oav,
+		fnd_lookup_values@hrms_prod.fif.co.id flv
+		WHERE fotr.success_flag = 'Y'
+		AND ftp.event_id = fotr.event_id
+		AND oe.activity_version_id =
+		ftp.activity_version_id
+		AND oe.event_id = ftp.event_id
+		AND
+		oav.tav_information_category = 'FIF_COURSE'
+		AND flv.lookup_code =
+		oav.tav_information2
+		AND flv.lookup_type = 'FIF_TRAINING_PROGRAM'
+		AND
+		flv.view_application_id = 3
+		AND flv.security_group_id = 0
+		AND
+		oe.activity_version_id = oav.ACTIVITY_VERSION_ID
+		AND EXISTS
+		(SELECT 1
+		FROM fifctm.fif_ctm_subtrnprogram_v@hrms_prod.fif.co.id,
+		per_jobs@hrms_prod.fif.co.id pj
+		WHERE TO_CHAR (flex_value_id) =
+		pj.attribute15
+		AND oav.tav_information3 = flex_value
+		)
+		UNION ALL
+		SELECT
+		DISTINCT fotr.learner_person_id AS TRAINEE_PERSON_ID,
+		fotr.learner_name,
+		fotr.learner_emp_num,
+		oe.title,
+		ftp.training_start_date,
+		ftp.training_end_date,
+		ftp.objective,
+		NULL
+		score,
+		flv.meaning
+		FROM
+		fifota.fif_ota_trn_reg_result@hrms_prod.fif.co.id fotr,
+		fifota.fif_ota_trn_proposal@hrms_prod.fif.co.id ftp,
+		ota.ota_events@hrms_prod.fif.co.id oe,
+		ota_activity_versions@hrms_prod.fif.co.id oav,
+		fnd_lookup_values@hrms_prod.fif.co.id flv
+		WHERE fotr.success_flag = 'Y'
+		AND ftp.event_id = fotr.event_id
+		AND oe.activity_version_id =
+		ftp.activity_version_id
+		AND oe.event_id = ftp.event_id
+		AND
+		oav.tav_information_category = 'FIF_COURSE'
+		AND flv.lookup_code =
+		oav.tav_information2
+		AND flv.lookup_type = 'FIF_TRAINING_PROGRAM'
+		AND
+		flv.view_application_id = 3
+		AND flv.security_group_id = 0
+		AND
+		oe.activity_version_id = oav.ACTIVITY_VERSION_ID
+		AND NOT EXISTS
+		(SELECT
+		1
+		FROM fifctm.fif_ctm_subtrnprogram_v@hrms_prod.fif.co.id,
+		per_jobs@hrms_prod.fif.co.id pj
+		WHERE TO_CHAR (flex_value_id) =
+		pj.attribute15
+		AND oav.tav_information3 = flex_value
+		)
+		) trn
+		where
+		trn.trainee_emp_num = #{employeeNumber}
+	</select>
+
+
+	<!-- <resultMap id="diciplinaryLetterResult" -->
+	<!-- type="co.id.fifgroup.personneladmin.dto.DiciplinaryLetterDTO"> -->
+	<!-- <result column="DICIPLINARY_ACTION_TYPE" property="diciplinaryActionType" -->
+	<!-- jdbcType="VARCHAR" /> -->
+	<!-- <result column="REASON" property="reason" jdbcType="VARCHAR" /> -->
+	<!-- <result column="NOTES" property="notes" jdbcType="VARCHAR" /> -->
+	<!-- <result column="DATE_FROM" property="dateFrom" jdbcType="TIMESTAMP" 
+		/> -->
+	<!-- <result column="DATE_TO" property="dateTo" jdbcType="TIMESTAMP" /> -->
+	<!-- <result column="PERSON_ID" property="personId" jdbcType="NUMERIC" /> -->
+	<!-- <result column="TARGET" property="target" jdbcType="VARCHAR" /> -->
+	<!-- </resultMap> -->
+
+	<!-- <select id="getDiciplinaryLetterByEmployeeNumber" resultMap="diciplinaryLetterResult" 
+		parameterType="map"> -->
+	<!-- SELECT pac.segment1 diciplinary_action_type, -->
+	<!-- pac.segment4 reason, -->
+	<!-- pac.segment2 notes, -->
+	<!-- ppa.date_from, -->
+	<!-- ppa.date_to, -->
+	<!-- ppa.person_id, -->
+	<!-- pac.segment7 target -->
+	<!-- FROM per_analysis_criteria@hrms_prod.fif.co.id pac, -->
+	<!-- per_person_analyses@hrms_prod.fif.co.id ppa, -->
+	<!-- fnd_id_flex_structures_vl@hrms_prod.fif.co.id ifs, -->
+	<!-- per_all_people_f@hrms_prod.fif.co.id papf -->
+	<!-- WHERE pac.analysis_criteria_id = ppa.analysis_criteria_id -->
+	<!-- AND ifs.id_flex_structure_name = 'FIF Disiplinary Action' -->
+	<!-- AND ifs.id_flex_num = pac.id_flex_num -->
+	<!-- AND ppa.person_id = papf.person_id -->
+	<!-- AND trunc(sysdate) between papf.effective_start_date and papf.effective_end_date -->
+	<!-- AND papf.employee_number = #{employeeNumber} -->
+	<!-- </select> -->
+
+	<resultMap id="diciplinaryLetterResult"
+		type="co.id.fifgroup.core.dto.DisciplinaryLetterDTO">
+		<result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+		<result column="SP_NUMBER" property="spNumber" jdbcType="VARCHAR" />
+		<result column="DISCIPLINARY_TYPE" property="disciplinaryType" jdbcType="VARCHAR" />
+		<result column="REASON_NAME" property="reasonName" jdbcType="VARCHAR" />
+		<result column="DISCIPLINARY_LETTER_LEVEL" property="disciplinaryLetterLevel" jdbcType="VARCHAR" />
+		<result column="LEVEL_SOURCE" property="levelSource" jdbcType="VARCHAR" />
+		<result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="CRONOLOGIES" property="cronologies" jdbcType="VARCHAR" />
+		<result column="TARGET" property="target" jdbcType="NUMERIC" />
+		<result column="ACHIEVEMENT" property="achievement" jdbcType="NUMERIC" />
+	</resultMap>
+
+	<select id="getDiciplinaryLetterByPersonId" resultMap="diciplinaryLetterResult"
+		parameterType="map">
+		SELECT bhv.branch_name,
+		  wo.organization_name,
+		  wj.job_name,
+		  dsr.sp_number,
+		  dt.disciplinary_type,
+		  dr.reason_name,
+		  bld.description disciplinary_letter_level,
+		  REPLACE(dsr.level_source, '_', ' ') level_source,
+		  dsr.start_date,
+		  dsr.end_date,
+		  dsr.cronologies,
+		  dsr.target,
+		  dsr.achievement
+		FROM dil_sp_request dsr
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id   = dsr.person_id
+		AND ppa.company_id = dsr.company_id
+		AND TRUNC(dsr.start_date) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		JOIN wos_organizations wo
+		ON ppa.organization_id = wo.organization_id
+		JOIN wos_jobs wj
+		ON ppa.job_id = wj.job_id
+		JOIN dil_types dt
+		ON dt.disciplinary_type_id = dsr.disciplinary_type_id
+		JOIN dil_reasons dr
+		ON dr.disciplinary_reason_id = dsr.disciplinary_reason_id
+		JOIN bse_lookup_hdr bsh
+		ON bsh.name = 'DIL_LEVEL'
+		JOIN bse_lookup_dependents bld
+		ON bld.lookup_id    = bsh.lookup_id
+		AND bld.detail_code = dsr.sp_level
+		LEFT JOIN branch_hierarchy_v bhv
+		ON bhv.organization_id = ppa.organization_id
+		where dsr.status &lt;&gt; 'CANCELED'
+		and dsr.person_id = #{personId}
+		ORDER BY dsr.start_date asc
+	</select>
+
+	<resultMap id="performanceReviewResult"
+		type="co.id.fifgroup.personneladmin.dto.PerformanceReviewDTO">
+		<result column="PERSON_ID" property="personId" jdbcType="NUMERIC" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber"
+			jdbcType="VARCHAR" />
+		<result column="REVIEW_DATE" property="reviewDate" jdbcType="TIMESTAMP" />
+		<result column="PERFORMANCE_RATING" property="performanceRating"
+			jdbcType="VARCHAR" />
+		<result column="MEANING" property="meaning" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getPerformanceReviewByEmployeeNumber" resultMap="performanceReviewResult">
+		SELECT ppr.person_id,
+		papf.employee_number,
+		ppr.REVIEW_DATE,
+		ppr.PERFORMANCE_RATING,
+		fcl.meaning
+		FROM
+		HR.per_all_people_f@hrms_prod.fif.co.id papf,
+		HR.per_performance_reviews@hrms_prod.fif.co.id ppr,
+		APPS.fnd_common_lookups@hrms_prod.fif.co.id fcl
+		WHERE ppr.person_id =
+		papf.person_id
+		AND TRUNC (SYSDATE) BETWEEN
+		papf.effective_start_date AND
+		papf.effective_end_date
+		AND
+		fcl.lookup_type = 'PERFORMANCE_RATING'
+		AND
+		fcl.lookup_code =
+		ppr.performance_rating
+		AND papf.employee_number =
+		#{employeeNumber}
+		ORDER BY ppr.REVIEW_DATE ASC
+	</select>
+
+	<resultMap id="havResult" type="co.id.fifgroup.personneladmin.dto.HavDTO">
+		<result column="PERSON_ID" property="personId" jdbcType="NUMERIC" />
+		<result column="CTM_PEOPLE_HAV_ID" property="peopleHavId"
+			jdbcType="NUMERIC" />
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate"
+			jdbcType="TIMESTAMP" />
+		<result column="EFFECTIVE_END_DATE" property="effectiveEndDate"
+			jdbcType="TIMESTAMP" />
+		<result column="MEANING" property="meaning" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getHavByEmployeeNumber" resultMap="havResult">
+		SELECT
+		flv.meaning,
+		fph.effective_start_date,
+		fph.effective_end_date,
+		fph.ctm_people_hav_id,
+		fph.person_id
+		FROM
+		fifctm.fif_ctm_people_hav@hrms_prod.fif.co.id fph,
+		fnd_lookup_values@hrms_prod.fif.co.id flv,
+		per_all_people_f@hrms_prod.fif.co.id papf
+		WHERE flv.lookup_code =
+		fph.hav_level
+		AND flv.lookup_type = 'FIF_HAV_DES'
+		AND fph.person_id =
+		papf.person_id
+		AND trunc(sysdate) between papf.effective_start_date and
+		papf.effective_end_date
+		AND papf.employee_number = #{employeeNumber}
+	</select>
+
+	<resultMap type="co.id.fifgroup.personneladmin.dto.CompetenceDTO"
+		id="competencesResult">
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="BEHAVIOURAL_INDICATOR" property="behaviouralIndicator"
+			jdbcType="VARCHAR" />
+		<result column="IS_SCORE" property="score" jdbcType="NUMERIC" />
+		<result column="EFFECTIVE_START_DATE" property="effectiveStartDate"
+			jdbcType="TIMESTAMP" />
+		<result column="COMPETENCE_ID" property="competenceId"
+			jdbcType="NUMERIC" />
+	</resultMap>
+
+	<select id="getCompetencesByEmployeeNumberAndJobCodeHrms"
+		resultMap="competencesResult">
+		SELECT z1.NAME,
+		(SELECT pc2.description
+		FROM
+		per_competences@hrms_prod.fif.co.id pc2
+		WHERE z1.competence_id =
+		pc2.competence_id
+		) description,
+		z1.behavioural_indicator,
+		z2.is_score,
+		(SELECT DISTINCT fcch2.effective_start_date
+		FROM
+		fifctm.fif_ctm_competency_hdr@hrms_prod.fif.co.id fcch2,
+		fifctm.fif_ctm_competency_dtl@hrms_prod.fif.co.id fccd2,
+		per_all_people_f@hrms_prod.fif.co.id papf
+		WHERE
+		fccd2.ctm_competency_hdr_id = fcch2.ctm_competency_hdr_id
+		AND
+		z1.competence_id = fccd2.competency_id
+		AND TRUNC (SYSDATE) BETWEEN
+		fcch2.effective_start_date AND NVL
+		(fcch2.effective_end_date,
+		'31-DEC-4712')
+		AND fcch2.person_id = papf.person_id
+		AND trunc(sysdate)
+		between papf.effective_start_date and
+		papf.effective_end_date
+		AND
+		papf.employee_number = #{employeeNumber}
+		) effective_start_date,
+		z1.competence_id
+		FROM
+		(SELECT DISTINCT pc.competence_id,
+		pc.NAME,
+		pct.behavioural_indicator
+		FROM per_competences@hrms_prod.fif.co.id pc,
+		per_competences_tl@hrms_prod.fif.co.id pct,
+		per_competence_elements@hrms_prod.fif.co.id pce,
+		per_jobs@hrms_prod.fif.co.id pj
+		WHERE pc.attribute4 = 'Y'
+		AND
+		pct.competence_id = pc.competence_id
+		AND pce.competence_id =
+		pc.competence_id
+		AND pc.date_to IS NULL
+		AND pce.job_id = pj.job_id
+		AND
+		substr(pj.name,1,instr(pj.name,'.',1)-1) = #{jobCodeHrms}
+		ORDER BY
+		pc.NAME
+		) z1,
+		(SELECT DISTINCT pc.competence_id,
+		pc.NAME,
+		fccd.is_score
+		FROM fifctm.fif_ctm_competency_hdr@hrms_prod.fif.co.id fcch,
+		fifctm.fif_ctm_competency_dtl@hrms_prod.fif.co.id fccd,
+		per_competences@hrms_prod.fif.co.id pc,
+		per_competences_tl@hrms_prod.fif.co.id pct,
+		per_competence_elements@hrms_prod.fif.co.id pce,
+		per_all_people_f@hrms_prod.fif.co.id papf
+		WHERE
+		fccd.ctm_competency_hdr_id = fcch.ctm_competency_hdr_id
+		AND
+		pc.competence_id = fccd.competency_id
+		AND pc.attribute4 = 'Y'
+		AND
+		pct.competence_id = pc.competence_id
+		AND pce.competence_id =
+		pc.competence_id
+		AND pc.date_to IS NULL
+		AND TRUNC (SYSDATE) BETWEEN
+		fcch.effective_start_date AND NVL
+		(fcch.effective_end_date,
+		'31-DEC-4712')
+		AND fcch.person_id = papf.person_id
+		AND trunc(sysdate)
+		between papf.effective_start_date and
+		papf.effective_end_date
+		AND
+		papf.employee_number = #{employeeNumber}
+		) z2 WHERE z1.competence_id =
+		z2.competence_id(+)
+	</select>
+
+	<resultMap type="co.id.fifgroup.personneladmin.dto.AssessmentDTO"
+		id="assessmentResult">
+		<result column="CTM_ASSESSMENT_ID" property="assessmentId"
+			jdbcType="NUMERIC" />
+		<result column="RESULT_HRD" property="resultHrd" jdbcType="VARCHAR" />
+		<result column="RESULT_ASSESSMENT" property="resultAssessment"
+			jdbcType="VARCHAR" />
+		<result column="TEST_DATE" property="testDate" jdbcType="TIMESTAMP" />
+		<result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+		<result column="STRENGTH" property="strength" jdbcType="VARCHAR" />
+		<result column="DEVELOPMENT_PLAN" property="developmentPlan"
+			jdbcType="VARCHAR" />
+		<result column="SUPPLIER_CODE" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_NAME" property="supplierOpexName"
+			jdbcType="VARCHAR" />
+		<result column="SUPPLIER_BANK_CODE" property="supplierBankCode"
+			jdbcType="VARCHAR" />
+		<result column="SUPPLIER_BANK_ACCOUNT_NO" property="supplierBankAccountNumber"
+			jdbcType="VARCHAR" />
+		<result column="CTM_ENTRYICP_ID" property="entryIcpId"
+			jdbcType="NUMERIC" />
+		<result column="PERSON_ID" property="personId" jdbcType="NUMERIC" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber"
+			jdbcType="VARCHAR" />
+		<result column="LAST_NAME" property="lastName" jdbcType="VARCHAR" />
+		<result column="CREATOR_LAST_NAME" property="creatorLastName"
+			jdbcType="VARCHAR" />
+		<result column="JOB_ID" property="jobId" jdbcType="NUMERIC" />
+		<result column="JOB" property="job" jdbcType="VARCHAR" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="JOB_DESTINATION_ID" property="jobDestinationId"
+			jdbcType="NUMERIC" />
+		<result column="JOB_DESTINATION" property="jobDestination"
+			jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_NAME" property="organizationName"
+			jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_BRANCH_NAME" property="organizationBranchName"
+			jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_BRANCH_ID" property="organizationBranchId"
+			jdbcType="NUMERIC" />
+		<result column="POSITION_NAME" property="positionName"
+			jdbcType="VARCHAR" />
+		<result column="ACTUAL_TERMINATION_DATE" property="actualTerminationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="DATE_START" property="startDate" jdbcType="TIMESTAMP" />
+		<result column="CTM_COMPETENCY_HDR_ID" property="competencyHdrId"
+			jdbcType="NUMERIC" />
+		<result column="SELF_GUIDE_LEARNING" property="selfGuideLearning"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getAssesmentByEmployeeNumber" resultMap="assessmentResult">
+		SELECT DISTINCT fca.ctm_assessment_id,
+		fca.result_hrd,
+		fca.result_assessment,
+		fca.test_date,
+		fca.file_path,
+		fca.strength,
+		fca.development_plan,
+		fca.supplier_code,
+		fso.supl_opex_name,
+		fca.supplier_bank_code,
+		fca.supplier_bank_account_no,
+		fca.ctm_entryicp_id,
+		fca.person_id,
+		papf.employee_number,
+		papf.last_name,
+		papf2.last_name creator_last_name,
+		pj.job_id job_id,
+		SUBSTR(pj.NAME, INSTR (pj.NAME, '.') + 1) job,
+		pg.NAME grade,
+		pjb.job_id job_destination_id,
+		SUBSTR(pjb.NAME, INSTR (pjb.NAME, '.') +
+		1) job_destination,
+		haou.NAME organization_name,
+		DECODE
+		(haou_org_branch.NAME, 'FIF', 'FIF Head Office', haou_org_branch.NAME
+		) organization_branch_name,
+		haou_org_branch.organization_id
+		organization_branch_id,
+		SUBSTR (pap.NAME, INSTR (pap.NAME, '.') + 1)
+		position_name,
+		pos.actual_termination_date,
+		pos.date_start,
+		fcch.ctm_competency_hdr_id,
+		fca.self_guide_learning
+		FROM
+		fif_ctm_assessment@hrms_prod.fif.co.id fca
+		LEFT JOIN
+		fifctm.fif_ctm_competency_hdr@hrms_prod.fif.co.id fcch
+		ON
+		fca.ctm_assessment_id = fcch.source_id
+		AND fcch.person_id =
+		fca.person_id,
+		<!-- AND fcch.SOURCE = ? -->
+		per_all_people_f@hrms_prod.fif.co.id papf,
+		fnd_user@hrms_prod.fif.co.id fu,
+		per_all_people_f@hrms_prod.fif.co.id
+		papf2,
+		per_all_assignments_f@hrms_prod.fif.co.id paaf,
+		hr_all_organization_units@hrms_prod.fif.co.id haou,
+		hr_all_organization_units@hrms_prod.fif.co.id haou_org_branch,
+		hr_locations_all@hrms_prod.fif.co.id hla,
+		per_jobs@hrms_prod.fif.co.id
+		pj,
+		per_jobs@hrms_prod.fif.co.id pjb,
+		per_grades@hrms_prod.fif.co.id pg,
+		per_periods_of_service@hrms_prod.fif.co.id pos,
+		per_all_positions@hrms_prod.fif.co.id pap,
+		apps.hous_supplier_opex@hrms_prod.fif.co.id fso
+		WHERE papf.person_id =
+		fca.person_id
+		AND fu.user_id =
+		fca.created_by
+		AND papf2.person_id =
+		fu.employee_id
+		AND TRUNC (SYSDATE)
+		BETWEEN TRUNC
+		(papf.effective_start_date) AND TRUNC (NVL
+		(papf.effective_end_date,
+		'31-DEC-4712' ) )
+		AND paaf.person_id =
+		papf.person_id
+		AND
+		haou.organization_id = paaf.organization_id
+		AND
+		pj.job_id = paaf.job_id
+		AND pos.person_id = papf.person_id
+		AND
+		hla.location_id =
+		haou.location_id
+		AND hla.attribute6 =
+		haou_org_branch.organization_id
+		AND pjb.job_id = fca.job_destination_id
+		AND pg.grade_id = paaf.grade_id
+		AND papf.person_type_id = '106'
+		AND
+		paaf.employment_category IN ('PM',
+		'PB')
+		AND TRUNC (SYSDATE) BETWEEN
+		TRUNC (paaf.effective_start_date) AND
+		TRUNC (NVL
+		(paaf.effective_end_date, '31-DEC-4712' ) )
+		AND TRUNC
+		(SYSDATE) BETWEEN
+		TRUNC (haou.date_from) AND TRUNC (NVL (haou.date_to,
+		'31-DEC-4712' ) )
+		AND paaf.position_id = pap.position_id
+		AND
+		fso.supl_opex_code =
+		fca.supplier_code
+		AND papf.employee_number =
+		#{employeeNumber}
+	</select>
+
+	<resultMap type="co.id.fifgroup.personneladmin.dto.PresentationDTO"
+		id="presentationResult">
+		<result column="CTM_ENTRYPRESEN_ID" property="entryPresenId"
+			jdbcType="NUMERIC" />
+		<result column="TYPE_PRESENTASI" property="typePresentasi"
+			jdbcType="VARCHAR" />
+		<result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+		<result column="NOTE" property="note" jdbcType="VARCHAR" />
+		<result column="PRESENTATION_DATE" property="presentationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="FINAL_RESULT" property="finalResult" jdbcType="VARCHAR" />
+		<result column="CTM_ENTRYICP_ID" property="entryIcpId"
+			jdbcType="NUMERIC" />
+		<result column="CTM_ENTRYIDP_HDR_ID" property="entryIdpHdrId"
+			jdbcType="NUMERIC" />
+		<result column="PERSON_ID" property="personId" jdbcType="NUMERIC" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber"
+			jdbcType="VARCHAR" />
+		<result column="LAST_NAME" property="lastName" jdbcType="VARCHAR" />
+		<result column="JOB_ID" property="jobId" jdbcType="NUMERIC" />
+		<result column="JOB" property="job" jdbcType="VARCHAR" />
+		<result column="JOB_DESTINATION" property="jobDestination"
+			jdbcType="VARCHAR" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_NAME" property="organizationName"
+			jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_BRANCH_NAME" property="organizationBranchName"
+			jdbcType="VARCHAR" />
+		<result column="ORGANIZATION_BRANCH_ID" property="organizationBranchId"
+			jdbcType="VARCHAR" />
+		<result column="POSITION_NAME" property="positionName"
+			jdbcType="VARCHAR" />
+		<result column="ACTUAL_TERMINATION_DATE" property="actualTerminationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="DATE_START" property="dateStart" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="getPresentationByEmployeeNumber" resultMap="presentationResult">
+		SELECT
+		fce.ctm_entrypresen_id,
+		fce.type_presentasi,
+		fce.file_path,
+		fce.note,
+		fce.presentation_date,
+		fce.final_result,
+		fce.ctm_entryicp_id,
+		fce.ctm_entryidp_hdr_id,
+		fce.person_id,
+		papf.employee_number,
+		papf.last_name,
+		pj.job_id job_id,
+		pj.NAME job,
+		pjb.NAME job_destination,
+		pg.NAME grade,
+		haou.NAME organization_name,
+		DECODE
+		(haou_org_branch.NAME, 'FIF', 'FIF Head Office', haou_org_branch.NAME
+		) organization_branch_name,
+		haou_org_branch.organization_id
+		organization_branch_id,
+		SUBSTR(pap.NAME, INSTR(pap.name, '.') + 1)
+		position_name,
+		pos.actual_termination_date,
+		pos.date_start
+		FROM
+		fifctm.fif_ctm_entrypresen@hrms_prod.fif.co.id fce,
+		fifctm.fif_ctm_entryicp@hrms_prod.fif.co.id fcei,
+		per_all_people_f@hrms_prod.fif.co.id papf,
+		per_all_assignments_f@hrms_prod.fif.co.id paaf,
+		hr_all_organization_units@hrms_prod.fif.co.id haou,
+		hr_all_organization_units@hrms_prod.fif.co.id haou_org_branch,
+		hr_locations_all@hrms_prod.fif.co.id hla,
+		per_jobs@hrms_prod.fif.co.id
+		pj,
+		per_jobs@hrms_prod.fif.co.id pjb,
+		per_grades@hrms_prod.fif.co.id pg,
+		per_periods_of_service@hrms_prod.fif.co.id pos,
+		per_all_positions@hrms_prod.fif.co.id pap
+		WHERE papf.person_id =
+		fce.person_id
+		AND fce.ctm_entryicp_id =
+		fcei.ctm_entryicp_id
+		AND TRUNC
+		(SYSDATE) BETWEEN
+		papf.effective_start_date AND NVL
+		(papf.effective_end_date,
+		'31-DEC-4712' )
+		AND paaf.person_id =
+		papf.person_id
+		AND
+		haou.organization_id = paaf.organization_id
+		AND
+		pj.job_id = paaf.job_id
+		AND pos.person_id = papf.person_id
+		AND
+		hla.location_id =
+		haou.location_id
+		AND hla.attribute6 =
+		haou_org_branch.organization_id
+		AND pjb.job_id =
+		fcei.job_destination_id
+		AND pg.grade_id =
+		paaf.grade_id
+		AND
+		papf.person_type_id = '106'
+		AND
+		paaf.employment_category IN ('PM', 'PB')
+		AND TRUNC (SYSDATE) BETWEEN
+		paaf.effective_start_date AND NVL
+		(paaf.effective_end_date,
+		'31-DEC-4712')
+		AND TRUNC (SYSDATE) BETWEEN
+		haou.date_from AND NVL
+		(haou.date_to, '31-DEC-4712')
+		AND
+		paaf.position_id = pap.position_id
+		AND papf.employee_number =
+		#{employeeNumber}
+	</select>
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="keyValueResult">
+		<result column="LOOKUP_CODE" property="key" jdbcType="VARCHAR" />
+		<result column="MEANING" property="value" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getPerformanceRating" resultMap="keyValueResult">
+		select
+		LOOKUP_CODE,
+		MEANING,
+		DESCRIPTION
+		FROM APPS.fnd_common_lookups@hrms_prod.fif.co.id
+		fcl
+		where
+		fcl.lookup_type = 'PERFORMANCE_RATING'
+	</select>
+
+	<insert id="insertPerformanceReview"
+		parameterType="co.id.fifgroup.personneladmin.dto.PerformanceReviewDTO">
+		insert into SYN_PERFORMANCE_REVIEWS
+		(
+		REVIEW_ID,
+		PERSON_ID,
+		COMPANY_ID,
+		REVIEW_DATE,
+		PERFORMANCE_RATING,
+		CREATED_BY,
+		CREATION_DATE,
+		LAST_UPDATED_BY,
+		LAST_UPDATE_DATE
+		)
+		values
+		(
+		SYN_PERFORMANCE_REVIEWS_S.nextval,
+		#{personId},
+		#{companyId},
+		#{reviewDate},
+		#{performanceRating},
+		#{createdBy},
+		#{creationDate},
+		#{lastUpdatedBy},
+		#{lastUpdateDate}
+		)
+		<!-- insert into HR.per_performance_reviews@hrms_prod.fif.co.id -->
+		<!-- ( -->
+		<!-- PERFORMANCE_REVIEW_ID, -->
+		<!-- PERSON_ID, -->
+		<!-- REVIEW_DATE, -->
+		<!-- PERFORMANCE_RATING, -->
+		<!-- LAST_UPDATE_DATE, -->
+		<!-- LAST_UPDATED_BY, -->
+		<!-- LAST_UPDATE_LOGIN, -->
+		<!-- CREATED_BY, -->
+		<!-- CREATION_DATE -->
+		<!-- ) -->
+		<!-- values -->
+		<!-- ( -->
+		<!-- HR.per_performance_reviews_s.nextVal@hrms_prod.fif.co.id, -->
+		<!-- #{personId}, -->
+		<!-- #{reviewDate}, -->
+		<!-- #{performanceRating}, -->
+		<!-- #{lastUpdateDate}, -->
+		<!-- #{lastUpdatedBy}, -->
+		<!-- #{lastUpdateLogin}, -->
+		<!-- #{createdBy}, -->
+		<!-- #{creationDate} -->
+		<!-- ) -->
+	</insert>
+
+	<select id="getValidationLearningPath" statementType="CALLABLE">
+		{
+		#{returnValue, jdbcType=VARCHAR, mode=OUT} = call
+		apps.fif_validation_learning_path@hrms_prod.fif.co.id
+		(
+		#{personId,
+		mode=IN},
+		#{jobId, mode=IN}
+		)
+		}
+	</select>
+
+	<select id="getPersonId" parameterType="map" resultType="Long">
+		select
+		person_id from per_all_people_f@hrms_prod.fif.co.id papf
+		where
+		trunc(sysdate) between papf.effective_start_date and
+		papf.effective_end_date
+		AND papf.employee_number = #{employeeNumber}
+	</select>
+
+</mapper>

@@ -1,0 +1,40 @@
+<window id="winApprovalModelListOfValue" title="List of Value Approval Model" border="normal" width="400px" height="600px" closable="true"
+apply="co.id.fifgroup.systemworkflow.util.ApprovalModelListOfValueComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label id="lblSearchText" value="Search text"/>
+				<textbox id="txtSearchCriteria" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<button id="btnFind" label="find" mold="trendy" />
+					<button id="btnDeselect" label="${labels.common.deselect}" mold="trendy" />				
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel" label="${labels.swf.approvalModelName }" />
+			<listheader label="${labels.common.action }" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.avmName}"></listcell>
+				<listcell><a label="${labels.common.detail}" style="text-decoration:underline ;color:blue" forward="listbox.onDetail(${each})"></a></listcell>
+			</listitem>
+		</template>
+	</listbox>
+</groupbox>
+</window>

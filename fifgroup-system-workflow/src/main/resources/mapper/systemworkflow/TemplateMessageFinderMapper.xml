@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemworkflow.dao.TemplateMessageFinderMapper">
+   
+   <resultMap id="templateMessageMappingMap" type="co.id.fifgroup.systemworkflow.domain.TemplateMessageMapping">
+    <id column="TEMPLATE_MAPPING_ID" jdbcType="DECIMAL" property="templateMappingId" />
+    <result column="TEMPLATE_ID" jdbcType="DECIMAL" property="templateId" />
+    <result column="TRANSACTION_ID" jdbcType="DECIMAL" property="transactionId" />
+    <result column="ACTION_TYPE" jdbcType="VARCHAR" property="actionType" />
+    <result column="URL_DETAIL" jdbcType="VARCHAR" property="urlDetail" />
+    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+    <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+    <result column="LAST_UPDATED_DATE" jdbcType="TIMESTAMP" property="lastUpdatedDate" />    
+  </resultMap>
+  
+  <select id="getTemplateMessageByCriteria" parameterType="map" resultMap="templateMessageMappingMap">
+  	select tmm.* from swf_level_message_mapping lmp
+	  join swf_avm_mapping_detail amd on amd.mapping_detail_id = lmp.mapping_detail_id 
+	  join swf_avm_mapping_header amh on amh.model_mapping_id = amd.model_mapping_id
+	  join swf_template_message_mapping tmm on tmm.template_mapping_id = lmp.template_mapping_id
+	where amd.approval_model = #{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler} 
+	and #{currentDate} between amh.effective_start_date and amh.effective_end_date
+	and amh.scope = #{scope}
+	and lmp.transaction_id = #{transactionId} 
+	and lmp.action_type = #{actionType} 
+	and lmp.level_approval = #{levelApproval}
+	and amd.priority = #{priority}
+  </select>
+  
+  <resultMap id="templateMessageMappingDtoMap" type="co.id.fifgroup.systemworkflow.dto.TemplateMessageMappingDTO">
+    <id column="TEMPLATE_MAPPING_ID" jdbcType="DECIMAL" property="templateMappingId" />
+    <result column="TEMPLATE_ID" jdbcType="DECIMAL" property="templateId" />
+    <result column="TRANSACTION_ID" jdbcType="DECIMAL" property="transactionId" />
+    <result column="ACTION_TYPE" jdbcType="VARCHAR" property="actionType" />
+    <result column="URL_DETAIL" jdbcType="VARCHAR" property="urlDetail" />
+    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+    <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+    <result column="LAST_UPDATED_DATE" jdbcType="TIMESTAMP" property="lastUpdatedDate" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />    
+  </resultMap>
+  
+  <select id="getTemplateMessageMapping" parameterType="map" resultMap="templateMessageMappingDtoMap">
+  	select 
+  		tmm.*, 
+  		su.user_name 
+  	from swf_template_message_mapping tmm
+  	left join sam_users su on(su.user_id = tmm.last_updated_by) 
+  	<where>
+  		<if test="trxType != null">
+  			and tmm.transaction_id = #{trxType}
+  		</if>
+  		<if test="actionType != null">
+  			and tmm.action_type = #{actionType}
+  		</if>  		
+  	</where>
+  	ORDER BY tmm.last_updated_by desc	
+  </select>
+</mapper>

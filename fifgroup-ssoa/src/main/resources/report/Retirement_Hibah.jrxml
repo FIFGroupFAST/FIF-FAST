@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Retirement_Hibah" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="748b904c-25e5-4eed-876b-aad18c5a944e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="96"/>
+	<queryString>
+		<![CDATA[select distinct
+       rh.request_no,
+       (SELECT branch_name
+          FROM BRANCH_HIERARCHY_V
+         WHERE branch_id = rh.branch_id AND ROWNUM = 1)
+          branch_name,
+       a.asset_number,
+       a.book_type_code,
+       TO_CHAR(a.date_placed_in_service,'YYYY')as tahun,
+       a.description,
+       a.original_cost,
+       a.unrevalued_cost,
+       rh.request_date,
+       rh.recipient
+   from soc_assets a
+        inner join soc_retirement_dtl rd on rd.asset_id = a.asset_id
+        inner join soc_retirement_hdr rh on rh.retirement_id = rd.retirement_id]]>
+	</queryString>
+	<field name="REQUEST_NO" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="ASSET_NUMBER" class="java.lang.String"/>
+	<field name="BOOK_TYPE_CODE" class="java.lang.String"/>
+	<field name="TAHUN" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="ORIGINAL_COST" class="java.math.BigDecimal"/>
+	<field name="UNREVALUED_COST" class="java.math.BigDecimal"/>
+	<field name="REQUEST_DATE" class="java.sql.Timestamp"/>
+	<field name="RECIPIENT" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="78" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="36908579-8696-4779-84fc-9dcde4848cb5" x="0" y="2" width="802" height="42" backcolor="#FF9966"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="29759ff3-c01b-4b96-bd4d-c3b14e1cfb7e" x="46" y="15" width="67" height="21"/>
+				<textElement/>
+				<text><![CDATA[NO MEMO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="34c0952d-cbaf-4fb9-af18-53e357b06bbe" x="197" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="b430f2b2-3be1-4ae4-adcb-55d037279d56" x="429" y="15" width="76" height="18"/>
+				<textElement/>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="2d26c74c-7b26-4609-ae1b-96ba111bbd86" x="738" y="3" width="1" height="40"/>
+			</line>
+			<line>
+				<reportElement uuid="1a81c432-3944-4979-b275-f86d3a3d4662" x="529" y="3" width="1" height="40"/>
+			</line>
+			<line>
+				<reportElement uuid="e6c62f65-a098-4e33-bfcf-e1ab8a8a31f6" x="606" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="3eddbc9f-5341-4aec-81ca-31cee567994b" x="286" y="11" width="40" height="30"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ASSET TYPE]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="816716fa-3121-4aa2-978e-c28ca28f4bca" x="348" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="e6cd5bf4-2289-46f7-a41f-598c5bcc5a6d" x="7" y="16" width="23" height="18"/>
+				<textElement/>
+				<text><![CDATA[NO]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="2666c2a4-f742-4ee6-b9f0-d6651da7ca5a" x="120" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="11aa9ce8-d86d-4ee5-869c-5b51c7a96e99" x="216" y="10" width="40" height="30"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NO ASSET]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="f6f037d5-ab65-4491-a105-112b05670664" x="668" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="9c39f915-5abc-4c8c-b345-2bf326adc3e8" x="614" y="10" width="46" height="27"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NILAI BUKU]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="a0e0e3b0-f789-49b9-b645-a1fa09f042ca" x="271" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="28d96e97-f385-42c1-bc0a-6980e262ff4c" x="128" y="11" width="69" height="27"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NAMA CABANG]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="4fec9c63-8ecb-4c57-a3c2-35857f7fb92d" x="34" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="139f66b7-55ae-4cd2-9d83-aa1a2892467f" x="354" y="11" width="40" height="30"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TAHUN ASSET]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c5ac4f1c-8274-4b18-93ff-64c2fbf2b113" x="535" y="10" width="68" height="32"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NILAI PEROLEHAN]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="a594885d-35e9-4898-85ea-07b8f12a1e3e" x="398" y="3" width="1" height="40"/>
+			</line>
+			<staticText>
+				<reportElement uuid="8cb520a5-928d-4909-b1ee-ff198165e608" x="667" y="13" width="71" height="30"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[TGL HIBAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="af0d9daf-db28-4241-9f74-4592c20143c7" x="743" y="12" width="52" height="30"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[VENDOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="bc447a98-feba-4f3a-8891-67cab48295ae" x="0" y="0" width="802" height="57"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="ade1c0e6-9cc9-460c-a8fe-b545389c6e26" x="35" y="0" width="85" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{REQUEST_NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b0e25038-dc84-4bed-96aa-6354dee05ef1" x="121" y="0" width="76" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="097dee0f-5239-45c8-b730-5b5186812aae" x="198" y="0" width="73" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ASSET_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1fd74151-fb2f-4fe2-b210-1c8254576a21" x="272" y="0" width="76" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{BOOK_TYPE_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8e315144-5c56-47d5-80f0-0544abf5aabb" x="349" y="0" width="50" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TAHUN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a58c66f1-cd6e-4e03-9fff-56cb67c17941" x="399" y="0" width="130" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ad5492f1-27d9-4dcc-a85c-c479163ca43f" x="530" y="0" width="76" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ORIGINAL_COST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1400d9f7-12da-474f-8672-d86035406a99" x="608" y="0" width="60" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{UNREVALUED_COST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="cb8de8e9-5dee-43ef-a3f7-6d39bc6d9240" x="669" y="0" width="68" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{REQUEST_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ac2dfffd-821f-47b8-af51-07feeeca6f1e" x="739" y="0" width="63" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RECIPIENT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="903d1c6d-2d8a-4843-ae6e-6272a6e8ff10" x="0" y="0" width="34" height="57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="9aaecbfb-8da3-41ef-9d8e-d35071ad7472" x="34" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="2c32e960-d546-4c14-b436-36845b3e8e4a" x="120" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="d20f60ce-e44e-49c8-8392-1258fd5bdd06" x="348" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="140928cf-17a8-431e-b1b2-20b17cd4c000" x="197" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="2395fefa-5f4e-417a-90f3-ae045d5ed496" x="271" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="c4e8c4d1-9136-45a3-b681-4234e0493315" x="398" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="c04f3f06-c0ac-4fee-b47b-da6f21c1dbf2" x="529" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="9414a406-2ec4-4c50-866f-6aef89d47021" x="606" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="65bf893d-90b5-4edd-ba2c-51673b85ffc7" x="668" y="0" width="1" height="57"/>
+			</line>
+			<line>
+				<reportElement uuid="8bb6b838-b1fd-4506-853f-55c0c90fb4ea" x="737" y="0" width="1" height="57"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

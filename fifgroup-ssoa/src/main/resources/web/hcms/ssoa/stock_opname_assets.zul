@@ -1,0 +1,112 @@
+<?page title="System Property"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?xel-method prefix="c" name="formatNumber" class="co.id.fifgroup.ssoa.util.FormatNumber" signature="java.lang.String formatNumber(double)" ?>
+<window id="winStockOpnameAsset"
+	apply="co.id.fifgroup.ssoa.controller.StockOpnameAssetsComposer" width="1200px">
+	<!-- <style src="/styles/css/lat.css" /> -->
+	<groupbox id="gbDetail" closable="true" mold="3d">
+	<caption label="Assets" />
+		<separator />
+		<listbox id="assetsListbox" height="auto" emptyMessage="No Data Found" >
+			<listhead id="lHead">
+				<listheader label="Asset Number" width="120px" sort="auto(assetNo)"
+					/>
+				<listheader label="Asset Type" width="100px" sort="auto(bookTypeCode)"
+					/>
+				<listheader label="Net Book Value" width="130px" sort="auto(netBookValue)"/>
+				<listheader label="Branch Code" width="130px" sort="auto(branchCode)"
+					/> 
+				<listheader label="Branch Name" width="150px" sort="auto(branchName)"
+					/>
+				<listheader label="Kode Outlet"
+					sort="auto(locationCode)"  width="120px"/> 
+				<listheader label="Nama Outlet"
+					sort="auto(locationName)" width="150px"/>
+				<listheader label="Asset Category"
+					sort="auto(itemCategory)" width="150px"/>
+				<listheader label="Tanggal Perolehan"
+					sort="auto(dateOfService)" width="160px"/>
+				<listheader label="Description" sort="auto(description)" width="200px"/>
+				<listheader label="Serial Number"
+					sort="auto(serialNumber)" width="180px"/>
+				<listheader label="Result" sort="auto(opnameResult)" width="170px"/>
+				<listheader label="Recommendation"
+					sort="auto(opnameSugest)" width="190px"/>
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.assetNo}"></listcell>
+					<listcell label="${each.assetType}"></listcell>
+					<listcell label="${c:formatNumber(each.netBookValue)}"></listcell>
+					<listcell label="${each.branchCode}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${each.locationCode}"></listcell>
+					<listcell label="${each.locationName}"></listcell>
+					<listcell label="${each.categoryName}"></listcell>
+					<listcell label="${date:format(each.dateOfService,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.serialNumber}"></listcell>
+					<listcell label="${each.opnameResult}"></listcell>
+					<listcell label="${each.opnameSugest}"></listcell>
+					</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<listbox id="assetsListboxForDownload" mold="paging" pageSize="10" pagingPosition="both" height="auto" emptyMessage="No Data" visible="false">
+			<listhead id="lHeadDownload">
+				<listheader label="Asset Number" width="120px" sort="auto(assetNo)"
+					/>
+				<listheader label="Asset Type" width="120px" sort="auto(bookTypeCode)"
+					/>
+				<listheader label="Branch Code" width="150px" sort="auto(branchCode)"
+					/> 
+				<listheader label="Branch Name" width="150px" sort="auto(branchName)"
+					/>
+				<listheader label="Kode Outlet"
+					sort="auto(locationCode)"  width="150px"/> 
+				<listheader label="Nama Outlet"
+					sort="auto(locationName)" width="150px"/>
+				<listheader label="Asset Category"
+					sort="auto(itemCategory)" width="150px"/>
+				<listheader label="Tanggal Perolehan"
+					sort="auto(dateOfService)" width="180px"/>
+				<listheader label="Description" sort="auto(description)" width="200px"/>
+				<listheader label="Serial Number"
+					sort="auto(serialNumber)" width="180px"/>
+				<listheader label="Result" sort="auto(opnameResult)" width="170px"/>
+				<listheader label="Recommendation"
+					sort="auto(opnameSugest)" width="190px"/>
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.assetNo}"></listcell>
+					<listcell label="${each.assetType}"></listcell>
+					<listcell label="${each.branchCode}"></listcell>
+					<listcell label="${each.branchName}"></listcell>
+					<listcell label="${each.locationCode}"></listcell>
+					<listcell label="${each.locationName}"></listcell>
+					<listcell label="${each.categoryName}"></listcell>
+					<listcell label="${date:format(each.dateOfService,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.description}"></listcell>
+					<listcell label="${each.serialNumber}"></listcell>
+					<listcell label="${each.opnameResult}"></listcell>
+					<listcell label="${each.opnameSugest}"></listcell>
+					</listitem>
+			</template>
+		</listbox>
+		<!-- <exporter id="exporterList" referenceId="assetsListbox" /> -->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		<separator />
+		<button id="btnClose" style="float:right;" label="Close" image="${labels.image.link.cancel}"></button>
+		</div>
+		
+	</groupbox>
+</window>

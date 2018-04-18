@@ -1,0 +1,67 @@
+<window id="winWorkflowConfirmationReassign" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowConfirmationReassignComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.confirmationReassign}">
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right"/>
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.swf.assignApprover}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<bandbox id="bnbAssignApprover" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.swf.listOfEmployee}" searchText1="${labels.swf.employeeNumber}" searchText2="${labels.swf.employeeName }" headerLabel1="${labels.swf.employeeNumber}" headerLabel2="${labels.swf.employeeName}"></bandbox>
+						</row>
+						<row>
+							<label value="${labels.common.organization}" />
+							<label id="lblOrganization" />
+						</row>
+						<row>
+							<label value="${labels.common.job}" />
+							<label id="lblJob" />
+						</row>
+						<row>
+							<label value="${labels.swf.remarks}" />
+							<textbox id="txtRemarks" rows="5" width="600px" maxlength="255"/>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<label value="${labels.swf.listApprovalTask}" />
+				<separator />
+				<listbox id="lbxMultipleTask">
+					<listhead>
+						<listheader label="${labels.common.rowNum}" align="center" />
+						<listheader label="${labels.swf.company}" align="center" />
+						<listheader label="${labels.swf.subject}" align="center" />
+						<listheader label="${labels.swf.transactionType}" align="center" />
+						<listheader label="${labels.swf.submittedTime}" align="center" />
+						<listheader label="${labels.swf.pendingApprover}" align="center" />
+						<listheader label="${labels.swf.daysWithoutProgress}" align="center" />
+						<listheader label="${labels.swf.lastApprover}" align="center" />
+						<listheader label="${labels.swf.lastApproverRemarks}" align="center" />
+					</listhead>
+				</listbox>
+				<separator />
+				<hbox>
+					<cell align="center" style="width:1250px;">
+						<button id="btnReassign"
+							label="${labels.swf.reassign}" mold="trendy"/>
+					</cell>
+					<cell align="right">
+						<button id="btnCancel"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+					</cell>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="WorkStructureTables" targetRuntime="MyBatis3">
+
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.68:1521:hcmsdev" userId="ews"
+			password="ews" />
+
+		<javaModelGenerator targetPackage="co.id.fifgroup.workstructure.domain"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="mapper.workstructure"
+			targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.workstructure.dao"
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- <table tableName="WOS_LOCATION_STG" domainObjectName="LocationUploadStage" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="BRANCH_OWNER_ID" javaType="Long" /> -->
+		<!-- <columnOverride column="WORKING_SCHEDULE_ID" javaType="Long" /> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="IS_CLOSED" javaType="Boolean" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_LOCATIONS" domainObjectName="Location" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="LOCATION_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_LOCATION_VERSIONS" domainObjectName="LocationVersion" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="VERSION_ID" sqlStatement="select WOS_LOCATION_VERSIONS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="LOCATION_ID" property="id" /> -->
+		<!-- <columnOverride column="VERSION_NUMBER" javaType="Integer" jdbcType="NUMERIC" 
+			/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_LOCATION_INFOS" domainObjectName="LocationInfo" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="VERSION_ID" property="versionId" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADES" domainObjectName="Grade" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="GRADE_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADE_VERSIONS" domainObjectName="GradeVersion" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="VERSION_ID" sqlStatement="select WOS_GRADE_VERSIONS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="GRADE_ID" property="id" /> -->
+		<!-- <columnOverride column="VERSION_NUMBER" javaType="Integer" jdbcType="NUMERIC" 
+			/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="WORKING_SCHEDULE_ID" jdbcType="NUMERIC" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADE_RATES" domainObjectName="GradeRate" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="GRADE_RATE_ID" sqlStatement="select WOS_GRADE_RATES_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="GRADE_RATE_ID" property="id" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADE_INFOS" domainObjectName="GradeInfo" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="VERSION_ID" property="versionId" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOBS" domainObjectName="Job" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="JOB_UUID" property="jobUuid" jdbcType="VARBINARY" -->
+		<!-- typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+		<!-- <columnOverride column="JOB_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOB_VERSIONS" domainObjectName="JobVersion" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="VERSION_ID" sqlStatement="select WOS_JOB_VERSIONS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="JOB_ID" property="id" /> -->
+		<!-- <columnOverride column="VERSION_NUMBER" javaType="Integer" jdbcType="NUMERIC" 
+			/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="IS_KEY_JOB" javaType="boolean" /> -->
+		<!-- <columnOverride column="IS_MANAGER" javaType="boolean" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOB_INFOS" domainObjectName="JobInfo" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="VERSION_ID" property="versionId" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOB_VALID_GRADES" domainObjectName="JobValidGrade" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="JOB_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOB_ROLES" domainObjectName="JobRole" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="JOB_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOB_SPECIFICATIONS" domainObjectName="JobSpecification" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="JOB_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADE_SETS" domainObjectName="GradeSet" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="GRADE_SET_ID" sqlStatement="select WOS_GRADE_SETS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="GRADE_SET_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADE_SET_ELEMENTS" domainObjectName="GradeSetElement" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="GRADE_SET_ELEMENT_ID" sqlStatement="select WOS_GRADE_SET_ELEMENTS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="GRADE_SET_ID" property="id" /> -->
+		<!-- <columnOverride column="GRADE_SET_ELEMENT_ID" property="elementId" 
+			/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_JOB_STG" domainObjectName="JobUploadStage" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="IS_KEY_JOB" javaType="boolean" /> -->
+		<!-- <columnOverride column="IS_MANAGER" javaType="boolean" /> -->
+		<!-- <columnOverride column="WORKING_SCHEDULE_ID" javaType="Long" /> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="IS_CLOSED" javaType="Boolean" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_LOBS" domainObjectName="Lob" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="LOB_ID" sqlStatement="select WOS_LOBS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="LOB_ID" property="id" /> -->
+		<!-- <columnOverride column="JOB_ID" property="jobId" /> -->
+		<!-- <columnOverride column="ORGANIZATION_ID" property="organizationId" 
+			/> -->
+		<!-- <columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_LOB_ELEMENTS" domainObjectName="LobElement" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="LOB_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORGANIZATIONS" domainObjectName="Organization" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="ORGANIZATION_ID" property="id"/> -->
+		<!-- <columnOverride column="ORGANIZATION_UUID" property="OrganizationUuid" 
+			jdbcType="VARBINARY" -->
+		<!-- typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+
+		<!-- <table tableName="WOS_ORGANIZATION_VERSIONS" domainObjectName="OrganizationVersion" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="VERSION_ID" sqlStatement="select WOS_ORGANIZATION_VERSIONS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="ORGANIZATION_ID" property="id"/> -->
+		<!-- <columnOverride column="VERSION_NUMBER" javaType="Integer" jdbcType="NUMERIC" 
+			/> -->
+		<!-- <columnOverride column="IS_HEAD_OFFICE" javaType="java.lang.Boolean"/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORGANIZATION_CONTACTS" domainObjectName="OrganizationContact" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="CONTACT_ID" sqlStatement="select WOS_ORGANIZATION_CONTACTS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="START_DATE" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="END_DATE" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORGANIZATION_INFOS" domainObjectName="OrganizationInfo" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="VERSION_ID" property="versionId" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORGANIZATION_LEVELS" domainObjectName="OrganizationLevel" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="LEVEL_ID" sqlStatement="select WOS_ORGANIZATION_LEVELS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="START_DATE" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="END_DATE" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_GRADE_STG" domainObjectName="GradeUploadStage" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="WORKING_SCHEDULE_ID" javaType="Long" /> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="IS_CLOSED" javaType="Boolean" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_LEVEL_HIER" domainObjectName="OrgLevelHierarchy" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="LEVEL_HIER_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_LEVEL_HIER_ELEMENTS" domainObjectName="OrgLevelHierElement" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="ELEMENT_ID" sqlStatement="select WOS_ORG_LEVEL_HIER_ELEMENTS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="LEVEL_HIER_ID" property="id" /> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_LEVEL_HIER_VERSIONS" domainObjectName="OrgLevelHierVersion" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="VERSION_ID" sqlStatement="select WOS_ORG_LEVEL_HIER_VERSIONS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="LEVEL_HIER_ID" property="id" /> -->
+		<!-- <columnOverride column="VERSION_NUMBER" javaType="Integer" jdbcType="NUMERIC" 
+			/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORGANIZATION_HIER" domainObjectName="OrganizationHierarchy" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="false" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="ORG_HIER_ID" property="id" /> -->
+		<!-- <columnOverride column="IS_DEPT_OWNER" javaType="java.lang.Boolean" 
+			/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_HIER_ELEMENTS" domainObjectName="OrgHierarchyElement" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="ORG_HIER_ELEMENT_ID" sqlStatement="select WOS_ORG_HIER_ELEMENTS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_HIER_VERSIONS" domainObjectName="OrgHierarchyVersion" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="VERSION_ID" sqlStatement="select WOS_ORG_HIER_VERSIONS_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="ORG_HIER_ID" property="id" /> -->
+		<!-- <columnOverride column="VERSION_NUMBER" javaType="Integer" jdbcType="NUMERIC" 
+			/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_BRANCH_SIZES" domainObjectName="BranchSize" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="ORG_BRANCH_SIZE_ID" sqlStatement="select WOS_BRANCH_SIZES_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="ORG_BRANCH_SIZE_ID" property="id" /> -->
+		<!-- <columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE"/> -->
+		<!-- <columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- <columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORGANIZATION_STG" domainObjectName="OrganizationUploadStage" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="DATE_FROM" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="DATE_TO" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="WORKING_SCHEDULE_ID" javaType="Long" /> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="IS_CLOSED" javaType="Boolean" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_BRANCH_SIZE_STG" domainObjectName="BranchSizeUploadStage" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="IS_CLOSED" javaType="Boolean" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_LOB_STG" domainObjectName="LobUploadStage" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE" /> -->
+		<!-- <columnOverride column="ROW_NUMBER" javaType="Integer" /> -->
+		<!-- <columnOverride column="IS_CLOSED" javaType="Boolean" /> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_TEMPLATE" domainObjectName="OrganizationTemplate" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="TEMPLATE_ID" sqlStatement="select WOS_ORG_TEMPLATE_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- </table> -->
+
+		<!-- <table tableName="WOS_ORG_TEMPLATE_DTL" domainObjectName="OrganizationTemplateDetail" -->
+		<!-- modelType="flat" -->
+		<!-- enableDeleteByExample="true" -->
+		<!-- enableUpdateByExample="true" -->
+		<!-- selectByPrimaryKeyQueryId="false" -->
+		<!-- selectByExampleQueryId="false"> -->
+		<!-- <property name="useActualColumnNames" value="false"/> -->
+		<!-- <generatedKey column="TEMPLATE_DTL_ID" sqlStatement="select WOS_ORG_TEMPLATE_DTL_S.nextVal 
+			from dual" type="pre"/> -->
+		<!-- <columnOverride column="IS_PARENT" javaType="boolean" /> -->
+		<!-- </table> -->
+
+		<table tableName="WOS_JOB_DOCUMENTS" domainObjectName="JobDocument"
+			modelType="flat" enableDeleteByExample="true" enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false" selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="DOCUMENT_ID"
+				sqlStatement="select WOS_JOB_DOCUMENTS_S.nextVal from dual" type="pre" />
+		</table>
+
+	</context>
+</generatorConfiguration>

@@ -1,0 +1,27 @@
+<window id="winWorkflowApprovalHistory" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalHistoryComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption label="${labels.common.listOfApproval}"></caption>
+				<separator />
+				<listbox id="lbxApprovalHistory">
+					<listhead>
+						<listheader label="${labels.swf.approver }" align="center" />
+						<listheader label="${labels.swf.approvalDate }" align="center" />
+						<listheader label="${labels.swf.status }" align="center"/>
+						<listheader label="${labels.swf.remarks }" align="center" />
+					</listhead>
+				</listbox>
+			<separator />
+			<hbox>
+				<cell align="right">
+					<button id="btnClose"
+						label="${labels.swf.close}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+			</groupbox>		
+		</panelchildren>
+	</panel>
+</window>

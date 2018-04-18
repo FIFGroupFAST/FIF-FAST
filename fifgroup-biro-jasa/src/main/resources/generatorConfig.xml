@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="SsoaTables" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+	
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.68:1521:sit"
+			userId="hcms"
+			password="hcms" />
+			
+		<javaModelGenerator targetPackage="co.id.fifgroup.birojasa.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.birojasa" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.birojasa.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>
+		
+
+		<table tableName="SOC_SYSTEM_PROPERTIES" domainObjectName="SystemProperty"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="SYSTEM_PROPERTY_CODE" sqlStatement="select SOC_SYSTEM_PROPERTIES_S.nextVal from dual" type="pre"/>
+		</table>
+
+
+	</context>
+</generatorConfiguration>

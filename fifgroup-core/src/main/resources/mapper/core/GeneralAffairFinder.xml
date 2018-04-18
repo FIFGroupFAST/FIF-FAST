@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.finder.GeneralAffairFinder">
+	
+	
+	<insert id="insertFaMassAddition" parameterType="co.id.fifgroup.core.domain.interfacing.FaMassAdditions">
+
+		<selectKey keyProperty="massAdditionId" order="BEFORE"
+			resultType="java.lang.Long">
+			select fa_mass_additions_s.NEXTVAL@gl.us.oracle.com from dual
+		</selectKey>
+		INSERT INTO fa_mass_additions@gl.us.oracle.com
+			(mass_addition_id,asset_number,tag_number,
+			description, asset_category_id, manufacturer_name,
+			serial_number, model_number, book_type_code,
+			date_placed_in_service, fixed_assets_cost, payables_units,
+			fixed_assets_units, payables_code_combination_id, expense_code_combination_id,
+			location_id, assigned_to, feeder_system_name, create_batch_date,
+			create_batch_id, last_update_date, last_updated_by,
+			reviewer_comments, invoice_number, vendor_number,
+			po_vendor_id, po_number, posting_status,
+			queue_name, invoice_date, invoice_created_by,
+			invoice_updated_by, payables_cost, invoice_id,
+			payables_batch_name, depreciate_flag, parent_mass_addition_id,
+			parent_asset_id, split_merged_code, ap_distribution_line_number,
+			post_batch_id, add_to_asset_id, amortize_flag,
+			new_master_flag, asset_key_ccid, asset_type,
+			deprn_reserve, ytd_deprn, beginning_nbv,
+			created_by, creation_date, last_update_login,
+			salvage_value, accounting_date, attribute1,
+			attribute2, attribute3, attribute4,
+			attribute5, attribute6,	attribute7,
+			attribute8, attribute9, attribute10,
+			attribute11, attribute12, attribute13,
+			attribute14, attribute15, attribute_category_code,
+			fully_rsvd_revals_counter, merge_invoice_number, merge_vendor_number,
+			production_capacity, reval_amortization_basis, reval_reserve,
+		 	unit_of_measure, unrevalued_cost, ytd_reval_deprn_expense,
+			attribute16, attribute17, attribute18,
+			attribute19, attribute20, attribute21,
+			attribute22, attribute23, attribute24,
+			attribute25, attribute26, attribute27,
+			attribute28, attribute29, attribute30,
+			merged_code, split_code, merge_parent_mass_additions_id,
+			split_parent_mass_additions_id, project_asset_line_id, project_id,
+			task_id, sum_units, dist_name,
+			global_attribute1, global_attribute2, global_attribute3,
+			global_attribute4, global_attribute5, global_attribute6,
+			global_attribute7, global_attribute8, global_attribute9,
+			global_attribute10, global_attribute11, global_attribute12,
+			global_attribute13, global_attribute14, global_attribute15,
+			global_attribute16, global_attribute17, global_attribute18,
+			global_attribute19, global_attribute20, global_attribute_category,
+			CONTEXT, inventorial, short_fiscal_year_flag,
+			conversion_date, original_deprn_start_date, group_asset_id,
+			cua_parent_hierarchy_id, units_to_adjust, bonus_ytd_deprn,
+			bonus_deprn_reserve, amortize_nbv_flag, amortization_start_date,
+			transaction_type_code, transaction_date, warranty_id,
+			lease_id, lessor_id, property_type_code,
+			property_1245_1250_code, in_use_flag, owned_leased,
+			new_used, asset_id, material_indicator_flag)
+		VALUES 
+		(	#{massAdditionId, jdbcType=DECIMAL},#{assetNumber,jdbcType=VARCHAR},#{tagNumber,jdbcType=VARCHAR},
+			#{description,jdbcType=VARCHAR}, #{assetCategoryId,jdbcType=DECIMAL}, #{manufacturerName,jdbcType=VARCHAR},
+			#{serialNumber,jdbcType=VARCHAR}, #{modelNumber,jdbcType=VARCHAR}, #{bookTypeCode,jdbcType=VARCHAR},
+			#{datePlacedInService,jdbcType=TIMESTAMP}, #{fixedAssetsCost,jdbcType=DECIMAL}, #{payablesUnits,jdbcType=DECIMAL},
+			#{fixedAssetsUnits,jdbcType=DECIMAL}, #{payablesCodeCombinationId,jdbcType=DECIMAL}, #{expenseCodeCombinationId,jdbcType=DECIMAL},
+			#{locationId,jdbcType=DECIMAL}, #{assignedTo,jdbcType=DECIMAL}, #{feederSystemName,jdbcType=VARCHAR}, #{createBatchDate,jdbcType=TIMESTAMP},
+			#{createBatchId,jdbcType=DECIMAL}, #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdatedBy,jdbcType=DECIMAL},
+			#{reviewerComments,jdbcType=VARCHAR}, #{invoiceNumber,jdbcType=VARCHAR}, #{vendorNumber,jdbcType=VARCHAR},
+			#{poVendorId,jdbcType=DECIMAL}, #{poNumber,jdbcType=VARCHAR}, #{postingStatus,jdbcType=VARCHAR},
+			#{queueName,jdbcType=VARCHAR}, #{invoiceDate,jdbcType=TIMESTAMP}, #{invoiceCreatedBy,jdbcType=DECIMAL},
+			#{invoiceUpdatedBy,jdbcType=DECIMAL}, #{payablesCost,jdbcType=DECIMAL}, #{invoiceId,jdbcType=DECIMAL},
+			#{payablesBatchName,jdbcType=VARCHAR}, #{depreciateFlag,jdbcType=VARCHAR}, #{parentMassAdditionId,jdbcType=DECIMAL},
+			#{parentAssetId,jdbcType=DECIMAL}, #{splitMergedCode,jdbcType=VARCHAR}, #{apDistributionLineNumber,jdbcType=DECIMAL},
+			#{postBatchId,jdbcType=DECIMAL}, #{addToAssetId,jdbcType=DECIMAL}, #{amortizeFlag,jdbcType=VARCHAR},
+			#{newMasterFlag,jdbcType=VARCHAR}, #{assetKeyCcid,jdbcType=DECIMAL}, #{assetType,jdbcType=VARCHAR},
+			#{deprnReserve,jdbcType=DECIMAL}, #{ytdDeprn,jdbcType=DECIMAL}, #{beginningNbv,jdbcType=DECIMAL},
+			#{createdBy,jdbcType=DECIMAL}, #{creationDate,jdbcType=TIMESTAMP}, #{lastUpdateLogin,jdbcType=DECIMAL},
+			#{salvageValue,jdbcType=DECIMAL}, #{accountingDate,jdbcType=TIMESTAMP}, #{attribute1,jdbcType=VARCHAR},
+			#{attribute2,jdbcType=VARCHAR}, #{attribute3,jdbcType=VARCHAR}, #{attribute4,jdbcType=VARCHAR},
+			#{attribute5,jdbcType=VARCHAR}, #{attribute6,jdbcType=VARCHAR},	#{attribute7,jdbcType=VARCHAR},
+			#{attribute8,jdbcType=VARCHAR}, #{attribute9,jdbcType=VARCHAR}, #{attribute10,jdbcType=VARCHAR},
+			#{attribute11,jdbcType=VARCHAR}, #{attribute12,jdbcType=VARCHAR}, #{attribute13,jdbcType=VARCHAR},
+			#{attribute14,jdbcType=VARCHAR}, #{attribute15,jdbcType=VARCHAR}, #{attributeCategoryCode,jdbcType=VARCHAR},
+			#{fullyRsvdRevalsCounter,jdbcType=DECIMAL}, #{mergeInvoiceNumber,jdbcType=VARCHAR}, #{mergeVendorNumber,jdbcType=VARCHAR},
+			#{productionCapacity,jdbcType=DECIMAL}, #{revalAmortizationBasis,jdbcType=DECIMAL}, #{revalReserve,jdbcType=DECIMAL},
+		 	#{unitOfMeasure,jdbcType=VARCHAR}, #{unrevaluedCost,jdbcType=DECIMAL}, #{ytdRevalDeprnExpense,jdbcType=DECIMAL},
+			#{attribute16,jdbcType=VARCHAR}, #{attribute17,jdbcType=VARCHAR}, #{attribute18,jdbcType=VARCHAR},
+			#{attribute19,jdbcType=VARCHAR}, #{attribute20,jdbcType=VARCHAR}, #{attribute21,jdbcType=VARCHAR},
+			#{attribute22,jdbcType=VARCHAR}, #{attribute23,jdbcType=VARCHAR}, #{attribute24,jdbcType=VARCHAR},
+			#{attribute25,jdbcType=VARCHAR}, #{attribute26,jdbcType=VARCHAR}, #{attribute27,jdbcType=VARCHAR},
+			#{attribute28,jdbcType=VARCHAR}, #{attribute29,jdbcType=VARCHAR}, #{attribute30,jdbcType=VARCHAR},
+			#{mergedCode,jdbcType=VARCHAR}, #{splitCode,jdbcType=VARCHAR}, #{mergeParentMassAdditionsId,jdbcType=DECIMAL},
+			#{splitParentMassAdditionsId,jdbcType=DECIMAL}, #{projectAssetLineId,jdbcType=DECIMAL}, #{projectId,jdbcType=DECIMAL},
+			#{taskId,jdbcType=DECIMAL}, #{sumUnits,jdbcType=VARCHAR}, #{distName,jdbcType=VARCHAR},
+			#{globalAttribute1,jdbcType=VARCHAR}, #{globalAttribute2,jdbcType=VARCHAR}, #{globalAttribute3,jdbcType=VARCHAR},
+			#{globalAttribute4,jdbcType=VARCHAR}, #{globalAttribute5,jdbcType=VARCHAR}, #{globalAttribute6,jdbcType=VARCHAR},
+			#{globalAttribute7,jdbcType=VARCHAR}, #{globalAttribute8,jdbcType=VARCHAR}, #{globalAttribute9,jdbcType=VARCHAR},
+			#{globalAttribute10,jdbcType=VARCHAR}, #{globalAttribute11,jdbcType=VARCHAR}, #{globalAttribute12,jdbcType=VARCHAR},
+			#{globalAttribute13,jdbcType=VARCHAR}, #{globalAttribute14,jdbcType=VARCHAR}, #{globalAttribute15,jdbcType=VARCHAR},
+			#{globalAttribute16,jdbcType=VARCHAR}, #{globalAttribute17,jdbcType=VARCHAR}, #{globalAttribute18,jdbcType=VARCHAR},
+			#{globalAttribute19,jdbcType=VARCHAR}, #{globalAttribute20,jdbcType=VARCHAR}, #{globalAttributeCategory,jdbcType=VARCHAR},
+			#{context,jdbcType=VARCHAR}, #{inventorial,jdbcType=VARCHAR}, #{shortFiscalYearFlag,jdbcType=VARCHAR},
+			#{conversionDate,jdbcType=TIMESTAMP}, #{originalDeprnStartDate,jdbcType=TIMESTAMP}, #{groupAssetId,jdbcType=DECIMAL},
+			#{cuaParentHierarchyId,jdbcType=DECIMAL}, #{unitsToAdjust,jdbcType=DECIMAL}, #{bonusYtdDeprn,jdbcType=DECIMAL},
+			#{bonusDeprnReserve,jdbcType=DECIMAL}, #{amortizeNbvFlag,jdbcType=VARCHAR}, #{amortizationStartDate,jdbcType=TIMESTAMP},
+			#{transactionTypeCode,jdbcType=VARCHAR}, #{transactionDate,jdbcType=TIMESTAMP}, #{warrantyId,jdbcType=DECIMAL},
+			#{leaseId,jdbcType=DECIMAL}, #{lessorId,jdbcType=DECIMAL}, #{propertyTypeCode,jdbcType=VARCHAR},
+			#{property12451250Code,jdbcType=VARCHAR}, #{inUseFlag,jdbcType=VARCHAR}, #{ownedLeased,jdbcType=VARCHAR},
+			#{newUsed,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{materialIndicatorFlag,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getFaMassDescription" parameterType="map" resultType="hashmap">
+		SELECT description,asset_category_id
+             FROM mtl_system_items_b@gl.us.oracle.com
+             WHERE inventory_item_id = (Select bld.Detail_Code
+              From Bse_Lookup_Hdr Blh
+                Join Bse_Lookup_Dependents Bld On Blh.Lookup_Id=Bld.Lookup_Id
+             Where Blh.Name='HOU_HOUSING_DURATION'
+                   AND bld.meaning = #{duration, jdbcType=DECIMAL})
+                   AND organization_id =
+                          DECODE (#{companyId, jdbcType=DECIMAL},  11, 82,  22, 83,  31 ,94)
+	</select>
+	
+	<select id="getPayablesCodeCombinationId" parameterType="map" resultType="Long">
+		SELECT code_combination_id
+              FROM gl_code_combinations@gl.us.oracle.com
+             WHERE     segment1 = #{companyId, jdbcType=DECIMAL}
+                   AND segment2 = #{branchCode, jdbcType=VARCHAR}
+                   AND segment3 = '000'
+                   AND segment4 = '15110288'
+                   AND segment5 = 'XT01'
+                   AND segment6 = '00'
+                   AND segment7 = '00000'
+                   AND segment8 = '00'
+	
+	</select>
+	<select id="getExpenseCodeCombinationId" parameterType="map" resultType="Long">
+		SELECT code_combination_id
+              
+              FROM gl_code_combinations@gl.us.oracle.com
+             WHERE     segment1 = #{companyId, jdbcType=DECIMAL}             
+                   AND segment2 = #{branchCode, jdbcType=VARCHAR}
+                   AND segment3 = '000'
+                   AND segment4 = '73240401'
+                   AND segment5 = 'XT01'
+                   AND segment6 = '00'
+                   AND segment7 = '00000'
+                   AND segment8 = '00'
+	</select>
+	<!-- 15062410312755 | 29/06/2015 | By : PHI | Added Enabled Flag and Active Date condition -->
+	<select id="getLocationId" parameterType="map" resultType="Long">
+		SELECT fl.location_id
+		FROM fa_locations@gl.us.oracle.com fl
+		WHERE fl.segment1  = DECODE (RPAD (#{branchGlCode, jdbcType=VARCHAR}, 5, '0'), '10000', '00001', RPAD (#{branchGlCode, jdbcType=VARCHAR}, 5, '0'))
+			AND FL.ENABLED_FLAG = 'Y'
+	  		AND (TRUNC(SYSDATE) &gt;= TRUNC(fl.START_DATE_ACTIVE) OR fl.START_DATE_ACTIVE IS NULL)
+	   		AND (TRUNC(SYSDATE) &lt;= TRUNC(fl.END_DATE_ACTIVE) OR fl.END_DATE_ACTIVE IS NULL)
+	</select>
+	
+	<select id="getPayablesCodeCombinationIdHousing" parameterType="map" resultType="Long">
+		SELECT code_combination_id
+              FROM gl_code_combinations@gl.us.oracle.com
+             WHERE     segment1 = #{companyId, jdbcType=DECIMAL}
+                   AND segment2 = #{branchCode, jdbcType=VARCHAR}
+                   AND segment3 = #{costCenterCode,jdbcType=VARCHAR}
+                   AND segment4 = #{segment4,jdbcType=VARCHAR}
+                   AND segment5 = #{segment5,jdbcType=VARCHAR}
+                   AND segment6 = #{segment6,jdbcType=VARCHAR}
+                   AND segment7 = #{segment7,jdbcType=VARCHAR}
+                   AND segment8 = #{segment8,jdbcType=VARCHAR}
+	
+	</select>
+	<select id="getExpenseCodeCombinationIdHousing" parameterType="map" resultType="Long">
+		SELECT code_combination_id
+              FROM gl_code_combinations@gl.us.oracle.com
+             WHERE     segment1 = #{companyId, jdbcType=DECIMAL}
+                   AND segment2 = #{branchCode, jdbcType=VARCHAR}
+                   AND segment3 = #{costCenterCode,jdbcType=VARCHAR}
+                   AND segment4 = #{segment4,jdbcType=VARCHAR}
+                   AND segment5 = #{segment5,jdbcType=VARCHAR}
+                   AND segment6 = #{segment6,jdbcType=VARCHAR}
+                   AND segment7 = #{segment7,jdbcType=VARCHAR}
+                   AND segment8 = #{segment8,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 15060508220346 | 15/06/2015 | By : PHI -->
+	<select id="getEmployeePersonId" parameterType="map" resultType="Long">
+		SELECT PERSON_ID 
+		FROM HR.PER_ALL_PEOPLE_F@GL.US.ORACLE.COM 
+		WHERE EMPLOYEE_NUMBER = #{employeeNumber, jdbcType=VARCHAR}
+		and trunc(sysdate) between effective_start_date and effective_end_date
+	</select>
+	
+	<!-- 15072314060623 | 03/08/2015 | By : PHI-->
+	<select id="getCodeCombinationId" parameterType="map" resultType="Long">
+		SELECT code_combination_id
+        FROM gl_code_combinations@gl.us.oracle.com
+        WHERE segment1 = #{segment1, jdbcType=VARCHAR}
+	        AND segment2 = #{segment2, jdbcType=VARCHAR}
+	        AND segment3 = #{segment3,jdbcType=VARCHAR}
+	        AND segment4 = #{segment4,jdbcType=VARCHAR}
+	        AND segment5 = #{segment5,jdbcType=VARCHAR}
+	        AND segment6 = #{segment6,jdbcType=VARCHAR}
+	        AND segment7 = #{segment7,jdbcType=VARCHAR}
+	        AND segment8 = #{segment8,jdbcType=VARCHAR}
+	</select>
+		
+	<select id="getChartAccountId" parameterType="String" resultType="java.lang.Long">
+		SELECT MIN (sob.chart_of_accounts_id)
+        FROM gl.gl_sets_of_books@gl.us.oracle.com sob
+       	WHERE short_name = #{shortName, jdbcType=VARCHAR}
+	</select>	
+	
+	<insert id="insertNewCodeCombination" parameterType="map">
+		<selectKey keyProperty="codeCombinationId" order="BEFORE" resultType="java.lang.Long">
+			SELECT gl.gl_code_combinations_s.NEXTVAL@gl.us.oracle.com FROM DUAL
+		</selectKey>
+		INSERT INTO gl.gl_code_combinations@gl.us.oracle.com
+                      (
+                      	code_combination_id, last_update_date, last_updated_by, chart_of_accounts_id, detail_posting_allowed_flag,
+                        detail_budgeting_allowed_flag, account_type, enabled_flag, summary_flag, 
+                        segment1, segment2, segment3, segment4, 
+                        segment5, segment6, segment7, segment8
+                      )
+               VALUES (
+               			#{codeCombinationId}, SYSDATE, -1, #{chartAccountId}, #{detailPostingAllowedFlag},
+                        #{detailBudgetingAllowedFlag}, #{accountType}, #{enabledFlag}, #{summaryFlag}, 
+                        #{segment1}, #{segment2}, #{segment3}, #{segment4},
+						#{segment5}, #{segment6}, #{segment7}, #{segment8}
+                      )
+	</insert>
+	<!-- End 15072314060623 | 03/08/2015 | By : PHI-->
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.dao.HierarchyFinder">
+	  
+	  <select id="findOrganizationByParent" parameterType="map" resultType="Long" >
+		select distinct organization_id 
+		from hierarchy_structural 
+		where branch_id = #{organizationId}
+			and company_id = #{companyId} 
+			or branch_id in (
+		  		select organization_id 
+		  		from wos_organization_versions 
+		  		where organization_spv_id = #{organizationId}
+		  	)
+<!-- 			select distinct hs.organization_id -->
+<!-- 	  		from ews.hierarchy_structural hs -->
+<!--         join wos_organization_versions wov on wov.organization_id = hs.organization_id -->
+<!--         join wos_organization_versions wov2 on wov2.organization_id = 598 -->
+<!-- 			where hs.company_id = 1 -->
+<!-- 			and hs.branch_id = 598 -->
+<!--       and wov2.is_head_office = wov.is_head_office -->
+	  </select>
+	  
+	  <select id="findBranchOrganizations" parameterType="map" resultType="Long" >
+	  	select b.organization_id 
+	  		from BRANCH_HIERARCHY_V b
+	  		<if test="effectiveDate != null">
+	  		join wos_organization_versions wov
+	  			on b.organization_id = wov.organization_id
+	  			and trunc(#{effectiveDate, jdbcType=DATE}) between wov.date_from and wov.date_to
+	  		</if>
+			where b.branch_id = (select b.branch_id from BRANCH_HIERARCHY_V b where b.organization_id = #{organizationId})
+			and b.company_id = #{companyId}
+	  </select>
+	  
+	  <select id="findAllOrgainzations" parameterType="map" resultType="Long" >
+	  	select 
+	  		organization_id 
+	  	from wos_organizations 
+	  	where company_id = #{companyId}
+	  </select>
+	  
+	  <select id="findBranchWithoutPosByBranchId" parameterType="map" resultType="Long" >
+	  	select 
+	  		bhv.organization_id 
+		from branch_hierarchy_v bhv
+		join wos_organization_versions wov on bhv.organization_id = wov.organization_id
+		where bhv.company_id = #{companyId}
+		and bhv.branch_id = #{organizationId}
+		and bhv.org_hier_id = (select org_hier_id 
+		    from wos_organization_hier 
+		    where company_id = #{companyId} 
+		    and upper(org_hier_type) = upper('structural'))
+		and upper(wov.level_code) != upper('POS')
+	  </select>
+	  
+	  <select id="findHoOrganization" parameterType="map" resultType="Long" >
+	  	select 
+	  		wo.organization_id 
+		from wos_organizations wo
+		join wos_organization_versions wov on wo.organization_id = wov.organization_id
+		where wo.company_id = #{companyId}
+		and wov.is_head_office = 1	
+	  </select>
+	  
+	  <select id="findPosByBranch" parameterType="map" resultType="Long" >
+	  	select 
+	  		bhv.organization_id 
+		from branch_hierarchy_v bhv
+		join wos_organization_versions wov on bhv.organization_id = wov.organization_id
+		where bhv.company_id = #{companyId}
+		and bhv.branch_id = #{organizationId}
+		and bhv.org_hier_id = (select org_hier_id 
+		    from wos_organization_hier 
+		    where company_id = #{companyId} 
+		    and upper(org_hier_type) = upper('structural'))
+		and upper(wov.level_code) = upper('POS')				  	
+	  </select>
+	  
+	  <select id="findOrganizationIdByName" parameterType="map" resultType="Long">
+	  		select organization_id from wos_organizations where organization_name = #{name}
+	  </select>
+	  
+	  <select id="findAuthorizedOrganizations" parameterType="map" resultType="Long">
+	  	SELECT DISTINCT bh.organization_id
+		FROM branch_hierarchy_v bh
+		  <if test="organizationId != null">
+		   join ews.hierarchy_structural hs on bh.organization_id = hs.organization_id
+		   and hs.branch_id = #{organizationId}
+		  </if>
+		WHERE bh.company_id = #{companyId}
+		  <if test="branchId != null">
+		   and bh.branch_id = #{branchId}
+		  </if>
+		  <if test="isWithoutPos == true">
+			   and bh.organization_id not in (select distinct organization_id from 
+			hierarchy_structural 
+			where branch_id in (select distinct organization_id from wos_organization_versions wov where upper(wov.level_code) = upper('POS') and trunc(sysdate) between wov.date_from and wov.date_to))
+		  </if>
+		  <if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() > 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inOrganizationId">
+						bh.organization_id = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() > 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="notInOrganizationId">
+						bh.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+	  </select>
+	  
+	  <select id="findChildOrganizationDepartmentOwner" parameterType="map" resultType="Long">
+	  	select 
+	  		wohe.organization_id
+		from wos_organization_hier woh
+		join wos_org_hier_versions wohv 
+			on woh.org_hier_id = wohv.org_hier_id
+		join wos_org_hier_elements wohe 
+			on wohe.version_id = wohv.version_id
+		join wos_organizations wo 
+			on wohe.organization_id = wo.organization_id
+		where woh.org_hier_type = 'FUNCTIONAL'
+			and woh.is_dept_owner = 1
+			and wohe.parent_id &lt;&gt; wohe.organization_id
+			and trunc(sysdate) between wohv.date_from and wohv.date_to
+			and woh.company_id = #{companyId}
+			and wo.company_id = #{companyId}
+			and wohe.parent_id = #{organizationId}
+	  </select>
+	
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.WorkingScheduleSetupFinder">
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="workingScheduleBaseResult">
+		<id column="WORKING_SCHEDULE_ID" property="key" javaType="Long"/>
+		<result column="DESCRIPTION" property="description" />
+		<result column="WORKING_SCHEDULE_NAME" property="value" />
+	</resultMap>
+
+	<select id="getWorkingScheduleByCompanyId" resultMap="workingScheduleBaseResult">
+		select
+		tws.working_schedule_id,
+		tws.working_schedule_name,
+		tws.description
+		from TMS_WORKING_SCHEDULES tws
+		<where>
+			<if test="companyId != null">
+				tws.company_id = #{companyId, jdbcType=NUMERIC}
+			</if>
+		</where>
+		ORDER BY UPPER(tws.working_schedule_name) ASC
+	</select>
+	
+	<select id="getWorkingScheduleById" resultMap="workingScheduleBaseResult">
+		select
+		tws.working_schedule_id,
+		tws.working_schedule_name,
+		tws.description
+		from TMS_WORKING_SCHEDULES tws
+		<where>
+			<if test="id != null">
+				tws.working_schedule_id = #{id, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getWorkingScheduleByName" resultMap="workingScheduleBaseResult">
+		select
+		tws.working_schedule_id,
+		tws.working_schedule_name,
+		tws.description
+		from TMS_WORKING_SCHEDULES tws
+		<where>
+			<if test="companyId != null">
+				tws.company_id= #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="name != null">
+				and tws.working_schedule_name = #{name, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="countWorkingScheduleByCompanyId" resultType="int">
+		select
+			count(tws.working_schedule_id)
+		from TMS_WORKING_SCHEDULES tws
+		<where>
+			<if test="companyId != null">
+				tws.company_id = #{companyId, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+	
+	<select id="countWorkingScheduleByWorkingScheduleId" resultType="int">
+		select count(*)
+		from TMS_WORKING_SCHEDULES
+		<where>
+			<if test="workingScheduleId != null">
+				working_schedule_id = #{workingScheduleId, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+	
+	
+	
+</mapper>

@@ -1,0 +1,77 @@
+<window id="winPersonalInfoMain" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.PersonalInfoMainComposer">
+	<groupbox mold="3d" closable="false">
+		<caption label="${labels.pea.personalInformation }" />
+		<grid id="gridHeaderInformation">
+			<columns>
+				<column width="180px" align="right"/>
+				<column width="150px" align="left" valign="top" />
+				<column align="left" valign="top" />
+			</columns>
+			<rows>
+				<row>
+					<cell rowspan="8">
+						<vbox align="end">
+							<button id="btnEditPhoto" label="${labels.common.edit }" upload="true" disabled="true"></button>
+							<div width="150px" height="130px" style="border:1px #000 solid;overflow:hidden">
+								<image id="imgPhoto" width="150px" height="auto" style="position:relative; top:-5px"></image>
+							</div>
+						</vbox>
+					</cell>					
+				</row>
+				<row>
+					<cell colspan="2" align="left">
+						<label id="lblNumberFullName"/>
+					</cell>
+				</row>
+				<row>
+					<label value="${labels.pea.peopleType }" />
+					<label id="lblPeopleType"/>
+				</row>
+				<row>
+					<label value="${labels.pea.organization }" />
+					<label id="lblOrganization"/>
+				</row>
+				<row>
+					<label value="${labels.pea.location }" />
+					<label id="lblLocation"/>
+				</row>
+				<row>
+					<label value="${labels.pea.job }" />
+					<label id="lblJob"/>					
+				</row>
+				<row>
+					<label value="${labels.pea.jobGroup }" />
+					<label id="lblJobGroup"/>
+				</row>
+				<row>
+					<label value="${labels.pea.personalGrade }" />
+					<label id="lblPersonalGrade"/>					
+				</row>	
+			</rows>
+		</grid>
+		<separator />
+		<toolbar style="padding:10px">
+			<listbox mold="select" id="cmbPageSelector">
+				<template name="model">
+					<listitem value="${each }">
+						<listcell label="${each.description }" />
+					</listitem>
+				</template>				
+			</listbox>
+		</toolbar>
+		<separator />
+		<div id="personalInfoContent">			
+		</div>
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<label></label>				
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

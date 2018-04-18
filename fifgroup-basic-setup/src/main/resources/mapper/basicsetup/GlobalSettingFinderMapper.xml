@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.GlobalSettingFinderMapper">
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.GlobalSettingDTO" id="BaseResultMapInuqiry">
+		<id property="globalSetting.globalSettingId" column="GLOBAL_SETTING_ID" jdbcType="DECIMAL"/>
+		<result property="globalSetting.code" column="CODE" jdbcType="VARCHAR"/>
+		<result property="globalSetting.description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="globalSetting.dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
+		<result property="globalSetting.value" column="VALUE" jdbcType="VARCHAR"/>
+		<result property="globalSetting.createdBy" column="CREATED_BY" jdbcType="DECIMAL"/>
+		<result property="globalSetting.creationDate" column="CREATION_DATE" jdbcType="TIMESTAMP"/>
+		<result property="globalSetting.lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="globalSetting.lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"/>
+		<result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="getGlobalSettingDtoByCodeAndDescription" parameterType="map" resultMap="BaseResultMapInuqiry">
+		SELECT
+			BGS.GLOBAL_SETTING_ID,
+			BGS.CODE,
+			BGS.DESCRIPTION,
+			BGS.DATA_TYPE,
+			BGS.VALUE,
+			BGS.CREATED_BY,
+			BGS.CREATION_DATE,
+			BGS.LAST_UPDATED_BY,
+			BGS.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		FROM
+			BSE_GLOBAL_SETTINGS BGS LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BGS.LAST_UPDATED_BY)
+		<where>
+			<if test="code != null">
+				UPPER(CODE) LIKE UPPER(#{code, jdbcType=VARCHAR})
+			</if>
+			<if test="description != null">
+				AND UPPER(DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+	<select id="getCountGlobalSettingDtoByCode" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_GLOBAL_SETTINGS BGS LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BGS.LAST_UPDATED_BY)
+		<where>
+			<if test="code != null">
+				UPPER(CODE) LIKE UPPER(#{code, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+</mapper>

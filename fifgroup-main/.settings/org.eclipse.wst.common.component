@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="fifgroup-main">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="fifgroup-core-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-core/fifgroup-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-avm-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-avm/fifgroup-avm">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-notification-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-notification/fifgroup-notification">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-audit-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-audit/fifgroup-audit">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-system-admin-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-system-admin/fifgroup-system-admin">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-basic-setup-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-basic-setup/fifgroup-basic-setup">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-workstructure-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-workstructure/fifgroup-workstructure">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-system-workflow-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-system-workflow/fifgroup-system-workflow">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-personnel-admin-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-personnel-admin/fifgroup-personnel-admin">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-eligibility-rule-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-eligibility-rule/fifgroup-eligibility-rule">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-ssoa-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-ssoa/fifgroup-ssoa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-fast-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-fast/fifgroup-fast">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fifgroup-biro-jasa-1.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fifgroup-biro-jasa/fifgroup-biro-jasa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="fifgroup-main"/>
+        <property name="java-output-path" value="/fifgroup-main/target/classes"/>
+    </wb-module>
+</project-modules>

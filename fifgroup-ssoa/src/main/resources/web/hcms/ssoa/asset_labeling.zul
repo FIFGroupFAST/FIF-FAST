@@ -1,0 +1,111 @@
+<?page title="Asset Labeling"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssetLabeling" apply="co.id.fifgroup.ssoa.controller.AssetLabelingComposer">
+
+	<groupbox id="gbAssetLabeling" closable="false" mold="3d">
+		<caption label="Asset Labeling" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column width="310px" align="left"/>
+				<column width="" align="left" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Labeling Date" />
+					<div style="width:310px;">
+						<datebox id="startDate" format="dd-MMM-yyyy"  />
+						<label value="To" />
+						<datebox id="endDate" format="dd-MMM-yyyy" />
+					</div>
+					<label id="lblErrorDate"></label>
+				</row>
+				<row>
+					<label value="Branch" />
+					<div style="width:310px;">
+					<bandbox id="bnbBranch" readonly="true" width="270px" use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox" 
+										title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" 
+										headerLabel="Branch Code" descLabel="Branch Name">
+				    </bandbox>
+				    </div>
+				    <textbox width="200px" id="txtBranchName" style="display:none;"/>
+				    
+				</row>
+				<row>
+					<label />
+					<div style="width:310px;">
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" style="margin-left:15px;" />
+					</hbox>
+					</div>
+					<label />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<paging id="pgListOfValueTop"  />
+		<listbox id="lstAssetLabeling" height="auto"
+			emptyMessage="${labels.common.noDataFound}" >
+			<listhead menupopup="auto">
+				<listheader label="Action" width="100px" />
+				<listheader id="hdrLabelingDate" label="Labeling Date" sort="auto(labelingDate)" width="200px" />
+				<listheader id="hdrDesc" label="Description" sort="auto(description)" />
+				<listheader id="hdrLastUpdateBy" label="Last Update By" width="300px" sort="auto(fullName)"/>
+				<listheader id="hdrLastUpdateDate" label="Last Update Date" width="180px" sort="auto(lastUpdateDate)" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell>
+						<a label="Detail" forward="onDetail(${each})" style="color:blue;"/>
+						<span style="color:blue;"> || </span>
+						<a label="Delete" forward="onDelete(${each})" style="color:blue;"/>
+					</listcell>
+					<listcell label="${date:format(each.labelingDate,'dd MMM yyyy')}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.fullName}" />
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}" />
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<separator />
+		
+		<listbox id="lstAssetLabelingDownload" height="auto"
+			emptyMessage="${labels.common.noDataFound}" visible="false" >
+			<listhead menupopup="auto">
+				<listheader label="Labeling Date" width="200px" />
+				<listheader label="Description" />
+				<listheader label="Last Update By" width="180px" />
+				<listheader label="Last Update Date" width="180px" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${date:format(each.labelingDate,'dd MMM yyyy')}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.userName}" />
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}" />
+				</listitem>
+			</template>
+		</listbox>
+		<separator/>
+		<!--  	<exporter id="downloadSearch" referenceId="lstAssetLabelingDownload"/>-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+	<separator />
+	
+</window>

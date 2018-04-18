@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+	
+	<context:annotation-config />
+	
+	<context:property-placeholder location="classpath:jdbc.properties" order="1" ignore-unresolvable="true" />
+	<import resource="classpath:applicationContext-security.xml"/>
+	<import resource="classpath:audit-context.xml"/>
+	<import resource="classpath:basicsetup-context.xml"/>
+	<import resource="classpath:core-context.xml"/>
+	<import resource="classpath:eligibility-context.xml"/>
+	<import resource="classpath:personneladmin-context.xml"/>
+	<import resource="classpath:systemadmin-context.xml" />
+	<import resource="classpath:systemworkflow-context.xml"/>
+	<import resource="classpath:workstructure-context.xml"/>
+
+	<!-- <import resource="classpath:leave-context.xml" />
+	<import resource="classpath:questionnaire-context.xml"/>
+	<import resource="classpath:time-management-context.xml"/>
+	<import resource="classpath:business-trip-context.xml"/>
+	<import resource="classpath:transfer-context.xml"/>
+	<import resource="classpath:promotion-context.xml"/>
+	<import resource="classpath:payroll-context.xml"/>
+	<import resource="classpath:benefit-context.xml"/>
+	<import resource="classpath:recruitment-context.xml"/>
+	<import resource="classpath:man-powerplanning-context.xml"/>
+	<import resource="classpath:termination-context.xml"/>
+	<import resource="classpath:loan-context.xml"/>
+	<import resource="classpath:epsikotest-context.xml"/>
+	<import resource="classpath:batchprocess-context.xml"/>
+	<import resource="classpath:training-context.xml"/>
+	<import resource="classpath:vip-context.xml"/>
+	<import resource="classpath:lalab-context.xml"/>
+	<import resource="classpath:document-letter-context.xml"/>
+	<import resource="classpath:disciplinary-letter-context.xml"/>
+	<import resource="classpath:ocop-context.xml"/>
+	<import resource="classpath:housing-context.xml"/>
+	<import resource="classpath:workingequipment-context.xml"/>
+	<import resource="classpath:ilearning-context.xml"/>
+	<import resource="classpath:competency-context.xml"/>
+	<import resource="classpath:performance-context.xml"/>
+	<import resource="classpath:career-context.xml"/>
+	<import resource="classpath:contingent-worker-context.xml"/>
+	<import resource="classpath:trainingadmin-context.xml"/> -->
+	
+	<tx:annotation-driven />
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:mapper/**/*.xml" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="batchSqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<constructor-arg index="1" value="BATCH" />
+	</bean>
+	
+	<bean class="co.id.fifgroup.core.dao.mybatis.StatementUtil"/>
+	
+	<bean id="userAccessRecordInterceptor" class="co.id.fifgroup.main.service.UserAccessRecordInterceptor" />
+	
+	<bean id="userAccessRecordProxyService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="userAccessRecordService" />
+		<property name="interceptorNames">
+			<list>
+				<value>userAccessRecordInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="3" />
+		<property name="maxPoolSize" value="10" />
+		<property name="queueCapacity" value="25" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
+		
+	<beans profile="SIT,UAT,PROD">
+	
+		<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" />
+		
+		<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+			<property name="jndiName" value="jdbc/HCMS" />
+		</bean>
+		
+		<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+			  <property name="applicationContextSchedulerContextKey">
+	            <value>applicationContext</value>
+	    	</property>
+	    	<property name="configLocation" value="classpath:quartz.properties" />
+			<!-- <property name="waitForJobsToCompleteOnShutdown" value="true" /> -->
+	    	<property name="dataSource" ref="dataSource" />
+		</bean>
+		
+	</beans>
+	
+	<beans profile="default,DEV">
+		<bean id="transactionManager"
+			class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+	
+		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+		</bean>
+	</beans>
+
+	
+</beans>

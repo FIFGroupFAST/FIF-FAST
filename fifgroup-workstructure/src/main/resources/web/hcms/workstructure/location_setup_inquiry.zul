@@ -1,0 +1,94 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winLocationSetupInquiry"
+	apply="co.id.fifgroup.workstructure.controller.LocationSetupInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.common.location}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.locationName}" />
+					<bandbox id="bnbLocation" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfLocation}" searchText1="${labels.wos.locationCode}" searchText2="${labels.wos.locationName}" headerLabel1="${labels.wos.locationCode}" headerLabel2="${labels.wos.locationName}" width="300px" />
+				</row>
+				<row>
+					<label value="${labels.address.country}" />
+					<bandbox id="bnbCountry" use="co.id.fifgroup.core.ui.lookup.LookupWindow" title="${labels.wos.listOfCountry}" searchText="${labels.wos.countryName}" headerLabel="${labels.wos.countryName}" width="300px" />
+				</row>
+				<row>
+					<label value="${labels.address.province}" />
+					<bandbox id="bnbProvince" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfProvince}" searchText="${labels.wos.provinceName}" headerLabel="${labels.wos.provinceName}" width="300px" />
+				</row>
+				<row>
+					<label value="${labels.address.city}" />
+					<bandbox id="bnbCity" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfCity}" searchText="${labels.wos.cityName}" headerLabel="${labels.wos.cityName}" width="300px" />
+				</row>
+				<row>
+					<label value="${labels.wos.zone}" />
+					<bandbox id="bnbZone" use="co.id.fifgroup.core.ui.lookup.LookupWindow" width="300px" />
+				</row>
+				<row>
+					<label value="${labels.wos.effectiveOnDate}" />
+					<datebox id="dtbEffectiveOnDate" format="dd-MMM-yyyy"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy" 
+							image="${labels.image.link.add}" />
+						<space width="20px" />
+						<button id="btnUpload"
+							label="${labels.upload.upload}" mold="trendy" 
+							image="${labels.image.link.upload}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.common.location}" />
+			<listbox id="lstLocation" emptyMessage="${labels.common.noDataFound}" mold="paging" pagingPosition="both">
+				<listhead menupopup="auto">
+					<listheader label="${labels.wos.locationCode}" align="center" sort="auto(lower(locationCode))" />
+					<listheader label="${labels.wos.locationName}" align="center" sort="auto(lower(locationName))" />
+					<listheader label="${labels.wos.locationDescription}" align="center" sort="auto(lower(description))" hflex="min"/>
+					<listheader label="${labels.address.country}" align="center" sort="auto(lower(countryCode))" />
+					<listheader label="${labels.address.province}" align="center" sort="auto(lower(provinceCode))" />
+					<listheader label="${labels.address.city}" align="center" sort="auto(lower(cityCode))" />
+					<listheader label="${labels.wos.zone}" align="center" sort="auto(lower(zoneCode))" />
+					<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)" hflex="min"/>
+					<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)" />
+					<listheader label="${labels.common.action}" align="center"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell value="${each}" label="${each.locationCode}"></listcell>
+						<listcell value="${each}" label="${each.locationName}"></listcell>
+						<listcell value="${each}" label="${each.description}"></listcell>
+						<listcell value="${each}" label="${each.countryCode}"></listcell>
+						<listcell value="${each}" label="${each.provinceCode}"></listcell>
+						<listcell value="${each}" label="${each.cityCode}"></listcell>
+						<listcell value="${each}" label="${each.zoneCode}"></listcell>
+						<listcell value="${each}" label="${date:formatDateTime(each.lastUpdateDate)}"></listcell>
+						<listcell value="${each}" label="${each.userName}"></listcell>
+						<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+					</listitem>
+				</template>
+			</listbox>
+			<exporter referenceId="lstLocation" />
+		</groupbox>		
+	</groupbox>
+</window>

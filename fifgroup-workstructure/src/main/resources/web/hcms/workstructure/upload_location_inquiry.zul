@@ -1,0 +1,57 @@
+<?component name="simplelabel" class="co.id.fifgroup.core.common.ui.component.FormLabel" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winWsUploadLocationInquiry" apply="co.id.fifgroup.workstructure.controller.UploadLocationInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.uploadLocation}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.upload.processDate}" />
+					<hbox>
+						<datebox id="dtbDateFrom" width="100px" />
+						<label value="${labels.pea.to}" />
+						<datebox id="dtbDateTo" width="100px" />
+					</hbox>
+				</row>
+				<row>
+					<label value="${labels.upload.batchNumber}" />
+					<hbox>
+						<textbox id="txtBatchNumberFrom" />
+						<label value="${labels.pea.to}" />
+						<textbox id="txtBatchNumberTo" />
+					</hbox>
+				</row>
+				<row>
+					<label />
+					<hbox>
+						<button label="${labels.common.find}"
+							mold="trendy" id="btnFind" image="${labels.image.link.search }" />
+						<space />
+						<button label="${labels.common.create}"
+							id="btnNew" mold="trendy" image="${labels.image.link.add }" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstUploadLocation" emptyMessage="${labels.common.err.noDataFound }" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.upload.batchNumber}" align="center" sort="auto(batchNumber)" />
+				<listheader label="${labels.upload.processDate}" align="center" sort="auto(processDateFrom)" />
+				<listheader label="${labels.common.status}" align="center" sort="auto(status)" />
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)" />
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)" />
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+		</listbox>
+		<exporter referenceId="lstUploadLocation" />
+	</groupbox>
+</window>

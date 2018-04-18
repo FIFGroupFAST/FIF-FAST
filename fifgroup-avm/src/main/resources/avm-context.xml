@@ -1,0 +1,110 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="is*" read-only="true" />
+			<tx:method name="resolveAVMApproverList" read-only="true" />
+			<tx:method name="cancelTrxBySystem" propagation="REQUIRES_NEW" rollback-for="co.id.fifgroup.avm.exception.FifException, java.lang.Exception"/>
+			<tx:method name="errorTransaction" propagation="REQUIRES_NEW" rollback-for="co.id.fifgroup.avm.exception.FifException, java.lang.Exception"/>			
+			<tx:method name="*" rollback-for="co.id.fifgroup.avm.exception.FifException, java.lang.Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut id="txManager" expression="execution(* co.id.fifgroup.avm.manager.**.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txManager" />
+	</aop:config>
+		
+<!-- 	<bean id="avmTrxManager" -->
+<!-- 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
+<!-- 		<property name="dataSource" ref="dataSource" /> -->
+<!-- 	</bean> -->
+	<!-- end of aop for transaction manager -->
+	
+<!-- 	<bean id="avmDataSource" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> -->
+<!-- 		<property name="url" value="jdbc:oracle:thin:@10.17.18.95:1521:hcmdev" /> -->
+<!-- 		<property name="username" value="fifhcms" /> -->
+<!-- 		<property name="password" value="password" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="avmSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
+<!-- 		<property name="dataSource" ref="avmDataSource" /> -->
+<!-- 		<property name="mapperLocations" value="classpath*:com/fif/hcms/avm/dao/mybatis/mapper/xml/*.xml" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="avmSqlSession" class="org.mybatis.spring.SqlSessionTemplate"> -->
+<!-- 		<constructor-arg index="0" ref="avmSqlSessionFactory" /> -->
+<!-- 	</bean> -->
+	
+	<bean id="avmAndTransactionMappingDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMAndTransactionMappingDAO">
+	</bean>
+	
+	<bean id="avmApprovalHistoryDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMApprovalHistoryDAO">
+	</bean>
+	
+	<bean id="avmApproverDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMApproverDAO">
+	</bean>
+	
+	<bean id="avmDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMDAO">
+	</bean>
+	
+	<bean id="avmLevelDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMLevelDAO">
+	</bean>
+	
+	<bean id="avmRuleMappingDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMRuleMappingDAO">
+	</bean>
+	
+	<bean id="avmTransactionDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMTransactionDAO">
+	</bean>
+	
+	<bean id="avmVersionDAO" class="co.id.fifgroup.avm.dao.mybatis.MyBatisAVMVersionDAO">
+	</bean>
+	
+	<bean id="avmApprovalManager" class="co.id.fifgroup.avm.manager.DefaultAVMApprovalManager">
+		<property name="avmApprovalHistoryDAO" ref="avmApprovalHistoryDAO"/>
+		<property name="avmLevelDAO" ref="avmLevelDAO"/>
+		<property name="avmTransactionDAO" ref="avmTransactionDAO" />
+		<property name="avmRuleEvaluationManager" ref="avmRuleEvaluationManager" />
+		<property name="avmSetupManager" ref="avmSetupManager" />
+	</bean>
+	
+	<bean id="avmRuleEvaluationManager" class="co.id.fifgroup.avm.manager.AVMRuleEvaluationManager">
+		<property name="avmRuleMappingDAO" ref="avmRuleMappingDAO"/>
+	</bean>
+	
+	<bean id="avmSetupManager" class="co.id.fifgroup.avm.manager.AVMSetupManager">
+		<property name="avmAndTransactionMappingDAO" ref="avmAndTransactionMappingDAO"/>
+		<property name="avmApproverDAO" ref="avmApproverDAO" />
+		<property name="avmDAO" ref="avmDAO" />
+		<property name="avmLevelDAO" ref="avmLevelDAO" />
+		<property name="avmRuleMappingDAO" ref="avmRuleMappingDAO" />
+		<property name="avmVersionDAO" ref="avmVersionDAO" />
+	</bean>
+	
+	<bean id="avmTransactionManager" class="co.id.fifgroup.avm.manager.AVMTransactionManager">
+		<property name="avmApprovalHistoryDAO" ref="avmApprovalHistoryDAO" />
+		<property name="avmLevelDAO" ref="avmLevelDAO" />
+		<property name="avmTransactionDAO" ref="avmTransactionDAO" />
+		<property name="avmSetupManager" ref="avmSetupManager" />
+	</bean>
+	
+	<bean id="avmEngine" class="co.id.fifgroup.avm.AVMEngine">
+		<property name="avmApprovalManager" ref="avmApprovalManager" />
+		<property name="avmSetupManager" ref="avmSetupManager" />
+		<property name="avmTransactionManager" ref="avmTransactionManager" />
+	</bean>	
+		
+</beans>

@@ -1,0 +1,13 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="Task Parameters" border="normal" width="500px" height="450px" closable="true"
+		apply="co.id.fifgroup.systemadmin.controller.EntryTaskParameterComposer">
+		<vlayout id="dynamicParams" height="350px" style="overflow:auto">
+
+		</vlayout>
+		<div align="center" style="padding-top:10px">
+			<button id="btnOk" label="${labels.common.ok}"
+				mold="trendy" image="${labels.image.link.save}" />
+		</div>
+	</window>
+</zk>

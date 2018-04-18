@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Perubahan Data Kontak Karyawan" language="groovy" pageWidth="2000" pageHeight="595" orientation="Landscape" columnWidth="1960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6739b2c-0db9-42e6-95b4-f082432c2591">
+	<property name="ireport.zoom" value="1.3310000000000035"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CHANGE_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CHANGE_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AUTHORIZED_ORGANIZATIONS" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STATIC_PARAM_EMPLOYEE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select bc.company_name, bhv.branch_name, wo.organization_name, ppt.people_type, ppi.employee_number, ppi.full_name, emp.*   from (
+  select 'Perubahan Golongan' type, person_id, company_id, null contact_name, effective_start_date, old_grade old_value, new_grade new_value,
+    null BANK_NAME_OLD, null BANK_NAME_NEW, null BRANCH_OLD, null BRANCH_NEW,
+    null ACCOUNT_NUM_OLD, null ACCOUNT_NUM_NEW, null ACCOUNT_NAME_OLD, null ACCOUNT_NAME_NEW from (
+    select prev.person_id, prev.company_id, curr.effective_start_date, prevg.grade || '-' || prevg.sub_grade old_grade, currg.grade || '-' || currg.sub_grade new_grade from pea_primary_assignments prev
+    join wos_grades prevg on prev.grade_id = prevg.grade_id
+    join pea_primary_assignments curr on prev.person_id = curr.person_id and prev.company_id = curr.company_id
+      and trunc(prev.effective_end_date + 1) = trunc(curr.effective_start_date)
+    join wos_grades currg on curr.grade_id = currg.grade_id
+    where (prevg.grade <> currg.grade or prevg.sub_grade <> currg.sub_grade)
+  )
+  UNION
+  select 'Perubahan Rekening' type, person_id, company_id, null contact_name, effective_start_date, null old_value, null new_value,
+    BANK_NAME_OLD, BANK_NAME_NEW, BRANCH_OLD, BRANCH_NEW,
+    ACCOUNT_NUM_OLD, ACCOUNT_NUM_NEW, ACCOUNT_NAME_OLD, ACCOUNT_NAME_NEW from (
+    select prev.person_id, prev.company_id, curr.effective_start_date, dtl_old.meaning BANK_NAME_OLD, dtl_new.meaning BANK_NAME_NEW, prev.branch_name BRANCH_OLD, curr.branch_name BRANCH_NEW,
+    prev.ACCOUNT_Number ACCOUNT_NUM_OLD, curr.account_number ACCOUNT_NUM_NEW, prev.ACCOUNT_NAME ACCOUNT_NAME_OLD, curr.account_name ACCOUNT_NAME_NEW from pea_bank_informations prev
+    join pea_bank_informations curr on prev.person_id = curr.person_id and prev.company_id = curr.company_id
+      and trunc(prev.effective_end_date + 1) = trunc(curr.effective_start_date)
+    join bse_lookup_hdr hdr on hdr.name = 'MST_VALID_BANK'
+    join bse_lookup_dependents dtl_old on hdr.lookup_id = dtl_old.lookup_id and dtl_old.detail_code = prev.BANK_NAME
+    join bse_lookup_dependents dtl_new on hdr.lookup_id = dtl_new.lookup_id and dtl_new.detail_code = curr.BANK_NAME
+    where (prev.bank_name <> curr.bank_name or prev.account_name <> curr.account_name or prev.account_number <> curr.account_number)
+  )
+  UNION
+  select DECODE(attribute_name, 'Gender', 'Perubahan kelamin', 'Birth Date', 'Perubahan tanggal lahir') type,
+    person_id, company_id, full_name contact_name, audit_timestamp effective_start_date, attribute_current_value old_value, attribute_new_value new_value,
+    null BANK_NAME_OLD, null BANK_NAME_NEW, null BRANCH_OLD, null BRANCH_NEW,
+    null ACCOUNT_NUM_OLD, null ACCOUNT_NUM_NEW, null ACCOUNT_NAME_OLD, null ACCOUNT_NAME_NEW
+    from (
+    select pc.person_id, pc.company_id, pc.full_name, sat.audit_timestamp, sad.attribute_name, sad.attribute_current_value, sad.attribute_new_value
+    from pea_contacts pc
+    join sam_audit_trail sat on sat.trx_id = pc.contact_id and sat.transaction_type = 'Update Contact Data'
+    join sam_audit_detail sad on sat.audit_id = sad.audit_id and sad.attribute_name in ('Gender', 'Birth Date')
+  )
+) emp
+join bse_companies bc on emp.company_id = bc.company_id
+join pea_people_types ppt on ppt.person_id = emp.person_id and ppt.company_id = emp.company_id
+and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+join pea_primary_assignments ppa on ppa.person_id = emp.person_id and ppa.company_id = emp.company_id
+and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+join wos_organizations wo on ppa.organization_id = wo.organization_id
+join branch_hierarchy_v bhv on bhv.organization_id = ppa.organization_id
+join pea_personal_informations ppi on ppi.person_id = emp.person_id and ppi.company_id = emp.company_id
+and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+WHERE (emp.effective_start_date >= trunc(to_date($P{CHANGE_DATE_FROM}, 'DD-MON-YYYY')) OR $P{CHANGE_DATE_FROM} is null)
+AND (emp.effective_start_date <= trunc(to_date($P{CHANGE_DATE_TO}, 'DD-MON-YYYY')) OR $P{CHANGE_DATE_TO} is null)
+AND (ppi.COMPANY_ID = $P{COMPANY_ID} OR $P{COMPANY_ID} is null)
+AND $X{IN, ppa.organization_id, AUTHORIZED_ORGANIZATIONS}
+AND (ppi.EMPLOYEE_NUMBER = $P{STATIC_PARAM_EMPLOYEE} OR $P{STATIC_PARAM_EMPLOYEE} is null)
+AND ppt.people_type = 'EMPLOYEE'
+order by emp.person_id asc, emp.effective_start_date asc]]>
+	</queryString>
+	<field name="COMPANY_NAME" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="ORGANIZATION_NAME" class="java.lang.String"/>
+	<field name="PEOPLE_TYPE" class="java.lang.String"/>
+	<field name="EMPLOYEE_NUMBER" class="java.lang.String"/>
+	<field name="FULL_NAME" class="java.lang.String"/>
+	<field name="TYPE" class="java.lang.String"/>
+	<field name="PERSON_ID" class="java.math.BigDecimal"/>
+	<field name="COMPANY_ID" class="java.math.BigDecimal"/>
+	<field name="CONTACT_NAME" class="java.lang.String"/>
+	<field name="EFFECTIVE_START_DATE" class="oracle.sql.TIMESTAMP"/>
+	<field name="OLD_VALUE" class="java.lang.String"/>
+	<field name="NEW_VALUE" class="java.lang.String"/>
+	<field name="BANK_NAME_OLD" class="java.lang.String"/>
+	<field name="BANK_NAME_NEW" class="java.lang.String"/>
+	<field name="BRANCH_OLD" class="java.lang.String"/>
+	<field name="BRANCH_NEW" class="java.lang.String"/>
+	<field name="ACCOUNT_NUM_OLD" class="java.lang.String"/>
+	<field name="ACCOUNT_NUM_NEW" class="java.lang.String"/>
+	<field name="ACCOUNT_NAME_OLD" class="java.lang.String"/>
+	<field name="ACCOUNT_NAME_NEW" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1e62df7d-6019-4c31-9882-2b4e7efc1ac0" x="0" y="0" width="115" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b94f2c07-9ad3-45e7-8095-2db706656ca0" x="115" y="0" width="61" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Company]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ec85aa80-28cf-4c02-9bea-595b6f4fed21" x="176" y="0" width="110" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d232b3a5-0b0c-4171-bca4-a79875ad93cb" x="286" y="0" width="114" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Organization]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8937c517-0f26-415f-8cc3-6ad3ef6337b0" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[People Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ca38c5f5-9a0e-48a8-9ed4-5f22d23cdb1d" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Employee Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b94a60b2-c5bf-4736-ada3-f5eeb0db574e" x="600" y="0" width="137" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Full Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9f6f8cae-d8db-4b3d-9083-57070401019f" x="936" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Old Value]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="97234a9e-5c09-4221-9f9e-980fa3da7674" x="1036" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[New Value]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4485663a-db3d-42cf-aa2e-1faffd59ad9c" x="1136" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Bank Name Old]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ce51e8b0-5996-4fa8-a044-00a220dc1d65" x="1236" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Bank Name New]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9c0c8b71-29a9-4241-b175-157831847fa2" x="1336" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Bank Branch Old]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="338737bf-e5d4-45ef-83f9-4626461dd4fc" x="1436" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Bank Branch New]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e65a01c1-19f9-4bad-b5df-99b6439d0070" x="1536" y="0" width="112" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Account Number Old]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="014b1646-834c-4845-84a6-25d9794c797f" x="1648" y="0" width="112" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Account Number New]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6f1a5cb3-3202-44d8-821d-40316eb55d7c" x="1760" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Account Name Old]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7c0964a9-726a-4874-a624-9849ffd95de6" x="1860" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Account Name New]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57c60910-f917-4001-bc03-5a2c57b91895" x="737" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Effective Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a4b84485-a6e8-4c8b-b2b6-6c7944c0ce92" x="837" y="0" width="99" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Contact Name]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="bedfadc3-b126-4974-800b-c854f2d783f2" stretchType="RelativeToTallestObject" x="0" y="0" width="115" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="57dc5d6d-3986-46cc-bbfd-18b26627374b" stretchType="RelativeToTallestObject" x="115" y="0" width="61" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="10e92704-ffec-4815-bbf8-eb18ec56ccea" stretchType="RelativeToTallestObject" x="176" y="0" width="110" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="036aac24-1e00-4416-99e8-fcd3dbdb0459" stretchType="RelativeToTallestObject" x="286" y="0" width="114" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ORGANIZATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0719b12f-6477-48d6-b228-f07af7f43ac9" stretchType="RelativeToTallestObject" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PEOPLE_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f58e5ad9-36d3-466e-bbac-57e701f257ca" stretchType="RelativeToTallestObject" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="3cc3be1f-5dd3-4440-a7dc-f66e2f3b84ac" stretchType="RelativeToTallestObject" x="600" y="0" width="137" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FULL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c1a4d5e9-1980-452c-83d2-31210b8b73f7" stretchType="RelativeToTallestObject" x="936" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{OLD_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e7513ea5-5671-468e-9596-722c8dd96410" stretchType="RelativeToTallestObject" x="1036" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NEW_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6dc741de-793f-4cf0-8d64-d2ef96f5ce75" stretchType="RelativeToTallestObject" x="1136" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BANK_NAME_OLD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="84bc5dc0-645e-4c59-8c3a-89b14dbffdc0" stretchType="RelativeToTallestObject" x="1236" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BANK_NAME_NEW}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f3170db8-ecf5-4a17-b817-30303c54f0bf" stretchType="RelativeToTallestObject" x="1336" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_OLD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="898fe187-b916-47ee-929f-3f827fbe724f" stretchType="RelativeToTallestObject" x="1436" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NEW}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="812a0abe-eaa3-4a55-bd13-8eab90fe2b99" stretchType="RelativeToTallestObject" x="1536" y="0" width="112" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_NUM_OLD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4cedd201-2234-483f-a74c-203e11bfbf2c" stretchType="RelativeToTallestObject" x="1648" y="0" width="112" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_NUM_NEW}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="67d4f4cf-34d4-45c4-b73b-7ff6e149b27f" stretchType="RelativeToTallestObject" x="1760" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_NAME_OLD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9ae5954f-0a47-48fa-a92e-6f73d2268e9d" stretchType="RelativeToTallestObject" x="1860" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_NAME_NEW}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="c9309508-7b80-4d2d-b48e-5f1c24a84f87" stretchType="RelativeToTallestObject" x="737" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EFFECTIVE_START_DATE}.dateValue()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4651672d-0e1b-4bcf-8d0e-e85d28a8e5bd" stretchType="RelativeToTallestObject" x="837" y="0" width="99" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CONTACT_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

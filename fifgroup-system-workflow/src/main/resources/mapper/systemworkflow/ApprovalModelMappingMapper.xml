@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemworkflow.dao.ApprovalModelMappingMapper">
+  
+  <delete id="deleteLevelMessageMappingByMappingDetailId" parameterType="java.lang.Long">
+      delete from SWF_LEVEL_MESSAGE_MAPPING
+    where MAPPING_DETAIL_ID = #{mappingDetailId,jdbcType=DECIMAL}
+  </delete>
+    
+  <delete id="deleteApprovalModelMappingDetailByMappingId" parameterType="java.lang.Long">
+      delete from SWF_AVM_MAPPING_DETAIL
+    where MODEL_MAPPING_ID = #{modelMappingId,jdbcType=DECIMAL}
+  </delete>
+  
+  <select id="countApprovalModelMappingActiveByScopeAndTransactionId" resultType="java.lang.Integer" parameterType="map">
+  	select count(*) from SWF_AVM_MAPPING_HEADER
+	  where SCOPE = #{scopeId} and TRANSACTION_ID = #{transactionId}
+	  and #{effectiveStartDate} between EFFECTIVE_START_DATE and EFFECTIVE_END_DATE
+  </select>
+  
+  <resultMap id="approvalModelMappingHeaderMap" type="co.id.fifgroup.systemworkflow.dto.ApprovalModelMappingHeaderDTO">
+    <id column="MODEL_MAPPING_ID" jdbcType="DECIMAL" property="modelMappingId" />
+    <result column="SCOPE" jdbcType="DECIMAL" property="scope" />
+    <result column="TRANSACTION_ID" jdbcType="DECIMAL" property="transactionId" />
+    <result column="EFFECTIVE_START_DATE" jdbcType="TIMESTAMP" property="effectiveStartDate" />
+    <result column="EFFECTIVE_END_DATE" jdbcType="TIMESTAMP" property="effectiveEndDate" />
+    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+    <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+    <result column="LAST_UPDATED_DATE" jdbcType="TIMESTAMP" property="lastUpdatedDate" />
+    <result column="ORG_HIER_ID" jdbcType="DECIMAL" property="orgHierId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+  
+  <select id="getApprovalModelMappingHeader" resultMap="approvalModelMappingHeaderMap" parameterType="map">
+  	select 
+  		amh.*, 
+  		su.user_name 
+  	from swf_avm_mapping_header amh
+  	left join sam_users su on(su.user_id = amh.last_updated_by) 
+  	<where>
+  		<if test="scopeId != null">
+  			and amh.scope = #{scopeId}
+  		</if>
+  		<if test="transactionId != null">
+  			and amh.transaction_id = #{transactionId}
+  		</if>
+  		<if test="orgHierId != null">
+  			and amh.org_hier_id = #{orgHierId}
+  		</if>
+  		<if test="effectiveOnDate != null">
+  			and #{effectiveOnDate} between amh.effective_start_date and amh.effective_end_date
+  		</if>  		
+  	</where>	
+  
+  </select>
+  
+</mapper>

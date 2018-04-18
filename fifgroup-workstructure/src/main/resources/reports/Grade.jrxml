@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Grade" language="groovy" pageWidth="770" pageHeight="595" orientation="Landscape" columnWidth="730" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="83d3c944-afe7-42a7-a4d7-ffc105dee683">
+	<property name="ireport.zoom" value="1.610510000000017"/>
+	<property name="ireport.x" value="82"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Dev\\hcms-workstructure\\src\\main\\resources\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EFFECTIVE_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GRADE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUB_GRADE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  grade.grade_id,
+  grade.grade_code,
+  grade.grade || '-' || grade.sub_grade  name,
+  ver.version_id,
+  ver.date_from,
+  ver.date_to
+from wos_grades grade
+join wos_grade_versions ver on grade.grade_id = ver.grade_id
+where (upper(grade.grade) = upper($P{GRADE}) OR $P{GRADE} is null)
+and (upper(grade.sub_grade) = upper($P{SUB_GRADE}) OR $P{SUB_GRADE} is null)
+and (trunc(to_date($P{EFFECTIVE_DATE})) between ver.date_from and ver.date_to OR trunc(to_date($P{EFFECTIVE_DATE})) is null)
+and grade.company_id = $P{COMPANY_ID}]]>
+	</queryString>
+	<field name="GRADE_ID" class="java.math.BigDecimal"/>
+	<field name="GRADE_CODE" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="VERSION_ID" class="java.math.BigDecimal"/>
+	<field name="DATE_FROM" class="java.sql.Timestamp"/>
+	<field name="DATE_TO" class="java.sql.Timestamp"/>
+	<title>
+		<band height="25">
+			<staticText>
+				<reportElement uuid="1ad7cfdc-7f92-4bbd-aa55-34bb9007bd4c" x="300" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grade Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="9bb2caad-cd4c-43b0-8e0c-8fb9754dd983" x="0" y="0" width="100" height="43" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRADE_CODE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9441c131-2da5-4d4e-a5e9-a9717ed35d5b" x="100" y="0" width="100" height="43" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ca08db7f-1024-4c66-a232-039d109a5833" x="200" y="0" width="100" height="43" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE_FROM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1571924a-5b00-4990-8831-445213e3a364" x="300" y="0" width="100" height="43" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE_TO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="08047472-4b4e-49f8-ab81-a3cdb5eaf773" x="400" y="23" width="170" height="20" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eb878bee-2d09-42a4-8231-541032b6acf1" x="570" y="23" width="80" height="20" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Minimum]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="89c2f537-aef6-45fc-b6c0-0e152c35b1bf" x="650" y="23" width="80" height="20" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Maximum]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="66ed4419-c7a4-4b84-9988-866b544ad9fb" x="400" y="0" width="330" height="23" isPrintInFirstWholeBand="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grade Rate]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="178ce2b3-6206-4c08-a361-2531e30bf9f9" stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="0" width="330" height="20"/>
+				<subreportParameter name="VERSION_ID">
+					<subreportParameterExpression><![CDATA[$F{VERSION_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Grade_rate_branch.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy">
+				<reportElement uuid="fa4df06f-eb0f-4ad4-86a1-0824eef26521" stretchType="RelativeToTallestObject" x="200" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{DATE_FROM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="099f999a-6345-48c3-bfae-4198eb296031" stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8d3def6b-bb7e-44e7-9627-560c31f8a49c" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{GRADE_CODE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement uuid="a86c15be-ee69-41bd-b472-44edb5677581" stretchType="RelativeToTallestObject" x="300" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{DATE_TO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

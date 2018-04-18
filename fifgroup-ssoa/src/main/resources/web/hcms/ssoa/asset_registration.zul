@@ -1,0 +1,110 @@
+<?page title="Asset Transfer"?>
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)"?>
+<window id="winAssetRegistration" apply="co.id.fifgroup.ssoa.controller.AssetRegistrationComposer" title="">	
+	<style>
+		.zrow{}
+		.zrow:hover {background-color:#fff; color:#000;}
+	
+	</style>
+	<groupbox  id="gbAssetRegistration" mold="3d" width="auto">
+		<caption label="Asset Registration"/>
+		<grid>
+			<columns>
+				<column width="210px" align="right"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row class="margin-left zrow">
+						<label>Document No</label>
+						<textbox width="200px" id="txtSearchRegistrationNo"/>
+						<label/><label/>
+				</row>
+				<row>
+					<label value="Branch" />
+						<bandbox id="bnbBranch" readonly="true" width="270px" use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox" 
+										title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" headerLabel="Branch Code"
+								        descLabel="Branch Name">
+				    </bandbox>
+				    <textbox width="200px" id="txtBranchName" style="display:none"/>
+				    <textbox width="200px" id="txtBranchId" style="display:none"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}" />
+						<button id="btnNew" label="${labels.common.create}" mold="trendy" 
+						image="${labels.image.link.add}" style="margin-left:15px;" />
+					</hbox>
+					<label/><label/>
+				</row>
+			</rows>	
+		</grid>
+						
+		<separator></separator>
+		<paging id="pgListOfValueTop"  />	
+		<listbox id="lbxAssetRegistration" emptyMessage="No data found">
+			<listhead sizable="true" menupopup="auto">
+				<listheader label="Action" width="100px"/>
+				<listheader id="hdrRegistrationNo" label="Document No" sort="auto(registrationNo)"/>
+				<listheader id="hdrRegistrationDate" label="Request Date" sort="auto(registrationDate)"/>
+				<listheader id="hdrRemarks" label="Remarks" sort="auto(remarks)"/>
+				<listheader id="hdrStatus" label="Status" sort="auto(statusName)"/>
+				<listheader id="hdrLastUpdateBy" label="Last Updated By" sort="auto(fullName)"/>
+				<listheader id="hdrLastUpdateDate" label="Last Updated Date" sort="auto(lastUpdateDate)"/>
+			</listhead>
+			
+			<template name="model">
+				<listitem>
+					<listcell>
+						<a label="Detail" forward="onDetail(${each})"  style="color:blue" />
+					</listcell>
+					<listcell label="${each.registrationNo}"></listcell>
+					<listcell label="${date:format(each.registrationDate,'dd-MMM-yyyy')}"></listcell>
+					<listcell label="${each.remarks}"></listcell>
+					<listcell> <a forward="onStatus(${each})" style="color:blue" label="${each.statusName }"/></listcell>
+					<listcell label="${each.fullName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		
+		<listbox id="lbxAssetRegistrationDownload" visible="false" emptyMessage="No data found">
+			<listhead sizable="true" menupopup="auto">
+				<listheader label="Document No" sort="auto(registrationNo)" />
+				<listheader label="Request Date" sort="auto(registrationDate)" />
+				<listheader label="Remarks" sort="auto(remarks)"/>
+				<listheader label="Status" sort="auto(statusName)"/>
+				<listheader label="Last Updated By" sort="auto(fullName)"/>
+				<listheader label="Last Updated Date" sort="auto(lastUpdateDate)"/>
+			</listhead>
+			
+			<template name="model">
+				<listitem>
+					<listcell label="${each.registrationNo}"></listcell>
+					<listcell label="${date:format(each.registrationDate,'dd MMM yyyy')}"></listcell>
+					<listcell label="${each.remarks}"></listcell>
+					<listcell> <a forward="onStatus(${each})" style="color:blue" label="${each.statusName }"/></listcell>
+					<listcell label="${each.fullName}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}"></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgListOfValue"  />
+		<separator/>
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+				
+	<separator></separator>
+	
+	
+</window>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.RvUnsettledTransactionFinder">
+
+	<resultMap type="co.id.fifgroup.core.dto.RVUnsettledDTO" id="baseResult">
+		<result column="BRANCH_NAME" jdbcType="VARCHAR" property="branchName" />
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+		<result column="FULL_NAME" jdbcType="VARCHAR" property="fullName" />
+		<result column="TRX" jdbcType="VARCHAR" property="transaction" />
+		<result column="RV_NO" jdbcType="VARCHAR" property="rvNumber" />
+		<result column="CREATED_TIMESTAMP" jdbcType="TIMESTAMP" property="rvCreationDate" />
+		<result column="DESCRIPTION_HDR" jdbcType="VARCHAR" property="description" />
+		<result column="GRAN_TOTAL" jdbcType="DECIMAL" property="rvAmount" />
+	</resultMap>
+
+	<select id="getRvUnsettledTransaction" resultMap="baseResult" parameterType="map">
+		SELECT bh.branch_name branch_name,
+		  ppi.employee_number,
+		  ppi.full_name,
+		  unsettled.trx,
+		  unsettled.rv_no,
+		  unsettled.trans_date rvCreationDate,
+		  unsettled.description description,
+		  unsettled.received_amount rvAmount
+		FROM
+		  (SELECT 'Benefit' trx,
+		    bst.person_id,
+		    bst.company_id,
+		    rv.rv_no,
+		    rv.trans_date,
+		    rv.description,
+		    rv.received_amount
+		  FROM ben_settlement_trn bst
+		  JOIN ap.rv_trn_interface@FIFAPPS.US.ORACLE.COM rv
+		  ON bst.rv_number = rv.rv_no
+		  WHERE
+		  UPPER(bst.transaction_status) = 'SETTLED'
+		  UNION
+		  SELECT 'Loan' trx,
+		    llt.person_id,
+		    llt.company_id,
+		    rv.rv_no,
+		    rv.trans_date,
+		    rv.description,
+		    rv.received_amount
+		  FROM loa_loan_trn llt
+		  JOIN ap.rv_trn_interface@FIFAPPS.US.ORACLE.COM rv
+		  ON llt.rv_number = rv.rv_no
+		  WHERE
+		  UPPER(llt.loan_status) = 'SETTLEMENT_IN_PROGRESS'
+		  UNION
+		  SELECT 'Business Trip' trx,
+		    brt.person_id,
+		    brg.company_id,
+		    rv.rv_no,
+		    rv.trans_date,
+		    rv.description,
+		    rv.received_amount
+		  FROM btr_request_trn brt
+		  JOIN btr_request_groups brg
+		  ON brg.request_group_id = brt.request_group_id
+		  JOIN btr_settlement_trn bst
+		  ON bst.request_trn_id = brt.request_trn_id
+		  JOIN ap.rv_trn_interface@FIFAPPS.US.ORACLE.COM rv
+		  ON bst.rv_number = rv.rv_no
+		  WHERE
+		  UPPER(brt.transaction_status) = 'SETTLED'
+		  ) unsettled
+		JOIN pea_personal_informations ppi
+		ON ppi.person_id   = unsettled.person_id
+		AND ppi.company_id = unsettled.company_id
+		AND TRUNC(unsettled.trans_date) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id   = unsettled.person_id
+		AND ppa.company_id = unsettled.company_id
+		AND TRUNC(unsettled.trans_date) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		LEFT JOIN wos_organization_hier hier on hier.company_id = ppi.company_id AND upper(org_hier_type) = upper('STRUCTURAL') 
+		LEFT JOIN BRANCH_HIERARCHY_V bh ON bh.org_hier_id = hier.org_hier_id AND bh.organization_id = ppa.organization_id
+		WHERE
+		unsettled.company_id = #{companyId}
+	</select>	
+</mapper>

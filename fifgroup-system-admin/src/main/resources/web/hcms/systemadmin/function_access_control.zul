@@ -1,0 +1,70 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<window id="winFunctionAccessControlComposser" apply="co.id.fifgroup.systemadmin.controller.FunctionAccessControlComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.functionAccessControl}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.sam.responsibility}" />
+					<label id="lblResponsibilityName" />
+				</row>
+				<row>
+					<label value="${labels.sam.menu}" />
+					<label id="lblMenuName" />
+				</row>		
+				<row>
+					<formlabel value="${labels.sam.defaultAccess}" required="true" />
+					<radiogroup id="rdogrpDefaultAccess">
+						<vbox>
+							<radio label="${labels.sam.fullAccess}" />
+							<radio label="${labels.sam.readOnly}" />
+							<radio label="${labels.sam.custom}" />
+						</vbox>
+					</radiogroup>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox id="grbAccessControl" visible="false">
+			<caption label="${labels.sam.customAccessControl}" />
+			<separator />
+			<listbox id="tbnCustomAccessControl" checkmark="false" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="${labels.sam.menuItem}" align="center" />
+					<listheader align="center">
+						<hbox>
+							<checkbox id="chkAllCreate" />
+							<label value="${labels.sam.create}"/>
+						</hbox>
+					</listheader>
+					<listheader align="center">
+						<hbox>
+							<checkbox id="chkAllUpdate" />
+							<label value="${labels.common.update}"/>
+						</hbox>
+					</listheader>
+					<listheader align="center" >
+						<hbox>
+							<checkbox id="chkAllDelete" />
+							<label value="${labels.common.delete}"/>
+						</hbox>
+					</listheader>
+				</listhead>
+			</listbox>
+		</groupbox>
+		<separator/>
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnBack" label="${labels.common.back}" mold="trendy" image="${labels.image.link.back}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

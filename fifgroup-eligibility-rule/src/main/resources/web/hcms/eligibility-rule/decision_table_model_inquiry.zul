@@ -1,0 +1,56 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winDecisionTableModelInquiry"
+	apply="co.id.fifgroup.eligibility.controller.DecisionTableModelInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.elr.decisionTableModel}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.elr.decisionTableModelName}" />
+					<searchtextbox id="txtModelName" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy" 
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstModel" mold="paging" pagingPosition="both" pageSize="20" emptyMessage="${labels.common.err.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader label="${labels.elr.decisionTableModelName}"  align="center" sort="auto(name)"/>
+				<listheader label="${labels.common.version}"  align="center" sort="auto(versionNumber)"/>
+				<listheader label="${labels.elr.resultType}"  align="center" sort="auto(resultType.name)"/>				
+				<listheader label="${labels.common.action}"  align="center"/>
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.name }"/>
+					<listcell label="${null == each.versionNumber ? '-' : each.versionNumber }"/>
+					<listcell label="${null == each.resultType.name ? '-' : each.resultType.name }"/>
+					<listcell>
+						<a label="Detail" forward="onModelDetail(${each })"/>
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<separator/>
+		<exporter referenceId="lstModel"/>
+	</groupbox>
+</window>

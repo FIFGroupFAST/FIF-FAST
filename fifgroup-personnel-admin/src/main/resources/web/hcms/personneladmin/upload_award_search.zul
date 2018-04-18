@@ -1,0 +1,56 @@
+<window id="winUploadAwardSearch" border="none" apply="co.id.fifgroup.personneladmin.controller.UploadAwardSearchComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.uploadAwardSearch}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top"  />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.processDate}" />
+					<hbox pack="center" align="center">
+						<datebox id="dtbDateFrom" width="100px" />
+						<label value="${labels.pea.to}" />
+						<datebox id="dtbDateTo" width="100px" />
+						
+					</hbox>
+				</row>
+				<row>
+					<label value="${labels.pea.batchNumber}" />
+					<hbox pack="center" align="center">
+<!-- 						<textbox id="txtBatchNumberFrom" /> -->
+						<intbox id="intBatchNumberFrom" />
+						<label value="${labels.pea.to}" />
+<!-- 						<textbox id="txtBatchNumberTo" /> -->
+						<intbox id="intBatchNumberTo" />
+					</hbox>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew" label="${labels.common.create}" mold="trendy" image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>	
+		</grid>
+		<separator />
+		<listbox id="lstUploadAward" emptyMessage="${labels.common.err.noDataFound }" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.pea.batchNumber}" align="center" sort="auto(number)"/>
+				<listheader label="${labels.pea.processDate}" align="center" sort="auto(processDateFrom)"/>
+				<listheader label="${labels.pea.status}" align="center" sort="auto(status)"/>
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+		</listbox>
+		<exporter referenceId="lstUploadAward" />
+	</groupbox>
+</window>

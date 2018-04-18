@@ -1,0 +1,91 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winFunctionInquiry" apply="co.id.fifgroup.systemadmin.controller.FunctionInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.function}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.sam.functionName}" />
+					<searchtextbox id="txtFunctionName" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label value="${labels.common.description}" />
+					<searchtextbox id="txtDescription" width="25%" maxlength="100" />
+				</row>
+				<row>
+					<label value="${labels.sam.module}" />
+					<listbox id="lstModule" mold="select" width="25%">
+						<template name="model">
+							<listitem value="${each}" label="${each.moduleName}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<paging id="pgFunctionTop" forward="onPaging" autohide="true" detailed="true" />
+		<listbox id="lstFunction" emptyMessage="No Data Found">
+			<listhead menupopup="auto">
+				<listheader sort="auto(functionName)" label="${labels.sam.functionName}" align="center"  />
+				<listheader sort="auto(description)" label="${labels.common.description}" align="center"  />
+				<listheader sort="auto(actionUrl)" label="${labels.sam.link}" align="center" />
+				<listheader sort="auto(lastUpdateDate)" label="${labels.common.lastUpdateDate}" align="center" />
+				<listheader sort="auto(userName)" label="${labels.common.lastUpdatedBy}" align="center" />
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell value="${each}" label="${each.functionName}"></listcell>
+					<listcell value="${each}" label="${each.description}"></listcell>
+					<listcell value="${each}" label="${each.actionUrl}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell value="${each}" label="${each.userName}"></listcell>
+					<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<paging id="pgFunction" forward="onPaging" autohide="true" detailed="true" />	
+		<listbox id="lstFunctionDownload" emptyMessage="No Data Found" visible="false">
+			<listhead menupopup="auto">
+				<listheader sort="auto(functionName)" label="${labels.sam.functionName}" align="center" />
+				<listheader sort="auto(description)" label="${labels.common.description}" align="center"  />
+				<listheader sort="auto(actionUrl)" label="${labels.sam.link}" align="center" />
+				<listheader sort="auto(lastUpdateDate)" label="${labels.common.lastUpdateDate}" align="center" />
+				<listheader sort="auto(userName)" label="${labels.common.lastUpdatedBy}" align="center" />
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell value="${each}" label="${each.functionName}"></listcell>
+					<listcell value="${each}" label="${each.description}"></listcell>
+					<listcell value="${each}" label="${each.actionUrl}"></listcell>
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm:ss')}"></listcell>
+					<listcell value="${each}" label="${each.userName}"></listcell>
+					<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstFunctionDownload" />	
+	</groupbox>
+</window>

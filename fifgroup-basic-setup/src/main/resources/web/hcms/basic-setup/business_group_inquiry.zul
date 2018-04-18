@@ -1,0 +1,59 @@
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winBusinessGroupInquiry" apply="co.id.fifgroup.basicsetup.controller.BusinessGroupInquiryComposer" style="width:100%;">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.businessGroup}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column style="width:15%;" align="right" />
+				<column style="width:85%;" />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.bse.groupName}" />
+					<textbox id="txtGroupName" width="200px" maxlength="60" use="co.id.fifgroup.core.ui.Searchtextbox"></textbox>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox>
+			<caption label="${labels.bse.businessGroup}" />
+			<listbox id="lstBusinessGroup" emptyMessage="${labels.common.noDataFound}" mold="paging" pagingPosition="both">
+				<listhead menupopup="auto">
+					<listheader label="${labels.bse.groupCode}" align="center" sort="auto(lower(businessGroup.groupCode))"/>
+					<listheader label="${labels.bse.groupName}" align="center" sort="auto(lower(businessGroup.groupName))"/>
+					<listheader label="${labels.bse.groupDescription}" align="center" sort="auto(lower(businessGroup.description))"/>
+					<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(businessGroup.lastUpdateDate)"/>
+					<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(lower(userName))"/>
+					<listheader label="${labels.common.action}" align="center" />
+				</listhead>
+				<template name="model">
+					<listitem value="${each}">
+						<listcell label="${each.businessGroup.groupCode}"></listcell>
+						<listcell label="${each.businessGroup.groupName}"></listcell>
+						<listcell label="${each.businessGroup.description}"></listcell>
+						<listcell label="${date:formatDateTime(each.businessGroup.lastUpdateDate)}"></listcell>
+						<listcell label="${each.userName}"></listcell>
+						<listcell><a label="${labels.common.detail}" style="text-decoration:underline ;color:blue" forward="lstBusinessGroup.onDetail(${each})"></a></listcell>
+					</listitem>
+				</template>
+			</listbox>
+			<exporter referenceId="lstBusinessGroup" />
+		</groupbox>			
+	</groupbox>
+</window>

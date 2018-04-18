@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.TransactionTypeFinder">
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.TransactionTypeDTO" id="resultTransactionTypeInquiry">
+		<id property="trxTypeId" column="TRX_TYPE_ID" jdbcType="DECIMAL"/>
+		<result property="trxCode" column="TRX_CODE" jdbcType="VARCHAR"/>
+		<result property="trxType" column="TRX_TYPE" jdbcType="VARCHAR"/>
+		<result property="createdBy" column="CREATED_BY" jdbcType="DECIMAL"/>
+		<result property="creationDate" column="CREATION_DATE" jdbcType="VARCHAR"/>
+		<result property="lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="VARCHAR"/>
+		<association property="module" javaType="co.id.fifgroup.basicsetup.domain.Module">
+			<id property="moduleId" column="MODULE_ID" jdbcType="DECIMAL"/>
+			<result property="moduleName" column="MODULE_NAME" jdbcType="VARCHAR"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.basicsetup.dto.TransactionTypeDTO" id="resultTransactionTypeInquiry2">
+		<id property="trxTypeId" column="TRX_TYPE_ID" jdbcType="DECIMAL"/>
+		<result property="trxCode" column="TRX_CODE" jdbcType="VARCHAR"/>
+		<result property="trxType" column="TRX_TYPE" jdbcType="VARCHAR"/>
+		<result property="createdBy" column="CREATED_BY" jdbcType="DECIMAL"/>
+		<result property="creationDate" column="CREATION_DATE" jdbcType="VARCHAR"/>
+		<result property="lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="getTransactionTypeByTrxCode" parameterType="map" resultMap="resultTransactionTypeInquiry2">
+	SELECT
+			*
+		FROM
+			BSE_TRANSACTION_TYPES 
+		<where>
+			<if test="trxCode != null">
+					UPPER(TRX_CODE) LIKE UPPER(#{trxCode, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+	<select id="getTransactionTypeDTOByModuleAndTransactionType" parameterType="map" resultMap="resultTransactionTypeInquiry">
+		SELECT
+			BTT.TRX_TYPE_ID,
+			BTT.TRX_CODE,
+			BTT.TRX_TYPE,
+			BTT.MODULE_ID,
+			BTT.CREATED_BY,
+			BTT.CREATION_DATE,
+			BTT.LAST_UPDATED_BY,
+			BTT.LAST_UPDATE_DATE,
+			BM.MODULE_NAME
+		FROM
+			BSE_TRANSACTION_TYPES BTT LEFT JOIN BSE_MODULES BM ON(BTT.MODULE_ID = BM.MODULE_ID)
+		<where>
+			<if test="module != null">
+				<if test="module.moduleId != null">
+					BTT.MODULE_ID = #{module.moduleId, jdbcType=DECIMAL}
+				</if>
+			</if>
+			<if test="transactionType != null">
+				AND UPPER(BTT.TRX_TYPE) LIKE UPPER(#{transactionType, jdbcType=VARCHAR})
+			</if>
+		</where>	
+	</select>
+
+	<select id="getCountTransactionTypeDTOByModuleAndTransactionType" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_TRANSACTION_TYPES BTT LEFT JOIN BSE_MODULES BM ON(BTT.MODULE_ID = BM.MODULE_ID)
+		<where>
+			<if test="module != null">
+				<if test="module.moduleId != null">
+					BTT.MODULE_ID = #{module.moduleId, jdbcType=DECIMAL}				
+				</if>
+			</if>
+			<if test="transactionType != null">
+				AND UPPER(BTT.TRX_TYPE) LIKE UPPER(#{transactionType, jdbcType=VARCHAR})
+			</if>
+		</where>	
+	</select>
+
+</mapper>

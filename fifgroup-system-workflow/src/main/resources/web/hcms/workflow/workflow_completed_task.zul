@@ -1,0 +1,62 @@
+<window id="winWorkflowApprovedTask" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowCompletedTaskComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.completedTask}">
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.subject}" />
+							<textbox id="txtSubject" width="300px" />
+						</row>
+						<row>
+							<label value="${labels.swf.transactionType}" />
+							<listbox id="cmbTrxType" /> 
+						</row>
+						<row>
+							<label value="${labels.common.transactionStatus}" />
+							<listbox id="cmbTrxStatus" /> 
+						</row>
+						<row>
+							<label value="${labels.swf.approvedDate}" />
+							<hbox>
+								<datebox id="dtbStartDate" width="100px" /> 
+								<label value="${labels.common.to}" />
+								<datebox id="dtbEndDate" width="100px" /> 
+							</hbox>
+						</row>
+						<row>
+							<hbox />
+							<hbox>
+								<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+									image="${labels.image.link.search}"/>
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxCompletedTask" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)"/>
+						<listheader label="${labels.swf.transactionType}" align="center" sort="auto(trxType)"/>
+						<listheader label="${labels.common.transactionStatus}" align="center" sort="auto(trxStatus)"/>
+						<listheader label="${labels.swf.actionType}" align="center" sort="auto(actionType)"/>
+						<listheader label="${labels.swf.remarks}" align="center" sort="auto(remarks)"/>
+						<listheader label="${labels.swf.completedTime}" align="center" sort="auto(avmActionTimestamp)"/>
+					</listhead>
+				</listbox>
+				<exporter referenceId="lbxCompletedTask" />
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

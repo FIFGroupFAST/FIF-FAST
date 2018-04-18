@@ -1,0 +1,65 @@
+<window border="none" id="winTransactionTypeCreate"
+	apply="co.id.fifgroup.basicsetup.controller.TransactionTypeComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.bse.transactionType}">
+				</caption>
+				<grid sclass="form-entry">
+					<columns sizable="true">
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.bse.moduleName}" />
+								<label
+									value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<listbox id="lstModule" mold="select">
+								<listhead>
+									<listheader></listheader>
+								</listhead>
+								<template name="model">
+									<listitem value="${each}">
+										<listcell label="${each.moduleName}"></listcell>
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.bse.transactionCode}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<textbox id="txtTransactionTypeCode" maxlength="30" width="200px"/>								
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.bse.transactionType}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<textbox id="txtTransactionType" maxlength="100" width="250px" />								
+						</row>
+						
+					</rows>
+				</grid>
+				<separator />
+				<hbox>
+					<cell align="center" style="width:1250px;">
+						<button id="btnSave"
+							label="${labels.common.save}" mold="trendy" 
+							image="${labels.image.link.save}" />
+					</cell>
+					<cell align="right">
+						<button id="btnCancel"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+					</cell>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

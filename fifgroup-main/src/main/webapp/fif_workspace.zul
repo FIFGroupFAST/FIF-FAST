@@ -1,0 +1,110 @@
+<?page id="workspace" title="FIFGROUP Application Name"?>
+<?meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0"?>
+<zk xmlns:w="client" xmlns:h="native">
+	<style src="/styles/css/style.css" />
+	<style>
+		html,body { 
+			height: 100%; 
+			margin: 0px; 
+			padding: 0px; 
+		}
+		.z-window-content{
+			padding : 0px !important; 
+		}
+		.z-row-content,.z-row-inner,.z-rows,.z-row,.z-grid-odd,.z-grid-body,.z-grid-header,.z-cell { background: transparent !important; color:#555555;}
+        .z-label{color:#555555;}        
+        p {color :#555555}
+        .z-listitem a {text-decoration:underline}
+
+	</style>
+	<window id="mainWindow" apply="co.id.fifgroup.main.controller.WorkspaceMainComposer">
+		<h:div id="wrapper" class="o-wrapper">
+			<h:div id="header" class="o-header">
+				<h:span class="menu_toggle">
+					<h:i id="c-button--push-left" class="menu_open c-button">
+						<h:div class="navicon-line"></h:div>
+						<h:div class="navicon-line"></h:div>
+						<h:div class="navicon-line"></h:div>
+					</h:i>
+    				<h:i class="menu_close" />
+  				</h:span>
+				<div align="left" style="float: left;">
+					<div>
+						<h:h1 style="padding-left: 60px; font-weight:bold; font-size:2em; color:white;
+									font-family: 'DINMedium', tahoma, arial, sans-serif;">
+								FIFGROUP FAST
+						</h:h1>
+					</div>
+				</div>
+				<div sclass="title-menu" align="right" style="color:white">
+					<div style="padding-bottom:10px">
+						<label value="( Logged in as" style="color:white"/>
+						<label id="lblUsername" style="font-weight:bold;color:white;"/>
+						<label value="|" style="color:white"/>
+						<a href="/logout" style="color:white">
+							Logout
+						</a>
+						<label value="|" style="color:white"/>
+						<label id="lblLastLogin" style="color:white"/>
+					</div>
+ 					<div align="right">
+						<label id="lblScope" style="color:white"/>
+						<listbox mold="select" id="cbCompany">
+							<template name="model">
+								<listitem label="${each.description}" value="${each.key }" />
+							</template>
+						</listbox>
+					</div>
+				</div>
+			</h:div>
+			
+			<tabbox id="tabBox" >
+				<tabs id="tabs"></tabs>
+				<tabpanels id="tabPanels"></tabpanels> 
+			</tabbox>
+		</h:div>
+			
+		<div id="divNavigation" />
+		<div id="divNavigationm" />
+	
+		<h:div id="c-maskDiv" class="c-mask" />
+		<h:div id="divBtnShowSO">
+		<button id="btnShowSO" label="${labels.common.submit}" mold="trendy" visible="false"
+			image="${labels.image.link.save}" />
+		<button id="btnShowAT" label="${labels.common.submit}" mold="trendy" visible="false"
+			image="${labels.image.link.save}" />
+		</h:div>
+		<h:html>
+			<h:script>
+				<![CDATA[
+				  var x = new Boolean(false);
+				  
+				  jQuery("#divhNavigation").addClass('c-menu c-menu--push-left');
+				  
+				  var pushLeftBtn = document.querySelector('#c-button--push-left');
+				  
+				  pushLeftBtn.addEventListener('click', function(e) {
+					  e.preventDefault;
+					  jQuery("#wrapper").addClass('has-push-left');
+					  jQuery("#divhNavigation").addClass('is-active');
+					  jQuery("#c-maskDiv").addClass('is-active');
+					  if (x) {
+						  jQuery("#divhNavigationm").addClass('is-active');
+					  }
+				  });
+					  
+				  var mask = document.querySelector('#c-maskDiv');
+				  
+				  mask.addEventListener('click', function(e) {
+					  e.preventDefault;
+					  jQuery("#wrapper").removeClass('has-push-left');
+					  jQuery("#divhNavigation").removeClass('is-active');
+					  jQuery("#c-maskDiv").removeClass('is-active');
+					  jQuery("#divhNavigationm").removeClass('is-active');
+					  JQuery("menu_toggle").addClass('shazam');
+				  });
+				//]]>
+			</h:script>
+		</h:html>
+	</window>
+</zk>

@@ -1,0 +1,38 @@
+<?page title="FIFGROUP Application Name Login"?>
+<zk xmlns:ca="client/attribute">	
+	<style src="/styles/css/login.css" />
+	<style src="/styles/css/animations.css" />
+	<h:div class="LyWrap" xmlns:h="native">
+		<h:header>
+			<h:div class="lyHeadInner">
+				<h:img src="styles/images/logo.jpg" 
+					style="display: block; max-width: 100%; max-height: 100%;" 
+					class="animated fadeIn slowest go"></h:img>
+			</h:div>
+		</h:header>
+		<h:section>
+			<h:form id="f" name="f" action="j_spring_security_check" method="post">
+				<h:input name="id" id="rsaKeyName" value="" type="hidden" />
+				<h:input name="verifier" id="verifier" value="JJtZuJK8zoNjm2TMSczxA9hZKcUktGl8" type="hidden" />
+				<h:input name="password" id="ipt_login_param_encrypt" value="" type="hidden" />
+				<div class="MdCMN01Cont">
+					<h:input id="u" name="j_username" class="mdInput02Input animated fadeIn slowest go" 
+					placeholder="Please enter username." maxlength="20" required="required"
+						autofocus="true" autocomplete="off" type="input" style="border-radius: 7px;" />
+					<h:input id="p" name="j_password" class="mdInput02Input animated fadeIn slowest go" 
+					placeholder="Please enter password." maxlength="50" type="password" style="border-radius: 7px;" />
+					<div class="MdBtn01P01 animated fadeIn slowest go" style="border-radius: 7px;">
+						<h:input value="Login" id="FnSubmit" type="submit" />
+					</div>
+					<html class="animated fadeIn slowest go" style="color:red; font-size: 12px" if="${not empty param.login_error}">
+						<![CDATA[ <p style="margin:0;">${SPRING_SECURITY_LAST_EXCEPTION.message} </p> ]]>
+					</html>
+				</div>
+			</h:form>
+			<h:div class="footer-background">
+				<h:img src="styles/images/footer.jpg" style="display: block; height:100%; width:100%;" 
+				class="animated fadeIn slowest go"></h:img>
+			</h:div>
+		</h:section>
+	</h:div>
+</zk>

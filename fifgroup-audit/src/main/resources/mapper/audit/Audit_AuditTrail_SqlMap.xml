@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Audit_AuditTrail">
+	<!-- Result Map -->	
+		<resultMap id="auditTrailResultMap" type="co.id.fifgroup.audit.model.entity.AuditTrail">
+			<result column="sequence_number" property="sequenceNumber" jdbcType="NUMERIC"/>
+			<result column="audit_id" property="auditId" jdbcType="VARBINARY"
+ 								typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler"/>
+    		<result column="control_type" property="controlType" jdbcType="NUMERIC" />
+ 			<result column="action_type" property="actionType" jdbcType="NUMERIC"/>
+ 			<result column="module_id" property="moduleId" jdbcType="NUMERIC"/>
+ 			<result column="audit_timestamp" property="auditTimestamp" jdbcType="TIMESTAMP"/>
+ 			<result column="session_id" property="sessionId" jdbcType="VARBINARY"
+ 								typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler"/>
+   			<result column="attribute_code_label" property="attributeCodeLabel" jdbcType="VARCHAR"/>
+   			<result column="attribute_code_value" property="attributeCodeValue" jdbcType="VARCHAR"/>			
+  			<result column="remarks" property="remarks" jdbcType="VARCHAR"/>			
+ 		</resultMap>
+	<!-- Result Map -->
+	<!-- Select -->
+		<select id="findAuditId" parameterType="co.id.fifgroup.audit.model.entity.AuditTrail">
+			select * from SAM_AUDIT_TRAIL
+			where audit_id=#{auditId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+		</select>
+		<select id="getLastSequenceNumber" parameterType="co.id.fifgroup.audit.model.entity.AuditTrail"
+				resultType="int">
+			select max(sequence_number) from SAM_AUDIT_TRAIL
+			where audit_id=#{auditId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+		</select>
+		<select id="getRefAttributeCode" resultMap="auditTrailResultMap" parameterType="int">
+			select attribute_code_label, attribute_code_value from SAM_AUDIT_TRAIL
+			where sequence_number = #{sequenceNumber}
+		</select>
+		<select id="getRefSequenceNumber" resultType="long" parameterType="co.id.fifgroup.audit.model.entity.AuditTrail">
+			select max(sequence_number) from SAM_AUDIT_TRAIL
+			where audit_id = #{auditId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+			and (action_type = 2 or action_type = 3 or action_type=10 )
+		</select>
+		<select id="getAuditTrailSeqNo" resultType="long">
+			select F_GET_AUDIT_TRAIL_SEQ_NO from DUAL
+		</select>
+	<!-- Select -->
+	<!-- Insert -->
+		
+		<insert id="insertNewAuditTrail" parameterType="co.id.fifgroup.audit.model.entity.AuditTrail">
+			insert into SAM_AUDIT_TRAIL(sequence_number, audit_id, control_type, action_type, module_id, audit_timestamp,
+									session_id, attribute_code_label, attribute_code_value, ref_sequence_number, transaction_type, user_id, trx_id)
+			values(#{sequenceNumber},
+				   #{auditId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler},
+			 	   #{controlType, jdbcType=NUMERIC}, 
+			 	   #{actionType, jdbcType=NUMERIC}, 
+			 	   #{moduleId, jdbcType=NUMERIC}, 
+			 	   #{auditTimestamp, jdbcType=TIMESTAMP}, 
+			 	   #{sessionId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler},
+			 	   #{attributeCodeLabel, jdbcType=VARCHAR}, 
+			 	   #{attributeCodeValue, jdbcType=VARCHAR}, 
+			 	   #{refSequenceNumber, jdbcType=NUMERIC},
+			 	   #{transactionType, jdbcType=VARCHAR},
+			 	   #{userId, jdbcType=NUMERIC},
+			 	   #{trxId, jdbcType=NUMERIC})
+		</insert>
+	<!-- Insert -->
+	<!-- Update -->
+		<update id="updateRefSequenceNumber" parameterType="co.id.fifgroup.audit.model.entity.AuditTrail">
+			update SAM_AUDIT_TRAIL
+			set ref_sequence_number = #{refSequenceNumber, jdbcType=NUMERIC},
+			<if test="attributeCodeLabel!=null">
+				attribute_code_label = #{attributeCodeLabel, jdbcType=VARCHAR},
+			</if>
+			<if test="attributeCodeValue!=null">
+				attribute_code_value = #{attributeCodeValue, jdbcType=VARCHAR}
+			</if>	
+			where sequence_number = #{sequenceNumber, jdbcType=NUMERIC}
+		</update>
+	<!-- Update -->
+</mapper>

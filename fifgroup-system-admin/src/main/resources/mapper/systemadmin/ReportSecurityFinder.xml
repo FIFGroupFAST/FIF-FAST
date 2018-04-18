@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.finder.ReportSecurityFinder">
+
+<resultMap id="keyValueResult" type="co.id.fifgroup.core.ui.lookup.KeyValue" >
+    <id column="KEY" property="key" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+</resultMap>
+
+<select id="getCompany" parameterType="map" resultMap="keyValueResult">
+	SELECT bc.company_id key, bc.company_name value
+	FROM SAM_RESPONSIBILITY_COMPANIES SRC
+	join bse_companies bc on bc.company_id = src.company_id and sysdate between bc.effective_start_date and bc.effective_end_date
+	WHERE SRC.RESPONSIBILITY_ID = #{responsibilityId}
+	AND SRC.COMPANY_ID = #{currentCompanyId}
+	and bc.company_name like #{companyName}
+	UNION
+	SELECT bc.company_id, bc.company_name 
+	FROM SAM_RESPONSIBILITY_COMPANIES SRC
+	join bse_companies bc on bc.company_id = src.company_id and sysdate between bc.effective_start_date and bc.effective_end_date
+	WHERE SRC.RESPONSIBILITY_ID = #{responsibilityId}
+	AND SRC.COMPANY_ID &lt;&gt; #{currentCompanyId}
+	and upper(bc.company_name) like #{companyName}
+	and SRC.FLAG_OTHER_USER_MULTI = 1
+	order by value asc
+</select>
+
+<select id="countCompany" parameterType="map" resultType="int">
+	select count(1) from (SELECT bc.company_id key, bc.company_name value
+	FROM SAM_RESPONSIBILITY_COMPANIES SRC
+	join bse_companies bc on bc.company_id = src.company_id and sysdate between bc.effective_start_date and bc.effective_end_date
+	WHERE SRC.RESPONSIBILITY_ID = #{responsibilityId}
+	AND SRC.COMPANY_ID = #{currentCompanyId}
+	and bc.company_name like #{companyName}
+	UNION
+	SELECT bc.company_id, bc.company_name 
+	FROM SAM_RESPONSIBILITY_COMPANIES SRC
+	join bse_companies bc on bc.company_id = src.company_id and sysdate between bc.effective_start_date and bc.effective_end_date
+	WHERE SRC.RESPONSIBILITY_ID = #{responsibilityId}
+	AND SRC.COMPANY_ID &lt;&gt; #{currentCompanyId}
+	and upper(bc.company_name) like #{companyName}
+	and SRC.FLAG_OTHER_USER_MULTI = 1)
+</select>
+
+<select id="getSecurityTypeByAssignment" parameterType="map" resultType="String">
+	select SECURITY_BY_ASSIGN from SAM_RESPONSIBILITY_COMPANIES where RESPONSIBILITY_ID = #{responsibilityId} and COMPANY_ID = #{companyId}
+</select>
+
+<select id="getSecurityTypeOtherCompany" parameterType="map" resultType="String">
+	select SECURITY_MULTI_COY from SAM_RESPONSIBILITY_COMPANIES where RESPONSIBILITY_ID = #{responsibilityId} and COMPANY_ID = #{companyId}
+</select>
+
+<select id="getBranches" parameterType="map" resultMap="keyValueResult">
+	select distinct 
+		BRANCH_ID key, 
+		BRANCH_CODE value, 
+		BRANCH_NAME description 
+	from branch_hierarchy_v 
+	<where>
+		<if test="companyId != null">
+			and company_id = #{companyId}
+		</if>
+		 <if test="branchName">
+			and upper(branch_name) like #{branchName} 
+		 </if>
+		 <if test="branchCode">
+		 	and upper(branch_code) like #{branchCode}
+		 </if>
+	</where>
+	order by BRANCH_CODE asc
+</select>
+
+<select id="countBranches" parameterType="map" resultType="int">
+	select count(1) from (
+		select distinct 
+			branch_id key, 
+			branch_name value 
+		from branch_hierarchy_v 
+		<where>
+			<if test="companyId != null">
+				and company_id = #{companyId}
+			</if>
+			 <if test="branchName">
+				and upper(branch_name) like #{branchName} 
+			 </if>
+			 <if test="branchCode">
+			 	and upper(branch_code) like #{branchCode}
+			 </if>
+		</where>
+	)
+</select>
+
+<select id="getBranchByResponsibility" parameterType="map" resultMap="keyValueResult">
+	SELECT BRANCH_ID key, BRANCH_CODE value, BRANCH_NAME description FROM(
+		SELECT distinct BRANCH_ID, BRANCH_CODE, BRANCH_NAME 
+		FROM BRANCH_HIERARCHY_V 
+		where company_id = (
+		SELECT company_id 
+		FROM SAM_RESPONSIBILITY_COMPANIES
+		WHERE
+		  RESPONSIBILITY_ID = #{responsibilityId}
+		  AND SECURITY_BY_ASSIGN = 'VIEW_ALL'
+		  AND COMPANY_ID = (
+		    SELECT COMPANY_ID 
+		    FROM PEA_PEOPLE_TYPES 
+		    WHERE PERSON_ID = #{personId} 
+		    AND PEOPLE_TYPE = 'EMPLOYEE' 
+		    AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+		  ))
+		UNION
+		SELECT distinct BRANCH_ID, BRANCH_CODE, BRANCH_NAME 
+		FROM BRANCH_HIERARCHY_V 
+		where company_id IN (
+		SELECT company_id 
+		FROM SAM_RESPONSIBILITY_COMPANIES
+		WHERE
+		  RESPONSIBILITY_ID = #{responsibilityId}
+		  AND SECURITY_MULTI_COY = 'VIEW_ALL'
+		  AND COMPANY_ID &lt;&gt; (
+		    SELECT COMPANY_ID 
+		    FROM PEA_PEOPLE_TYPES 
+		    WHERE PERSON_ID = #{personId}
+		    AND PEOPLE_TYPE = 'EMPLOYEE' 
+		    AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+		  )))
+	WHERE upper(BRANCH_NAME) LIKE #{branchName} and upper(branch_code) like #{branchCode}
+	order by BRANCH_CODE asc
+</select>
+
+<select id="countBranchByResponsibility" parameterType="map" resultType="int">
+	select count(1) from (SELECT BRANCH_ID key, BRANCH_CODE value, BRANCH_NAME description FROM(
+		SELECT distinct BRANCH_ID, BRANCH_CODE, BRANCH_NAME 
+		FROM BRANCH_HIERARCHY_V 
+		where company_id = (
+		SELECT company_id 
+		FROM SAM_RESPONSIBILITY_COMPANIES
+		WHERE
+		  RESPONSIBILITY_ID = #{responsibilityId}
+		  AND SECURITY_BY_ASSIGN = 'VIEW_ALL'
+		  AND COMPANY_ID = (
+		    SELECT COMPANY_ID 
+		    FROM PEA_PEOPLE_TYPES 
+		    WHERE PERSON_ID = #{personId} 
+		    AND PEOPLE_TYPE = 'EMPLOYEE' 
+		    AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+		  ))
+		UNION
+		SELECT distinct BRANCH_ID, BRANCH_CODE, BRANCH_NAME 
+		FROM BRANCH_HIERARCHY_V 
+		where company_id IN (
+		SELECT company_id 
+		FROM SAM_RESPONSIBILITY_COMPANIES
+		WHERE
+		  RESPONSIBILITY_ID = #{responsibilityId}
+		  AND SECURITY_MULTI_COY = 'VIEW_ALL'
+		  AND COMPANY_ID &lt;&gt; (
+		    SELECT COMPANY_ID 
+		    FROM PEA_PEOPLE_TYPES 
+		    WHERE PERSON_ID = #{personId}
+		    AND PEOPLE_TYPE = 'EMPLOYEE' 
+		    AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+		  )))
+	WHERE upper(BRANCH_NAME) LIKE #{branchName} and upper(branch_code) like #{branchCode})
+</select>
+
+<select id="getOrganizationByBranch" parameterType="map" resultMap="keyValueResult">
+	SELECT bhv.ORGANIZATION_ID key, wo.ORGANIZATION_CODE value, wo.ORGANIZATION_NAME description 
+	FROM WOS_ORGANIZATIONS WO
+	JOIN BRANCH_HIERARCHY_V BHV ON WO.ORGANIZATION_ID = BHV.ORGANIZATION_ID
+	LEFT JOIN WOS_ORGANIZATION_VERSIONS WOV ON WOV.ORGANIZATION_ID = WO.ORGANIZATION_ID AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO
+	<where>
+		<if test="companyId != null">
+			and wo.company_id = #{companyId}
+		</if>
+		<if test="branchId != null">
+			and BHV.BRANCH_ID = #{branchId} 
+		</if>
+		<if test="organizationName != null">
+			and upper(wo.organization_name) like #{organizationName}
+		</if>
+		<if test="organizationCode != null">
+			and upper(wo.organization_code) like #{organizationCode}
+		</if>
+		<if test="locationId != null">
+			and wov.location_id = #{locationId}
+		</if>
+		<if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					wo.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					wo.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	order by ORGANIZATION_NAME asc
+</select>
+
+<select id="countOrganizationByBranch" parameterType="map" resultType="int">
+	select count(1) from(
+	SELECT bhv.ORGANIZATION_ID, ORGANIZATION_NAME 
+	FROM WOS_ORGANIZATIONS WO
+	JOIN BRANCH_HIERARCHY_V BHV ON WO.ORGANIZATION_ID = BHV.ORGANIZATION_ID
+	LEFT JOIN WOS_ORGANIZATION_VERSIONS WOV ON WOV.ORGANIZATION_ID = WO.ORGANIZATION_ID AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO
+	<where>
+		<if test="companyId != null">
+			and wo.company_id = #{companyId}
+		</if>
+		<if test="branchId != null">
+			and BHV.BRANCH_ID = #{branchId} 
+		</if>
+		<if test="organizationName != null">
+			and upper(wo.organization_name) like #{organizationName}
+		</if>
+		<if test="organizationCode != null">
+			and upper(wo.organization_code) like #{organizationCode}
+		</if>
+		<if test="locationId != null">
+			and wov.location_id = #{locationId}
+		</if>
+		<if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					wo.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					wo.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	)
+</select>
+
+<select id="getCurrentLocation" parameterType="map" resultMap="keyValueResult">
+	SELECT distinct wl.location_id key, wl.location_code value, wl.location_name description FROM WOS_ORGANIZATION_VERSIONS WOV
+	JOIN WOS_LOCATIONS WL ON WOV.LOCATION_ID = WL.LOCATION_ID
+	WHERE
+  	TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO
+  	and WOV.ORGANIZATION_ID = #{organizationId}
+
+</select>
+
+<select id="getLocation" parameterType="map" resultMap="keyValueResult">
+	SELECT distinct wl.location_id key, wl.location_code value, wl.location_name description
+	FROM WOS_LOCATIONS WL
+	join WOS_LOCATION_VERSIONS wlv on WL.LOCATION_ID = WLV.LOCATION_ID
+	<where>
+		TRUNC(SYSDATE) BETWEEN WLV.DATE_FROM AND WLV.DATE_TO
+	  	<if test="branchOwnerId != null">
+	  		AND WLV.BRANCH_OWNER_ID = #{branchOwnerId}
+	  	</if>
+	  	<if test="companyId">
+			and WL.COMPANY_ID = #{companyId}	  	
+	  	</if>
+	  	<if test="locationName != null">
+	  		and upper(wl.location_name) like #{locationName}
+	  	</if>
+	  	<if test="locationCode != null">
+	  		and upper(wl.location_code) like #{locationCode}
+	  	</if>
+	</where>
+	order by  wl.location_name
+</select>
+
+<select id="countLocation" parameterType="map" resultType="int">
+	select count(1) from (
+	SELECT distinct wl.location_id key, WL.LOCATION_NAME value
+	FROM WOS_LOCATIONS WL
+	join WOS_LOCATION_VERSIONS wlv on WL.LOCATION_ID = WLV.LOCATION_ID
+	<where>
+		TRUNC(SYSDATE) BETWEEN WLV.DATE_FROM AND WLV.DATE_TO
+	  	<if test="branchOwnerId != null">
+	  		AND WLV.BRANCH_OWNER_ID = #{branchOwnerId}
+	  	</if>
+	  	<if test="companyId">
+			and WL.COMPANY_ID = #{companyId}	  	
+	  	</if>
+	  	<if test="locationName != null">
+	  		and upper(wl.location_name) like #{locationName}
+	  	</if>
+	  	<if test="locationCode != null">
+	  		and upper(wl.location_code) like #{locationCode}
+	  	</if>
+	</where>
+	)
+</select>
+
+<select id="getEmployee" parameterType="map" resultMap="keyValueResult">
+	SELECT distinct
+	  PPI.PERSON_ID key, PPI.EMPLOYEE_NUMBER value, PPI.FULL_NAME description
+	FROM PEA_PERSONAL_INFORMATIONS PPI
+	JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON PPI.PERSON_ID = PPA.PERSON_ID AND PPI.COMPANY_ID = PPA.COMPANY_ID
+	JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	join WOS_ORGANIZATION_VERSIONS wov on WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	<where>
+	  TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM and WOV.DATE_TO
+	  <if test="companyId != null">
+	  	AND PPI.COMPANY_ID = #{companyId}
+	  </if>
+	  <if test="branchId != null">
+	  	AND BHV.BRANCH_ID = #{branchId}
+	  </if>
+	  <if test="locationId != null">
+	  	AND WOV.LOCATION_ID = #{locationId}
+	  </if>
+	  <if test="organizationId != null">
+	  	and PPA.ORGANIZATION_ID = #{organizationId}
+	  </if>
+	  <if test="employeeNumber != null">
+	  	and ppi.employee_number like #{employeeNumber}
+	  </if>
+	  <if test="fullName != null">
+	  	and upper(ppi.full_name) like #{fullName}
+	  </if>
+	  <if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					ppa.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					ppa.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	order by PPI.EMPLOYEE_NUMBER
+</select>
+
+<select id="getEmployeeCWK" parameterType="map" resultMap="keyValueResult">
+	SELECT distinct
+	  PPI.PERSON_ID key, PPI.EMPLOYEE_NUMBER value, PPI.FULL_NAME description
+	FROM PEA_PERSONAL_INFORMATIONS PPI
+	JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON PPI.PERSON_ID = PPA.PERSON_ID AND PPI.COMPANY_ID = PPA.COMPANY_ID
+	JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	join WOS_ORGANIZATION_VERSIONS wov on WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	<where>
+	  TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM and WOV.DATE_TO
+	  <if test="companyId != null">
+	  	AND PPI.COMPANY_ID = #{companyId}
+	  </if>
+	  <if test="branchId != null">
+	  	AND BHV.BRANCH_ID = #{branchId}
+	  </if>
+	  <if test="locationId != null">
+	  	AND WOV.LOCATION_ID = #{locationId}
+	  </if>
+	  <if test="organizationId != null">
+	  	and PPA.ORGANIZATION_ID = #{organizationId}
+	  </if>
+	  <if test="employeeNumber != null">
+	  	and ppi.employee_number like #{employeeNumber}
+	  </if>
+	  <if test="fullName != null">
+	  	and upper(ppi.full_name) like #{fullName}
+	  </if>
+	  <if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					ppa.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					ppa.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	UNION
+	SELECT distinct
+	  PPI.CWK_PERSON_ID key, PPI.CWK_NUMBER value, PPI.FULL_NAME description
+	FROM CWK_PERSONAL_INFORMATIONS PPI
+	JOIN CWK_ASSIGNMENTS PPA ON PPI.CWK_PERSON_ID = PPA.CWK_PERSON_ID
+	JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	join WOS_ORGANIZATION_VERSIONS wov on WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	<where>
+	  TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM and WOV.DATE_TO
+	  <if test="companyId != null">
+	  	AND PPA.COMPANY_ID = #{companyId}
+	  </if>
+	  <if test="branchId != null">
+	  	AND BHV.BRANCH_ID = #{branchId}
+	  </if>
+	  <if test="locationId != null">
+	  	AND WOV.LOCATION_ID = #{locationId}
+	  </if>
+	  <if test="organizationId != null">
+	  	and PPA.ORGANIZATION_ID = #{organizationId}
+	  </if>
+	  <if test="employeeNumber != null">
+	  	and ppi.cwk_number like #{employeeNumber}
+	  </if>
+	  <if test="fullName != null">
+	  	and upper(ppi.full_name) like #{fullName}
+	  </if>
+	  <if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					ppa.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					ppa.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	order by VALUE
+</select>
+
+<select id="countEmployee" parameterType="map" resultType="int">
+	select count(1) from(
+	SELECT distinct
+	  PPI.PERSON_ID key, PPI.EMPLOYEE_NUMBER value, PPI.FULL_NAME description
+	FROM PEA_PERSONAL_INFORMATIONS PPI
+	JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON PPI.PERSON_ID = PPA.PERSON_ID AND PPI.COMPANY_ID = PPA.COMPANY_ID
+	JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	join WOS_ORGANIZATION_VERSIONS wov on WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	<where>
+	  TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM and WOV.DATE_TO
+	  <if test="companyId != null">
+	  	AND PPI.COMPANY_ID = #{companyId}
+	  </if>
+	  <if test="branchId != null">
+	  	AND BHV.BRANCH_ID = #{branchId}
+	  </if>
+	  <if test="locationId != null">
+	  	AND WOV.LOCATION_ID = #{locationId}
+	  </if>
+	  <if test="organizationId != null">
+	  	and PPA.ORGANIZATION_ID = #{organizationId}
+	  </if>
+	  <if test="employeeNumber != null">
+	  	and ppi.employee_number like #{employeeNumber}
+	  </if>
+	  <if test="fullName != null">
+	  	and upper(ppi.full_name) like #{fullName}
+	  </if>
+	  <if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					ppa.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					ppa.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	)
+</select>
+
+<select id="countEmployeeCWK" parameterType="map" resultType="int">
+	select count(1) from(
+	SELECT distinct
+	  PPI.PERSON_ID key, PPI.EMPLOYEE_NUMBER value, PPI.FULL_NAME description
+	FROM PEA_PERSONAL_INFORMATIONS PPI
+	JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON PPI.PERSON_ID = PPA.PERSON_ID AND PPI.COMPANY_ID = PPA.COMPANY_ID
+	JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	join WOS_ORGANIZATION_VERSIONS wov on WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	<where>
+	  TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM and WOV.DATE_TO
+	  <if test="companyId != null">
+	  	AND PPI.COMPANY_ID = #{companyId}
+	  </if>
+	  <if test="branchId != null">
+	  	AND BHV.BRANCH_ID = #{branchId}
+	  </if>
+	  <if test="locationId != null">
+	  	AND WOV.LOCATION_ID = #{locationId}
+	  </if>
+	  <if test="organizationId != null">
+	  	and PPA.ORGANIZATION_ID = #{organizationId}
+	  </if>
+	  <if test="employeeNumber != null">
+	  	and ppi.employee_number like #{employeeNumber}
+	  </if>
+	  <if test="fullName != null">
+	  	and upper(ppi.full_name) like #{fullName}
+	  </if>
+	  <if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					ppa.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					ppa.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	UNION
+	SELECT distinct
+	  PPI.CWK_PERSON_ID key, PPI.CWK_NUMBER value, PPI.FULL_NAME description
+	FROM CWK_PERSONAL_INFORMATIONS PPI
+	JOIN CWK_ASSIGNMENTS PPA ON PPI.CWK_PERSON_ID = PPA.CWK_PERSON_ID
+	JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	join WOS_ORGANIZATION_VERSIONS wov on WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+	<where>
+	  TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	  AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM and WOV.DATE_TO
+	  <if test="companyId != null">
+	  	AND PPA.COMPANY_ID = #{companyId}
+	  </if>
+	  <if test="branchId != null">
+	  	AND BHV.BRANCH_ID = #{branchId}
+	  </if>
+	  <if test="locationId != null">
+	  	AND WOV.LOCATION_ID = #{locationId}
+	  </if>
+	  <if test="organizationId != null">
+	  	and PPA.ORGANIZATION_ID = #{organizationId}
+	  </if>
+	  <if test="employeeNumber != null">
+	  	and ppi.cwk_number like #{employeeNumber}
+	  </if>
+	  <if test="fullName != null">
+	  	and upper(ppi.full_name) like #{fullName}
+	  </if>
+	  <if test="inOrgId != null">
+			<if test="inOrgId.size() > 0">
+				and
+				<foreach collection="inOrgId" open="(" close=")" separator=" OR " item="orgId">
+					ppa.organization_id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="notInOrgId != null">
+			<if test="notInOrgId.size() > 0">
+				and
+				<foreach collection="notInOrgId" open="(" close=")" separator=" OR " item="notOrgId">
+					ppa.organization_id &lt;&gt; #{notOrgId}
+				</foreach>
+			</if>
+		</if>
+	</where>
+	)
+</select>
+
+<select id="getJob" parameterType="map" resultMap="keyValueResult">
+	SELECT job_id key, job_code value, job_name description
+	FROM WOS_JOBS WJ
+	<where>
+		<if test="companyId != null">
+			and WJ.COMPANY_ID = #{companyId}
+		</if>
+		<if test="companyId == null">
+			and wj.company_id in (SELECT company_id 
+								FROM SAM_RESPONSIBILITY_COMPANIES
+								WHERE
+								  RESPONSIBILITY_ID = #{responsibilityId}
+								  AND SECURITY_MULTI_COY = 'VIEW_ALL'
+								  AND COMPANY_ID &lt;&gt; (
+								    SELECT COMPANY_ID 
+								    FROM PEA_PEOPLE_TYPES 
+								    WHERE PERSON_ID = #{personId}
+								    AND PEOPLE_TYPE = 'EMPLOYEE' 
+								    AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+								  )
+							 )
+		</if>
+		<if test="jobCode != null">
+			and upper(wj.job_code) like #{jobCode}
+		</if>
+		<if test="jobName != null">
+			and upper(wj.job_name) like #{jobName}
+		</if>
+	</where> 
+	order by job_name asc
+</select>
+
+<select id="countJob" parameterType="map" resultType="int">
+	select count(1) from(
+	SELECT job_id, job_code, job_name 
+	FROM WOS_JOBS WJ
+	<where>
+		<if test="companyId != null">
+			and WJ.COMPANY_ID = #{companyId}
+		</if>
+		<if test="companyId == null">
+			and wj.company_id in (SELECT company_id 
+								FROM SAM_RESPONSIBILITY_COMPANIES
+								WHERE
+								  RESPONSIBILITY_ID = #{responsibilityId}
+								  AND SECURITY_MULTI_COY = 'VIEW_ALL'
+								  AND COMPANY_ID &lt;&gt; (
+								    SELECT COMPANY_ID 
+								    FROM PEA_PEOPLE_TYPES 
+								    WHERE PERSON_ID = #{personId}
+								    AND PEOPLE_TYPE = 'EMPLOYEE' 
+								    AND SYSDATE BETWEEN EFFECTIVE_START_DATE AND EFFECTIVE_END_DATE
+								  )
+							 )
+		</if>
+		<if test="jobCode != null">
+			and upper(wj.job_code) like #{jobCode}
+		</if>
+		<if test="jobName != null">
+			and upper(wj.job_name) like #{jobName}
+		</if>
+	</where> 
+	)
+</select>
+</mapper>

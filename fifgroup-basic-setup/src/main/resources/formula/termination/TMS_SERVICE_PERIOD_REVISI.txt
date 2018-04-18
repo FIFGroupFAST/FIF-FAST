@@ -1,0 +1,44 @@
+import groovy.transform.CompileStatic;
+import co.id.fifgroup.basicsetup.service.ServiceModel;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+@CompileStatic 
+public class SeveranceValue{
+           ServiceModel serviceModel;
+           Long personId;
+           Date processDate;
+           Long companyId;
+           DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+
+           public Long getParam(){
+                        String dateStr = df.format(processDate);
+			String sqlTmsServicePeriod = """
+							SELECT
+								floor(MONTHS_BETWEEN(trunc(to_date('${dateStr}', 'DD-MON-YYYY'), 'MM'), trunc(ppi.astra_join_date, 
+
+'MM')) / 12) service_time
+							FROM
+								pea_personal_informations ppi
+							WHERE
+								ppi.person_id = ${personId}
+								AND ppi.company_id  = ${companyId}
+								AND (TRUNC(sysdate) BETWEEN ppi.effective_start_date AND ppi.effective_end_date)
+							""";
+                       List<Map<String, Object>> result = serviceModel.getFromQuery(sqlTmsServicePeriod);
+                      if(!result.isEmpty()){	
+                                Map<String, Object> map = result.get(0);	
+                                println("Query Result : "+map.get("SERVICE_TIME").toString());
+                                return Long.valueOf(map.get("SERVICE_TIME").toString());
+                      } else return 0;
+            }
+ }; 
+ 
+println("Getting Service Period for person id"+person_id);
+SeveranceValue subject = new SeveranceValue();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setProcessDate(process_date);
+subject.setCompanyId(company_id);
+
+return subject.getParam();

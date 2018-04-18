@@ -1,0 +1,75 @@
+import groovy.transform.CompileStatic
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+import co.id.fifgroup.core.ui.lookup.KeyValue
+
+@CompileStatic
+public class PotonganNmc {
+	ServiceModel serviceModel;
+	Long personId;
+	Date processDate;
+	Long companyId;
+	Long terTypeId;
+
+	public Object getParam(){
+		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
+		String sqlNmc = """
+				SELECT
+					otah.contract_no as CONTRACT_NUMBER,
+					(
+					(
+						SELECT
+							SUM (ati.prnc_amt_dtl_cust + ati.intr_amt_dtl_ar)
+						FROM 
+							acctmgmt.ar_trn_installments@fifapps.us.oracle.com ati
+						WHERE 
+							ati.contract_no = otah.contract_no
+					) -
+					(
+						SELECT
+							SUM (ati2.prnc_amt_dtl_cust_paid + ati2.intr_amt_dtl_ar_paid )
+						FROM 
+							acctmgmt.ar_trn_installments@fifapps.us.oracle.com ati2
+						WHERE 
+							ati2.contract_no = otah.contract_no
+					)
+					) AMOUNT,
+					bhv.branch_name as BRANCH
+				FROM
+					ordmgmt.cifn_empl_loan@fifapps.us.oracle.com cel
+					INNER JOIN fifcr.om_trn_appl_hdr@fifapps.us.oracle.com otah ON cel.emploan_appl_id = otah.appl_no
+					INNER JOIN ordmgmt.om_trn_appl_strucrdt@fifapps.us.oracle.com otas ON otas.appl_no = otah.appl_no
+					INNER JOIN fifcr.ar_trn_sum_contracts@fifapps.us.oracle.com atsc ON otah.contract_no         = atsc.contract_no
+					INNER JOIN  pea_personal_informations ppi ON ppi.employee_number = cel.emploan_empl_code and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+					INNER JOIN pea_primary_assignments ppa ON ppa.person_id = ppi.person_id and ppa.company_id = ppi.company_id and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+					INNER JOIN branch_hierarchy_v bhv ON bhv.organization_id = ppa.organization_id and bhv.company_id = ppa.company_id
+				WHERE
+					ppi.person_id = ${personId}
+					AND ppi.company_id = ${companyId}
+					AND contract_status         = 'AC'
+					AND cel.emploan_mop_flag    IS NULL
+					AND otah.buss_unit = 'NMC'
+				""";
+		List<Map<String, Object>> results = serviceModel.getFromQuery(sqlNmc);
+		
+		if(!results.isEmpty()){
+			for(Map<String, Object> result : results){
+				KeyValue KeyValue = new KeyValue();
+				KeyValue.setKey(result.get("CONTRACT_NUMBER"));
+				KeyValue.setValue(result.get("AMOUNT"));
+				keyvalues.add(KeyValue);
+			}
+			println("result : "+results.size()+" records");
+		} else
+			println("result : 0 record");
+		
+		return keyvalues;
+	 };
+}
+
+
+PotonganNmc subject = new PotonganNmc();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setCompanyId(company_id);
+return subject.getParam();

@@ -1,0 +1,59 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winTaskRunnerInquiry" apply="co.id.fifgroup.systemadmin.controller.TaskRunnerInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.taskRunner}">
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.common.name}" />
+					<searchtextbox id="txtName" width="25%" maxlength="50"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+<!-- 		<paging id="pgTaskRunnerTop" forward="onPaging" autohide="true" detailed="true"/>	 -->
+		<listbox id="taskRunnerListbox" mold="paging" pagingPosition="both" emptyMessage="${labels.common.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader label="${labels.common.name}" align="center" sort="auto(taskRunnerName)" />
+				<listheader label="${labels.common.description}" align="center" sort="auto(description)" />
+				<listheader label="${labels.sam.taskCount}" align="center" sort="auto(taskCount)" />
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="${each.taskRunnerName}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.taskCount}" />
+					<listcell label="${date:format(each.lastUpdateDate,'dd MMM yyyy HH:mm')}"></listcell>
+					<listcell label="${each.userName}" />
+					<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+				</listitem>
+			</template>
+		</listbox>
+<!-- 		<paging id="pgTaskRunner" forward="onPaging" autohide="true" detailed="true"/>	 -->
+		<exporter referenceId="taskRunnerListbox" />	
+	</groupbox>
+</window>

@@ -1,0 +1,1458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.JobFinder">
+
+	<resultMap type="co.id.fifgroup.workstructure.dto.JobDTO" id="JobDtoResult">
+		<id column="JOB_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="JOB_CODE" property="jobCode" jdbcType="VARCHAR" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+		<result column="JOB_UUID" jdbcType="VARBINARY" property="jobUuid"
+			typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+		<result column="VERSION_ID" property="versionId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="VERSION_NUMBER" property="versionNumber"
+			javaType="Integer" jdbcType="NUMERIC" />
+		<result column="DATE_FROM" property="dateFrom" jdbcType="DATE" />
+		<result column="DATE_TO" property="dateTo" jdbcType="DATE" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="JOB_FOR_CODE" property="jobForCode" jdbcType="VARCHAR" />
+		<result column="JOB_TYPE_CODE" property="jobTypeCode" jdbcType="VARCHAR" />
+		<result column="PEOPLE_CATEGORY_CODE" property="peopleCategoryCode"
+			jdbcType="VARCHAR" />
+		<result column="JOB_GROUP_CODE" property="jobGroupCode"
+			jdbcType="VARCHAR" />
+		<result column="IS_KEY_JOB" property="isKeyJob" jdbcType="NUMERIC" />
+		<result column="IS_MANAGER" property="isManager" jdbcType="NUMERIC" />
+		<result column="KEY_JOB" property="keyJob" jdbcType="VARCHAR" />
+		<result column="MAIN_RESPONSIBILITY" property="mainResponsibility"
+			jdbcType="VARCHAR" />
+		<result column="JOB_FILE_PATH" property="jobFilePath" jdbcType="VARCHAR" />
+		<result column="GRADE_SET_ID" property="gradeSetId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="WORKING_SCHEDULE_ID" property="workingScheduleId"
+			jdbcType="NUMERIC" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<collection property="jobInfos"
+			ofType="co.id.fifgroup.workstructure.dto.OtherInfoDTO" javaType="java.util.List">
+			<result column="INFO_ID" property="infoId" javaType="Long"
+				jdbcType="NUMERIC" />
+			<result column="JOB_ID" property="id" javaType="Long"
+				jdbcType="NUMERIC" />
+			<result column="VERSION_ID" property="versionId" javaType="Long"
+				jdbcType="NUMERIC" />
+			<result column="INFO_VALUE" property="infoValue" jdbcType="VARCHAR" />
+			<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+			<result column="CREATION_DATE" property="creationDate"
+				jdbcType="TIMESTAMP" />
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+				jdbcType="VARCHAR" />
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+				jdbcType="TIMESTAMP" />
+		</collection>
+		<collection property="jobValidGrades"
+			ofType="co.id.fifgroup.workstructure.dto.JobValidGradeDTO" javaType="java.util.List">
+			<result column="JOB_ID" property="id" jdbcType="NUMERIC" />
+			<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+			<result column="GRADE_ID" property="gradeId" jdbcType="NUMERIC" />
+			<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+			<result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+			<result column="GRADE_SET_ID" property="gradeSetId" jdbcType="NUMERIC" />
+			<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+			<result column="CREATION_DATE" property="creationDate"
+				jdbcType="TIMESTAMP" />
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+				jdbcType="VARCHAR" />
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+				jdbcType="TIMESTAMP" />
+			<result column="GRADE_CODE" property="gradeCode" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="jobRoles"
+			ofType="co.id.fifgroup.workstructure.dto.JobRoleDTO" javaType="java.util.List">
+			<result column="JOB_ID" property="id" javaType="Long"
+				jdbcType="NUMERIC" />
+			<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+			<result column="MANAGEMENT_TYPE_CODE" property="managementTypeCode"
+				jdbcType="VARCHAR" />
+			<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+			<result column="CREATION_DATE" property="creationDate"
+				jdbcType="TIMESTAMP" />
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+				jdbcType="VARCHAR" />
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+				jdbcType="TIMESTAMP" />
+		</collection>
+		<collection property="jobSpecifications"
+			ofType="co.id.fifgroup.workstructure.dto.JobSpecificationDTO" javaType="java.util.List">
+			<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+			<result column="JOB_ID" property="id" jdbcType="NUMERIC" />
+			<result column="QUALIFICATION_CODE" property="qualificationCode"
+				jdbcType="VARCHAR" />
+			<result column="CONDITION_CODE" property="conditionCode"
+				jdbcType="VARCHAR" />
+			<result column="VALUE_1" property="value1" jdbcType="VARCHAR" />
+			<result column="VALUE_2" property="value2" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="jobDocuments"
+			ofType="co.id.fifgroup.workstructure.domain.JobDocument" javaType="java.util.List">
+			<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+			<result column="DOCUMENT_ID" property="documentId"
+				jdbcType="NUMERIC" />
+			<result column="DOCUMENT_TYPE" property="documentType"
+				jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.workstructure.dto.OtherInfoDTO"
+		id="JobOtherInfoDtoResult">
+		<result column="INFO_ID" property="infoId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="JOB_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="VERSION_ID" property="versionId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="INFO_VALUE" property="infoValue" jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.workstructure.dto.JobRoleDTO"
+		id="JobRoleDtoResult">
+		<id column="JOB_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+		<result column="MANAGEMENT_TYPE_CODE" property="managementTypeCode"
+			jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.workstructure.dto.JobValidGradeDTO"
+		id="JobValidGradeDtoResult">
+		<id column="JOB_ID" property="id" jdbcType="NUMERIC" />
+		<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+		<result column="GRADE_ID" property="gradeId" jdbcType="NUMERIC" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+		<result column="GRADE_SET_ID" property="gradeSetId" jdbcType="NUMERIC" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+		<result column="GRADE_CODE" property="gradeCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.workstructure.dto.JobSpecificationDTO"
+		id="JobSpecificationsDtoResult">
+		<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+		<result column="JOB_ID" property="id" jdbcType="NUMERIC" />
+		<result column="QUALIFICATION_CODE" property="qualificationCode"
+			jdbcType="VARCHAR" />
+		<result column="CONDITION_CODE" property="conditionCode"
+			jdbcType="VARCHAR" />
+		<result column="VALUE_1" property="value1" jdbcType="VARCHAR" />
+		<result column="VALUE_2" property="value2" jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="VARCHAR" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.domain.LookupDependent"
+		id="documentListResult">
+		<result column="DETAIL_CODE" property="detailCode" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="whereClauseJobGroups">
+		<if test="jobGroups != null">
+			<if test="jobGroups.size() != 0">
+				and
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="jobGroups">
+					JV.JOB_GROUP_CODE = #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="canBeActing == true">
+			and JV.VERSION_ID IN (
+			select
+			wjv.version_id
+			from
+			wos_jobs wj
+			join wos_job_versions wjv on (wjv.job_id = wj.job_id)
+			join wos_job_infos wji on(wji.version_id = wjv.version_id)
+			join bse_other_info_dtl boid on(boid.other_info_dtl_id = wji.info_id)
+			join bse_other_info_hdr boih on(boih.other_info_hdr_id =
+			boid.other_info_hdr_id)
+			where
+			wj.company_id = #{job.companyId, jdbcType=DECIMAL}
+			and TRUNC(#{job.effectiveDate, jdbcType=DATE}) between wjv.date_from and
+			wjv.date_to
+			and upper(boih.form_name) = 'JOB'
+			and upper(boid.detail_code) = 'CAN_BE_ACTING'
+			and boih.group_id = #{businessGroupId, jdbcType=DECIMAL}
+			and boid.company_scope in(-1, #{job.companyId, jdbcType=DECIMAL})
+			and wji.info_value = '1'
+			)
+		</if>
+	</sql>
+
+	<sql id="whereClause">
+		<where>
+			<if test="job.companyId != null">
+				AND (J.COMPANY_ID) = (#{job.companyId})
+			</if>
+			<if test="job.id != null">
+				AND J.JOB_ID = #{job.id}
+			</if>
+			<if test="job.jobName != null">
+				AND UPPER(J.JOB_NAME) like UPPER(#{job.jobName,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobCode != null">
+				AND UPPER(J.JOB_CODE) like UPPER(#{job.jobCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobForCode != null">
+				AND UPPER(JV.JOB_FOR_CODE) like UPPER(#{job.jobForCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobTypeCode != null">
+				AND UPPER(JV.JOB_TYPE_CODE) like UPPER(#{job.jobTypeCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobGroupCode != null">
+				AND UPPER(JV.JOB_GROUP_CODE) like
+				UPPER(#{job.jobGroupCode, jdbcType=VARCHAR})
+			</if>
+			<if test="job.peopleCategoryCode != null">
+				AND UPPER(JV.PEOPLE_CATEGORY_CODE) like
+				UPPER(#{job.peopleCategoryCode, jdbcType=VARCHAR})
+			</if>
+			<if test="job.isKeyJob != null">
+				AND (JV.IS_KEY_JOB) = (#{job.isKeyJob, jdbcType=NUMERIC})
+			</if>
+			<if test="job.effectiveDate != null">
+				AND TRUNC(#{job.effectiveDate, jdbcType=DATE}) BETWEEN
+				JV.DATE_FROM AND JV.DATE_TO
+			</if>
+			<if test="job.dateTo != null">
+				AND JV.DATE_TO = TRUNC(#{job.dateTo, jdbcType=DATE})
+			</if>
+			<if test="job.listJobFor != null">
+				<if test="job.listJobFor.size() != 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="job.listJobFor">
+						JV.JOB_FOR_CODE = #{item}
+					</foreach>
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="whereClause2">
+		<where>
+			<if test="job.companyId != null">
+				AND (J.COMPANY_ID) = (#{job.companyId})
+			</if>
+			<if test="job.id != null">
+				AND J.JOB_ID = #{job.id}
+			</if>
+			<if test="job.jobName != null">
+				AND UPPER(JOB_NAME) like UPPER(#{job.jobName,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobCode != null">
+				AND UPPER(JOB_CODE) like UPPER(#{job.jobCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobForCode != null">
+				AND UPPER(JV.JOB_FOR_CODE) like UPPER(#{job.jobForCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobTypeCode != null">
+				AND UPPER(JV.JOB_TYPE_CODE) like UPPER(#{job.jobTypeCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobGroupCode != null">
+				AND UPPER(JV.JOB_GROUP_CODE) like
+				UPPER(#{job.jobGroupCode, jdbcType=VARCHAR})
+			</if>
+			<if test="job.peopleCategoryCode != null">
+				AND UPPER(JV.PEOPLE_CATEGORY_CODE) like
+				UPPER(#{job.peopleCategoryCode, jdbcType=VARCHAR})
+			</if>
+			<if test="job.isKeyJob != null">
+				AND (JV.IS_KEY_JOB) = (#{job.isKeyJob, jdbcType=NUMERIC})
+			</if>
+			<if test="job.effectiveDate != null">
+				AND 
+				( (TRUNC(#{job.effectiveDate, jdbcType=DATE}) BETWEEN DATE_FROM AND DATE_TO) OR (TRUNC(#{job.effectiveDate, jdbcType=DATE}) &lt; TRUNC(DATE_FROM)))
+			</if>
+			<if test="job.dateTo != null">
+				AND JV.DATE_TO = TRUNC(#{job.dateTo, jdbcType=DATE})
+			</if>
+			<if test="job.listJobFor != null">
+				<if test="job.listJobFor.size() != 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="job.listJobFor">
+						JV.JOB_FOR_CODE = #{item}
+					</foreach>
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<select id="findByIdAndVersionNumber" parameterType="map"
+		resultMap="JobDtoResult">
+		SELECT
+		J.COMPANY_ID,
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		J.CREATED_BY,
+		J.CREATION_DATE,
+		JV.VERSION_ID,
+		JV.DATE_FROM,
+		JV.DATE_TO,
+		JV.VERSION_NUMBER,
+		JV.DESCRIPTION,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.MAIN_RESPONSIBILITY,
+		JV.JOB_FILE_PATH,
+		JV.GRADE_SET_ID,
+		JV.WORKING_SCHEDULE_ID,
+		J.LAST_UPDATED_BY,
+		J.LAST_UPDATE_DATE,
+		JS.QUALIFICATION_CODE,
+		JS.CONDITION_CODE,
+		JS.VALUE_1,
+		JS.VALUE_2,
+		JR.MANAGEMENT_TYPE_CODE,
+		JG.GRADE_ID,
+		JI.INFO_ID,
+		JI.INFO_VALUE,
+		wjd.DOCUMENT_ID,
+		wjd.DOCUMENT_TYPE
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		LEFT
+		JOIN WOS_JOB_SPECIFICATIONS JS ON JV.VERSION_ID = JS.VERSION_ID
+		LEFT
+		JOIN WOS_JOB_ROLES JR ON JV.VERSION_ID = JR.VERSION_ID
+		LEFT JOIN
+		WOS_JOB_VALID_GRADES JG ON JV.VERSION_ID = JG.VERSION_ID
+		LEFT JOIN
+		WOS_JOB_INFOS JI ON JV.VERSION_ID = JI.VERSION_ID
+		LEFT join wos_grades
+		grade on grade.grade_id = jg.grade_id
+		left join WOS_JOB_DOCUMENTS wjd on wjd.version_id = JV.VERSION_ID
+		WHERE J.JOB_ID = (#{id,
+		jdbcType=DECIMAL})
+		AND JV.VERSION_NUMBER = (#{versionNumber,
+		jdbcType=DECIMAL})
+		order by grade.grade asc, grade.sub_grade asc
+	</select>
+
+	<select id="findById" parameterType="map" resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.VERSION_NUMBER,
+		JV.GRADE_SET_ID,
+		jv.main_responsibility,
+		jv.description,
+		jv.version_id
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		WHERE J.JOB_ID = #{id, jdbcType=NUMERIC}
+		AND TRUNC(#{processDate}) BETWEEN JV.DATE_FROM AND JV.DATE_TO
+	</select>
+
+	<select id="findByUuid" parameterType="map" resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.VERSION_NUMBER,
+		JV.GRADE_SET_ID
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		WHERE J.JOB_UUID = #{uuid, jdbcType=VARBINARY,
+		typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+		AND TRUNC(SYSDATE) BETWEEN JV.DATE_FROM AND JV.DATE_TO
+	</select>
+
+	<select id="findByInquiry" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.IS_KEY_JOB,
+		JV.LAST_UPDATED_BY,
+		JV.LAST_UPDATE_DATE,
+		JV.VERSION_NUMBER,
+		case when jv.is_key_job = 1
+		then 'Key Job'
+		else 'Not Key Job'
+		end key_job,
+		us.user_name
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		join sam_users us on us.user_id = J.LAST_UPDATED_BY
+		<include refid="whereClause" />
+	</select>
+
+	<select id="findByExampleAndJobGroups" parameterType="map"
+		resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		J.LAST_UPDATED_BY,
+		J.LAST_UPDATE_DATE,
+		JV.DATE_FROM,
+		JV.DATE_TO,
+		JV.DESCRIPTION,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.MAIN_RESPONSIBILITY,
+		JV.JOB_FILE_PATH,
+		JV.GRADE_SET_ID,
+		JV.WORKING_SCHEDULE_ID
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+		<include refid="whereClauseJobGroups" />
+		ORDER BY J.JOB_CODE
+	</select>
+
+	<select id="countByExampleAndJobGroups" parameterType="map"
+		resultType="int">
+		SELECT
+		COUNT(*)
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+		<include refid="whereClauseJobGroups" />
+	</select>
+
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultMap="JobDtoResult">
+		SELECT
+		JV.VERSION_ID,
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		J.LAST_UPDATED_BY,
+		J.LAST_UPDATE_DATE,
+		JV.DATE_FROM,
+		JV.DATE_TO,
+		JV.DESCRIPTION,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.MAIN_RESPONSIBILITY,
+		JV.JOB_FILE_PATH,
+		JV.GRADE_SET_ID,
+		JV.WORKING_SCHEDULE_ID
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+		ORDER BY J.JOB_CODE
+	</select>
+
+	<select id="getGradeSetIdByExample" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultType="Long">
+		SELECT
+		JV.GRADE_SET_ID
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+	</select>
+
+	<select id="countByExample" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultType="Integer">
+		SELECT
+		count(J.JOB_ID)
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+	</select>
+
+	<select id="findVersionsById" parameterType="Long" resultType="Integer">
+		SELECT
+		JV.VERSION_NUMBER
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		LEFT JOIN WOS_JOB_ROLES JR
+		ON JV.VERSION_ID = JR.VERSION_ID
+		LEFT JOIN WOS_JOB_SPECIFICATIONS JS
+		ON JV.VERSION_ID = JS.VERSION_ID
+		LEFT JOIN WOS_JOB_VALID_GRADES JVG
+		ON JV.VERSION_ID = JVG.VERSION_ID
+		LEFT JOIN WOS_JOB_INFOS JI
+		ON JV.VERSION_ID = JI.VERSION_ID
+		WHERE
+		J.JOB_ID = #{id, jdbcType=NUMERIC}
+		ORDER BY JV.VERSION_NUMBER
+	</select>
+
+	<select id="isManager" parameterType="Long" resultType="Integer">
+		select
+		jv.is_manager
+		from wos_job_versions jv
+		join wos_jobs j
+		on jv.job_id = j.job_id
+		where jv.job_id = #{id, jdbcType=NUMERIC}
+	</select>
+
+	<select id="isKeyJob" parameterType="Long" resultType="Integer">
+		select
+		jv.is_key_job
+		from wos_job_versions jv
+		join wos_jobs j
+		on jv.job_id = j.job_id
+		where jv.job_id = #{id, jdbcType=NUMERIC}
+	</select>
+
+	<select id="isHaveFuture" parameterType="Long" resultType="Integer">
+		SELECT
+		COUNT(JV.VERSION_NUMBER)
+		FROM WOS_JOB_VERSIONS JV JOIN WOS_JOBS J
+		ON(JV.JOB_ID =
+		J.JOB_ID)
+		<where>
+			<if test="id != null">
+				JV.JOB_ID = #{id, jdbcType=DECIMAL}
+				and jv.version_number >
+				(SELECT JV.VERSION_NUMBER
+				FROM
+				WOS_JOB_VERSIONS JV
+				JOIN WOS_JOBS J ON(JV.JOB_ID = J.JOB_ID)
+				<where>
+					J.JOB_ID = #{id, jdbcType=DECIMAL}
+					AND TRUNC(SYSDATE) BETWEEN
+					JV.DATE_FROM AND JV.DATE_TO)
+				</where>
+			</if>
+		</where>
+	</select>
+
+	<select id="findLastVersionByCode" parameterType="map"
+		resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		JV.VERSION_NUMBER
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		WHERE JV.VERSION_NUMBER = (SELECT COUNT(JV.VERSION_NUMBER)
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		AND J.JOB_CODE = (#{jobCode, jdbcType=VARCHAR}))
+		AND J.JOB_CODE = (#{jobCode, jdbcType=VARCHAR})
+		AND J.COMPANY_ID = (#{companyId, jdbcType=NUMERIC})
+	</select>
+
+	<select id="findJobRoles" parameterType="Long" resultMap="JobRoleDtoResult">
+		select
+		jr.version_id,
+		jr.management_type_code,
+		jr.job_id,
+		jr.created_by,
+		jr.creation_date,
+		jr.last_updated_by,
+		jr.last_update_date
+		from wos_job_roles jr
+		join wos_jobs job on jr.job_id = job.job_id
+		join wos_job_versions ver on ver.job_id = job.job_id
+		where job.job_id = #{id, jdbcType = NUMERIC}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+	</select>
+
+	<select id="findValidGrades" parameterType="Long"
+		resultMap="JobValidGradeDtoResult">
+		select
+		ver.grade_set_id,
+		jvg.version_id,
+		jvg.grade_id,
+		jvg.job_id,
+		jvg.created_by,
+		jvg.creation_date,
+		jvg.last_updated_by,
+		jvg.last_update_date,
+		grade.grade,
+		grade.sub_grade,
+		grade.grade_code
+		from wos_job_valid_grades jvg
+		join wos_jobs job on jvg.job_id = job.job_id
+		join wos_job_versions ver on job.job_id = ver.job_id
+		join wos_grades grade on jvg.grade_id = grade.grade_id
+		where job.job_id = #{id, jdbcType=NUMERIC}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+		<if test="gradeCode != null">
+			and UPPER(grade.grade_code) like UPPER(#{gradeCode, jdbcType=VARCHAR})
+		</if>
+		<if test="gradeName != null">
+			and UPPER((grade.GRADE || '-' || grade.SUB_GRADE)) like
+			UPPER((#{gradeName, jdbcType=VARCHAR}))
+		</if>
+		ORDER BY grade.grade_code ASC
+	</select>
+
+	<select id="findValidGradesForPromotion" parameterType="Long"
+		resultMap="JobValidGradeDtoResult">
+		select
+		ver.grade_set_id,
+		jvg.version_id,
+		jvg.grade_id,
+		jvg.job_id,
+		jvg.created_by,
+		jvg.creation_date,
+		jvg.last_updated_by,
+		jvg.last_update_date,
+		grade.grade,
+		grade.sub_grade,
+		grade.grade_code
+		from wos_job_valid_grades jvg
+		join wos_jobs job on jvg.job_id = job.job_id
+		join wos_job_versions ver on job.job_id = ver.job_id and ver.version_id =
+		jvg.version_id
+		join wos_grades grade on jvg.grade_id = grade.grade_id
+		where job.job_id = #{id, jdbcType=NUMERIC}
+		and trunc(#{effectiveDate, jdbcType=TIMESTAMP}) between ver.date_from and
+		ver.date_to
+		order by grade.grade asc, grade.sub_grade asc
+	</select>
+
+	<select id="countValidGrades" parameterType="Long" resultType="Integer">
+		select
+		count(*)
+		from wos_job_valid_grades jvg
+		join wos_jobs job on jvg.job_id = job.job_id
+		join wos_job_versions ver on job.job_id = ver.job_id
+		join wos_grades grade on jvg.grade_id = grade.grade_id
+		where job.job_id = #{id, jdbcType=NUMERIC}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+		<if test="gradeCode != null">
+			and UPPER(grade.grade_code) like UPPER(#{gradeCode, jdbcType=VARCHAR})
+		</if>
+		<if test="gradeName != null">
+			and UPPER((grade.GRADE || '-' || grade.SUB_GRADE)) like
+			UPPER(#{gradeName, jdbcType=VARCHAR})
+		</if>
+	</select>
+
+	<select id="findByCode" parameterType="map" resultMap="JobDtoResult">
+		select
+		jo.job_id,
+		jo.job_code,
+		jo.job_name,
+		ver.grade_set_id
+		from wos_jobs jo
+		join wos_job_versions ver on jo.job_id = ver.job_id
+		where upper(jo.job_code) = upper(#{jobCode})
+		and jo.company_id = #{companyId}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+	</select>
+
+	<select id="findByCodeAndName" parameterType="map" resultMap="JobDtoResult">
+		select
+		jo.job_id,
+		jo.job_code,
+		jo.job_name,
+		jov.grade_set_id
+		from wos_jobs jo
+		join wos_job_versions jov on jo.job_id = jov.job_id
+		where upper(jo.job_code) = upper(#{jobCode})
+		and upper(jo.job_name) = upper(#{jobName})
+		and jo.company_id = #{companyId}
+		and trunc(sysdate) between jov.date_from and jov.date_to
+	</select>
+
+	<select id="getValueOtherInfoByInfoId" parameterType="map"
+		resultType="String">
+		select
+		jobi.info_value
+		from wos_job_versions jobv
+		join wos_job_infos jobi on jobi.version_id = jobv.version_id
+		where jobv.job_id = #{jobId}
+		and jobi.info_id = #{infoId}
+		and #{effectiveOnDate} between jobv.date_from and jobv.date_to
+	</select>
+
+	<select id="findJobForByCodeAndName" parameterType="map"
+		resultMap="JobDtoResult">
+		select
+		jo.job_id,
+		jo.job_code,
+		jo.job_name,
+		jov.job_for_code
+		from wos_jobs jo
+		join wos_job_versions jov on jo.job_id = jov.job_id
+		where upper(jo.job_code) = upper(#{jobCode})
+		and upper(jo.job_name) = upper(#{jobName})
+		and jo.company_id = #{companyId}
+		and trunc(sysdate) between jov.date_from and jov.date_to
+	</select>
+
+	<select id="isFutureExist" parameterType="Long" resultType="Integer">
+		select count(ver.version_id) from wos_job_versions ver
+		where ver.job_id = #{id}
+		and ver.date_from > trunc(sysdate)
+	</select>
+
+	<select id="findActiveJob" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultMap="JobDtoResult">
+		SELECT
+		J.COMPANY_ID,
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		JV.GRADE_SET_ID,
+		JV.DESCRIPTION
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+		ORDER BY JOB_CODE ASC
+	</select>
+	
+	<select id="findActiveJob2" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultMap="JobDtoResult">
+		SELECT
+		*
+		FROM(
+			SELECT
+			J.COMPANY_ID,
+			J.JOB_ID,
+			BC.COMPANY_NAME,
+			BC.COMPANY_NAME || '-' || J.JOB_CODE as JOB_CODE,
+			J.JOB_NAME,
+			JV.GRADE_SET_ID,
+			JV.DATE_FROM,
+			JV.DATE_TO
+			FROM WOS_JOBS J
+			JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+			JOIN BSE_COMPANIES BC ON BC.COMPANY_ID = J.COMPANY_ID
+		)
+		<include refid="whereClause2" />		
+		ORDER BY JOB_CODE ASC
+	</select>
+
+	<select id="countActiveJob" parameterType="co.id.fifgroup.workstructure.dto.JobDTO"
+		resultType="Integer">
+		SELECT
+		count(*)
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+	</select>
+
+	<select id="findByGradeId" parameterType="map" resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.VERSION_NUMBER,
+		JV.GRADE_SET_ID
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		left join wos_job_valid_grades jvg on jvg.version_id = jv.version_id
+		<include refid="whereClause" />
+		and jvg.grade_id in (
+		select
+		wg.grade_id
+		from
+		wos_grades wg
+		where
+		wg.company_id = #{job.companyId, jdbcType=DECIMAL}
+		and concat(wg.grade, wg.sub_grade) = (
+		select
+		concat(wg1.grade, wg1.sub_grade)
+		from
+		wos_grades wg1
+		where
+		wg1.grade_id = #{validGradeId, jdbcType=NUMERIC}
+		)
+		)
+		and J.job_id in (select mb.job_id
+		from mpp_balances mb
+		join wos_jobs wj on (mb.job_id = wj.job_id)
+		where mb.organization_id = #{organizationId}
+		and trunc(sysdate) between trunc(mb.date_from) and trunc(mb.date_to)
+		and company_id = (#{job.companyId}))
+		order by j.job_code
+	</select>
+
+	<select id="countByGradeId" parameterType="map" resultType="Integer">
+		SELECT
+		count(jvg.grade_id)
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		left join wos_job_valid_grades jvg on jvg.version_id = jv.version_id
+		<include refid="whereClause" />
+		and jvg.grade_id = #{validGradeId, jdbcType=NUMERIC}
+		and J.job_id in (select mb.job_id
+		from mpp_balances mb
+		join wos_jobs wj on (mb.job_id = wj.job_id)
+		where mb.organization_id = #{organizationId}
+		and trunc(sysdate) between trunc(mb.date_from) and trunc(mb.date_to)
+		and company_id = (#{job.companyId}))
+	</select>
+
+	<select id="findSpecifications" parameterType="map"
+		resultMap="JobSpecificationsDtoResult">
+		select
+		js.version_id,
+		js.job_id,
+		js.condition_code,
+		js.qualification_code,
+		js.value_1,
+		js.value_2,
+		js.created_by,
+		js.creation_date,
+		js.last_updated_by,
+		js.last_update_date
+		from wos_job_specifications js
+		join wos_jobs job on js.job_id = job.job_id
+		join wos_job_versions ver on ver.job_id = job.job_id
+		where job.job_id = #{id}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+	</select>
+
+	<select id="findJobOtherInfos" parameterType="map"
+		resultMap="JobOtherInfoDtoResult">
+		select
+		js.version_id,
+		js.info_id,
+		js.info_value,
+		js.created_by,
+		js.creation_date,
+		js.last_updated_by,
+		js.last_update_date
+		from wos_job_infos js
+		join wos_job_versions ver on ver.version_id = js.version_id
+		where ver.job_id = #{id}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+	</select>
+
+	<select id="findIsKeyJobById" parameterType="Long" resultMap="JobDtoResult">
+		SELECT
+		JV.IS_KEY_JOB,
+		J.JOB_NAME,
+		JV.JOB_GROUP_CODE
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		WHERE J.JOB_ID = #{id, jdbcType=NUMERIC}
+		AND
+		TRUNC(SYSDATE) BETWEEN JV.DATE_FROM AND JV.DATE_TO
+	</select>
+
+	<select id="findVersionIdById" parameterType="Long" resultType="Long">
+		SELECT
+		jv.version_id
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV
+		ON J.JOB_ID = JV.JOB_ID
+		WHERE J.JOB_ID = #{id, jdbcType=NUMERIC}
+		AND
+		TRUNC(SYSDATE) BETWEEN JV.DATE_FROM AND JV.DATE_TO
+	</select>
+
+	<resultMap id="gradeDtoResultMap" type="co.id.fifgroup.workstructure.dto.GradeDTO">
+		<id column="GRADE_ID" property="id" jdbcType="NUMERIC" />
+		<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="NUMERIC" />
+		<result column="VERSION_NUMBER" property="versionNumber"
+			jdbcType="NUMERIC" />
+		<result column="GRADE_CODE" property="code" jdbcType="VARCHAR" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+		<result column="PERSONAL_GRADE_CODE" property="personalGradeCode"
+			jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="WORKING_SCHEDULE_ID" property="workingScheduleId"
+			javaType="Long" jdbcType="NUMERIC" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="NUMERIC" />
+		<result column="CREATION_DATE" property="creationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy"
+			jdbcType="NUMERIC" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate"
+			jdbcType="TIMESTAMP" />
+		<result column="DATE_FROM" property="dateFrom" />
+		<result column="DATE_TO" property="dateTo" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="findValidGradeByJob" parameterType="map"
+		resultMap="gradeDtoResultMap">
+		select distinct
+		jvg.grade_id,
+		grade.grade,
+		grade.sub_grade,
+		grade.grade_code
+		from wos_job_valid_grades jvg
+		join wos_jobs job on jvg.job_id = job.job_id
+		join wos_job_versions ver on job.job_id = ver.job_id
+		join wos_grades grade on jvg.grade_id = grade.grade_id
+		where job.job_id = #{id, jdbcType=NUMERIC}
+		and trunc(sysdate) between ver.date_from and ver.date_to
+		<if test="gradeCode != null">
+			and UPPER(grade.grade_code) like UPPER(#{gradeCode, jdbcType=VARCHAR})
+		</if>
+		<if test="gradeName != null">
+			and UPPER((grade.GRADE || '-' || grade.SUB_GRADE)) like
+			UPPER((#{gradeName, jdbcType=VARCHAR}))
+		</if>
+		ORDER BY grade.grade_code ASC
+	</select>
+
+	<select id="countValidGradeByJob" parameterType="map"
+		resultType="int">
+		select count(1) from(
+		select distinct
+		jvg.grade_id,
+		grade.grade,
+		grade.sub_grade,
+		grade.grade_code
+		from wos_job_valid_grades jvg
+		join wos_jobs job on jvg.job_id = job.job_id
+		join wos_job_versions ver on job.job_id = ver.job_id
+		join wos_grades grade on jvg.grade_id = grade.grade_id
+		where job.job_id = #{id, jdbcType=NUMERIC}
+		and trunc(#{effectiveOnDate}) between ver.date_from and ver.date_to
+		and jvg.version_id = ver.version_id
+		<if test="gradeCode != null">
+			and UPPER(grade.grade_code) like UPPER(#{gradeCode, jdbcType=VARCHAR})
+		</if>
+		<if test="gradeName != null">
+			and UPPER((grade.GRADE || '-' || grade.SUB_GRADE)) like
+			UPPER((#{gradeName, jdbcType=VARCHAR}))
+		</if>
+		)
+	</select>
+
+	<!-- add by rim ticket 14040715181325 - CR MPP -->
+	<select id="countByOrgId" parameterType="map" resultType="Integer">
+		select count(job_id)
+		from
+		(
+		SELECT j.job_id, j.job_code, j.job_name, j.job_uuid
+		FROM mpp_balances mb
+		JOIN wos_jobs j
+		ON (mb.job_id = j.job_id)
+		<if test="organizationId > 0">
+			and mb.organization_id = #{organizationId}
+		</if>
+		AND TRUNC (SYSDATE) BETWEEN TRUNC (mb.date_from)
+		AND TRUNC (mb.date_to)
+		AND company_id = (#{job.companyId})
+		JOIN wos_job_versions jv
+		ON jv.job_id = j.job_id
+		<include refid="whereClause" />
+		GROUP BY j.job_id, j.job_code, j.job_name, j.job_uuid
+		)
+
+	</select>
+	<select id="findByOrgId" parameterType="map" resultMap="JobDtoResult">
+		SELECT j.job_id, j.job_code, j.job_name, j.job_uuid
+		FROM mpp_balances mb
+		JOIN wos_jobs j
+		ON (mb.job_id =j.job_id)
+		<if test="organizationId > 0">
+			AND mb.organization_id = #{organizationId}
+		</if>
+		AND TRUNC (SYSDATE) BETWEEN TRUNC (mb.date_from)
+		AND TRUNC (mb.date_to)
+		AND company_id = (#{job.companyId})
+		JOIN wos_job_versions jv
+		ON jv.job_id = j.job_id
+		<include refid="whereClause" />
+		GROUP BY j.job_id, j.job_code, j.job_name, j.job_uuid
+		ORDER BY
+		j.job_name
+	</select>
+	<!-- 14040715181325_CR HCMS - MPP_JAR -->
+	<select id="findByOrgIdIn" parameterType="map" resultMap="JobDtoResult">
+		SELECT j.job_id, j.job_code, j.job_name, j.job_uuid
+		FROM mpp_balances mb
+		JOIN wos_jobs j
+		ON (mb.job_id =j.job_id)
+		<if test="organizationIds != null">
+			<if test="organizationIds.size() != 0">
+				AND
+				<foreach collection="organizationIds" item="item" index="index"
+					open="(" separator=" OR " close=")">
+					mb.organization_id = #{item, jdbcType=INTEGER}
+				</foreach>
+			</if>
+		</if>
+		AND TRUNC (SYSDATE) BETWEEN TRUNC (mb.date_from)
+		AND TRUNC (mb.date_to)
+		AND company_id = (#{job.companyId})
+		JOIN wos_job_versions jv
+		ON jv.job_id = j.job_id
+		<include refid="whereClause" />
+		GROUP BY j.job_id, j.job_code, j.job_name, j.job_uuid
+		ORDER BY
+		j.job_name
+	</select>
+	<!-- 14040715181325_CR HCMS - MPP_JAR -->
+	<select id="countByOrgIdIn" parameterType="map" resultType="Integer">
+		select count(job_id)
+		from
+		(
+		SELECT j.job_id, j.job_code, j.job_name, j.job_uuid
+		FROM mpp_balances mb
+		JOIN wos_jobs j
+		ON (mb.job_id = j.job_id)
+		<if test="organizationIds != null">
+			<if test="organizationIds.size() != 0">
+				AND
+				<foreach collection="organizationIds" item="item" index="index"
+					open="(" separator=" OR " close=")">
+					mb.organization_id = #{item, jdbcType=INTEGER}
+				</foreach>
+			</if>
+		</if>
+		AND TRUNC (SYSDATE) BETWEEN TRUNC (mb.date_from)
+		AND TRUNC (mb.date_to)
+		AND company_id = (#{job.companyId})
+		JOIN wos_job_versions jv
+		ON jv.job_id = j.job_id
+		<include refid="whereClause" />
+		GROUP BY j.job_id, j.job_code, j.job_name, j.job_uuid
+		)
+	</select>
+	<!-- end add by RIM - CR MPP -->
+
+	<resultMap type="co.id.fifgroup.workstructure.domain.Job" id="JobResult">
+		<id column="JOB_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" javaType="Long"
+			jdbcType="NUMERIC" />
+		<result column="JOB_CODE" property="jobCode" jdbcType="VARCHAR" />
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="whereClauseJob">
+		<where>
+			MERT.CREATE_VACANCY = 0
+			<if test="job.companyId != null">
+				and wj.company_id = #{job.companyId}
+			</if>
+			<if test="job.jobName != null">
+				AND UPPER(wj.JOB_NAME) like UPPER(#{job.jobName,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobCode != null">
+				AND UPPER(wj.JOB_CODE) like UPPER(#{job.jobCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobForCode != null">
+				AND UPPER(wjv.JOB_FOR_CODE) like UPPER(#{job.jobForCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.effectiveDate != null">
+				and trunc(#{job.effectiveDate}) between mpp.date_from and
+				mpp.date_to
+				and trunc(#{job.effectiveDate}) between wjv.date_from and
+				wjv.date_to
+			</if>
+			<if test="job.listJobFor != null">
+				<if test="job.listJobFor.size() != 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="job.listJobFor">
+						wjv.JOB_FOR_CODE = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="organizations != null">
+				<if test="organizations.size() != 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="organizations">
+						mpp.organization_id = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="branchId != null">
+                AND MERT.BRANCH_ID = #{branchId, jdbcType=NUMERIC}
+            </if>
+			<if test="organizations != null">
+				<if test="organizations.size() != 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="organizations">
+						MERT.ORGANIZATION_ID = #{item}
+					</foreach>
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<select id="findJobAvailableInMpp" parameterType="map"
+		resultMap="JobResult">
+		select distinct wj.* from wos_jobs wj
+		join mpp_balances mpp on
+		mpp.job_id = wj.job_id
+		join wos_job_versions wjv on wjv.job_id = mpp.job_id
+		<include refid="whereClauseJob" />
+	</select>
+
+	<select id="countJobAvailableInMpp" parameterType="map"
+		resultType="Integer">
+		select count(*) from
+		(select distinct wj.* from wos_jobs wj
+		join mpp_balances mpp on mpp.job_id =
+		wj.job_id
+		join wos_job_versions wjv on wjv.job_id = mpp.job_id
+		<include refid="whereClauseJob" />
+		)
+	</select>
+	
+<!-- 	14091015011812 - Enhancement System E-Psychotest(NPK) (tambahan untuk filter job, yang ada MPP nya dan sudah dibuat employee requisition dan belum dicreate vacancy nya) add by JAR -->
+	<select id="findJobAvailableInMppAndReadyToCreateVacancy" parameterType="map"
+		resultMap="JobResult">
+		select distinct wj.* from wos_jobs wj
+		join mpp_balances mpp on mpp.job_id = wj.job_id
+		join wos_job_versions wjv on wjv.job_id = mpp.job_id
+		INNER JOIN MPP_EMP_REQUISITION_TRN MERT
+		ON wj.JOB_ID = MERT.JOB_ID
+		LEFT JOIN BRANCH_HIERARCHY_V BH
+		ON
+		  (
+		    BH.ORGANIZATION_ID = MERT.BRANCH_ID
+		  )
+		LEFT JOIN WOS_ORGANIZATIONS ORG
+		ON
+		  (
+		    ORG.ORGANIZATION_ID = MERT.ORGANIZATION_ID
+		  )
+		LEFT JOIN WOS_ORGANIZATION_HIER HIER
+		ON
+		  (
+		    HIER.COMPANY_ID             = MERT.COMPANY_ID
+		  AND UPPER(HIER.ORG_HIER_TYPE) = UPPER('STRUCTURAL')
+		  )
+		LEFT JOIN SAM_USERS SU
+		ON
+		  (
+		    SU.USER_ID = MERT.LAST_UPDATED_BY
+		  )
+		LEFT JOIN REC_VACANCIES RV
+		ON
+		  (
+		    RV.TRN_ID = MERT.TRN_ID
+		  )
+		<include refid="whereClauseJob" />
+	</select>
+
+	<select id="countJobAvailableInMppAndReadyToCreateVacancy" parameterType="map"
+		resultType="Integer">
+		select count(*) from
+		(select distinct wj.* from wos_jobs wj
+		join mpp_balances mpp on mpp.job_id = wj.job_id
+		join wos_job_versions wjv on wjv.job_id = mpp.job_id
+		INNER JOIN MPP_EMP_REQUISITION_TRN MERT
+		ON wj.JOB_ID = MERT.JOB_ID
+		LEFT JOIN BRANCH_HIERARCHY_V BH
+		ON
+		  (
+		    BH.ORGANIZATION_ID = MERT.BRANCH_ID
+		  )
+		LEFT JOIN WOS_ORGANIZATIONS ORG
+		ON
+		  (
+		    ORG.ORGANIZATION_ID = MERT.ORGANIZATION_ID
+		  )
+		LEFT JOIN WOS_ORGANIZATION_HIER HIER
+		ON
+		  (
+		    HIER.COMPANY_ID             = MERT.COMPANY_ID
+		  AND UPPER(HIER.ORG_HIER_TYPE) = UPPER('STRUCTURAL')
+		  )
+		LEFT JOIN SAM_USERS SU
+		ON
+		  (
+		    SU.USER_ID = MERT.LAST_UPDATED_BY
+		  )
+		LEFT JOIN REC_VACANCIES RV
+		ON
+		  (
+		    RV.TRN_ID = MERT.TRN_ID
+		  )
+		<include refid="whereClauseJob" />
+		)
+	</select>
+<!-- 	14091015011812 - Enhancement System E-Psychotest(NPK) (tambahan untuk filter job, yang ada MPP nya dan sudah dibuat employee requisition dan belum dicreate vacancy nya) add by JAR -->
+
+	<select id="getDocumentList" parameterType="map" resultMap="documentListResult">
+		Select Bld.Detail_Code, Bld.Description
+
+		From Bse_Lookup_Hdr Blh Join Bse_Lookup_Dependents Bld
+		On Blh.Lookup_Id = Bld.Lookup_Id
+
+		Where
+		Blh.Name = 'CWK_DOCUMENTS'
+	</select>
+
+	<!-- start added by WLY for phase 2 -->
+	<select id="findJobByCompanyName" parameterType="map" resultMap="JobDtoResult">
+		SELECT
+		    WJ.JOB_ID,
+		    WJ.JOB_CODE,
+		    WJ.JOB_NAME,
+		    WJ.COMPANY_ID
+		FROM WOS_JOBS WJ
+		    JOIN BSE_COMPANIES BC ON BC.COMPANY_ID = WJ.COMPANY_ID
+		    LEFT JOIN WOS_JOB_VERSIONS WJV ON WJV.JOB_ID = WJ.JOB_ID AND TRUNC(SYSDATE) BETWEEN WJV.DATE_FROM AND WJV.DATE_TO
+		<where>
+			<if test="companyId != null">
+				and wj.company_id = #{companyId}
+			</if>
+			<if test="businessGroupId != null">
+				and bc.group_id = #{businessGroupId}
+			</if>
+			<if test="companyName != null">
+				AND UPPER(BC.COMPANY_NAME) like UPPER(#{companyName, jdbcType=VARCHAR})
+			</if>
+			<if test="jobName != null">
+				AND UPPER(wj.JOB_NAME) like UPPER(#{jobName, jdbcType=VARCHAR})
+			</if>
+			<if test="jobCode != null">
+				AND UPPER(wj.JOB_CODE) like UPPER(#{jobCode, jdbcType=VARCHAR})
+			</if>
+			<if test="jobGroupCode != null">
+				AND UPPER(WJV.JOB_GROUP_CODE) like UPPER(#{jobGroupCode, jdbcType=VARCHAR})
+			</if>
+		</where>
+		ORDER BY WJ.JOB_CODE ASC
+	</select>
+	
+	<select id="countJobByCompanyName" parameterType="map" resultType="Integer">
+		SELECT
+		    COUNT(*)
+		FROM WOS_JOBS WJ
+		    JOIN BSE_COMPANIES BC ON BC.COMPANY_ID = WJ.COMPANY_ID
+		    LEFT JOIN WOS_JOB_VERSIONS WJV ON WJV.JOB_ID = WJ.JOB_ID AND TRUNC(SYSDATE) BETWEEN WJV.DATE_FROM AND WJV.DATE_TO
+		<where>
+			<if test="companyId != null">
+				and wj.company_id = #{companyId}
+			</if>
+			<if test="businessGroupId != null">
+				and bc.group_id = #{businessGroupId}
+			</if>
+			<if test="companyName != null">
+				AND UPPER(BC.COMPANY_NAME) like UPPER(#{companyName, jdbcType=VARCHAR})
+			</if>
+			<if test="jobName != null">
+				AND UPPER(wj.JOB_NAME) like UPPER(#{jobName, jdbcType=VARCHAR})
+			</if>
+			<if test="jobCode != null">
+				AND UPPER(wj.JOB_CODE) like UPPER(#{jobCode, jdbcType=VARCHAR})
+			</if>
+			<if test="jobGroupCode != null">
+				AND UPPER(WJV.JOB_GROUP_CODE) like UPPER(#{jobGroupCode, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+	<!-- end added by WLY for phase 2 -->
+	
+	<!-- end start by jatis for phase 2 career -->
+	<select id="findJobByJobCode" parameterType="map" resultMap="JobDtoResult">
+		SELECT
+		J.JOB_ID,
+		J.JOB_CODE,
+		J.JOB_NAME,
+		J.JOB_UUID,
+		J.LAST_UPDATED_BY,
+		J.LAST_UPDATE_DATE,
+		JV.DATE_FROM,
+		JV.DATE_TO,
+		JV.DESCRIPTION,
+		JV.JOB_FOR_CODE,
+		JV.JOB_TYPE_CODE,
+		JV.PEOPLE_CATEGORY_CODE,
+		JV.JOB_GROUP_CODE,
+		JV.IS_KEY_JOB,
+		JV.IS_MANAGER,
+		JV.MAIN_RESPONSIBILITY,
+		JV.JOB_FILE_PATH,
+		JV.GRADE_SET_ID,
+		JV.WORKING_SCHEDULE_ID
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<include refid="whereClause" />
+		<if test="jobCodes != null">
+			<if test="jobCodes.size() != 0">
+				and
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="jobCodes">
+					J.JOB_CODE = #{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		ORDER BY J.JOB_CODE
+	</select>
+	
+	<select id="countJobByJobCode" parameterType="map" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM WOS_JOBS J
+		JOIN WOS_JOB_VERSIONS JV ON J.JOB_ID = JV.JOB_ID
+		<where>
+			<if test="job.companyId != null">
+				AND (J.COMPANY_ID) = (#{job.companyId})
+			</if>
+			<if test="job.id != null">
+				AND J.JOB_ID = #{job.id}
+			</if>
+			<if test="job.jobName != null">
+				AND UPPER(J.JOB_NAME) like UPPER(#{job.jobName,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobCode != null">
+				AND UPPER(J.JOB_CODE) like UPPER(#{job.jobCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobForCode != null">
+				AND UPPER(JV.JOB_FOR_CODE) like UPPER(#{job.jobForCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobTypeCode != null">
+				AND UPPER(JV.JOB_TYPE_CODE) like UPPER(#{job.jobTypeCode,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="job.jobGroupCode != null">
+				AND UPPER(JV.JOB_GROUP_CODE) like
+				UPPER(#{job.jobGroupCode, jdbcType=VARCHAR})
+			</if>
+			<if test="job.peopleCategoryCode != null">
+				AND UPPER(JV.PEOPLE_CATEGORY_CODE) like
+				UPPER(#{job.peopleCategoryCode, jdbcType=VARCHAR})
+			</if>
+			<if test="job.isKeyJob != null">
+				AND (JV.IS_KEY_JOB) = (#{job.isKeyJob, jdbcType=NUMERIC})
+			</if>
+			<if test="job.effectiveDate != null">
+				AND TRUNC(#{job.effectiveDate, jdbcType=DATE}) BETWEEN
+				JV.DATE_FROM AND JV.DATE_TO
+			</if>
+			<if test="job.dateTo != null">
+				AND JV.DATE_TO = TRUNC(#{job.dateTo, jdbcType=DATE})
+			</if>
+			<if test="job.listJobFor != null">
+				<if test="job.listJobFor.size() != 0">
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="job.listJobFor">
+						JV.JOB_FOR_CODE = #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="jobCodes != null">
+				<if test="jobCodes.size() != 0">
+					or
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="jobCodes">
+						J.JOB_CODE = #{item,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="findJobByJobName" parameterType="map" resultMap="JobDtoResult">
+		SELECT DISTINCT
+			J.JOB_NAME
+		FROM WOS_JOBS J
+		WHERE UPPER(J.JOB_NAME) LIKE UPPER(#{jobName, jdbcType=VARCHAR}) 
+		ORDER BY J.JOB_NAME
+	</select>
+	
+	<select id="countJobByJobName" parameterType="map" resultType="int">
+		SELECT
+			COUNT(DISTINCT JOB_NAME)
+		FROM WOS_JOBS J
+		WHERE UPPER(J.JOB_NAME) LIKE UPPER(#{jobName, jdbcType=VARCHAR}) 
+	</select>
+	
+	<!-- end added by jatis for phase 2 -->
+	
+</mapper>

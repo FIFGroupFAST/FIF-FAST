@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.JobQuestionSetFinder">
+
+	<resultMap id="QuestionSetupBaseResult" type="co.id.fifgroup.personneladmin.dto.JobQuestionSetDTO">
+		<id column="JOB_QUESTION_SET_ID" property="jobQuestionSetId" jdbcType="NUMERIC" />
+		<result column="QUESTION_SET_ID" property="questionSetId" jdbcType="NUMERIC"/>
+		<result column="QUESTION_SET_NAME" property="questionSetName" jdbcType="VARCHAR"/>
+		<result column="JOB_ID" property="jobId" jdbcType="NUMERIC"/>
+		<result column="JOB_CODE" property="jobCode" jdbcType="VARCHAR"/>
+		<result column="JOB_NAME" property="jobName" jdbcType="VARCHAR"/>
+		<result column="START_DATE" property="startDate" jdbcType="DATE"/>
+		<result column="END_DATE" property="endDate" jdbcType="DATE"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="NUMERIC"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>		
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="NUMERIC"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>	
+	
+	<select id="getJobQuestionSetByCriteria" parameterType="co.id.fifgroup.personneladmin.dto.CriteriaQuestionSetDTO" resultMap="QuestionSetupBaseResult">
+		SELECT 
+			JQS.JOB_QUESTION_SET_ID, 
+			JQS.QUESTION_SET_ID, 
+			QS.QUESTION_SET_NAME, 
+			JQS.JOB_ID, 
+			J.JOB_CODE, 
+			J.JOB_NAME, 
+			JQS.START_DATE, 
+			JQS.END_DATE, 
+			JQS.CREATED_BY, 
+			JQS.CREATION_DATE, 
+			U.USER_NAME, 
+			JQS.LAST_UPDATED_BY, 
+			JQS.LAST_UPDATE_DATE
+		FROM PEA_JOB_QUESTION_SETS JQS 
+		JOIN QUE_QUESTION_SETS QS
+			ON QS.QUESTION_SET_ID = JQS.QUESTION_SET_ID
+		JOIN WOS_JOBS J ON J.JOB_ID = JQS.JOB_ID
+		JOIN WOS_JOB_VERSIONS JV ON JV.JOB_ID = J.JOB_ID AND TRUNC(sysdate) BETWEEN JV.DATE_FROM AND JV.DATE_TO
+		JOIN SAM_USERS U ON U.USER_ID = JQS.LAST_UPDATED_BY
+		<where>
+			<if test="companyId">
+				AND JQS.COMPANY_ID = #{companyId}
+			</if>
+			<if test="jobId != null">
+				AND J.JOB_ID = #{jobId}
+			</if>
+			<if test="jobForCode != null">
+				AND UPPER(JV.JOB_FOR_CODE) = UPPER(#{jobForCode, jdbcType=VARCHAR})
+			</if>
+			<if test="jobTypeCode != null">
+				AND UPPER(JV.JOB_TYPE_CODE) = UPPER(#{jobTypeCode, jdbcType=VARCHAR})
+			</if>
+			<if test="peopleCategoryCode != null">
+				AND UPPER(JV.PEOPLE_CATEGORY_CODE) = UPPER(#{peopleCategoryCode, jdbcType=VARCHAR})
+			</if>
+			<if test="keyJob != null">
+				AND JV.IS_KEY_JOB = (#{keyJob, jdbcType=NUMERIC})
+			</if>
+		</where>
+		ORDER BY JQS.LAST_UPDATE_DATE DESC
+	</select>
+	
+	<select id="countJobQuestionSetByJobId" resultType="Long" parameterType="map">
+		select count(*) from pea_job_question_sets
+		where job_id = #{jobId}
+			<if test="jobQuestionSetId != null">
+			and job_question_set_id &lt;&gt; #{jobQuestionSetId}			
+			</if>
+			and (#{dateFrom} between start_date and end_date
+			or #{dateTo} between start_date and end_date
+			or start_date between #{dateFrom} and #{dateTo}
+			or end_date between #{dateFrom} and #{dateTo})
+	</select>
+				
+</mapper>

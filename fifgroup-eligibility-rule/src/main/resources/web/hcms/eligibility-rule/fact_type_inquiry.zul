@@ -1,0 +1,51 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winFactTypeInquiry" 
+	apply="co.id.fifgroup.eligibility.controller.FactTypeInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.elr.factType}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry" style="border: 0px;">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.elr.factTypeName}" />
+					<textbox id="txtFactTypeName" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy" 
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstFactType" mold="paging" emptyMessage="${labels.common.err.noDataFound}" >
+			<listhead menupopup="auto">
+				<listheader label="${labels.elr.factTypeName}"  align="center"/>
+				<listheader label="${labels.elr.retrievalMode}"  align="center"/>
+				<listheader label="${labels.common.action}"  align="center"/>
+			</listhead>
+			<template name="model">
+			<listitem> 
+				<listcell label="${each.name }"/>
+				<listcell label="${each.retrievalMode.description }"/>
+				<listcell><a label="${labels.common.detail }" forward="onFactTypeDetail(${each })" /></listcell>
+			</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstFactType" />
+	</groupbox>
+</window>

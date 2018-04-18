@@ -1,0 +1,124 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)"?>
+<window id="winAsset" border="none"
+	apply="co.id.fifgroup.ssoa.controller.AssetComposer">
+
+	<panel id="panelView" title="Assets" border="normal" collapsible="false" closable="false" maximizable="false" style="margin-bottom:10px" width="100%">
+		<panelchildren style="padding:5px">
+			<grid style="margin-bottom:5px">
+				<columns>
+					<column label="" width="150px" align="right" />
+					<column label="" width="" />
+				</columns>
+				<rows>
+					<row>
+						<label value="Asset Number" />
+						<textbox id="txtAssetNumber" width="200px" />
+					</row>
+					<row>
+						<label value="Description" />
+						<textbox id="txtDescription" width="200px" />
+					</row>
+					<row>
+					<div>
+						<label value="Branch" />
+					</div>
+					<div>
+							<bandbox id="bnbBranch" readonly="true"
+								width="280px"
+								use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox"
+								title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" headerLabel="Branch Code"
+								descLabel="Branch Name">
+							</bandbox>
+					</div>
+				</row>
+					<row>
+						<label/>
+						<button id="btnFind" label="${labels.common.find}" mold="trendy" 
+							image="${labels.image.link.search}" />
+					</row>
+				</rows>
+			</grid>
+			<paging id="pgListOfValueTop"  />	
+			<listbox id="lbxAsset" height="auto" emptyMessage="No data found">
+				<listhead style="text-align:left;">
+					 <listheader id="hdrAssetNumber" label="Asset Number" sort="auto(assetNumber)" width="130px;"/>
+			         <listheader id="hdrAssetType" label="Asset Type" sort="auto(assetType)" width="100px;"/>
+			         <listheader id="hdrBranchCode" label="Branch Code" sort="auto(branchCode)" width="130px;"/>
+			         <listheader id="hdrBranchName" label="Branch Name" sort="auto(branchName)" width="170px;"/>
+			         <listheader id="hdrLocationCode" label="Kode Outlet" sort="auto(locationCode)" width="130px;"/>
+			         <listheader id="hdrLocationName" label="Nama Outlet" sort="auto(locationName)" width="210px;"/>
+			         <listheader id="hdrCategoryName" label="Asset Category" sort="auto(categoryName)" width="150px;"/>
+			         <listheader id="hdrDatePlaceInService" label="Tanggal Perolehan" sort="auto(datePlacedInService)" width="170px;"/>
+			         <listheader id="hdrDescription" label="Description" sort="auto(description)" width="300px;"/>
+			         <listheader id="hdrSerialNumber" label="Serial Number"  sort="auto(serialNumber)" width="130px;"/>
+			         <listheader id="hdrStockOpnameResult" label="Result" sort="auto(stockOpnameResult)" width="200px;"/>
+			         <listheader id="hdrStockOpnameSugest" label="Recomendation" sort="auto(stockOpnameSugest)" width="200px;"/>
+				</listhead>
+
+				<template name="model">
+					<listitem>
+						<listcell label="${each.assetNumber}"></listcell>
+						<listcell label="${each.assetType}"></listcell>
+						<listcell label="${each.branchCode}"></listcell>
+						<listcell label="${each.branchName}"></listcell>
+						<listcell label="${each.locationCode}"></listcell>
+						<listcell label="${each.locationName}"></listcell>
+						<listcell label="${each.categoryName}"></listcell>
+						<listcell label="${date:format(each.datePlacedInService,'dd MMM yyyy')}"></listcell>
+						<listcell label="${each.description}"></listcell>
+						<listcell label="${each.serialNumber}"></listcell>
+						<listcell label="${each.stockOpnameResult}"></listcell>
+						<listcell label="${each.stockOpnameSugest}"></listcell>
+					</listitem>
+				</template>
+			</listbox>
+				<paging id="pgListOfValue"  />
+			<listbox id="lbxAssetDownload" visible="false" height="auto" emptyMessage="No Asset found in the result">
+				<listhead style="text-align:left;" menupopup="auto">
+					 <listheader label="Asset Number" width="160px;"/>
+			         <listheader label="Asset Type" width="150px;"/>
+			         <listheader label="Branch Code" width="150px;"/>
+			         <listheader label="Branch Name" width="200px;"/>
+			         <listheader label="Kode Outlet" width="160px;"/>
+			         <listheader label="Nama Outlet" width="210px;"/>
+			         <listheader label="Asset Category" width="170px;"/>
+			         <listheader label="Tanggal Perolehan" width="200px;"/>
+			         <listheader label="Description"  width="300px;"/>
+			         <listheader label="Serial Number"  width="160px;"/>
+			         <listheader label="Result"  width="200px;"/>
+			         <listheader label="Recomendation" width="200px;"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell label="${each.assetNumber}"></listcell>
+						<listcell label="${each.assetType}"></listcell>
+						<listcell label="${each.branchCode}"></listcell>
+						<listcell label="${each.branchName}"></listcell>
+						<listcell label="${each.locationCode}"></listcell>
+						<listcell label="${each.locationName}"></listcell>
+						<listcell label="${each.categoryName}"></listcell>
+						<listcell label="${date:format(each.datePlacedInService,'dd MMM yyyy')}"></listcell>
+						<listcell label="${each.description}"></listcell>
+						<listcell label="${each.serialNumber}"></listcell>
+						<listcell label="${each.stockOpnameResult}"></listcell>
+						<listcell label="${each.stockOpnameSugest}"></listcell>
+					</listitem>
+				</template>
+			</listbox> 
+			<separator/>
+			<!--  <exporter id="downloadSearch" referenceId="lbxAssetDownload"/>-->
+			<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+			
+		</panelchildren>
+	</panel>
+</window>

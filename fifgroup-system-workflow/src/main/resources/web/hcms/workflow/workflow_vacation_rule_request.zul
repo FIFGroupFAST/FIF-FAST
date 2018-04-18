@@ -1,0 +1,78 @@
+<window border="none" id="winWorkflowVacationRuleRequest"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowVacationRuleRequestComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption
+					label="${labels.swf.vacationRuleRequest}">
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row id="rowEmployeeApprover">
+							<hbox>
+								<label value="${labels.swf.approver}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<bandbox id="bnbApprover" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonEmployeeNumberBandbox" ></bandbox>
+						</row>
+						<row id="rowOrganizationApprover">
+							<label value="${labels.common.organization}" />
+							<label id="lblOrganizationApprover"/>
+						</row>
+						<row id="rowJobApprover">
+							<label value="${labels.common.job}" />
+							<label id="lblJobApprover"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.substituteApprover}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<bandbox id="bnbSubstituteApprover" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonEmployeeNumberBandbox" ></bandbox>
+						</row>
+						<row>
+							<label value="${labels.common.organization}" />
+							<label id="lblOrganization"/>
+						</row>
+						<row>
+							<label value="${labels.common.job}" />
+							<label id="lblJob"/>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.common.effectiveDateFrom}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<hbox>
+								<datebox id="dtbStartDate" width="100px"/>
+								<label value="${labels.common.to}" />
+								<datebox id="dtbEndDate" width="100px"/> 
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<hbox>
+					<cell align="center" style="width:1250px;">
+						<button id="btnSave"
+							label="${labels.common.save}" mold="trendy" 
+							image="${labels.image.link.save}" />
+						<space width=" 20px" />
+						<button id="btnDelete" disabled="true"
+							label="${labels.common.delete}" mold="trendy" 
+							image="${labels.image.link.delete}" />
+					</cell>
+					<cell align="right">
+						<button id="btnCancel"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+					</cell>
+				</hbox>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

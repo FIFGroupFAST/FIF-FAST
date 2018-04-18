@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.FormulaFinder">
+
+	<resultMap id="BaseResultMapInquiry" type="co.id.fifgroup.basicsetup.dto.FormulaDTO">
+		<id column="FORMULA_ID" jdbcType="DECIMAL" property="id" />
+		<result column="FORMULA_NAME" jdbcType="VARCHAR" property="formulaName" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.FormulaDTO" id="BaseResultMapVersion">
+		<id column="FORMULA_ID" property="id" jdbcType="DECIMAL"/>
+		<result column="FORMULA_NAME" property="formulaName" jdbcType="VARCHAR"/>
+		<result column="RETURN_TYPE" property="returnType" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="VERSION_ID" property="versionId" jdbcType="DECIMAL"/>
+		<result column="VERSION_NUMBER" property="versionNumber" jdbcType="DECIMAL"/>
+		<result column="DATE_FROM" property="dateFrom" jdbcType="TIMESTAMP"/>
+		<result column="DATE_TO" property="dateTo" jdbcType="TIMESTAMP"/>
+		<result column="FORMULA" property="formula" jdbcType="CLOB"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.FormulaDTO" id="FullResultMapInquiry">
+		<id column="FORMULA_ID" property="id" jdbcType="DECIMAL"/>
+		<result column="FORMULA_NAME" property="formulaName" jdbcType="VARCHAR"/>
+		<result column="RETURN_TYPE" property="returnType" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="VERSION_ID" property="versionId" jdbcType="DECIMAL"/>
+		<result column="VERSION_NUMBER" property="versionNumber" jdbcType="DECIMAL"/>
+		<result column="DATE_FROM" property="dateFrom" jdbcType="TIMESTAMP"/>
+		<result column="DATE_TO" property="dateTo" jdbcType="TIMESTAMP"/>
+		<result column="FORMULA" property="formula" jdbcType="CLOB"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.FormulaVersionDTO" id="ResultFormulaVersionUtil">
+		<id column="VERSION_ID" property="versionId" jdbcType="DECIMAL"/>
+		<result column="FORMULA_ID" property="id" jdbcType="DECIMAL"/>
+		<result column="FORMULA" property="formula" jdbcType="CLOB"/>
+		<collection property="formulaParameters" javaType="ArrayList" ofType="co.id.fifgroup.basicsetup.domain.FormulaParameter">
+			<id column="FORMULA_PARAMETER_ID" property="formulaParameterId" jdbcType="DECIMAL"/>
+			<result column="PARAMETER_NAME" property="parameterName" jdbcType="VARCHAR"/>
+			<result column="PARAMETER_FUNCTION" property="parameterFunction" jdbcType="CLOB"/>
+		</collection>
+	</resultMap>
+
+	<sql id="whereClause">
+		<where>
+			<if test="criteria.id != null">
+				AND BF.FORMULA_ID = #{criteria.id, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.versionId != null">
+				AND BFV.VERSION_ID = #{criteria.versionId, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.versionNumber != null">
+				BFV.VERSION_NUMBER = #{criteria.versionNumber, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.dateFrom != null">
+				AND BFV.DATE_FROM = #{criteria.dateFrom, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.dateTo != null">
+				AND BFV.DATE_TO = #{criteria.dateTo, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.createdBy != null">
+				AND BF.CREATED_BY = #{criteria.createdBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.creationDate != null">
+				AND BF.CREATION_DATE
+			</if>
+			<if test="criteria.lastUpdatedBy != null">
+				AND BF.LAST_UPDATED_BY = #{criteria.lastUpdatedBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.lastUpdateDate != null">
+				AND BF.LAST_UPDATE_DATE = #{criteria.lastUpdateDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.formulaName != null">
+				AND BF.FORMULA_NAME = #{criteria.formulaName, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.description != null">
+				AND UPPER(BF.DESCRIPTION) LIKE UPPER(#{criteria.description, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.returnType != null">
+				AND BFV.RETURN_TYPE = #{criteria.returnType, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.effectiveOnDate != null">
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} BETWEEN BFV.DATE_FROM AND BFV.DATE_TO
+			</if>
+			<if test="criteria.formulaNameLike != null">
+				AND UPPER(BF.FORMULA_NAME) LIKE UPPER(#{criteria.formulaNameLike, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</sql>
+
+	<select id="getFormulaDtoByExample" parameterType="map" resultMap="BaseResultMapVersion">
+		SELECT
+			BF.FORMULA_ID,
+			BF.FORMULA_NAME,
+			BFV.RETURN_TYPE,
+			BF.DESCRIPTION,
+			BFV.VERSION_ID,
+			BFV.VERSION_NUMBER,
+			BFV.DATE_FROM,
+			BFV.DATE_TO,
+			BFV.FORMULA,
+			BF.CREATED_BY,
+			BF.CREATION_DATE,
+			BF.LAST_UPDATED_BY,
+			BF.LAST_UPDATE_DATE
+		FROM
+			BSE_FORMULA BF 
+			JOIN BSE_FORMULA_VERSIONS BFV ON(BF.FORMULA_ID = BFV.FORMULA_ID)
+		<include refid="whereClause"/>
+		ORDER BY
+			BF.FORMULA_NAME asc
+	</select>
+	
+	<select id="getFormulaHeaderDtoByExampleWithRowbounds" parameterType="map" resultMap="BaseResultMapVersion">
+		SELECT
+			BF.FORMULA_ID,
+			BF.FORMULA_NAME,
+			BF.DESCRIPTION,
+			BF.CREATED_BY,
+			BF.CREATION_DATE,
+			BF.LAST_UPDATED_BY,
+			BF.LAST_UPDATE_DATE
+		FROM
+			BSE_FORMULA BF 
+			JOIN BSE_FORMULA_VERSIONS BFV ON(BF.FORMULA_ID = BFV.FORMULA_ID)
+		<include refid="whereClause"/>
+	</select>
+	
+	<select id="getCountFormulaByExample" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_FORMULA BF 
+			JOIN BSE_FORMULA_VERSIONS BFV ON(BF.FORMULA_ID = BFV.FORMULA_ID)
+		<include refid="whereClause"/>
+	</select>
+
+	<select id="getCurrentFormulaDto" parameterType="map" resultMap="BaseResultMapVersion">
+		SELECT
+			BF.FORMULA_ID,
+			BF.FORMULA_NAME,
+			BFV.RETURN_TYPE,
+			BF.DESCRIPTION,
+			BFV.VERSION_ID,
+			BFV.VERSION_NUMBER,
+			BFV.DATE_FROM,
+			BFV.DATE_TO,
+			BFV.FORMULA,
+			BF.CREATED_BY,
+			BF.CREATION_DATE,
+			BF.LAST_UPDATED_BY,
+			BF.LAST_UPDATE_DATE
+		FROM
+			BSE_FORMULA BF JOIN BSE_FORMULA_VERSIONS BFV ON(BF.FORMULA_ID = BFV.FORMULA_ID)
+		<where>
+			BFV.FORMULA_ID = #{formulaId, jdbcType=DECIMAL} AND
+			#{sysDate, jdbcType=TIMESTAMP} BETWEEN BFV.DATE_FROM AND BFV.DATE_TO
+		</where>
+	</select>
+
+	<select id="getLastFormulaDto" parameterType="map" resultMap="BaseResultMapVersion">
+		SELECT
+			BF.FORMULA_ID,
+			BF.FORMULA_NAME,
+			BFV.RETURN_TYPE,
+			BF.DESCRIPTION,
+			BFV.VERSION_ID,
+			BFV.VERSION_NUMBER,
+			BFV.DATE_FROM,
+			BFV.DATE_TO,
+			BFV.FORMULA,
+			BF.CREATED_BY,
+			BF.CREATION_DATE,
+			BF.LAST_UPDATED_BY,
+			BF.LAST_UPDATE_DATE
+		FROM
+			BSE_FORMULA BF JOIN BSE_FORMULA_VERSIONS BFV ON(BF.FORMULA_ID = BFV.FORMULA_ID)
+		<where>
+			BFV.FORMULA_ID = #{formulaId, jdbcType=DECIMAL} AND
+			BFV.DATE_TO = (SELECT MAX(BFV1.DATE_TO) FROM BSE_FORMULA_VERSIONS BFV1 WHERE BFV1.FORMULA_ID = #{formulaId, jdbcType=DECIMAL})  
+		</where>
+	</select>
+
+	<select id="getCountFormulaVersionByFormulaId" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_FORMULA_VERSIONS
+		WHERE
+			FORMULA_ID = #{formulaId, jdbcType=DECIMAL}
+	</select>
+
+	<select id="findByIdAndVersionNumber" parameterType="map" resultMap="BaseResultMapVersion">
+		SELECT
+			FRM.FORMULA_ID,
+			FRM.FORMULA_NAME,
+			FRM.DESCRIPTION,
+			FRM.CREATED_BY,
+			FRM.CREATION_DATE,
+			FRM.LAST_UPDATED_BY,
+			FRM.LAST_UPDATE_DATE,
+			FRS.RETURN_TYPE,
+			FRS.VERSION_ID,
+			FRS.VERSION_NUMBER,
+			FRS.DATE_FROM,
+			FRS.DATE_TO,
+			FRS.FORMULA
+		FROM BSE_FORMULA FRM
+		JOIN BSE_FORMULA_VERSIONS FRS
+		ON FRM.FORMULA_ID = FRS.FORMULA_ID
+		<where>
+			<if test="id !=null">
+				frm.formula_id = #{id, jdbcType=DECIMAL}
+			</if>
+			<if test="versionNumber != null">
+				AND FRS.VERSION_NUMBER = #{versionNumber, jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getNextVersionIdByFormulaId" parameterType="Long"
+		resultType="Integer">
+		SELECT MAX(FRS.VERSION_NUMBER)+1
+		FROM
+		BSE_FORMULA_VERSIONS FRS
+		LEFT JOIN
+		BSE_FORMULA FRM ON(FRM.FORMULA_ID = FRS.FORMULA_ID)
+		<where>
+			<if test="id != null">
+				FRM.FORMULA_ID = #{id, jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+
+	<select id="findVersionById" parameterType="Long" resultType="Integer">
+		SELECT FRS.VERSION_NUMBER
+		FROM BSE_FORMULA_VERSIONS FRS
+		<where>
+			<if test="id !=null">
+				FRS.FORMULA_ID = (#{id, jdbcType=DECIMAL})
+			</if>
+		</where>
+		ORDER BY FRS.VERSION_NUMBER ASC
+	</select>
+
+	<select id="getFormulaDtoById" resultMap="FullResultMapInquiry" parameterType="map">
+		SELECT
+			FRM.FORMULA_ID,
+			FRM.FORMULA_NAME,
+			FRM.DESCRIPTION,
+			FRM.CREATED_BY,
+			FRM.CREATION_DATE,
+			FRM.LAST_UPDATED_BY,
+			FRM.LAST_UPDATE_DATE,
+			SU.USER_NAME,
+			FRS.VERSION_ID,
+			FRS.VERSION_NUMBER,
+			FRS.DATE_FROM,
+			FRS.DATE_TO,
+			FRS.FORMULA,
+			FRS.RETURN_TYPE
+		FROM
+			BSE_FORMULA FRM
+			LEFT JOIN SAM_USERS SU ON(SU.USER_ID = FRM.LAST_UPDATED_BY)
+			LEFT JOIN BSE_FORMULA_VERSIONS FRS ON(FRM.FORMULA_ID = FRS.FORMULA_ID)
+		<where>
+			<if test="id != null">
+				FRM.FORMULA_ID = #{id, jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+
+	<select id="getFormulaDtoByIdAndVersionNumber" resultMap="BaseResultMapVersion" parameterType="map">
+		SELECT
+			BF.FORMULA_ID,
+			BF.FORMULA_NAME,
+			BFV.RETURN_TYPE,
+			BF.DESCRIPTION,
+			BFV.VERSION_ID,
+			BFV.VERSION_NUMBER,
+			BFV.DATE_FROM,
+			BFV.DATE_TO,
+			BFV.FORMULA,
+			BF.CREATED_BY,
+			BF.CREATION_DATE,
+			BF.LAST_UPDATED_BY,
+			BF.LAST_UPDATE_DATE
+		FROM
+			BSE_FORMULA BF JOIN BSE_FORMULA_VERSIONS BFV ON(BF.FORMULA_ID = BFV.FORMULA_ID)
+		<where>
+			BFV.FORMULA_ID = #{id, jdbcType=DECIMAL} AND
+			BFV.VERSION_NUMBER = #{currentVersionNumber, jdbcType=DECIMAL}
+		</where>
+	</select>
+
+	<select id="getCountFormulaDtoByFormulaNameAndDescription" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_FORMULA FRM LEFT JOIN SAM_USERS SU ON(SU.USER_ID = FRM.LAST_UPDATED_BY)
+		<where>
+			<if test="formulaName != null">
+				UPPER(FRM.FORMULA_NAME) LIKE UPPER(#{formulaName,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="description != null">
+				<if test="!description.equals('%%')">
+					AND (UPPER(FRM.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR}))
+				</if>
+				<if test="description.equals('%%')">
+					AND (UPPER(FRM.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR}) OR FRM.DESCRIPTION IS NULL)
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<select id="getFormulaDtoByFormulaNameAndDescription" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			FRM.FORMULA_ID,
+			FRM.FORMULA_NAME,
+			FRM.DESCRIPTION,
+			FRM.CREATED_BY,
+			FRM.CREATION_DATE,
+			FRM.LAST_UPDATED_BY,
+			FRM.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		FROM
+			BSE_FORMULA FRM LEFT JOIN SAM_USERS SU ON(SU.USER_ID = FRM.LAST_UPDATED_BY)
+		<where>
+			<if test="formulaName != null">
+				UPPER(FRM.FORMULA_NAME) LIKE UPPER(#{formulaName,
+				jdbcType=VARCHAR})
+			</if>
+			<if test="description != null">
+				<if test="!description.equals('%%')">
+					AND (UPPER(FRM.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR}))
+				</if>
+				<if test="description.equals('%%')">
+					AND (UPPER(FRM.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR}) OR FRM.DESCRIPTION IS NULL)
+				</if>
+			</if>
+		</where>
+		ORDER BY FRM.FORMULA_NAME
+	</select>
+
+	<select id="getCurrentFormulaVersionByFormulaId" parameterType="map"
+		resultType="int">
+		SELECT
+		FRS.VERSION_NUMBER
+		FROM
+		BSE_FORMULA_VERSIONS FRS
+		JOIN BSE_FORMULA FRM ON(FRM.FORMULA_ID = FRS.FORMULA_ID)
+		<where>
+			<if test="id != null">
+				FRM.FORMULA_ID = #{id, jdbcType=DECIMAL}
+			</if>
+			AND TO_DATE(SYSDATE) BETWEEN FRS.DATE_FROM AND FRS.DATE_TO
+		</where>
+	</select>
+
+	<select id="isFormulaVersionFutureExist" parameterType="map"
+		resultType="int">
+		SELECT
+		COUNT(FRS.VERSION_NUMBER)
+		FROM BSE_FORMULA_VERSIONS FRS JOIN BSE_FORMULA FRM ON(FRS.FORMULA_ID =
+		FRM.FORMULA_ID)
+		<where>
+		<if test="id != null">
+		FRM.FORMULA_ID = #{id, jdbcType=DECIMAL}
+		and frs.version_number > 
+			(SELECT FRS.VERSION_NUMBER
+			FROM
+			BSE_FORMULA_VERSIONS FRS
+			JOIN BSE_FORMULA FRM ON(FRM.FORMULA_ID = FRS.FORMULA_ID)
+			<where>
+			FRM.FORMULA_ID = #{id, jdbcType=DECIMAL}
+			AND TO_DATE(SYSDATE) BETWEEN FRS.DATE_FROM AND FRS.DATE_TO)
+			</where>
+		</if>
+		</where>
+	</select>
+
+	<select id="getFormulaVersionDtoByFormulaNameAndEffectiveOnDate" parameterType="map" resultMap="ResultFormulaVersionUtil">
+		SELECT
+			BFV.VERSION_ID,
+			BFV.FORMULA_ID,
+			BFV.FORMULA,
+			BFP.FORMULA_PARAMETER_ID,
+			BFP.PARAMETER_NAME,
+			BFP.PARAMETER_FUNCTION
+		FROM
+			BSE_FORMULA_VERSIONS BFV 
+			LEFT JOIN BSE_FORMULA_VERSION_PARAMS BFVP ON(BFVP.VERSION_ID = BFV.VERSION_ID)
+			LEFT JOIN BSE_FORMULA_PARAMETERS BFP ON(BFP.FORMULA_PARAMETER_ID = BFVP.FORMULA_PARAMETER_ID)
+		WHERE
+			#{effectiveOnDate, jdbcType=TIMESTAMP} BETWEEN BFV.DATE_FROM AND BFV.DATE_TO AND
+			BFV.FORMULA_ID = (SELECT BF.FORMULA_ID FROM BSE_FORMULA BF WHERE BF.FORMULA_NAME = #{formulaName, jdbcType=VARCHAR})
+	</select>
+
+	<select id="findVersionsById" parameterType="map" resultType="Integer">
+		SELECT
+			VERSION_NUMBER
+		FROM
+			BSE_FORMULA_VERSIONS
+		WHERE
+			FORMULA_ID = #{id, jdbcType=DECIMAL}
+		ORDER BY VERSION_NUMBER ASC
+	</select>
+
+	<select id="getFormulaDtoByIdAndDate" parameterType="map" resultMap="BaseResultMapVersion">
+		SELECT
+			FRM.FORMULA_ID,
+			FRM.FORMULA_NAME,
+			FRM.DESCRIPTION,
+			FRM.CREATED_BY,
+			FRM.CREATION_DATE,
+			FRM.LAST_UPDATED_BY,
+			FRM.LAST_UPDATE_DATE,
+			FRS.RETURN_TYPE,
+			FRS.VERSION_ID,
+			FRS.VERSION_NUMBER,
+			FRS.DATE_FROM,
+			FRS.DATE_TO,
+			FRS.FORMULA
+		FROM BSE_FORMULA FRM
+		JOIN BSE_FORMULA_VERSIONS FRS
+		ON FRM.FORMULA_ID = FRS.FORMULA_ID
+		<where>
+			<if test="id !=null">
+				frm.formula_id = #{id, jdbcType=DECIMAL}
+			</if>
+			<if test="effectiveDate != null">
+				AND trunc(#{effectiveDate, jdbcType=DATE}) between FRS.DATE_FROM and FRS.DATE_TO
+			</if>
+		</where>
+	</select>
+	
+	<select id="getCountFormulaByIdAndDate" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM BSE_FORMULA FRM
+		JOIN BSE_FORMULA_VERSIONS FRS
+		ON FRM.FORMULA_ID = FRS.FORMULA_ID
+		<where>
+			<if test="id !=null">
+				frm.formula_id = #{id, jdbcType=DECIMAL}
+			</if>
+			<if test="effectiveDate != null">
+				AND trunc(#{effectiveDate, jdbcType=DATE}) between FRS.DATE_FROM and FRS.DATE_TO
+			</if>
+		</where>
+	</select>
+</mapper>

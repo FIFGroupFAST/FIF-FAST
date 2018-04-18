@@ -1,0 +1,164 @@
+<window id="winTransferInWithinGroupDetail" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.TransferInWithinGroupDetailComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.transferWithinGroupDetail	 }" />
+		<hbox>
+		<div width="150px" height="130px" style="border:1px #000 solid">
+			<image id="imgPhoto" width="150px" height="130px"></image>
+		</div>
+		<tabbox>
+			<tabs>
+				<tab id="tabAssignment" label="${labels.pea.assignment }" selected="true"/>
+				<tab id="tabAssignmentOtherInfo" label="${labels.pea.assignmentOtherInfo }" disabled="true"/>
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" valign="top"/>
+							<column />
+						</columns>
+						<rows>
+							<row id="rowEffectiveDate">
+								<hbox>
+									<label value="${labels.pea.effectiveDateFrom }" />  
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<hbox>
+									<datebox id="dtbEffectiveStartDate" width="100px" />
+									<label value="to"/>
+									<datebox id="dtbEffectiveEndDate" width="100px" />
+								</hbox>
+							</row>
+							<row>
+								<label value="${labels.pea.employeeNumber }" /> 								
+								<label id="lblEmployeeNumber" />
+							</row>
+							<row>
+								<label value="${labels.pea.fullName }" />  
+								<label id="lblFullName" />
+							</row>
+							<row>
+								<label value="${labels.pea.assignmentType }" />
+								<label id="lblAssignmentType" />
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.pea.organization }" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>	
+								<bandbox id="bnbOrganization" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfOrganization}" searchText1="${labels.pea.organizationCode}" searchText2="${labels.pea.organizationName}" headerLabel1="${labels.pea.organizationCode}" headerLabel2="${labels.pea.organizationName}"></bandbox>
+							</row>
+							<row>
+								<label value="${labels.pea.location }" />
+								<label id="lblLocation" />
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.pea.job }" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>	
+								<bandbox id="bnbJob" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfJob}" searchText1="${labels.pea.jobCode}" searchText2="${labels.pea.jobName}" headerLabel1="${labels.pea.jobCode}" headerLabel2="${labels.pea.jobName}"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.pea.grade }" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>	
+								<bandbox id="bnbGrade" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfGrade}" searchText1="${labels.pea.gradeCode }" searchText2="${labels.pea.gradeName}" headerLabel1="${labels.pea.gradeCode }" headerLabel2="${labels.pea.gradeName}"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.pea.actionType }" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>	
+								<listbox id="cmbActionType" mold="select" disabled="true">
+									<template name="model">
+										<listitem value="${each }">
+											<listcell label="${each.description }" />
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.pea.assignmentStatus }" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>	
+								<listbox id="cmbAssignmentStatus" mold="select" disabled="true">
+									<template name="model">
+										<listitem value="${each }">
+											<listcell label="${each.description }" />
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+							<row>
+								<cell rowspan="2" valign="top">
+									<label value="${labels.pea.firstSupervisor }" />
+								</cell>
+								<hbox>
+									<label id="lblJobNameSPV1" />
+									<label value=" - " />
+									<label id="lblOrganizationNameSPV1" />				
+								</hbox>
+							</row>
+							<row>
+								<cell align="left">
+									<hbox>
+										<label id="lblEmployeeNumberSPV1" />
+									</hbox>
+								</cell>
+							</row>
+							<row>
+								<cell rowspan="2" valign="top">
+									<label value="${labels.pea.secondSupervisor }" />
+								</cell>
+								<hbox>
+									<label id="lblJobNameSPV2" />
+									<label value=" - " />
+									<label id="lblOrganizationNameSPV2" />
+								</hbox>
+							</row>
+							<row>
+								<cell align="left">
+									<hbox>
+										<label id="lblEmployeeNumberSPV2" />
+									</hbox>
+								</cell>
+							</row>
+							<row>
+								<label value="${labels.pea.housingAllowanceFlag }" />
+								<radiogroup id="rdgHousingAllowanceFlag" />
+								<label />
+							</row>
+						</rows>				
+					</grid>
+				</tabpanel>
+				<tabpanel id="tabPanelOtherInfo">
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</hbox>
+	
+	<hbox pack="center" align="center">
+		<cell align="center" style="width:1250px;">
+			<hbox>
+				<button id="btnNext"
+					label="${labels.common.next}" mold="trendy"
+					image="${labels.image.link.next}" />
+				<button id="btnBack" visible="false"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.back}" />
+				<button id="btnJoin" visible="false" image="${labels.image.link.add}"
+					label="${labels.pea.join}" mold="trendy"	/>
+			</hbox>			
+		</cell>
+		<cell align="right">
+			<button id="btnCancel"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>
+	</groupbox>	
+</window>

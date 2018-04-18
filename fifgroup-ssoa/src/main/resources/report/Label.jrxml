@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_1" pageWidth="288" pageHeight="107" orientation="Landscape" columnWidth="0" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="02b63faa-2b72-4201-bd84-777e36107045">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="inch"/>
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="148"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="labelingId" class="java.lang.Long"/>
+	<parameter name="logo" class="java.net.URL"/>
+	<parameter name="parameter2" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT a.asset_number,
+       a.description,
+       a.DATE_PLACED_IN_SERVICE,
+       a.serial_number,
+       (case when lh.BRANCH_ID = -1 then 'Head Office' else (SELECT ORGANIZATION_NAME from WOS_ORGANIZATIONS where ORGANIZATION_ID = lh.BRANCH_ID and rownum = 1) end )BRANCH_NAME
+  FROM SOC_ASSET_LABELING_DTL ld
+       INNER JOIN SOC_ASSET_LABELING_HDR lh on lh.labeling_id= ld.labeling_id
+       INNER JOIN SOC_ASSETS A ON A.asset_id = ld.asset_id
+ WHERE lh.labeling_id = $P{labelingId}]]>
+	</queryString>
+	<field name="ASSET_NUMBER" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="DATE_PLACED_IN_SERVICE" class="java.sql.Timestamp"/>
+	<field name="SERIAL_NUMBER" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<detail>
+		<band height="98">
+			<componentElement>
+				<reportElement uuid="4ddf6ad2-d13b-4748-af3d-023e1c552642" x="1" y="38" width="90" height="52">
+					<property name="com.jaspersoft.studio.unit.barHeight" value="inch"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false" barWidth="2" barHeight="100">
+					<jr:codeExpression><![CDATA[$F{ASSET_NUMBER}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement uuid="693e1787-c5fa-4dc3-97e9-72661aaec559" x="136" y="34" width="152" height="27"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bd16b88e-a285-49e2-b2ab-b6909c4ab284" x="136" y="62" width="138" height="16"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SERIAL_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMM yyyy">
+				<reportElement uuid="c681ee63-929d-42d7-8ed3-fc2f838a2fb0" x="136" y="77" width="138" height="16"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DATE_PLACED_IN_SERVICE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="69fa74d4-7456-4d6b-95cb-59241290b981" x="91" y="35" width="30" height="24"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Desc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6e012aca-8277-4dc2-9fe2-6f4d61ac1753" x="115" y="36" width="20" height="24"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6096fe82-8569-43c1-9f60-88e51b326229" x="115" y="61" width="20" height="16"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="abec8178-022a-47d5-bfa9-d1019d9455cd" x="91" y="63" width="30" height="16"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[S/N]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8e591e86-c25c-4dd9-95a2-bf11856ba26c" x="115" y="76" width="20" height="16"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="180b589e-a445-48f7-8178-dc4968c32f67" x="91" y="76" width="40" height="16"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" isUsingCache="true" onErrorType="Blank">
+				<reportElement uuid="74f06834-5c76-4e36-9c3c-e803b6d3120b" x="175" y="4" width="105" height="30"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="f89de043-9a83-46ff-a1ea-9212a86feb0a" x="6" y="4" width="130" height="30"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e276aabc-a4f1-4dd3-b4d4-e5db2e99fb11" x="9" y="87" width="75" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ASSET_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

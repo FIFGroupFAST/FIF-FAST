@@ -1,0 +1,40 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.common.ui.component.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winWsUploadGradeDetail"
+	apply="co.id.fifgroup.workstructure.controller.UploadGradeDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.uploadGradeDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.upload.batchNumber}" />
+					<label id="lblBatchNumber" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstUploadGradeDetail" mold="paging" pageSize="10">
+			<listhead>
+				<listheader label="${labels.upload.processDate}" align="center" />
+				<listheader label="${labels.upload.uploadedBy}" align="center" />
+				<listheader label="${labels.upload.totalRecord}" align="center" />
+				<listheader label="${labels.upload.totalSucceedRecord}" align="center" />
+				<listheader label="${labels.upload.totalFailedRecord}" align="center" />
+			</listhead>
+		</listbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnDownloadCloseBatchError" label="${labels.common.downloadCloseBatchError}" 
+				mold="trendy" />
+		</hbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnBack" label="${labels.common.back}" 
+				mold="trendy" image="${labels.image.link.back}"/>
+		</hbox>
+	</groupbox>
+</window>

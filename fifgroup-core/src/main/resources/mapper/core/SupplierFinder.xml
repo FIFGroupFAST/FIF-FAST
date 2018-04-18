@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.finder.SupplierFinder">
+
+	<resultMap type="co.id.fifgroup.core.dto.SupplierDTO" id="supplierDtoResult">
+		<result column="SUPL_OPEX_CODE" property="suplOpexCode" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_NAME" property="suplOpexName" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_SUBTYPE" property="suplOpexSubtype" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_BANK_CODE" property="suplOpexBankCode" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_BANK_NAME" property="suplOpexBankName" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_ACCNO" property="suplOpexAccno" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_ACCONAME" property="suplOpexAcconame" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_BANK" property="suplOpexBank" jdbcType="VARCHAR" />
+		<result column="SUPL_CURRENCY_CODE" property="suplCurrencyCode" jdbcType="VARCHAR" />
+		<result column="SUPL_OPEX_TYPE" property="isSuplOpexType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="whereClause">
+		<if test="supplier.isSuplOpexType != null">
+			and upper(supplier.SUPL_OPEX_TYPE) = upper(#{supplier.isSuplOpexType, jdbcType=VARCHAR})
+		</if>
+		<if test="supplier.suplOpexSubtype != null">
+			and upper(supplier.SUPL_OPEX_SUBTYPE) = upper(#{supplier.suplOpexSubtype, jdbcType=VARCHAR})
+		</if>
+		<if test="supplier.orgId != null">
+			and supplier.ORG_ID = #{supplier.orgId, jdbcType=NUMERIC}
+		</if>
+		<if test="supplier.suplOpexCode != null">
+			and upper(supplier.SUPL_OPEX_CODE) like upper(#{supplier.suplOpexCode, jdbcType=VARCHAR})
+		</if>
+		<if test="supplier.suplOpexName != null">
+			  and upper(SUPL_OPEX_NAME) like upper(#{supplier.suplOpexName, jdbcType=VARCHAR})
+		  	</if>
+		<if test="supplier.inSuplOpexSubtype != null">
+		  	<if test="supplier.inSuplOpexSubtype.size() != 0">
+				and 
+				 <foreach item="item" open="(" close=")" separator=" OR "
+				 	collection="supplier.inSuplOpexSubtype">
+					upper(supplier.SUPL_OPEX_SUBTYPE) = upper(#{item})
+				 </foreach>
+		  	</if>
+		</if>
+	</sql>
+	
+	<select id="getSupplierByType" parameterType="map" resultMap="supplierDtoResult">
+		select distinct 
+			SUPL_OPEX_SUBTYPE 
+		from mst_suppliers_v
+		where supl_opex_type = #{type, jdbcType=VARCHAR}
+		and SUPL_OPEX_SUBTYPE is not null
+	</select>
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.core.dto.SupplierDTO" resultMap="supplierDtoResult">
+		select 
+		  SUPL_OPEX_CODE,
+		  SUPL_OPEX_SUBTYPE,
+		  SUPL_OPEX_NAME,
+		  SUPL_OPEX_BANK_CODE,
+		  SUPL_OPEX_BANK_NAME,
+		  SUPL_OPEX_ACCNO,
+		  SUPL_OPEX_ACCONAME,
+		  SUPL_OPEX_BANK,
+		  SUPL_CURRENCY_CODE,
+		  SUPL_OPEX_TYPE
+		from mst_suppliers_v supplier
+		where 1 = 1
+		<include refid="whereClause"/>	
+	</select>
+	
+	<select id="countByExample" parameterType="co.id.fifgroup.core.dto.SupplierDTO" resultType="Integer">
+		select 
+		  count(*)
+		from mst_suppliers_v supplier
+		where 1 = 1
+		<include refid="whereClause"/>	
+	</select>
+	
+	<select id="findByExampleAndPersonId" parameterType="co.id.fifgroup.core.dto.SupplierDTO" resultMap="supplierDtoResult">
+		select * from (
+			select 
+				  SUPL_OPEX_CODE,
+				  SUPL_OPEX_SUBTYPE,
+				  SUPL_OPEX_NAME,
+				  SUPL_OPEX_BANK_CODE,
+				  SUPL_OPEX_BANK_NAME,
+				  SUPL_OPEX_ACCNO,
+				  SUPL_OPEX_ACCONAME,
+				  SUPL_OPEX_BANK,
+				  SUPL_CURRENCY_CODE
+				from mst_suppliers_v supplier
+			where 1=1
+			<include refid="whereClause"/>
+				<if test="supplier.searchCriteria != null">
+				  and upper(SUPL_OPEX_NAME) || upper(SUPL_OPEX_BANK_NAME) || upper(SUPL_OPEX_ACCNO) like upper(#{supplier.searchCriteria, jdbcType=VARCHAR})
+			  	</if>
+			  	<if test="personId != null">
+					union
+					SELECT 
+					      employee_number SUPL_OPEX_CODE,
+					      ' ' SUPL_OPEX_SUBTYPE,
+					      ' ' SUPL_OPEX_NAME,
+					      ' ' SUPL_OPEX_BANK_CODE,
+					      employee_number || ' - ' || full_name SUPL_OPEX_BANK_NAME,
+					      ' ' SUPL_OPEX_ACCNO,
+					      ' ' SUPL_OPEX_ACCONAME,
+					      ' ' SUPL_OPEX_BANK,
+					      ' ' SUPL_CURRENCY_CODE
+					  FROM pea_personal_informations 
+					  where trunc(sysdate) between effective_start_date and effective_end_date
+					  and person_id = #{personId, jdbcType=NUMERIC}
+					  	<if test="supplier.searchCriteria != null">
+						  and upper(EMPLOYEE_NUMBER) || upper(FULL_NAME) like upper(#{supplier.searchCriteria, jdbcType=VARCHAR})
+					  	</if>
+			  	</if>
+			)
+		 <where>
+			<if test="supplier.suplOpexCode != null">
+			  and upper(SUPL_OPEX_CODE) like upper(#{supplier.suplOpexCode, jdbcType=VARCHAR})
+		  	</if>
+		  	
+		 </where>
+		 order by SUPL_OPEX_NAME
+	</select>
+	
+	<select id="countByExampleAndPersonId" parameterType="co.id.fifgroup.core.dto.SupplierDTO" resultType="Integer">
+		select count(1) from (
+			select 
+				  SUPL_OPEX_CODE,
+				  SUPL_OPEX_SUBTYPE,
+				  SUPL_OPEX_NAME,
+				  SUPL_OPEX_BANK_CODE,
+				  SUPL_OPEX_BANK_NAME,
+				  SUPL_OPEX_ACCNO,
+				  SUPL_OPEX_ACCONAME,
+				  SUPL_OPEX_BANK,
+				  SUPL_CURRENCY_CODE
+				from mst_suppliers_v supplier
+			where 1=1
+			<include refid="whereClause"/>
+				<if test="supplier.searchCriteria != null">
+				  and upper(SUPL_OPEX_NAME) || upper(SUPL_OPEX_BANK_NAME) || upper(SUPL_OPEX_ACCNO) like upper(#{supplier.searchCriteria, jdbcType=VARCHAR})
+			  	</if>
+			  	<if test="personId != null">
+					union
+					SELECT 
+					      ' ' SUPL_OPEX_CODE,
+					      ' ' SUPL_OPEX_SUBTYPE,
+					      ' ' SUPL_OPEX_NAME,
+					      ' ' SUPL_OPEX_BANK_CODE,
+					      employee_number || ' - ' || full_name SUPL_OPEX_BANK_NAME,
+					      ' ' SUPL_OPEX_ACCNO,
+					      ' ' SUPL_OPEX_ACCONAME,
+					      ' ' SUPL_OPEX_BANK,
+					      ' ' SUPL_CURRENCY_CODE
+					  FROM pea_personal_informations 
+					  where trunc(sysdate) between effective_start_date and effective_end_date
+					  and person_id = #{personId, jdbcType=NUMERIC}
+					  	<if test="supplier.searchCriteria != null">
+						  and upper(EMPLOYEE_NUMBER) || upper(FULL_NAME) like upper(#{supplier.searchCriteria, jdbcType=VARCHAR})
+					  	</if>
+			  	</if>
+			)
+		 <where>
+			<if test="supplier.suplOpexCode != null">
+			  and upper(SUPL_OPEX_CODE) like upper(#{supplier.suplOpexCode, jdbcType=VARCHAR})
+		  	</if>
+		 </where>
+		 order by SUPL_OPEX_NAME
+	</select>
+	
+	<select id="getBranchBod" parameterType="map" resultMap="supplierDtoResult">
+		select 
+		  bank_id supl_opex_bank_code,
+		  account_no supl_opex_accno,
+		  account_name supl_opex_acconame
+		from ap.ap_bank_od_branch_v@fifapps.us.oracle.com
+		where fif_branch = #{branchCode} 
+		and segment1 = #{companyGlCode};
+	</select>
+	
+	<select id="findSupplierType" resultMap="supplierDtoResult">
+	select distinct  supl_opex_subtype from mst_suppliers_v where supl_opex_subtype is not null
+	
+	</select>
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.PeopleTypeFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.PeopleTypeDTO">
+		<id column="PEOPLE_TYPE_ID" jdbcType="DECIMAL" property="peopleTypeId" />
+	    <result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+	    <result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="PEOPLE_TYPE" jdbcType="VARCHAR" property="peopleType" />
+	    <result column="EMPLOYMENT_CATEGORY" jdbcType="VARCHAR" property="employmentCategory" />
+	    <result column="SOURCE" jdbcType="VARCHAR" property="source" />
+	    <result column="REF_ID" jdbcType="DECIMAL" property="refId" />
+	    <result column="IS_AFFCO" jdbcType="DECIMAL" property="affco" />
+	    <result column="IS_CANCELED" jdbcType="DECIMAL" property="canceled" />
+	    <result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+	    <result column="EFFECTIVE_END_DATE" jdbcType="DATE" property="effectiveEndDate" />
+	    <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber"/>
+	    <result column="APPLICANT_NO" jdbcType="VARCHAR" property="applicantNo"/>
+	</resultMap>
+	
+	<sql id="findPeopleType">
+		select 
+			PEOPLE_TYPE_ID, 
+			PERSON_ID, 
+			COMPANY_ID, 
+			PEOPLE_TYPE, 
+			EMPLOYMENT_CATEGORY, 
+			SOURCE, 
+			REF_ID, 
+			IS_AFFCO, 
+			IS_CANCELED, 
+			EFFECTIVE_START_DATE, 
+			EFFECTIVE_END_DATE
+		from PEA_PEOPLE_TYPES		
+		where 1 = 1
+	</sql>
+	
+	<select id="getPeopleTypeByEffectiveOnDate" parameterType="map" resultMap="baseResult">
+		<include refid="findPeopleType"/>
+		<if test="personId != null">
+			AND PERSON_ID = #{personId}
+		</if>
+		<if test="companyId != null">
+			AND COMPANY_ID = #{companyId}
+		</if>
+		<if test="effectiveOnDate != null">
+			AND #{effectiveOnDate} between EFFECTIVE_START_DATE and EFFECTIVE_END_DATE
+		</if>		
+	</select>	
+	
+	<select id="getMaxEffectiveStartDate" parameterType="map" resultType="java.util.Date">
+		SELECT
+			MAX(EFFECTIVE_START_DATE)
+		FROM
+			PEA_PEOPLE_TYPES
+		<where>
+			<if test="personId != null">
+				AND PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND COMPANY_ID = #{companyId}
+			</if>
+			<if test="peopleType != null">
+				AND PEOPLE_TYPE = #{peopleType, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getMinEffectiveStartDate" parameterType="map" resultType="java.util.Date">
+		SELECT
+			MIN(EFFECTIVE_START_DATE)
+		FROM
+			PEA_PEOPLE_TYPES
+		<where>
+			<if test="personId != null">
+				AND PERSON_ID = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND COMPANY_ID = #{companyId}
+			</if>
+			AND PEOPLE_TYPE = 'EMPLOYEE'
+		</where>
+	</select>
+	
+	<select id="getPeopleTypeEmployee" parameterType="map" resultMap="baseResult">
+		select 
+			ppt.company_id, 
+			ppt.person_id, 
+			ppt.people_type, 
+			ppt.employment_category, 
+			ppi.employee_number, 
+			ppt.ref_id,
+			ppt.source,
+			ppt.effective_start_date,
+			ppt.effective_end_date,
+			ra.applicant_no 
+		from pea_people_types ppt 
+		join pea_personal_informations ppi 
+			on ppt.company_id = ppi.company_id and ppt.person_id = ppi.person_id 
+			and ppt.effective_start_date between ppi.effective_start_date and ppi.effective_end_date
+		left join (select ra.applicant_no, rt.trn_id from rec_applicants ra join rec_transactions rt on ra.applicant_id = rt.applicant_id) ra on ra.trn_id = ppt.ref_id
+		where ppt.person_id = #{personId}
+			and ppt.company_id = #{companyId}
+		order by ppt.effective_start_date desc
+	</select>
+	
+	<select id="countPeopleInCompany" parameterType="map" resultType="Integer">
+		select count(*)
+		from pea_people_types
+		where person_id = #{personId} and company_id = #{companyId}
+	</select>
+	
+	<select id="getPeopleTypeByUUID" parameterType="map" resultMap="baseResult">
+		select ppt.* from pea_people_types ppt
+		join pea_people pp on ppt.person_id = pp.person_id
+		where trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+		and pp.person_uuid = #{personUUID, jdbcType=VARBINARY,typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+	</select>	
+	
+	<select id="getFuturePeopleType" parameterType="map" resultMap="baseResult">
+<!-- 	remark by icha -->
+
+<!-- 		SELECT  -->
+<!--   			PEOPLE_TYPE_ID,  -->
+<!-- 			PERSON_ID,  -->
+<!-- 			COMPANY_ID,  -->
+<!-- 			PEOPLE_TYPE,  -->
+<!-- 			EMPLOYMENT_CATEGORY,  -->
+<!-- 			SOURCE,  -->
+<!-- 			REF_ID,  -->
+<!-- 			IS_AFFCO,  -->
+<!-- 			IS_CANCELED,  -->
+<!-- 			EFFECTIVE_START_DATE,  -->
+<!-- 			EFFECTIVE_END_DATE -->
+<!-- 		from PEA_PEOPLE_TYPES  -->
+<!-- 		where EFFECTIVE_START_DATE > trunc(sysdate)+1 -->
+<!-- 		and person_id = #{personId} -->
+<!-- 		and company_id = #{companyId} -->
+
+<!-- 	end remark by icha -->
+
+<!-- 		add by icha tgl 12 jan 2016 - 15121616083837  -->
+				SELECT 
+	  			PEOPLE_TYPE_ID, 
+				PERSON_ID, 
+				COMPANY_ID, 
+				PEOPLE_TYPE, 
+				EMPLOYMENT_CATEGORY, 
+				SOURCE, 
+				REF_ID, 
+				IS_AFFCO, 
+				IS_CANCELED, 
+				EFFECTIVE_START_DATE, 
+				EFFECTIVE_END_DATE
+			from PEA_PEOPLE_TYPES 
+			where EFFECTIVE_START_DATE > trunc(sysdate)
+			and person_id = #{personId}
+			and company_id = #{companyId}
+<!-- 		end add by icha -->
+	</select>
+</mapper>

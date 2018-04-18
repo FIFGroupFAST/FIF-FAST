@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Biodata Karyawan Per Cabang" language="groovy" pageWidth="2600" pageHeight="595" orientation="Landscape" columnWidth="2560" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6d4bed8b-df4f-4444-a44c-3535874ceb06">
+	<property name="ireport.zoom" value="7.5949966716648305"/>
+	<property name="ireport.x" value="350"/>
+	<property name="ireport.y" value="339"/>
+	<parameter name="BRANCH_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="JOB_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORGANIZATION_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MARITAL_STATUS" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PROCESS_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AUTHORIZED_ORGANIZATIONS" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STATIC_PARAM_EMPLOYEE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT bc.company_name,
+  bh.branch_name,
+  wo.organization_name,
+  wl.location_name,
+  wj.job_name,
+  ppi.employee_number,
+  ppi.full_name,
+  homebase.location_name home_base_name,
+  ppi.birth_date,
+  ppi.birth_place,
+  ppi.gender_code,
+  ppi.religion_code,
+  ppi.marital_status,
+  edu.education_level,
+  edu.institution,
+  edu.faculty,
+  edu.major,
+  ppi.blood_type,
+  address.address_line,
+  address.provinsi,
+  address.city,
+  address.zip_code,
+  phone.comm_information home_phone,
+  mobile.comm_information mobile_phone,
+  emergency.comm_information emergency_phone
+FROM pea_personal_informations ppi
+JOIN pea_primary_assignments ppa
+ON ppa.person_id   = ppi.person_id
+AND ppa.company_id = ppi.company_id
+JOIN bse_companies bc
+ON bc.company_id = ppi.company_id
+JOIN branch_hierarchy_v bh
+ON bh.organization_id = ppa.organization_id
+JOIN wos_organizations wo
+ON wo.organization_id = ppa.organization_id
+JOIN wos_organization_versions wov
+ON wov.organization_id = wo.organization_id
+JOIN wos_locations wl
+ON wl.location_id = wov.location_id
+JOIN wos_jobs wj
+ON wj.job_id = ppa.job_id
+JOIN wos_locations homebase
+ON homebase.location_code = ppi.home_base_code
+AND homebase.company_id   = ppi.company_id
+LEFT JOIN
+  (SELECT pe1.person_id,
+    pe1.company_id,
+    pe1.education_level,
+    pe1.institution,
+    pe1.faculty,
+    pe1.major
+  FROM pea_educations pe1
+  WHERE pe1.end_date =
+    (SELECT MAX(end_date)
+    FROM pea_educations pe2
+    WHERE pe2.person_id = pe1.person_id
+    AND pe2.company_id  = pe1.company_id
+    )
+  ) edu
+ON edu.person_id   = ppi.person_id
+AND edu.company_id = ppi.company_id
+LEFT JOIN
+  (SELECT pa.person_id,
+    pa.company_id,
+    pa.address_line,
+    fmp.provinsi,
+    fmc.city,
+    pa.zip_code
+  FROM pea_addresses pa
+  LEFT JOIN fs_mst_provinsi fmp on pa.province_code = fmp.prov_code
+  LEFT JOIN fs_mst_cities fmc on pa.city_code       = fmc.city_code
+  WHERE pa.is_ktp          = 1
+  AND TRUNC(TO_DATE($P{PROCESS_DATE}, 'DD-MON-YYYY')) BETWEEN pa.start_date AND pa.end_date
+  ) address
+ON address.person_id   = ppi.person_id
+AND address.company_id = ppi.company_id
+LEFT JOIN
+  (SELECT pc1.person_id,
+    pc1.company_id,
+    pc1.comm_information
+  FROM pea_communications pc1
+  WHERE comm_type  = 'HOME_PHONE'
+  AND pc1.communication_id =
+    (SELECT MAX(communication_id)
+    FROM pea_communications pc2
+    WHERE pc2.person_id = pc1.person_id
+    AND pc2.company_id  = pc1.company_id
+    AND pc2.comm_type   = 'HOME_PHONE'
+    )
+  ) phone
+ON phone.person_id   = ppi.person_id
+AND phone.company_id = ppi.company_id
+LEFT JOIN
+  (SELECT pc1.person_id,
+    pc1.company_id,
+    pc1.comm_information
+  FROM pea_communications pc1
+  WHERE comm_type  = 'MOBILE_PHONE'
+  AND pc1.communication_id =
+    (SELECT MAX(communication_id)
+    FROM pea_communications pc2
+    WHERE pc2.person_id = pc1.person_id
+    AND pc2.company_id  = pc1.company_id
+    AND pc2.comm_type   = 'MOBILE_PHONE'
+    )
+  ) mobile
+ON mobile.person_id   = ppi.person_id
+AND mobile.company_id = ppi.company_id
+LEFT JOIN
+  (SELECT pc1.person_id,
+    pc1.company_id,
+    pc1.comm_information
+  FROM pea_communications pc1
+  WHERE comm_type  = 'EMERGENCY_PHONE'
+  AND pc1.communication_id =
+    (SELECT MAX(communication_id)
+    FROM pea_communications pc2
+    WHERE pc2.person_id = pc1.person_id
+    AND pc2.company_id  = pc1.company_id
+    AND pc2.comm_type   = 'EMERGENCY_PHONE'
+    )
+  ) emergency
+ON emergency.person_id   = ppi.person_id
+AND emergency.company_id = ppi.company_id
+WHERE bh.org_hier_id     =
+  (SELECT org_hier_id
+  FROM EWS.wos_organization_hier
+  WHERE company_id         = ppi.company_id
+  AND upper(org_hier_type) = upper('STRUCTURAL')
+  )
+AND TRUNC(TO_DATE($P{PROCESS_DATE}, 'DD-MON-YYYY')) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+AND TRUNC(TO_DATE($P{PROCESS_DATE}, 'DD-MON-YYYY')) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+AND TRUNC(TO_DATE($P{PROCESS_DATE}, 'DD-MON-YYYY')) BETWEEN bc.effective_start_date AND bc.effective_end_date
+AND TRUNC(TO_DATE($P{PROCESS_DATE}, 'DD-MON-YYYY')) BETWEEN wov.date_from AND wov.date_to
+AND (ppi.EMPLOYEE_NUMBER = $P{STATIC_PARAM_EMPLOYEE} OR $P{STATIC_PARAM_EMPLOYEE} is null)
+AND (bh.BRANCH_ID = $P{BRANCH_ID} OR $P{BRANCH_ID} is null)
+AND (ppa.JOB_ID = $P{JOB_ID} OR $P{JOB_ID} is null)
+AND (ppa.ORGANIZATION_ID = $P{ORGANIZATION_ID} OR $P{ORGANIZATION_ID} is null)
+AND (ppi.MARITAL_STATUS = $P{MARITAL_STATUS} OR $P{MARITAL_STATUS} is null)
+AND (ppi.COMPANY_ID = $P{COMPANY_ID} OR $P{COMPANY_ID} is null)
+AND $X{IN, ppa.organization_id, AUTHORIZED_ORGANIZATIONS}
+ORDER BY bh.branch_name ASC, ppi.full_name ASC]]>
+	</queryString>
+	<field name="COMPANY_NAME" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="ORGANIZATION_NAME" class="java.lang.String"/>
+	<field name="LOCATION_NAME" class="java.lang.String"/>
+	<field name="JOB_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_NUMBER" class="java.lang.String"/>
+	<field name="FULL_NAME" class="java.lang.String"/>
+	<field name="HOME_BASE_NAME" class="java.lang.String"/>
+	<field name="BIRTH_DATE" class="java.sql.Timestamp"/>
+	<field name="BIRTH_PLACE" class="java.lang.String"/>
+	<field name="GENDER_CODE" class="java.lang.String"/>
+	<field name="RELIGION_CODE" class="java.lang.String"/>
+	<field name="MARITAL_STATUS" class="java.lang.String"/>
+	<field name="EDUCATION_LEVEL" class="java.lang.String"/>
+	<field name="INSTITUTION" class="java.lang.String"/>
+	<field name="FACULTY" class="java.lang.String"/>
+	<field name="MAJOR" class="java.lang.String"/>
+	<field name="BLOOD_TYPE" class="java.lang.String"/>
+	<field name="ADDRESS_LINE" class="java.lang.String"/>
+	<field name="PROVINSI" class="java.lang.String"/>
+	<field name="CITY" class="java.lang.String"/>
+	<field name="ZIP_CODE" class="java.lang.String"/>
+	<field name="HOME_PHONE" class="java.lang.String"/>
+	<field name="MOBILE_PHONE" class="java.lang.String"/>
+	<field name="EMERGENCY_PHONE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0460bba4-f5bd-4c7d-9dda-51fa1c61e99f" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Company]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b8fdc2e3-dccd-4504-aef3-45f5c2281d5a" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6653fd11-8390-4f51-aaf3-760cf4940f20" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Organization]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="97034129-c38c-4fb7-a4a7-34a8b5d2a71d" x="300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9469898f-519f-4f15-aa07-3e53d16ea9f5" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Job]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b79c8d68-f24c-4ac2-b53e-f48b22d7f5bf" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Employee Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4d89d459-96bf-4ce1-a751-448c714b9879" x="600" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Full Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d8618149-ca81-4689-bff4-bc40590d2750" x="700" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Home Base]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d71fedb6-600c-4258-b36a-076ea5815d4e" x="800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Birth Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="290f84a7-70ef-4037-9d57-97cbce88f1af" x="900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Birth Place]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f26ada94-2cbc-486a-909f-8096b76457b2" x="1000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="66a4fa2d-5cfe-4c73-97e4-9601c51078f1" x="1100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Religion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a60d7299-2553-4d1f-b6ca-8733ff59f1d0" x="1200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Marital Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7241155f-a520-48a2-964d-e6e59e9c8f70" x="1300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Last Education]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="afb51f80-01ff-4710-9ba8-b3a8ced47285" x="1400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Institution]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="98b466a7-63a3-46e4-9dd7-4f82905d45dd" x="1500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Faculty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="11adeaa1-020f-43b8-baee-368f294da586" x="1600" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Major]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5284671a-cd03-47a9-b3e7-235c0f468582" x="1700" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Blood Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="685c4328-2305-4c17-9ea0-d3da7c632f98" x="1800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Address Line]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1463cf72-e115-454d-88d8-90b6098c0dbb" x="1900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Provinsi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8ab5b207-49ef-4b6d-a994-70acc326f6e2" x="2000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fb3cbd33-8445-42b4-80dd-c15703c02dad" x="2100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Zip Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9c54279b-9c56-448e-9aa9-22737ecc3f67" x="2200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Home Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cb4253e2-f996-4eea-bce6-5dd5085296b8" x="2300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Mobile Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5ffdb1a9-e3fe-4862-aa7e-1970a7010759" x="2400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Emergency Phone]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="77e5201a-809b-4908-b6db-09ee7d88c195" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fb9a0cca-13e5-4628-805f-b4cab35f0ee1" stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9593b05f-3ac5-4685-8b90-2f2d2986d90e" stretchType="RelativeToTallestObject" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ORGANIZATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="5dfc6bfc-2325-4280-924d-8ce0747881ac" stretchType="RelativeToTallestObject" x="300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{LOCATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="37c0cb3f-8ae4-4696-8440-b45b35b5dd6a" stretchType="RelativeToTallestObject" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{JOB_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b2a5469b-2f28-43e5-8164-ba3f6314d73c" stretchType="RelativeToTallestObject" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="71922761-67a1-4898-ab73-877e507b3273" stretchType="RelativeToTallestObject" x="600" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FULL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9bad8fe4-d9b2-47e9-ad98-e9251ca4e31e" stretchType="RelativeToTallestObject" x="700" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{HOME_BASE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="87e2287a-53b0-47d4-947f-08f926ca36f2" stretchType="RelativeToTallestObject" x="800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BIRTH_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="77aed3e8-b15e-4e33-8701-baf88e688004" stretchType="RelativeToTallestObject" x="900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BIRTH_PLACE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0191ab60-2c44-4ade-9fd9-bd05ea379189" stretchType="RelativeToTallestObject" x="1000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{GENDER_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f14ee5ab-3622-4c9c-8b64-50d1762f44b5" stretchType="RelativeToTallestObject" x="1100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{RELIGION_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="baa94428-2ae8-4a01-89b8-e7ba7672f087" stretchType="RelativeToTallestObject" x="1200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MARITAL_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="3248ef48-286a-4689-9cf8-7272aa2a9faf" stretchType="RelativeToTallestObject" x="1300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EDUCATION_LEVEL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="1d700076-c229-4256-93d5-41ce5b3eaf4f" stretchType="RelativeToTallestObject" x="1400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{INSTITUTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4dc6c683-5622-4bcc-ad3b-388ba5331be1" stretchType="RelativeToTallestObject" x="1500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FACULTY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="57295055-274c-49d7-8d49-633d1340bdb7" stretchType="RelativeToTallestObject" x="1600" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MAJOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="392e547e-751f-411a-aed9-6c449378278a" stretchType="RelativeToTallestObject" x="1700" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BLOOD_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0447cadd-2fe7-4e24-aab9-19cbc7c34a4e" stretchType="RelativeToTallestObject" x="1800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ADDRESS_LINE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9d7535aa-dc0b-4cfe-bf49-057056470772" stretchType="RelativeToTallestObject" x="1900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PROVINSI}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fe5da733-a1be-4906-b998-c31372c0c5f3" stretchType="RelativeToTallestObject" x="2000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e2a852dd-cf56-4fa4-902a-3c64531b44ff" stretchType="RelativeToTallestObject" x="2100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ZIP_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0de4b12e-aaca-4c0c-acdc-f4e9f3658d88" stretchType="RelativeToTallestObject" x="2200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{HOME_PHONE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="2e49d188-46dc-4f7e-85c8-cda95fd785a7" stretchType="RelativeToTallestObject" x="2300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MOBILE_PHONE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="81bbca9b-c495-4b2f-95b8-afbe289d7eec" stretchType="RelativeToTallestObject" x="2400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EMERGENCY_PHONE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

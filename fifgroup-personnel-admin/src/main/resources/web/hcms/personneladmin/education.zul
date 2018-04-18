@@ -1,0 +1,50 @@
+<window id="winEducation" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.EducationComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.educationList }" />
+		<panel>
+			<panelchildren>
+				<listbox id="lbxEducations" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.common.startDate}" width="150px" />
+						<listheader label="${labels.common.endDate}" width="150px" />
+						<listheader label="${labels.pea.educationLevel}" width="150px" />
+						<listheader label="${labels.pea.institution}" width="400px" />
+						<listheader label="${labels.pea.faculty}" width="400px" />
+						<listheader label="${labels.pea.major}" width="300px" />
+						<listheader label="${labels.pea.gpa}" width="100px" />
+						<listheader label="${labels.pea.isGraduate}" width="75px" />
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxNavigation">
+				<button id="btnBackAddress"
+					label="${labels.common.back}" mold="trendy"
+					image="${labels.image.link.back}" />
+				<space width="10px"></space>
+				<button id="btnNextContact"
+					label="${labels.common.next}" mold="trendy"
+					image="${labels.image.link.next}" />
+			</hbox>
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>		
+</window>

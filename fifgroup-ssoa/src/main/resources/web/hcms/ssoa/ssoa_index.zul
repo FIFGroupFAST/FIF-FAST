@@ -1,0 +1,6 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?xel-method prefix="control" name="getValue" class="co.id.fifgroup.audit.ControlType" signature="java.lang.String getValue(java.lang.Integer)" ?>
+<window id="index1" apply="co.id.fifgroup.ssoa.controller.IndexComposer">
+	<label value="hello" />
+</window>

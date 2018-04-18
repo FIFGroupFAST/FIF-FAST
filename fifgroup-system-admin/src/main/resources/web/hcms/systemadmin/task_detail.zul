@@ -1,0 +1,101 @@
+ <?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<window id="winTaskDetail" apply="co.id.fifgroup.systemadmin.controller.TaskDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.taskDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<formlabel value="${labels.common.name}" required="true" />
+					<textbox id="txtName" maxlength="50" width="250px" />
+				</row>
+				<row>
+					<formlabel value="${labels.common.description}" required="true" />
+					<textbox id="txtDesc" maxlength="255" width="250px" rows="5" />
+				</row>
+				<row>
+					<formlabel value="${labels.common.type}" required="true" />
+					<radiogroup id="rdType">
+						<hbox>
+							<radio label="${labels.sam.batchProcess}" checked="true" />
+							<radio label="${labels.sam.report}"  />
+						</hbox>
+					</radiogroup>
+				</row>
+			</rows>
+		</grid>
+		<groupbox>
+			<caption label="${labels.sam.executableFile}" />
+			<grid>
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<formlabel value="${labels.common.name}" required="true" />
+						<bandbox id="bdnFileName" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" width="250px"/>
+					</row>
+					<row id="classRow">
+						<formlabel value="${labels.sam.className}" required="true" />
+						<textbox id="txtClass" maxlength="255" width="250px" />
+					</row>
+					<row id="reportRow">
+						<formlabel value="${labels.sam.staticParameter}" required="false" />
+						<checkbox label="${labels.sam.organizationParameter}" id="ckbStaticParam"  />
+					</row>
+					<row>
+						<label />
+						<button label="Define Parameters" id="btnDefineParam" mold="trendy" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<groupbox>
+			<caption label="${labels.sam.output}" />
+			<grid>
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<formlabel value="${labels.sam.format}" />
+						<listbox id="formatListbox" mold="select" width="250px">
+							<template name="model">
+								<listitem value="${each}" label="${each.value}" />
+							</template>
+						</listbox>
+					</row>
+					<row>
+						<formlabel value="${labels.sam.afterCompleted }"/>
+						<hbox>
+							<radiogroup id="afterComplted">
+								<radio label="${labels.common.save}" />
+								<radio  label="${labels.common.print}" />
+							</radiogroup>
+						</hbox>
+					</row>
+					<row>
+						<formlabel value="${labels.sam.printer}" />
+						<bandbox id="bdnPrinter" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" width="250px"/>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

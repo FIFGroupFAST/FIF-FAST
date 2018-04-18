@@ -1,0 +1,336 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="dateboxmax" class="co.id.fifgroup.core.ui.DateBoxMax" ?>
+<window id="winResponsibilityDetail"
+	apply="co.id.fifgroup.systemadmin.controller.ResponsibilitySetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.responsibilityItem}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.common.name}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<div width="100%"><textbox id="txtRespName" hflex="1" maxlength="50" /><label id="lblErrorName" style="color:red" /></div>
+					<hbox>
+					<label value="${labels.sam.taskGroup}" />
+					</hbox>
+					<bandbox id="txtTaskGroup" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" hflex="1"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.sam.dateFrom}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>	
+					<datebox id="dtbDateFrom" hflex="1" />
+					<hbox>
+						<label value="${labels.sam.menu}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<div width="100%"><bandbox id="txtMenuName" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" hflex="1"/><label id="lblErrorMenu" style="color:red" /></div>
+				</row>
+				<row>
+					<hbox align="center" pack="start">
+						<label value="${labels.sam.dateTo}" />
+					</hbox>
+					<dateboxmax id="dtbDateTo" />
+					<label />
+					<label />
+				</row>				
+			</rows>
+		</grid>
+		<separator />
+		<vbox id="detailErrorMessage" />
+		<tabbox id="tabsResponsibility">
+			<tabs>
+				<tab label="${labels.sam.itemExclusions}" />
+				<tab label="${labels.sam.dataGroup}" />
+				<tab label="${labels.sam.fieldPermissions}" />
+			</tabs>
+			<tabpanels>
+				<tabpanel id="tpItemExclusions">
+					<separator/>
+					<label id="lblErrorItemExclusion" style="color:red" />
+					<listbox id="tbnItemExclusions" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+						<listhead>
+							<listheader label="" width="30px"/>
+							<listheader label="${labels.common.type}" width="10%" />
+							<listheader label="${labels.sam.itemName}" />
+						</listhead>					
+					</listbox>
+					<hbox>
+						<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowItemExclusions" />
+						<button label="${labels.common.delete}" mold="trendy" id="btnDeleteItemExclusions" />
+					</hbox>
+				</tabpanel>
+				<tabpanel id="tpDataGroup">
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" />
+							<column />
+						</columns>					
+						<rows>
+							<row>
+								<hbox>
+									<label value="${labels.sam.businessGroup}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>					
+								<listbox id="lstBusinessGroup" mold="select" >
+									<template name="model">
+										<listitem value="${each}" label="${each.groupName}"></listitem>
+									</template>
+								</listbox>
+							</row>
+							<row id="rowCompany">
+								<hbox>
+									<label value="${labels.sam.company}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>	
+								<vbox>
+									<groupbox>
+										<separator/>
+										<label id="lblErrorCompany" style="color:red" />
+										<listbox id="tbnCompany" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+											<listhead>
+												<listheader label="" width="30px"/>
+												<listheader label="${labels.sam.company}" width="25%" />
+												<listheader label="${labels.sam.summary}" />
+												<listheader label="${labels.common.action}" width="10%" />
+											</listhead>
+										</listbox>
+										<separator/>
+										<hbox>
+											<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowCompany" />
+											<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRowCompany" />
+										</hbox>
+									</groupbox>								
+								</vbox>
+							</row>
+						</rows>
+					</grid>
+					<separator />
+					<groupbox id="grbCompanyDetails" visible="false">
+						<caption label="${labels.sam.companyDetails}" />
+						<tabbox>
+							<tabs>
+								<tab label="${labels.sam.securityByAssignment}" id="tabSecurityByAssignment"/>
+								<tab label="${labels.sam.securitymulticompany}" id="tabSecurityMulticompany"/>
+							</tabs>
+							<tabpanels>
+								<tabpanel>
+									<grid sclass="form-entry">
+										<columns>
+											<column width="180px" align="right" />
+											<column />
+										</columns>
+										<rows>
+											<row>
+												<hbox>
+													<label value="${labels.sam.security}" />
+													<label value="${labels.common.required}" style="color:red" />
+												</hbox>					
+												<radiogroup id="rdogrpSecurityByAssignment" >
+													<vbox>
+														<radio label="${labels.sam.viewOwnData}" selected="true"/>
+														<radio label="${labels.sam.viewBySingleOperatingUnit}" />
+														<radio label="${labels.sam.viewByHierarchy}" />
+														<radio label="${labels.common.branch}" />
+														<radio label="${labels.sam.viewByFunctionalHierarchy}" />
+														<radio label="${labels.sam.viewAllOrganizations}" />
+													</vbox>
+												</radiogroup>
+											</row>
+
+											<row id="rowGradeExclusion">										
+												<label value="${labels.sam.gradeExclusion}" />
+												<vbox>
+													<groupbox>
+														<separator/>
+														<label id="lblErrorGradeExclusionAssignment" style="color:red" />
+														<listbox id="tbnGradeExclusionAssignment" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+															<listhead>
+																<listheader label="" width="30px"/>
+																<listheader label="${labels.common.grade}" />
+															</listhead>
+														</listbox>
+														<separator/>
+														<hbox>
+															<button label="${labels.common.addRow}" mold="trendy" id="btnAddGradeExclusionAssignment" />
+															<button label="${labels.common.delete}" mold="trendy" id="btnDeleteGradeExclusionAssignment" />
+														</hbox>
+													</groupbox>											
+												</vbox>											
+											</row>																			
+											<row id="rowLevelByAssingment">
+												<label value="${labels.sam.level}" />
+												<hbox>
+													<listbox id="lstLevelAssignment" mold="select">
+													<template name="model">
+														<listitem>
+															<listcell value="${each}" label="${each.name}"></listcell>
+														</listitem>
+													</template>
+													</listbox>
+													<space />
+													<checkbox id="chkRecursiveAssignment" label="${labels.sam.recursive}" />
+												</hbox>
+											</row>
+											<row id="rowFilterByAssingment">
+												<label value="${labels.sam.filter}" />
+												<vbox id="vboxFilter">
+													<listbox id="lstFilterAssignment" mold="select" />
+													<separator />
+												</vbox>
+											</row>
+											<row id="rowOrganizationByAssignment">
+												<separator/>
+												<vbox>
+													<groupbox>
+														<separator/>
+														<label id="lblErrorOrganizationAssignment" style="color:red" />
+														<listbox id="tbnOrganizationAssignment" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+															<listhead>
+																<listheader label="" width="30px"/>
+																<listheader label="${labels.common.organization}" />
+															</listhead>
+														</listbox>
+															<separator/>
+															<hbox>
+																<button label="${labels.common.addRow}" mold="trendy" id="btnAddOrganizationAssignment" />
+																<button label="${labels.common.delete}" mold="trendy" id="btnDeleteOrganizationAssignment" />
+															</hbox>
+													</groupbox>											
+												</vbox>						
+											</row>										
+										</rows>
+									</grid>
+								</tabpanel>
+								<tabpanel>
+									<grid sclass="form-entry">
+										<columns>
+											<column width="180px" align="right" />
+											<column />
+										</columns>
+										<rows>
+											<row>
+												<separator/>
+												<checkbox id="chkAllowOtherUserMultiCompany" label="${labels.sam.allowotheruser}" />
+											</row>
+											<row id="rowSecurityMultiCompany">
+												<hbox>
+													<label value="${labels.sam.security}" />
+													<label value="${labels.common.required}" style="color:red" />
+												</hbox>						
+												<radiogroup id="rdogrpViewAllOrganizationMultiCompany">
+													<vbox>
+													<radio label="${labels.sam.viewOwnData}" selected="true"/>
+													<radio label="${labels.sam.viewByHierarchy}" />
+													<radio label="${labels.common.branch}" />
+													<radio label="${labels.sam.viewByFunctionalHierarchy}" />
+													<radio label="${labels.sam.viewAllOrganizations}" />
+													</vbox>
+												</radiogroup>
+											</row>
+											<row id="rowGradeExclusionMultiCompany">
+												<label value="${labels.sam.gradeExclusion}" />
+												<vbox>
+													<groupbox>
+														<separator/>
+														<label id="lblErrorGradeMultiCompany" style="color:red" />
+														<listbox id="tbnGradeMultiCompany" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+															<listhead>
+																<listheader label="" width="30px"/>
+																<listheader label="${labels.common.grade}" />
+															</listhead>
+														</listbox>
+														<separator/>
+														<hbox>
+															<button label="${labels.common.addRow}" mold="trendy" id="btnAddGradeMultiCompany" />
+															<button label="${labels.common.delete}" mold="trendy" id="btnDeleteGradeMultiCompany" />
+														</hbox>														
+													</groupbox>	
+												</vbox>																					
+											</row>
+											<row id="rowLevelMultiCompany">											
+												<label value="${labels.sam.level}" />
+												<hbox>
+													<listbox id="lstLevelDefaultMultiCompany" mold="select">
+													<template name="model">
+														<listitem>
+															<listcell value="${each}" label="${each.name}"></listcell>
+														</listitem>
+													</template>
+													</listbox>
+													<space />
+													<checkbox id="chkRecursiveMultiCompany" label="${labels.sam.recursive}" />
+												</hbox>
+											</row>
+											<row id="rowFilterMultiCompany" >
+												<label value="${labels.sam.filter}" />
+												<listbox id="lstFilterDefaultMultiCompany" mold="select" />
+											</row>
+											<row id="rowOrganizationMultiCompany">
+												<separator/>
+												<vbox>
+													<groupbox>
+														<separator/>
+														<label id="lblErrorOrganizationMultiCompany" style="color:red" />
+														<listbox id="tbnOrganizationMultiCompany" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+															<listhead>
+																<listheader label="" width="30px"/>
+																<listheader label="${labels.common.organization}" />
+															</listhead>
+														</listbox>	
+														<separator/>
+														<hbox>
+															<button label="${labels.common.addRow}" mold="trendy" id="btnAddOrganizationMultiCompany" />
+															<button label="${labels.common.delete}" mold="trendy" id="btnDeleteOrganizationMultiCompany" />
+														</hbox>												
+													</groupbox>
+												</vbox>																											
+											</row>											
+											
+										</rows>
+									</grid>
+								</tabpanel>
+							</tabpanels>
+						</tabbox>
+						<hbox align="center">
+							<button label="Ok" id="btnOkCompanyDetail" />
+							<button label="Hide" id="btnCancelCompanyDtail" />
+						</hbox>
+					</groupbox>
+				</tabpanel>
+				<tabpanel id="tpPermission">
+					<separator/>
+					<label id="lblErrorPermission" style="color:red" />
+					<listbox id="tbnPermission" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+						<listhead>
+							<listheader label="" width="30px" />
+							<listheader label="${labels.sam.permissionName}" />
+						</listhead>
+					</listbox>
+					<hbox>
+						<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowPermission" />
+						<button label="${labels.common.delete}" mold="trendy" id="btnDeletePermission" />
+					</hbox>			
+				</tabpanel>
+			</tabpanels>
+		</tabbox>		
+		<separator/>
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnNext" label="${labels.common.next}" mold="trendy" image="${labels.image.link.next}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

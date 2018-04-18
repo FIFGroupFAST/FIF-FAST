@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.LookupFinderMapper">
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.LookupDTO" id="resultInquiryLookupHeader">
+		<id property="lookupId" column="LOOKUP_ID" jdbcType="DECIMAL"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="lookupType" column="LOOKUP_TYPE" jdbcType="VARCHAR"/>
+		<result property="lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"/>
+		<result property="lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="userName" column="USER_NAME" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.LookupDTO" id="resultDetailLookupDependent">
+		<id property="lookupId" column="LOOKUP_ID" jdbcType="DECIMAL"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="lookupType" column="LOOKUP_TYPE" jdbcType="VARCHAR"/>
+		<result property="groupId" column="GROUP_ID" jdbcType="DECIMAL"/>
+		<result property="parentId" column="PARENT_ID" jdbcType="DECIMAL"/>
+		<result property="dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
+		<result property="createdBy" column="CREATED_BY" jdbcType="DECIMAL"/>
+		<result property="creationDate" column="CREATION_DATE" jdbcType="TIMESTAMP"/>
+		<result property="lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"/>
+		<collection property="lookupDependentDetailDtos" javaType="ArrayList" ofType="co.id.fifgroup.basicsetup.dto.LookupDependentDetailDTO">
+			<result property="lookupId" column="LOOKUP_ID_DETAIL" jdbcType="DECIMAL"/>
+			<result property="detailCode" column="DETAIL_CODE" jdbcType="VARCHAR"/>
+			<result property="meaning" column="MEANING" jdbcType="VARCHAR"/>
+			<result property="description" column="DESCRIPTION_DETAIL" jdbcType="VARCHAR"/>
+			<result property="companyScope" column="COMPANY_SCOPE" jdbcType="VARCHAR"/>
+			<result property="parentDetailCode" column="PARENT_DETAIL_CODE" jdbcType="VARCHAR"/>
+			<result property="dateFrom" column="DATE_FROM" jdbcType="TIMESTAMP"/>
+			<result property="dateTo" column="DATE_TO" jdbcType="TIMESTAMP"/>
+			<result property="parentDetailCode" column="PARENT_DETAIL_CODE" jdbcType="VARCHAR"/>
+			<result property="parentHdrId" column="PARENT_HDR_ID" jdbcType="DECIMAL"/>
+			<result property="createdBy" column="CREATED_BY_DETAIL" jdbcType="DECIMAL"/>
+			<result property="creationDate" column="CREATION_DATE_DETAIL" jdbcType="TIMESTAMP"/>
+			<result property="lastUpdatedBy" column="LAST_UPDATED_BY_DETAIL" jdbcType="DECIMAL"/>
+			<result property="lastUpdateDate" column="LAST_UPDATE_DATE_DETAIL" jdbcType="TIMESTAMP"/>
+		</collection>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.LookupDTO" id="resultLookupDynamic">
+		<id property="lookupId" column="LOOKUP_ID" jdbcType="DECIMAL"/>
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="description" column="DESCRIPTION" jdbcType="VARCHAR"/>
+		<result property="lookupType" column="LOOKUP_TYPE" jdbcType="VARCHAR"/>
+		<result property="groupId" column="GROUP_ID" jdbcType="DECIMAL"/>
+		<result property="parentId" column="PARENT_ID" jdbcType="DECIMAL"/>
+		<result property="dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
+		<result property="createdBy" column="CREATED_BY" jdbcType="DECIMAL"/>
+		<result property="creationDate" column="CREATION_DATE" jdbcType="TIMESTAMP"/>
+		<result property="lastUpdatedBy" column="LAST_UPDATED_BY" jdbcType="DECIMAL"/>
+		<result property="lastUpdateDate" column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP"/>
+		<collection property="lookupDynamicDtos" javaType="ArrayList" ofType="co.id.fifgroup.basicsetup.dto.LookupDynamicDTO">
+			<id property="lookupQueryId" column="LOOKUP_QUERY_ID" jdbcType="DECIMAL"/>
+			<result property="lookupId" column="LOOKUP_ID_DETAIL" jdbcType="DECIMAL"/>
+			<result property="companyScope" column="COMPANY_SCOPE" jdbcType="DECIMAL"/>
+			<result property="selectStatement" column="SELECT_STATEMENT" jdbcType="VARCHAR"/>
+			<result property="fromStatement" column="FROM_STATEMENT" jdbcType="VARCHAR"/>
+			<result property="whereStatement" column="WHERE_STATEMENT" jdbcType="VARCHAR"/>
+			<result property="orderBy" column="ORDER_BY" jdbcType="VARCHAR"/>
+			<result property="createdBy" column="CREATED_BY_DETAIL" jdbcType="DECIMAL"/>
+			<result property="creationDate" column="CREATION_DATE_DETAIL" jdbcType="TIMESTAMP"/>
+			<result property="lastUpdatedBy" column="LAST_UPDATED_BY_DETAIL" jdbcType="DECIMAL"/>
+			<result property="lastUpdateDate" column="LAST_UPDATE_DATE_DETAIL" jdbcType="TIMESTAMP"/>
+			<association property="company" javaType="co.id.fifgroup.basicsetup.domain.Company">
+				<id property="companyId" column="COMPANY_SCOPE" jdbcType="DECIMAL"/>
+				<result property="companyName" column="COMPANY_NAME" jdbcType="VARCHAR"/>
+			</association>
+		</collection>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="BaseResultMapKeyValue">
+		<result column="DETAIL_CODE" property="key" javaType="java.lang.Object"/>
+		<result column="MEANING" property="value" javaType="java.lang.Object"/>
+		<result column="DESCRIPTION" property="description" javaType="java.lang.Object"/>
+	</resultMap>
+
+<!-- 	<sql id="sqlLookupDependent"> -->
+<!-- 		SELECT  -->
+<!-- 			BLHD.LOOKUP_ID, -->
+<!-- 			BLHD.NAME, -->
+<!-- 			BLHD.LOOKUP_TYPE, -->
+<!-- 			(SELECT BLD.LAST_UPDATE_DATE FROM BSE_LOOKUP_DEPENDENTS BLD WHERE BLD.LAST_UPDATE_DATE = (SELECT MAX(BLD1.LAST_UPDATE_DATE) FROM BSE_LOOKUP_DEPENDENTS BLD1 WHERE BLD1.LOOKUP_ID = BLHD.LOOKUP_ID) GROUP BY BLD.LAST_UPDATE_DATE) AS LAST_UPDATE_DATE, -->
+<!-- 			(SELECT BLD.LAST_UPDATED_BY FROM BSE_LOOKUP_DEPENDENTS BLD WHERE BLD.LAST_UPDATE_DATE = (SELECT MAX(BLD1.LAST_UPDATE_DATE) FROM BSE_LOOKUP_DEPENDENTS BLD1 WHERE BLD1.LOOKUP_ID = BLHD.LOOKUP_ID) AND ROWNUM &lt; 2) AS LAST_UPDATED_BY, -->
+<!-- 			(SELECT SUD1.USER_NAME FROM SAM_USERS SUD1 WHERE SUD1.USER_ID = (SELECT BLD.LAST_UPDATED_BY FROM BSE_LOOKUP_DEPENDENTS BLD WHERE BLD.LAST_UPDATE_DATE = (SELECT MAX(BLD1.LAST_UPDATE_DATE) FROM BSE_LOOKUP_DEPENDENTS BLD1 WHERE BLD1.LOOKUP_ID = BLHD.LOOKUP_ID) AND ROWNUM &lt; 2)) AS USER_NAME -->
+<!-- 		FROM -->
+<!-- 			BSE_LOOKUP_HDR BLHD LEFT JOIN SAM_USERS SUD ON(SUD.USER_ID = BLHD.LAST_UPDATED_BY) -->
+<!-- 		<where> -->
+<!-- 			UPPER(BLHD.LOOKUP_TYPE) = 'DEPENDENT' -->
+<!-- 			<if test="groupId != null"> -->
+<!-- 				AND BLHD.GROUP_ID = #{groupId, jdbcType=DECIMAL} -->
+<!-- 			</if> -->
+<!-- 			<if test="lookupName != null"> -->
+<!-- 				AND UPPER(BLHD.NAME) LIKE UPPER(#{lookupName, jdbcType=VARCHAR}) -->
+<!-- 			</if> -->
+<!-- 			<if test="description != null"> -->
+<!-- 				AND UPPER(BLHD.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR}) -->
+<!-- 			</if> -->
+<!-- 			<if test="lookupType != null"> -->
+<!-- 				AND BLHD.LOOKUP_TYPE = #{lookupType, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 		</where> -->
+<!-- 	</sql> -->
+	
+<!-- 	<sql id="sqlLookupDynamic"> -->
+<!-- 		SELECT -->
+<!-- 			BLHQ.LOOKUP_ID, -->
+<!-- 			BLHQ.NAME, -->
+<!-- 			BLHQ.LOOKUP_TYPE, -->
+<!-- 			(SELECT BLQ.LAST_UPDATE_DATE FROM BSE_LOOKUP_QUERIES BLQ WHERE BLQ.LAST_UPDATE_DATE = (SELECT MAX(BLQ1.LAST_UPDATE_DATE) FROM BSE_LOOKUP_QUERIES BLQ1 WHERE BLQ1.LOOKUP_ID = BLHQ.LOOKUP_ID) GROUP BY BLQ.LAST_UPDATE_DATE) AS LAST_UPDATE_DATE, -->
+<!-- 			(SELECT BLQ.LAST_UPDATED_BY FROM BSE_LOOKUP_QUERIES BLQ WHERE BLQ.LAST_UPDATE_DATE = (SELECT MAX(BLQ1.LAST_UPDATE_DATE) FROM BSE_LOOKUP_QUERIES BLQ1 WHERE BLQ1.LOOKUP_ID = BLHQ.LOOKUP_ID) AND ROWNUM &lt; 2) AS LAST_UPDATED_BY, -->
+<!-- 			(SELECT SUQ1.USER_NAME FROM SAM_USERS SUQ1 WHERE SUQ1.USER_ID = (SELECT BLQ.LAST_UPDATED_BY FROM BSE_LOOKUP_QUERIES BLQ WHERE BLQ.LAST_UPDATE_DATE = (SELECT MAX(BLQ1.LAST_UPDATE_DATE) FROM BSE_LOOKUP_QUERIES BLQ1 WHERE BLQ1.LOOKUP_ID = BLHQ.LOOKUP_ID) AND ROWNUM &lt; 2)) AS USER_NAME -->
+<!-- 		FROM -->
+<!-- 			BSE_LOOKUP_HDR BLHQ LEFT JOIN SAM_USERS SUQ ON(SUQ.USER_ID = BLHQ.LAST_UPDATED_BY) -->
+<!-- 		<where> -->
+<!-- 			UPPER(BLHQ.LOOKUP_TYPE) = 'DYNAMIC' -->
+<!-- 			<if test="groupId != null"> -->
+<!-- 				AND BLHQ.GROUP_ID = #{groupId, jdbcType=DECIMAL} -->
+<!-- 			</if> -->
+<!-- 			<if test="lookupName != null"> -->
+<!-- 				AND UPPER(BLHQ.NAME) LIKE UPPER(#{lookupName, jdbcType=VARCHAR}) -->
+<!-- 			</if> -->
+<!-- 			<if test="description != null"> -->
+<!-- 				AND UPPER(BLHQ.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR}) -->
+<!-- 			</if> -->
+<!-- 			<if test="lookupType != null"> -->
+<!-- 				AND BLHQ.LOOKUP_TYPE = #{lookupType, jdbcType=VARCHAR} -->
+<!-- 			</if> -->
+<!-- 		</where> -->
+<!-- 	</sql> -->
+
+	<select id="getLookupHeaderDtoByLookupNameAndDescriptionAndType" parameterType="map" resultMap="resultInquiryLookupHeader">
+		SELECT 
+			BLH.LOOKUP_ID,
+			BLH.NAME,
+			BLH.LOOKUP_TYPE,
+			BLH.LAST_UPDATE_DATE,
+			BLH.LAST_UPDATED_BY,
+			SU.USER_NAME
+		FROM
+			BSE_LOOKUP_HDR BLH LEFT JOIN SAM_USERS SU ON(SU.USER_ID = BLH.LAST_UPDATED_BY)
+		<where>
+			<if test="groupId != null">
+				AND BLH.GROUP_ID = #{groupId, jdbcType=DECIMAL}
+			</if>
+			<if test="lookupName != null">
+				AND UPPER(BLH.NAME) LIKE UPPER(#{lookupName, jdbcType=VARCHAR})
+			</if>
+			<if test="description != null">
+				AND UPPER(BLH.DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR})
+			</if>
+			<if test="lookupType != null">
+				AND BLH.LOOKUP_TYPE = #{lookupType, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="getCountLookupHeaderDtoByLookupNameAndDescriptionAndType" parameterType="map" resultType="int">
+		SELECT 
+			COUNT(*)
+		FROM
+			BSE_LOOKUP_HDR
+		<where>
+			<if test="groupId != null">
+				AND GROUP_ID = #{groupId, jdbcType=DECIMAL}
+			</if>
+			<if test="lookupName != null">
+				AND UPPER(NAME) LIKE UPPER(#{lookupName, jdbcType=VARCHAR})
+			</if>
+			<if test="description != null">
+				AND UPPER(DESCRIPTION) LIKE UPPER(#{description, jdbcType=VARCHAR})
+			</if>
+			<if test="lookupType != null">
+				AND LOOKUP_TYPE = #{lookupType, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="getLookupDependentByLookupId" parameterType="long" resultMap="resultDetailLookupDependent">
+		SELECT
+			BLH.LOOKUP_ID,
+			BLH.NAME,
+			BLH.DESCRIPTION,
+			BLH.LOOKUP_TYPE,
+			BLH.GROUP_ID,
+			BLH.PARENT_ID,
+			BLH.DATA_TYPE,
+			BLH.CREATED_BY,
+			BLH.CREATION_DATE,
+			BLH.LAST_UPDATED_BY,
+			BLH.LAST_UPDATE_DATE,
+			BLD.LOOKUP_ID AS LOOKUP_ID_DETAIL,
+			BLD.DETAIL_CODE,
+			BLD.MEANING,
+			BLD.DESCRIPTION AS DESCRIPTION_DETAIL,
+			BLD.COMPANY_SCOPE,
+			BLD.PARENT_DETAIL_CODE,
+			BLD.PARENT_HDR_ID,
+			BLD.DATE_FROM,
+			BLD.DATE_TO,
+			BLD.CREATED_BY AS CREATED_BY_DETAIL,
+			BLD.CREATION_DATE AS CREATION_DATE_DETAIL,
+			BLD.LAST_UPDATED_BY AS LAST_UPDATED_BY_DETAIL,
+			BLD.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_DETAIL
+		FROM
+			BSE_LOOKUP_HDR BLH LEFT JOIN
+			BSE_LOOKUP_DEPENDENTS BLD ON (BLD.LOOKUP_ID = BLH.LOOKUP_ID)
+		WHERE
+			BLH.LOOKUP_ID = #{lookupId, jdbcType=DECIMAL}
+		ORDER BY
+			BLD.SEQ_NUMBER ASC, BLD.DESCRIPTION ASC
+	</select>
+	
+	<select id="getLookupDynamicByLookupId" parameterType="long" resultMap="resultLookupDynamic">
+		SELECT
+			BLH.LOOKUP_ID,
+			BLH.NAME,
+			BLH.DESCRIPTION,
+			BLH.LOOKUP_TYPE,
+			BLH.GROUP_ID,
+			BLH.PARENT_ID,
+			BLH.DATA_TYPE,
+			BLH.CREATED_BY,
+			BLH.CREATION_DATE,
+			BLH.LAST_UPDATED_BY,
+			BLH.LAST_UPDATE_DATE,
+			BLQ.LOOKUP_QUERY_ID,
+			BLQ.LOOKUP_ID AS LOOKUP_ID_DETAIL,
+			BLQ.COMPANY_SCOPE,
+			BC.COMPANY_NAME,
+			BLQ.SELECT_STATEMENT,
+			BLQ.FROM_STATEMENT,
+			BLQ.WHERE_STATEMENT,
+			BLQ.ORDER_BY,
+			BLQ.CREATED_BY AS CREATED_BY_DETAIL,
+			BLQ.CREATION_DATE AS CREATION_DATE_DETAIL,
+			BLQ.LAST_UPDATED_BY AS LAST_UPDATED_BY_DETAIL,
+			BLQ.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_DETAIL
+		FROM
+			BSE_LOOKUP_QUERIES BLQ 
+			LEFT JOIN 
+			BSE_LOOKUP_HDR BLH ON (BLQ.LOOKUP_ID = BLH.LOOKUP_ID) 
+			LEFT JOIN 
+			BSE_COMPANIES BC ON(BC.COMPANY_ID = BLQ.COMPANY_SCOPE)
+		WHERE
+			BLH.LOOKUP_ID = #{lookupId, jdbcType=DECIMAL}
+	</select>
+
+	<select id="getLookupDependentWithKeyCaseInsensitive" parameterType="map" resultMap="BaseResultMapKeyValue">
+		SELECT
+			DETAIL_CODE,
+			MEANING,
+			DESCRIPTION
+		FROM 
+			BSE_LOOKUP_DEPENDENTS
+		WHERE
+			LOOKUP_ID = #{lookupId, jdbcType=DECIMAL}
+			AND
+			UPPER(DETAIL_CODE) = UPPER(#{key, jdbcType=VARCHAR})
+		ORDER BY
+			SEQ_NUMBER ASC
+	</select>
+	
+	<select id="getLookupKeyValues" parameterType="map" resultMap="BaseResultMapKeyValue">
+		SELECT 
+			bld.DETAIL_CODE,
+			bld.MEANING,
+			bld.DESCRIPTION
+		FROM bse_lookup_hdr blh
+    	join BSE_LOOKUP_DEPENDENTS bld on bld.lookup_id = blh.lookup_id
+		WHERE
+      		blh.name = #{lookupName}
+      	<if test="key != null">
+			AND	UPPER(bld.DETAIL_CODE) = UPPER(#{key})      	
+      	</if>
+      	ORDER BY bld.DESCRIPTION ASC
+	</select>
+	
+	<!-- //Add by HBP 15103120081532 - Modifikasi Form PD Untuk Budget Control --> 
+	<select id="getLookupByName" parameterType="String" resultMap="resultDetailLookupDependent">
+		SELECT
+			BLH.LOOKUP_ID,
+			BLH.NAME,
+			BLH.DESCRIPTION,
+			BLH.LOOKUP_TYPE,
+			BLH.GROUP_ID,
+			BLH.PARENT_ID,
+			BLH.DATA_TYPE,
+			BLH.CREATED_BY,
+			BLH.CREATION_DATE,
+			BLH.LAST_UPDATED_BY,
+			BLH.LAST_UPDATE_DATE,
+			BLD.LOOKUP_ID AS LOOKUP_ID_DETAIL,
+			BLD.DETAIL_CODE,
+			BLD.MEANING,
+			BLD.DESCRIPTION AS DESCRIPTION_DETAIL,
+			BLD.COMPANY_SCOPE,
+			BLD.PARENT_DETAIL_CODE,
+			BLD.PARENT_HDR_ID,
+			BLD.DATE_FROM,
+			BLD.DATE_TO,
+			BLD.CREATED_BY AS CREATED_BY_DETAIL,
+			BLD.CREATION_DATE AS CREATION_DATE_DETAIL,
+			BLD.LAST_UPDATED_BY AS LAST_UPDATED_BY_DETAIL,
+			BLD.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_DETAIL
+		FROM
+			BSE_LOOKUP_HDR BLH LEFT JOIN
+			BSE_LOOKUP_DEPENDENTS BLD ON (BLD.LOOKUP_ID = BLH.LOOKUP_ID)
+		WHERE
+			BLH.NAME = #{lookupName, jdbcType=VARCHAR}
+		ORDER BY
+			BLD.SEQ_NUMBER ASC, BLD.DESCRIPTION ASC
+	</select>
+	<!-- //End Add by HBP 15103120081532 - Modifikasi Form PD Untuk Budget Control -->
+
+</mapper>

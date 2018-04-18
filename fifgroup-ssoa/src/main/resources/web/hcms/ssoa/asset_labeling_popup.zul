@@ -1,0 +1,98 @@
+<?page title="SSOA" contentType="text/html;charset=UTF-8"?>
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winAssetLabelingPopup" title="Search Asset" border="normal"
+	width="1000px" height="auto" closable="true"
+	apply="co.id.fifgroup.ssoa.ui.AssetLabelingPopupComposer"
+	position="center,center" action="show:slideDown; hide:slideUp">
+	<groupbox>
+		<grid>
+			<columns>
+				<column width="150px" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Asset Number" />
+					<textbox id="assetNumber" />
+				</row>
+				<row>
+					<div>
+						<label id="lblSearchText1"
+							value="Tanggal Perolehan" />
+					</div>
+					<div>
+						<datebox id="dtDateStart" format="dd-MMM-yyyy"
+							style="background-color:#fff;" />
+						<span style="margin:0px 5px 0px 5px">To</span>
+						<datebox id="dtDateEnd" format="dd-MMM-yyyy"
+							style="background-color:#fff;" />
+					</div>
+				</row>
+				<row>
+					<label value="Has Printed" />
+					<listbox id="cmbHasPrinted" mold="select">
+						<template name="model">
+							<listitem label="${each.description}" value="${each.key}" />
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label value="Location" />
+							<bandbox id="bnbLocation" readonly="true" width="190px" use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox" 
+										title="Location" searchTextCode="Location Code" searchTextName="Location Name" 
+										headerLabel="Location Code" descLabel="Location Name">
+						</bandbox>
+				</row>
+				<row>
+					<div></div>
+					<div>
+						<button id="btnFindAdd"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+					</div>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lbxAssetSearch" emptyMessage="${labels.common.noDataFound}" 
+			use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+				<listhead>
+					<listheader label="" width="50px" />
+					<listheader id="hdrAssetNumber" label="Asset Number" sort="auto(assetNumber)" width="130px" />
+					<listheader id="hdrAssetType" label="Asset Type" sort="auto(assetTypeName)" width="100px" />
+					<listheader id="hdrBranchCode" label="Branch Code" sort="auto(branchCode)" width="130px"/> 
+					<listheader id="hdrBranchName" label="Branch Name" sort="auto(branchName)" width="160px" />
+					<listheader id="hdrLocationCode" label="Kode Outlet" sort="auto(locationCode)" width="120px" />
+					<listheader id="hdrLocationName" label="Nama Outlet" sort="auto(locationName)" width="160px" />
+					<listheader id="hdrCategoryName" label="Asset Category" sort="auto(categoryName)" width="150px" />
+					<listheader id="hdrDatePlaceInService" label="Tanggal Perolehan" sort="auto(datePlacedInService)" width="160px" />
+					<listheader id="hdrDescription" label="Description" sort="auto(description)" width="200px" />
+					<listheader id="hdrSerialNumber" label="Serial Number" sort="auto(serialNumber)" width="150px" />
+				</listhead>
+				<template name="model">
+				<listitem>
+					<listcell style="text-align:center;">
+					</listcell>
+					<listcell label="${each.assetNumber}" />
+					<listcell label="${each.assetTypeName}" />
+					<listcell label="${each.branchCode}" />
+					<listcell label="${each.branchName}" />
+					<listcell label="${each.locationCode}" />
+					<listcell label="${each.locationName}" />
+					<listcell label="${each.categoryName}" />	
+					<listcell label="${date:format(each.datePlacedInService,'dd MMM yyyy')}" />
+					<listcell label="${each.description}" />
+					<listcell label="${each.serialNumber}" />
+				</listitem>
+			</template>
+			</listbox>
+			 <paging id="pgListOfValue"  />
+		<separator />
+		<div align="center">
+			<button id="btnSaveAsset" label="Save"
+				image="${labels.image.link.save}" />
+			<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" 
+			image="${labels.image.link.cancel}" style="float:right;" />
+		</div>
+	</groupbox>
+</window>

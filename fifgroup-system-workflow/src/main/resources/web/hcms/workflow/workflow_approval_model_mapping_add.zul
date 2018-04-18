@@ -1,0 +1,74 @@
+<window border="none" id="winWorkflowApprovalModelMappingAdd" title="${labels.swf.addApprovalModelMapping}"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalModelMappingAddComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<grid sclass="form-entry">
+					<columns sizable="true">
+						<column width="220px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.swf.approvalModelName}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<bandbox id="bnbApprovalModel" readonly="true" width="250px" use="co.id.fifgroup.systemworkflow.util.PopupApprovalModelBandbox" title="${labels.swf.listOfApprovalModelName}" searchText="${labels.swf.approvalModelName}" headerLabel="${labels.swf.approvalModelName}"></bandbox>
+						</row>
+						<row>
+							<label value="${labels.swf.conditionRule}" />
+							<vbox>
+								<hbox>
+									<label id="errRuleValidate" />
+								</hbox>
+								<hbox>
+									<grid id="gridRule" width="700px" sizedByContent="true"></grid>
+								</hbox>
+								<hbox>
+									<button id="btnAddRuleStatement"
+										label="${labels.swf.addCondition}"
+										mold="trendy" />
+								</hbox>
+							</vbox>							
+						</row>
+						<row>
+							<label value="${labels.swf.countLevelMessage}" />
+							<label id="lblCountLevel" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.levelMessageApprovalModel}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<vbox>
+								<div id="errLevelMessage" />
+								<hbox>
+									<grid id="gridLevelMessage" width="700px" height="200px"></grid>
+								</hbox>
+								<hbox>
+									<button id="btnAddLevelMessage"
+										label="${labels.swf.addLevelMessage}"
+										mold="trendy" />
+								</hbox>
+							</vbox>
+						</row>					
+					</rows>
+				</grid>
+			</groupbox>
+			<separator />
+			<hbox>
+				<cell align="center" style="width:1250px;">
+					<button id="btnAdd"
+						label="${labels.common.add}" mold="trendy" 
+						image="${labels.image.link.add}" />
+				</cell>
+				<cell align="right">
+					<button id="btnCancel"
+						label="${labels.common.cancel}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+		</panelchildren>
+	</panel>
+</window>

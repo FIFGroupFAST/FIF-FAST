@@ -1,0 +1,26 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<window id="winPopupImage" title="Asset Non EBS" border="normal" width="1000px" height="auto" closable="true" 
+apply="co.id.fifgroup.ssoa.controller.AssetRetirementNonEBSDetailImageComposer" position="center,center" 
+action="show:slideDown; hide:slideUp">
+	<groupbox mold="3d">
+		<caption label="Asset Photo" />
+		<listbox id="lstRetirementImg" emptyMessage="${labels.common.noDataFound}" >
+				<listhead>
+						<listheader label="Photo Name" sort="auto(imageFilePath)" ></listheader>
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell><a forward="onDetailImage(${each})" label="${each.imageFileName}"></a></listcell>
+						</listitem>
+					</template>
+			</listbox>
+			<separator/>
+			
+	</groupbox>
+	<groupbox id="gbButton">
+		    <div align="center">
+			<button id="btnBack" label="${labels.common.back}" mold="trendy" style="float:right;"
+			image="${labels.image.link.back}" />
+			</div>
+		</groupbox>
+</window>

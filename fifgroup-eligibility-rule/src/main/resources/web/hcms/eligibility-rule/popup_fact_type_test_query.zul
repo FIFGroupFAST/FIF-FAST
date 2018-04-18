@@ -1,0 +1,29 @@
+<window id="winPopupFactTypeTestQuery"
+	mode="modal" 
+	width="600px" apply="co.id.fifgroup.eligibility.controller.QueryTestComposer" >
+	<groupbox mold="3d" closable="true">
+	 	<caption label="${labels.elr.factTtpeTestQuery}" />
+		<grid>
+			<columns>
+				<column width="180px" align="right"/>
+				<column />
+			</columns>
+			<rows id="parameterForms">
+			</rows>
+		</grid>			
+		<separator />
+		<textbox id="txtResult" width="500px" multiline="true" rows="15"/>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnTest" label="${labels.elr.test}"
+					mold="trendy" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

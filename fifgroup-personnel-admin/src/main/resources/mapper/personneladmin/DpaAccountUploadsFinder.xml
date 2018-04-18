@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.DpaAccountUploadsFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.DpaAccountUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<select id="getDpaAccountUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PDAU.BATCH_NUMBER,
+		  PDAU.COMPANY_ID,
+		  PDAU.STATUS,
+		  PDAU.CREATED_BY,
+		  PDAU.CREATION_DATE,
+		  PDAU.LAST_UPDATED_BY,
+		  PDAU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PDAE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_DPA_ACCOUNT_ELEMENTS PDAE_1
+					WHERE 
+						PDAE_1.BATCH_NUMBER = PDAU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PDAE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_DPA_ACCOUNT_ELEMENTS PDAE_2
+					WHERE 
+						PDAE_2.BATCH_NUMBER = PDAU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_DPA_ACCOUNT_UPLOADS PDAU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PDAU.LAST_UPDATED_BY)
+		WHERE
+		 PDAU.BATCH_NUMBER IN (
+			SELECT 
+				PDAE.BATCH_NUMBER 
+			FROM 
+				PEA_DPA_ACCOUNT_ELEMENTS PDAE
+				<where>
+					<if test="dateFrom != null">
+						AND PDAE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PDAE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND PDAU.BATCH_NUMBER &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND PDAU.BATCH_NUMBER &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PDAU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<select id="getDpaAccountBatchUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PDAU.BATCH_NUMBER,
+		  PDAU.COMPANY_ID,
+		  PDAU.STATUS,
+		  PDAU.CREATED_BY,
+		  PDAU.CREATION_DATE,
+		  PDAU.LAST_UPDATED_BY,
+		  PDAU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PDAE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_DPA_ACCOUNT_ELEMENTS PDAE_1
+					WHERE 
+						PDAE_1.BATCH_NUMBER = PDAU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PDAE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_DPA_ACCOUNT_ELEMENTS PDAE_2
+					WHERE 
+						PDAE_2.BATCH_NUMBER = PDAU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_DPA_ACCOUNT_UPLOADS PDAU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PDAU.LAST_UPDATED_BY)
+		WHERE
+		 PDAU.BATCH_NUMBER IN (
+			SELECT 
+				PDAE.BATCH_NUMBER 
+			FROM 
+				PEA_DPA_ACCOUNT_ELEMENTS PDAE
+				<where>
+					<if test="dateFrom != null">
+						AND PDAE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PDAE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND TO_NUMBER(PDAU.BATCH_NUMBER) &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND TO_NUMBER(PDAU.BATCH_NUMBER) &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PDAU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.DpaAccountStageDTO" id="resultStage">
+		<result column="UPLOAD_ID" jdbcType="DECIMAL" property="uploadId" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+	    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+	    <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+	    <result column="ROW_NUMBER" jdbcType="DECIMAL" property="rowNumber" />
+	    <result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+	    <result column="IS_CLOSED" jdbcType="DECIMAL" property="isClosed" />
+	</resultMap>
+	
+	<select id="getStageObjectByUploadId" parameterType="map" resultMap="resultStage">
+		SELECT
+			UPLOAD_ID, 
+			USER_NAME, 
+			PASSWORD, 
+			EMPLOYEE_NUMBER, 
+			ROW_NUMBER, 
+			RAW_DATA, 
+			IS_CLOSED
+		FROM 
+			PEA_DPA_ACCOUNT_STG
+		WHERE
+			UPLOAD_ID = #{uploadId}
+		ORDER BY UPLOAD_ID ASC
+	</select>
+</mapper>

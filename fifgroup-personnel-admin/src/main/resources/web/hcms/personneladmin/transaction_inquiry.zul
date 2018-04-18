@@ -1,0 +1,34 @@
+<window id="winTransactionInquiry" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.TransactionInquiryComposer">
+	<grid>
+		<columns>
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<a id="linkAttendance" label="${labels.pea.attendance }" />
+			</row>
+			<row>
+				<a id="linkBenefit" label="${labels.pea.benefit }" />
+			</row>
+			<row>
+				<a id="linkBusinessTrip" label="${labels.pea.businessTrip }" />
+			</row>
+			<row>
+				<a id="linkIrregularPromotion" label="${labels.pea.irregularPromotion }" />
+			</row>
+			<row>
+				<a id="linkLeave" label="${labels.pea.leave }" />
+			</row>
+			<row>
+				<a id="linkLoan" label="${labels.pea.loan }" />
+			</row>
+			<row>
+				<a id="linkTransfer" label="${labels.pea.transfer }" />
+			</row>
+			<row>
+				<a id="linkOvertime" label="${labels.pea.overtime }" />
+			</row>
+		</rows>
+	</grid>
+</window>

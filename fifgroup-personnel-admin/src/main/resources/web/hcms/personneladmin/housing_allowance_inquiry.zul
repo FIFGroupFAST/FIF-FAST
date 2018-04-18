@@ -1,0 +1,55 @@
+<window id="winHousingAllowanceInquiry" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.HousingAllowanceInquiryComposer">
+	<groupbox closable="false">
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px"></column>
+				<column></column>
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.hou.allowanceType}"></label>
+					<listbox id="cmbAllowanceType" mold="select">
+ 						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each }" />
+							</listitem>
+						</template> 
+					</listbox>
+				</row>
+				<row>
+					<label />
+					<cell colspan="3">
+						<hbox>
+							<button label="${labels.common.find}"
+								id="btnFind" mold="trendy" image="${labels.image.link.search}" />
+							<button label="${labels.common.newHistory}"
+								id="btnNew" mold="trendy" image="${labels.image.link.add}" />
+						</hbox>
+					</cell>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lbxHousingHistory"
+			emptyMessage="${labels.common.err.noDataFound}" mold="paging"
+			pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.common.action }"
+					width="200px" />
+				<listheader label="${labels.cm.startDate }"
+					sort="auto(effectiveStartDate)" width="150px" />
+				<listheader label="${labels.cm.endDate }"
+					sort="auto(effectiveEndDate)" width="150px" />
+				<listheader label="${labels.hou.allowanceType}"
+					sort="auto(houseAllowance)" width="200px" />	
+				<listheader label="${labels.common.lastUpdateDate }"
+					width="150px" sort="auto(lastUpdateDate)" />
+				<listheader label="${labels.common.lastUpdatedBy }"
+					width="150px" sort="auto(lastUpdatedBy)" />
+			</listhead>
+		</listbox>
+		<exporter referenceId="lbxHousingHistory" />
+	</groupbox>
+
+</window>

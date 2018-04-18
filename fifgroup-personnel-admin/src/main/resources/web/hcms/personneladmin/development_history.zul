@@ -1,0 +1,45 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winDevelopmentHistory" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.DevelopmentHistoryComposer">
+	<groupbox closable="false">
+		<caption label="${labels.tra.developmenthistory}" />
+		<listbox id="lstBoxDevelopmentHistory" mold="paging" pagingPosition="both" emptyMessage="${labels.common.err.noDataFound}">
+				<auxhead>
+					<auxheader id="devOrganizerAuxHeader" label="${labels.tra.developmentorganizer}" rowspan="2"></auxheader>
+					<auxheader id="devCategoryAuxHeader" label="${labels.tra.developmentcategory}" rowspan="2" ></auxheader>
+					<auxheader id="devTypeAuxHeader" label="${labels.tra.developmenttype}" rowspan="2" ></auxheader>
+					<auxheader id="devNameAuxHeader" label="${labels.tra.developmentname}" rowspan="2" ></auxheader>
+					<auxheader id="coeNameAuxHeader" label="${labels.tra.coename}" rowspan="2" ></auxheader>
+					<auxheader id="devStartDateAuxHeader" label="${labels.tra.developmentstartdate}" rowspan="2" ></auxheader>
+					<auxheader id="devEndDateAuxHeader" label="${labels.tra.developmentenddate}" rowspan="2" ></auxheader>
+					<auxheader id="totalAttendanceAuxHeader" label="${labels.tra.totalAttendees}" rowspan="2" ></auxheader>			
+					<auxheader id="devResultAuxHeader" label="${labels.tra.developmentResult}" colspan="4"></auxheader>
+					<auxheader id="statusAuxHeader" label="${labels.tra.finalResult}" rowspan="2" ></auxheader>
+					<auxheader id="sourceTypeAuxHeader" label="${labels.tra.remark}" rowspan="2" ></auxheader>
+				</auxhead>
+				<auxhead>
+					<auxheader id="preActivity" label="${labels.tra.preactivity}"></auxheader>
+					<auxheader id="inClassDevelopment" label="${labels.tra.inclassdevelopment}"></auxheader>
+					<auxheader id="remedialInClassDevelopment" label="${labels.tra.remedialInClassDevelopment}"></auxheader>
+					<auxheader id="postActivity" label="${labels.tra.postActivity}"></auxheader>
+				</auxhead>
+				<listhead visible="false" menupopup="auto">
+					<listheader sort="auto(contractNumber)" width="150px"></listheader>
+					<listheader sort="auto(contractNumber)" width="180px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="200px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="280px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="280px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="250px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="250px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="100px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="150px"></listheader>
+					<listheader sort="auto(contractNumber)" width="150px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="200px" ></listheader>
+					<listheader sort="auto(contractNumber)" width="100px"></listheader>
+					<listheader sort="auto(contractNumber)" width="100px"></listheader>
+					<listheader width="200px"></listheader>					
+				</listhead>
+		</listbox>
+		<exporter referenceId="lstBoxDevelopmentHistory" />
+	</groupbox>
+</window>

@@ -1,0 +1,93 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winOrganizationSetupInquiry"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationSetupInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.common.organization}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.organizationName}" />
+					<bandbox id="bnbOrgName" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganization}" searchText1="${labels.wos.organizationCode}" searchText2="${labels.wos.organizationName}" headerLabel1="${labels.wos.organizationCode}" headerLabel2="${labels.wos.organizationName}" />
+				</row>
+				<row>
+					<label value="${labels.wos.organizationLevel}" />
+					<bandbox id="bnbOrgLevel" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganizationLevel}" searchText1="${labels.wos.organizationLevelCode}" searchText2="${labels.wos.organizationLevelName}" headerLabel1="${labels.wos.organizationLevelCode}" headerLabel2="${labels.wos.organizationLevelName}" />
+				</row>
+				<row>
+					<label value="${labels.wos.kpp}" />
+					<bandbox id="bnbKpp" width="220px" use="co.id.fifgroup.core.ui.lookup.LookupWindow" title="${labels.wos.listOfKPP}" searchText="${labels.wos.kpp}" headerLabel="${labels.wos.kpp}"  />
+				</row>
+				<row>
+					<label value="${labels.common.location}" />
+					<bandbox id="bnbLocation" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfLocation}" searchText1="${labels.wos.locationCode}" searchText2="${labels.wos.locationName}" headerLabel1="${labels.wos.locationCode}" headerLabel2="${labels.wos.locationName}" />
+				</row>
+				<row>
+					<label value="${labels.wos.effectiveOnDate}" />
+					<datebox id="dtbEffectiveOnDate" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy" 
+							image="${labels.image.link.add}" />
+						<space width="20px" />
+						<button id="btnUpload"
+							label="${labels.upload.upload}" mold="trendy" 
+							image="${labels.image.link.upload}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox>
+			<caption label="${labels.common.organization}" />
+			<listbox id="lstOrg" emptyMessage="${labels.common.noDataFound}" mold="paging" pagingPosition="both">
+				<listhead menupopup="auto">
+					<listheader label="${labels.wos.organizationCode}" align="center" sort="auto(lower(code))" hflex="min"/>
+					<listheader label="${labels.wos.organizationName}" align="center" sort="auto(lower(name))" hflex="min"/>
+					<listheader label="${labels.wos.organizationDescription}" align="center" sort="auto(lower(description))" hflex="min"/>
+					<listheader label="${labels.wos.organizationLevel}" align="center" sort="auto(lower(levelCode))" hflex="min"/>
+					<listheader label="${labels.wos.npwp}" align="center" sort="auto(lower(npwp))" hflex="min"/>
+					<listheader label="${labels.wos.kpp}" align="center" sort="auto(lower(kppCode))" hflex="min"/>
+					<listheader label="${labels.common.location}" align="center" sort="auto(lower(location.locationName))" hflex="min"/>
+					<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)" hflex="min"/>
+					<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)" hflex="min"/>
+					<listheader label="${labels.common.action}" align="center" hflex="min"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell value="${each}" label="${each.code}" />
+						<listcell value="${each}" label="${each.name}" />
+						<listcell value="${each}" label="${each.description}" />
+						<listcell value="${each}" label="${each.levelCode}" />
+						<listcell value="${each}" label="${each.npwp}" />
+						<listcell value="${each}" label="${each.kppCode}" />
+						<listcell value="${each}" label="${each.location.locationName}" />
+						<listcell value="${each}" label="${date:formatDateTime(each.lastUpdateDate)}" />
+						<listcell value="${each}" label="${each.userName}" />
+						<listcell>
+							<a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" />
+							<a label="${labels.wos.branchSize}" forward="onBranchSize(${each})" style="color:blue" />
+						</listcell>
+					</listitem>
+				</template>
+			</listbox>
+			<exporter referenceId="lstOrg" />
+		</groupbox>		
+	</groupbox>
+</window>

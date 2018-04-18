@@ -1,0 +1,88 @@
+<window id="winBankInformation" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.BankInformationComposer">
+	<grid sclass="form-entry">
+		<columns>
+			<column width="180px" align="right" valign="top"  />
+			<column />
+		</columns>
+		<rows>
+			<row id="rowEffectiveDateFrom">
+				<hbox>
+					<label value="${labels.pea.effectiveDateFrom }" />  
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<hbox>
+					<datebox id="dtbEffectiveStartDate" width="100px" />
+					<label value="to"/>
+					<datebox id="dtbEffectiveEndDate" width="100px" />
+				</hbox>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.bankName }"  /> 
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<bandbox id="bnbBank" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfBank}" searchText1="${labels.pea.bankCode}" searchText2="${labels.pea.bankName}" headerLabel1="${labels.pea.bankCode}" headerLabel2="${labels.pea.bankName}"></bandbox>
+			</row>
+			<row>
+				<hbox>
+					<label  value="${labels.pea.bankBranchName }" />
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<textbox  id="txtBankBranchName" width="250px" maxlength="60"/>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.bankAccountNumber }" />  
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<textbox id="txtBankAccountNumber" width="250px" maxlength="30"/>
+			</row>
+			<row>
+				<hbox>
+					<label value="${labels.pea.bankAccountName }" /> 
+					<label value="${labels.common.required}" style="color:red" />
+				</hbox>
+				<textbox id="txtBankAccountName" width="250px" maxlength="100"/>
+			</row>
+			<row>
+				<label value="${labels.common.file }"/>
+				<hbox>
+					<textbox id="txtFilePath" maxlength="300" width="250px" readonly="true" />
+					<button id="btnBrowse" label="${labels.common.browse}"
+						mold="trendy" upload="true, maxsize=-1" />
+					<a id="linkDownloadFile" style="color:blue" visible="false" />						
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<hbox pack="center" align="center">
+		<cell align="center" style="width:1250px;">
+			<hbox>
+				<hbox id="hboxNavigation">
+					<button id="btnBackAccountInformation"
+						label="${labels.common.back}" mold="trendy"
+						image="${labels.image.link.back}" />
+					<space width="10px"></space>
+					<button id="btnNextAssignment"
+						label="${labels.common.next}" mold="trendy"
+						image="${labels.image.link.next}" />
+				</hbox>
+				<hbox id="hboxSaveDelete">
+					<button id="btnSave"
+						label="${labels.common.save}" mold="trendy"
+						image="${labels.image.link.save}" />
+					<space width="10px"></space>
+					<button id="btnDelete"
+						label="${labels.common.delete}" mold="trendy"
+						image="${labels.image.link.delete}" />
+				</hbox>
+			</hbox>			
+		</cell>
+		<cell align="right"> 
+			<button id="btnCancelWizard" visible="false"
+				label="${labels.common.cancel}" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</cell>
+	</hbox>
+</window>

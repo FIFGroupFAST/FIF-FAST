@@ -1,0 +1,14 @@
+<window id="winFileAttachment" title="${labels.upload.fileAttachments}" width="500px" border="normal" apply="co.id.fifgroup.core.upload.PopupFileUploadComposer" closable="true">
+<listbox id="lstMedia">
+	<listhead>
+		<listheader label="File" />
+		<listheader label="Action" />
+	</listhead>
+<!-- 	<template name="model"> -->
+<!-- 		<listitem> -->
+<!-- 			<listcell value="${each}"><a label="${each.name }" style="text-decoration:underline ;color:blue" forward="lstMedia.onDownload(${each})"></a></listcell> -->
+<!-- 			<listcell><button label="remove" forward="onRemove(${each})" /></listcell> -->
+<!-- 		</listitem> -->
+<!-- 	</template> -->
+</listbox>
+</window>

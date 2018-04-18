@@ -1,0 +1,38 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winLovLookup" width="50%">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.listOfLookup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.bse.lookupName}" />
+					<hbox>
+						<textbox id="txtLookupName" />
+						<space />
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+					</hbox>					
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox>
+			<listhead>
+				<listheader label="${labels.common.name}" align="center" />
+			</listhead>
+		</listbox>
+		<paging />
+		<separator />
+		<hbox>
+			<cell align="center" style="width:1250px;">
+				<button id="btnClose"
+					label="${labels.bse.close}" mold="trendy" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

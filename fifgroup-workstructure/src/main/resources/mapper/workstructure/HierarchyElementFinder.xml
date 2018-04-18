@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.workstructure.finder.HierarchyElementFinder">
+
+	<resultMap id="hierarchyElementDtoResult" type="co.id.fifgroup.workstructure.domain.HierarchyElement">
+		<id column="ORG_HIER_ELEMENT_ID" property="elementId" jdbcType="NUMERIC" />
+		<result column="PARENT_ID" property="parentId" jdbcType="NUMERIC" />
+		<result column="HIER_VERSION_ID" property="hierarchyVersionId" jdbcType="NUMERIC" />
+		<association property="self" javaType="co.id.fifgroup.workstructure.dto.OrganizationDTO">
+			<id column="ORGANIZATION_ID" jdbcType="NUMERIC" property="id" />
+		    <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="code" />
+		    <result column="ORGANIZATION_NAME" jdbcType="VARCHAR" property="name" />
+		    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		    <result column="LEVEL_CODE" jdbcType="VARCHAR" property="levelCode" />
+		    <result column="NPWP" jdbcType="VARCHAR" property="npwp" />
+		    <result column="KPP_CODE" jdbcType="VARCHAR" property="kppCode" />
+		    <result column="LOCATION_ID" jdbcType="DECIMAL" property="location.id" />
+		    <result column="HEAD_OF_ORGANIZATION" jdbcType="DECIMAL" property="organizationHeadId" />
+		    <result column="PIC_ID" jdbcType="DECIMAL" property="picId" />
+		    <result column="IS_HEAD_OFFICE" jdbcType="DECIMAL" property="isHeadOffice" />
+		    <result column="ORGANIZATION_SPV_ID" jdbcType="DECIMAL" property="organizationSpvId" />
+		</association>
+	</resultMap>
+	
+	<select id="findByHierarchyId" parameterType="map" resultMap="hierarchyElementDtoResult">
+		select
+			he.org_hier_element_id,
+	      	he.parent_id,
+	      	he.version_id hier_version_id,
+	      	wo.organization_id,
+	      	wo.organization_code,
+			wo.organization_name,
+			wov.description,
+			wov.level_code,
+			wov.npwp,
+			wov.kpp_code,
+			wov.location_id,
+			wov.head_of_organization,
+			wov.is_head_office,
+			wov.organization_spv_id
+	    from wos_organization_hier h
+	    join wos_org_hier_versions hv
+	      on h.org_hier_id = hv.org_hier_id
+	    join wos_org_hier_elements he
+	      on hv.version_id = he.version_id
+	    join wos_organizations wo
+	      on wo.organization_id = he.organization_id
+		join wos_organization_versions wov
+			on wo.organization_id = wov.organization_id
+		<where>
+			h.org_hier_id = #{hierarchyId, jdbcType=NUMERIC}
+			<if test="versionId != null">
+				and hv.version_id = #{versionId, jdbcType=NUMERIC}
+			</if>
+			<if test="date != null">
+				and trunc(#{date, jdbcType=DATE}) between hv.date_from and hv.date_to
+			</if>
+			<if test="isActiveOrg != null">
+				<if test="isActiveOrg == 0">
+					and wov.version_id =  COALESCE(
+				        (select version_id from wos_organization_versions where trunc(sysdate) between date_from and date_to and organization_id = wo.organization_id),
+				        (select version_id from wos_organization_versions where organization_id = wo.organization_id 
+				            and date_to = (select max(date_to) from wos_organization_versions where organization_id = wo.organization_id))
+				      )
+				</if>
+				<if test="isActiveOrg == 1">
+					and trunc(#{date, jdbcType=DATE}) between wov.date_from and wov.date_to
+				</if>
+			</if>
+		</where>  			
+	</select>
+
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.avm.dao.mybatis.mapper.AVMLevelMapper">
+	<!-- Result Map -->	
+  		<resultMap type="co.id.fifgroup.avm.domain.AVMLevel" id="avmlevelResultMap">
+    		<result column="AVM_ID" jdbcType="VARBINARY" property="avmId" 
+    				typeHandler="co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler"/>
+    		<result column="LEVEL_SEQUENCE" jdbcType="DECIMAL" property="levelSequence" />
+    		<result column="NUMBER_OF_APPROVALS" jdbcType="DECIMAL" property="numberOfApprovals" />
+    		<result column="RULE" jdbcType="VARCHAR" property="rule" />
+    		<result column="LEVEL_NAME" jdbcType="VARCHAR" property="levelName" />
+    		<result column="AVM_VERSION_ID" jdbcType="NUMERIC" property="avmVersionId" />
+    		<result column="LEVEL_METHOD" jdbcType="NUMERIC" property="levelMethod" />
+  		</resultMap>
+  	<!-- Result Map -->
+  	<!-- Select -->
+  		<select id="getTheLastLevelSequence" resultType="int" parameterType="map">
+  			select max(LEVEL_SEQUENCE) from AVM_LEVEL 
+			where AVM_ID=#{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			<if test="avmVersionId != null">
+				and AVM_VERSION_ID = #{avmVersionId, jdbcType=NUMERIC}
+			</if>
+  		</select>
+  		<select id="getAVMLevel" resultMap="avmlevelResultMap" parameterType="map">
+  			select AVM_ID, LEVEL_SEQUENCE, NUMBER_OF_APPROVALS, RULE, LEVEL_NAME, AVM_VERSION_ID, LEVEL_METHOD from AVM_LEVEL
+  			where AVM_ID=#{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			and LEVEL_SEQUENCE=#{levelSequence,jdbcType=DECIMAL}
+			<if test="avmVersionId != null">
+			and AVM_VERSION_ID = #{avmVersionId}
+			</if>
+  		</select>
+  		<select id="getAVMLevels" resultMap="avmlevelResultMap" parameterType="map">
+  			select * from AVM_LEVEL
+  			where AVM_ID=#{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			<if test="avmVersionId != null">
+				and AVM_VERSION_ID = #{avmVersionId}
+			</if>
+  		</select>
+ 
+  	<!-- Select -->
+  	<!-- Insert -->
+  		<insert id="insertNewAVMLevel" parameterType="co.id.fifgroup.avm.domain.AVMLevel">
+  			insert into AVM_LEVEL (AVM_ID, LEVEL_SEQUENCE, NUMBER_OF_APPROVALS, RULE, LEVEL_NAME, AVM_VERSION_ID, LEVEL_METHOD)
+  			values (#{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}, 
+					#{levelSequence}, #{numberOfApprovals}, #{rule, jdbcType=VARCHAR}, #{levelName, jdbcType=VARCHAR}, #{avmVersionId, jdbcType=NUMERIC},
+					#{levelMethod})
+  		</insert>
+  	<!-- Insert -->  
+  	<!-- Update -->
+  	<!-- Update -->
+  	<!-- Delete -->
+  	<delete id="deleteLevelList" parameterType="map">
+  			delete from AVM_LEVEL
+  			where AVM_ID = #{avmId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 			typeHandler=co.id.fifgroup.avm.dao.mybatis.type.UUIDTypeHandler}
+			<if test="avmVersionId != null">
+				and AVM_VERSION_ID = #{avmVersionId}
+			</if>
+  		</delete>
+  	<!-- Delete -->
+</mapper>

@@ -1,0 +1,51 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?component name="formlabel" class="co.id.fifgroup.core.ui.FormLabel" ?>
+<?component name="dateboxmax" class="co.id.fifgroup.core.ui.DateBoxMax" ?>
+<window id="winParameterDetail" apply="co.id.fifgroup.ssoa.controller.ParameterDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Parameter Detail" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<formlabel value="Parameter Code" required="true" />
+					<textbox id="txtCode"  width="200px"  />
+				</row>
+				
+				<row>
+					<formlabel value="Parameter Name" required="true" />
+					<textbox id="txtName"  width="200px"  />		
+				</row>
+	
+			</rows>
+		</grid>
+		<separator />
+		<label id="lblErrorParameter" style="color:red" />
+		<listbox id="parameterDetail" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+			<listhead>
+				<listheader label="" width="35px" />
+				<listheader label="No" />
+				<listheader label="Detail Code" width="20%" />
+				<listheader label="Detail Name" />
+			</listhead>
+		</listbox>
+		<hbox>
+			<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+			<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+		</hbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

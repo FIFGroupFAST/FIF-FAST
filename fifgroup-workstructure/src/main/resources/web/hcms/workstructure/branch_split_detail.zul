@@ -1,0 +1,249 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+
+<window id="winOrganizationSetup" width="750px" title="Organization Detail" border="normal" apply="co.id.fifgroup.workstructure.controller.BranchSplitDetailComposer" closable="true">
+	
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column align="left" />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label
+							value="${labels.wos.organizationCode}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtOrganizationCode" width="220px" maxlength="30" />
+
+				</row>
+				<row>
+					<hbox>
+						<label
+							value="${labels.wos.organizationName}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtOrganizationName" width="220px" maxlength="240" />
+				</row>
+				<row>
+					<label
+						value="${labels.wos.organizationDescription}" />
+					<textbox id="txtDesc" width="220px" rows="2" maxlength="240" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<panel border="normal">
+			<panelchildren>
+				<space height="25px" />
+				<tabbox>
+					<tabs>
+						<tab label="${labels.wos.organizationInfo}" />
+						<tab label="${labels.wos.glCode}" />
+						<tab label="${labels.address.address}" />
+						<tab label="${labels.wos.communication}" />
+						<tab label="${labels.wos.competency}" />
+						<tab label="${labels.wos.timeManagement}" />
+						<tab label="${labels.wos.otherInfo}" />
+					</tabs>
+					<tabpanels>
+						<tabpanel id="tpOrganizationInfo">
+							<space width="300px" />
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<hbox>
+											<label
+												value="${labels.wos.organizationLevel}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<bandbox id="bnbOrgLevel" width="220px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfOrganizationLevel}" searchText="${labels.wos.organizationLevel}" headerLabel="${labels.wos.organizationLevel}" />
+									</row>
+									<row>
+										<label
+											value="${labels.wos.npwp}" />
+										<textbox id="txtNpwp" width="220px" maxlength="20" />
+									</row>
+									<row>
+										<hbox>	
+											<label
+												value="${labels.wos.kpp}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<bandbox id="bnbKpp" width="220px" use="co.id.fifgroup.core.ui.lookup.LookupWindow"/>
+									</row>
+									<row>
+										<hbox>
+											<label
+												value="${labels.common.location}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<bandbox id="bnbLocation" width="220px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfLocation}" searchText1="${labels.wos.locationCode}" searchText2="${labels.wos.locationName}" headerLabel1="${labels.wos.locationCode}" headerLabel2="${labels.wos.locationName}" />
+									</row>
+									<row>
+										<hbox>
+											<label
+												value="${labels.wos.headOfOrganization}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<bandbox id="bnbHeadOrg" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfJob}" searchText1="${labels.wos.jobCode}" searchText2="${labels.wos.jobName}" headerLabel1="${labels.wos.jobCode}" headerLabel2="${labels.wos.jobName}" />
+									</row>
+									<row>
+										<label value="${labels.wos.organizationOfSupervisor}" />
+										<bandbox id="bnbOrgSpv" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganization}" searchText1="${labels.wos.companyName}" searchText2="${labels.wos.organizationName}" headerLabel1="${labels.wos.companyName}" headerLabel2="${labels.wos.organizationName}" />
+									</row>
+									<row>
+										<label value="${labels.wos.isHeadOffice}" />
+										<checkbox id="chkHO" />
+									</row>
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpGlCode">
+							<groupbox mold="default">
+								<caption
+									label="${labels.wos.accountingCode}" />
+								<grid sclass="form-entry">
+									<columns>
+										<column width="180px"
+											align="right" />
+										<column />
+									</columns>
+									<rows>
+										<row>
+											<hbox>
+												<label
+													value="${labels.wos.branchCode}" />
+												<label value="${labels.common.required}" style="color:red;" />
+											</hbox>
+											<bandbox id="bnbBranchCode" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" width="50%" title="${labels.wos.listOfBranchCode}" searchText="${labels.wos.branchCode}" headerLabel="${labels.wos.branchCode}" />
+										</row>
+										<row>
+											<hbox>
+												<label value="${labels.wos.costCenter}" />
+												<label value="${labels.common.required}" style="color:red;" />
+											</hbox>
+											<bandbox id="bnbCostCenter" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" width="50%" title="${labels.wos.listOfCostCenter}" searchText="${labels.wos.costCenter}" headerLabel="${labels.wos.costCenter}" />
+										</row>
+									</rows>
+								</grid>
+							</groupbox>
+						</tabpanel>
+						<tabpanel id="tpAddress">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label
+											value="${labels.address.country}" />
+										<label id="lblCountry" />
+									</row>
+									<row>
+										<label
+											value="${labels.address.province}" />
+										<label id="lblProvince" />
+									</row>
+									<row>
+										<label
+											value="${labels.address.city}" />
+										<label id="lblCity" />
+									</row>
+									<row>
+										<label
+											value="${labels.address.kecamatan}" />
+										<bandbox id="bnbKecamatan" width="220px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfKecamatan}" searchText="${labels.address.kecamatan}" headerLabel="${labels.address.kecamatan}" />
+									</row>
+									<row>
+										<label
+											value="${labels.address.kelurahan}" />
+										<bandbox id="bnbKelurahan" width="220px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfKelurahan}" searchText="${labels.address.kelurahan}" headerLabel="${labels.address.kelurahan}" />
+									</row>
+									<row>
+										<hbox>
+											<label value="${labels.address.zipcode}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<bandbox id="bnbZipCode" width="220px" readonly="true" use="co.id.fifgroup.core.ui.CommonPopupZipCodeBandbox" />
+									</row>
+									<row>
+										<hbox>
+											<label value="${labels.address.address}" />
+											<label value="${labels.common.required}" style="color:red;" />
+										</hbox>
+										<textbox id="txtAddress"
+											maxlength="300" width="220px" rows="3" />
+									</row>									
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpContact">
+							<groupbox>
+								<caption label="${labels.wos.communicationMedia}" />
+							</groupbox>
+							<listbox id="lstContact" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+								<listhead>
+									<listheader width="30px" />
+									<listheader label="${labels.wos.communicationType}" align="center"/>
+									<listheader label="${labels.common.title.information}" align="center"/>
+									<listheader label="${labels.common.startDate}" align="center"/>
+									<listheader label="${labels.common.endDate}" align="center"/>
+								</listhead>
+							</listbox>
+							<separator/>
+							<hbox>
+								<button id="btnAddContact" label="${labels.common.addRow}" />
+								<button id="btnDeleteContact" label="${labels.common.delete}" />
+							</hbox>
+						</tabpanel>
+						<tabpanel id="tpCompetency">
+
+						</tabpanel>
+						<tabpanel id="tpTimeManagement">
+							<grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label value="${labels.wos.workingSchedule}" />
+										<listbox id="lstWorkingSchedule" mold="select"/>
+									</row>
+								</rows>
+							</grid>
+						</tabpanel>
+						<tabpanel id="tpOtherInfo">
+							<!-- <grid sclass="form-entry">
+								<columns>
+									<column width="180px" align="right" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label
+											value="${labels.wos.hoBranch}" />
+										<listbox id="lstHoBranch" mold="select" />
+									</row>
+								</rows>
+							</grid> -->
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</panelchildren>
+		</panel>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnOk" label="${labels.common.ok}" 
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+
+		</hbox>
+</window>

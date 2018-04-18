@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.OrganizationUploadFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.workstructure.dto.OrganizationUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="BRANCH_ID" jdbcType="NUMERIC" property="branchId" />
+		<result column="FORMAT_REFERENCE_ID" jdbcType="NUMERIC" property="formatReferenceId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<resultMap id="stageResult" type="co.id.fifgroup.workstructure.dto.OrganizationStageDTO">
+		<result column="UPLOAD_ID" jdbcType="NUMERIC" property="uploadId" />
+		<result column="DATE_FROM" jdbcType="DATE" property="dateFrom" />
+		<result column="DATE_TO" jdbcType="DATE" property="dateTo" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode" />
+		<result column="ORGANIZATION_NAME" jdbcType="VARCHAR" property="organizationName" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+		<result column="LEVEL_CODE" jdbcType="VARCHAR" property="levelCode" />
+		<result column="NPWP" jdbcType="VARCHAR" property="npwp" />
+		<result column="KPP_CODE" jdbcType="VARCHAR" property="kppCode" />
+		<result column="LOCATION_ID" jdbcType="NUMERIC" property="locationId" />
+		<result column="HEAD_OF_ORGANIZATION" jdbcType="NUMERIC" property="headOfOrganization" />
+		<result column="BRANCH_CODE" jdbcType="VARCHAR" property="branchCode" />
+		<result column="COST_CENTER_CODE" jdbcType="VARCHAR" property="costCenterCode" />
+		<result column="WORKING_SCHEDULE_ID" jdbcType="NUMERIC" property="workingScheduleId" />
+		<result column="ZIP_CODE" jdbcType="VARCHAR" property="zipCode" />
+    	<result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+		<result column="ROW_NUMBER" jdbcType="NUMERIC" property="rowNumber" />
+		<result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+		<result column="IS_CLOSED" jdbcType="NUMERIC" property="isClosed" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.UploadError" id="errorResult">
+		<id column="ERROR_ID" property="errorId" jdbcType="DECIMAL"/>
+		<result column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="ROW_NUMBER" property="rowNumber" jdbcType="DECIMAL"/>
+		<result column="RAW_DATA" property="rawData" jdbcType="VARCHAR"/>
+		<result column="ERROR_MESSAGE" property="errorMessage" jdbcType="VARCHAR"/>
+		<result column="SOURCE" property="source" jdbcType="VARCHAR" javaType="co.id.fifgroup.core.constant.UploadErrorStatus"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="whereClause">
+		<if test="batchNumber != null">
+			AND WOE.BATCH_NUMBER = #{batchNumber, jdbcType=VARCHAR}
+		</if>
+		<if test="companyId != null">
+			AND WOE.COMPANY_ID = #{companyId, jdbcType=DECIMAL}
+		</if>
+		<if test="branchId != null">
+			AND WOE.BRANCH_ID = #{branchId, jdbcType=DECIMAL}
+		</if>
+		<if test="formatReferenceId != null">
+			AND WOE.FORMAT_REFERENCE_ID = #{formatReferenceId, jdbcType=DECIMAL}
+		</if>
+		<if test="status != null">
+			AND WOE.STATUS = #{status, jdbcType=VARCHAR}
+		</if>
+		<if test="createdBy != null">
+			AND WOE.CREATED_BY = #{createdBy, jdbcType=DECIMAL}
+		</if>
+		<if test="creationDate != null">
+			AND WOE.CREATION_DATE = #{creationDate, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdatedBy != null">
+			AND WOE.LAST_UPDATED_BY = #{lastUpdatedBy, jdbcType=DECIMAL}
+		</if>
+		<if test="lastUpdateDate != null">
+			AND WOE.LAST_UPDATE_DATE = #{lastUpdateDate, jdbcType=TIMESTAMP}
+		</if>
+		<if test="batchNumberFrom != null">
+			<if test="!batchNumberFrom.trim().equals('')">
+				AND WOE.BATCH_NUMBER &gt;= #{batchNumberFrom, jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test="batchNumberTo != null">
+			<if test="!batchNumberTo.trim().equals('')">
+				AND WOE.BATCH_NUMBER &lt;= #{batchNumberTo, jdbcType=VARCHAR}
+			</if>
+		</if>
+	</sql>
+
+	<select id="getOrganizationUploads" parameterType="map" resultMap="baseResult" >
+		SELECT 
+		  WOE.BATCH_NUMBER,
+		  WOE.COMPANY_ID, 
+		  WOE.BRANCH_ID, 
+		  WOE.FORMAT_REFERENCE_ID,
+		  WOE.STATUS,
+		  WOE.CREATED_BY,
+		  WOE.CREATION_DATE,
+		  WOE.LAST_UPDATED_BY,
+		  WOE.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PAE_1.UPLOAD_DATE) 
+				FROM 
+					WOS_ORGANIZATION_ELEMENTS PAE_1
+					WHERE 
+						PAE_1.BATCH_NUMBER = WOE.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PAE_2.UPLOAD_DATE) 
+				FROM 
+					WOS_ORGANIZATION_ELEMENTS PAE_2
+					WHERE 
+						PAE_2.BATCH_NUMBER = WOE.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM WOS_ORGANIZATION_UPLOADS WOE
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = WOE.LAST_UPDATED_BY)
+		<where>
+			AND WOE.BATCH_NUMBER IN (
+										SELECT 
+											EUE.BATCH_NUMBER 
+										FROM 
+											wos_organization_elements EUE
+											<where>
+												<if test="processDateFrom != null">
+													AND EUE.UPLOAD_DATE &gt;= #{processDateFrom, jdbcType=TIMESTAMP}
+												</if>
+												<if test="processDateTo != null">
+													AND EUE.UPLOAD_DATE &lt;= #{processDateTo, jdbcType=TIMESTAMP}
+												</if>
+											</where>
+									)
+			<include refid="whereClause"/>
+		</where>
+	</select>
+	
+	<select id="getOrganizationStageByUploadId" parameterType="map" resultMap="stageResult" >
+		select 
+		  upload.company_id,
+		  stg.branch_code,
+		  stg.cost_center_code,
+		  stg.date_from,
+		  stg.date_to,
+		  stg.description,
+		  stg.head_of_organization,
+		  stg.is_closed,
+		  stg.kpp_code,
+		  stg.level_code,
+		  stg.location_id,
+		  stg.npwp,
+		  stg.organization_code,
+		  stg.organization_name,
+		  stg.raw_data,
+		  stg.row_number,
+		  stg.upload_id,
+		  stg.working_schedule_id,
+		  stg.zip_code,
+		  stg.address
+		from wos_organization_stg stg
+		join wos_organization_elements ele on stg.upload_id = ele.upload_id
+		join wos_organization_uploads upload on ele.batch_number = upload.batch_number
+		where stg.upload_id = #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getOrganizationErrorByUploadId" parameterType="map" resultMap="errorResult" >
+		select * from wos_organization_errors where upload_id = #{uploadId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getOrgStageInOneBatchNumberByUploadId" parameterType="map" resultType="int" >
+		select count(1) from wos_organization_stg stg
+			join wos_organization_elements ele on stg.upload_id = ele.upload_id
+			join wos_organization_uploads upl on ele.batch_number = upl.batch_number
+			<where>
+				stg.is_closed = 0
+				<if test="organizationStage.organizationCode != null">
+					and upper(stg.organization_code) = upper(#{organizationStage.organizationCode})
+				</if>
+				<if test="organizationStage.organizationName != null">
+					and upper(stg.organization_name) = upper(#{organizationStage.organizationName})
+				</if>
+			</where>
+			
+	</select>
+</mapper>

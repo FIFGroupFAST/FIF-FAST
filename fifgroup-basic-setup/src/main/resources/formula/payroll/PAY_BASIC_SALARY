@@ -1,0 +1,36 @@
+import groovy.transform.CompileStatic
+
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+
+@CompileStatic
+public class BasicSalary {
+	ServiceModel serviceModel;
+	Long personId;
+	Date processDate;
+	Long companyId;
+        Map<String, Object> additionalParam;
+
+	public Double getParam(){
+		DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+		String processDateStr = df.format(processDate);
+                if(additionalParam.containsKey("isRapel") && (additionalParam.get("isRapel") instanceof Boolean && (Boolean) additionalParam.get("isRapel"))) {
+                     processDateStr = df.format(new Date());
+                }
+		List<Map<String, Object>> result = serviceModel.getFromQuery("select pay_encryption_util_pkg.decrypt_data(amount) basic_salary from pay_salaries where company_id = ${companyId} and person_id = ${personId} and trunc(to_date('${processDateStr}', 'DD-MON-YYYY')) between trunc(effective_start_date) and trunc(effective_end_date)");
+		if(!result.isEmpty()){
+			Map<String, Object> map = result.get(0);
+			return Double.valueOf(new BigDecimal(map.get("BASIC_SALARY").toString()).toString());
+		} else return 0;
+	}
+};
+
+BasicSalary subject = new BasicSalary();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setProcessDate(process_date);
+subject.setCompanyId(company_id);
+subject.setAdditionalParam(additionalParam);
+return subject.getParam();

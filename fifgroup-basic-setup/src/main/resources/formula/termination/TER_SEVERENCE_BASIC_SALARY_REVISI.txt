@@ -1,0 +1,61 @@
+import groovy.transform.CompileStatic;
+import co.id.fifgroup.basicsetup.service.ServiceModel;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+@CompileStatic 
+public class PMKValue{
+           ServiceModel serviceModel;
+           Long personId;
+           Date processDate;
+           Long companyId;
+           Long terTypeId;
+	   DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+
+           public Double getParam(){
+			String dateStr = df.format(processDate);
+			String sql = """
+					SELECT
+  						tts.value
+					FROM
+						ter_types tt
+						JOIN ter_type_version ttv ON (tt.type_id = ttv.type_id AND (TRUNC(sysdate) BETWEEN ttv.date_from AND ttv.date_to))
+						JOIN ter_type_severances tts ON (tts.version_id= ttv.version_id)
+					WHERE
+						tt.type_id       = ${terTypeId}
+						AND tts.severance_type = 'BASIC_SALARY'
+						AND (
+							(
+							SELECT
+								floor(MONTHS_BETWEEN(trunc(to_date('${dateStr}', 'DD-MON-YYYY'), 'MM'), trunc(ppi.astra_join_date, 'MM')) 
+
+/ 12) service_time
+							FROM
+								pea_personal_informations ppi
+							WHERE
+								ppi.person_id = ${personId}
+								AND ppi.company_id  = ${companyId}
+								AND (TRUNC(sysdate) BETWEEN ppi.effective_start_date AND ppi.effective_end_date)
+						) BETWEEN tts.min_year AND tts.max_year)
+					""";
+                       List<Map<String, Object>> result = serviceModel.getFromQuery(sql);
+                      if(!result.isEmpty()){	
+                                Map<String, Object> map = result.get(0);	
+                                println("Query Result : "+map.get("VALUE").toString());
+                                return Double.valueOf(map.get("VALUE").toString());
+                      } else return 0;
+            }
+ }; 
+
+println("Getting PMK Value..");
+
+PMKValue subject = new PMKValue();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+subject.setProcessDate(process_date);
+subject.setCompanyId(company_id);
+if(additionalParam.containsKey("TER_TYPE_ID"))
+subject.setTerTypeId((Long)additionalParam.get("TER_TYPE_ID"));
+else
+subject.setTerTypeId(-1);
+return subject.getParam();

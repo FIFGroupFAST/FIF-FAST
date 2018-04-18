@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.MobilityEmployeeFinder">
+
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.MobilityEmployeeDTO">
+		<id column="MOBILITY_EMPLOYEE_ID" 			property="mobilityEmployeeId" 		jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" 					property="personId" 				jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" 				property="companyId" 				jdbcType="DECIMAL" />
+	    <result column="MOBILITY_STATUS" 			property="mobilityStatus" 			jdbcType="VARCHAR" />
+	    <result column="NOTES" 						property="notes" 					jdbcType="VARCHAR" />
+	    <result column="CREATED_BY" 				property="createdBy" 				jdbcType="DECIMAL" />
+   		<result column="CREATION_DATE" 				property="creationDate" 			jdbcType="TIMESTAMP" />
+   		<result column="LAST_UPDATED_BY"			property="lastUpdatedBy" 			jdbcType="DECIMAL" />
+  		<result column="LAST_UPDATE_DATE" 			property="lastUpdateDate" 			jdbcType="TIMESTAMP" />
+	    <collection property="mobilityZone" ofType="co.id.fifgroup.personneladmin.domain.MobilityZone" javaType="java.util.List" >
+		    <result column="ZONE_ID" property="zoneId" jdbcType="DECIMAL" />
+		</collection>
+	</resultMap>
+	
+	<select id="getMobilityByPersonIdAndCompanyId" parameterType="map" resultMap="baseResult">
+		SELECT 
+  			pme.mobility_employee_id, pme.person_id, pme.company_id, pme.mobility_status, pme.notes, 
+  			pme.created_by, pme.creation_date, pme.last_update_date, pme.last_updated_by,
+  			pmz.zone_id
+		FROM 
+			pea_mobility_employees pme
+		LEFT JOIN pea_mobility_zones pmz
+  			ON pmz.mobility_employee_id = pme.mobility_employee_id
+  		<where>
+			<if test="personId != null">
+				AND pme.person_id = #{personId}
+			</if>
+			<if test="companyId != null">
+				AND pme.company_id = #{companyId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getZoneName" parameterType="map" resultType="String">
+		SELECT ZONE_NAME FROM CAM_ZONES WHERE ZONE_ID = #{zoneId}
+	</select>
+</mapper>

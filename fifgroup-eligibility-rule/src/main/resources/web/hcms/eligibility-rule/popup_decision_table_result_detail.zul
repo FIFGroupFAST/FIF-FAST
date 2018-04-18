@@ -1,0 +1,56 @@
+<window id="winPopupDecisionTableResultDetail" width="600px" 
+	mode="modal"
+	apply="co.id.fifgroup.eligibility.controller.DecisionTableResultDetailComposer">
+	<groupbox mold="3d" closable="false">
+		<caption label="${labels.elr.decisionTableResultDetail}" />
+		<grid>
+			<columns>
+				<column width="180px" align="right"/>
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.elr.fieldName}" />
+						<label value="${labels.common.required}" style="color:red" />	
+					</hbox>		
+					<listbox id="lstFieldName" mold="select">
+						<template name="model">
+							<listitem value="${each }" label="${each.name }"/>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.elr.columnName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtColumnName" />
+				</row>						
+				<row>
+					<hbox>
+						<label value="${labels.elr.valueType}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstValueType" use="co.id.fifgroup.core.ui.EnumListbox"  mold="select" />
+				</row>
+				<row id="rowValue">
+					<label value="${labels.elr.value}" />
+					<textbox id="txtValue" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>	
+</window>

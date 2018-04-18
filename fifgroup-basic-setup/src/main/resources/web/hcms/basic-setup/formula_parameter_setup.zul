@@ -1,0 +1,69 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winFormulaParameterSetup"
+	apply="co.id.fifgroup.basicsetup.controller.FormulaParameterSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.formulaParameter}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.parameterName}" />
+						<label value="${labels.common.required}"
+							style="color : red" />
+					</hbox>
+					<textbox id="txtParameterName" width="220px"
+						maxlength="30" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.formulaReturnType}" />
+						<label value="${labels.common.required}"
+							style="color : red" />
+					</hbox>
+					<listbox id="lstReturnType" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.description}" />
+					</hbox>
+					<textbox id="txtDescription" width="220px"
+						maxlength="255" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.parameterFunction}" />
+						<label value="${labels.common.required}"
+							style="color : red" />
+					</hbox>
+					<textbox id="txtParameterFunction" rows="15"
+						width="800px" style="font-family:'Consolas', monospace"/>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnSave"
+							label="${labels.common.save}" mold="trendy"
+							image="${labels.image.link.save}" />
+						<space width="20px" />
+						<button id="btnCancel"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+</window>

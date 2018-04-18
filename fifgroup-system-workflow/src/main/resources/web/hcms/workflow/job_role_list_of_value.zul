@@ -1,0 +1,46 @@
+<window id="winJobRoleListOfValue" title="List of Value Job/Role" border="normal" width="400px" height="600px" closable="true"
+apply="co.id.fifgroup.systemworkflow.util.JobRoleListOfValueComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label id="lblJobRole" value="Job / Role"/>
+				<listbox id="cmbJobRole" mold="select">
+					<listitem label="Job" value="JOB" />
+					<listitem label="Role" value="PEA_ROLE"/>
+				</listbox>
+			</row>
+			<row>
+				<label id="lblSearchText" value="Search text"/>
+				<textbox id="txtSearchCriteria" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<button id="btnFind" label="find" mold="trendy" />
+					<button id="btnDeselect" label="${labels.common.deselect}" mold="trendy" />				
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.description}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue" />
+</groupbox>
+</window>

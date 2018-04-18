@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.PrinterFinder">
+
+	<resultMap id="BaseResultMapInquiry" type="co.id.fifgroup.basicsetup.dto.PrinterDTO">
+		<id column="PRINTER_ID" jdbcType="DECIMAL" property="printer.printerId" />
+		<result column="PRINTER_CODE" jdbcType="VARCHAR" property="printer.printerCode" />
+		<result column="PRINTER_NAME" jdbcType="VARCHAR" property="printer.printerName" />
+		<result column="ARGUMENT" jdbcType="VARCHAR" property="printer.argument" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="printer.description" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="printer.createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="printer.creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="printer.lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="printer.lastUpdateDate" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+
+	<select id="getCountPrinterDtoByPrinterName" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_PRINTERS PRI LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PRI.LAST_UPDATED_BY)
+		<where>
+			<if test="printerName != null">
+				UPPER(PRINTER_NAME) LIKE UPPER(#{printerName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+	
+	<select id="getPrinterDtoByPrinterName" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			PRI.PRINTER_ID,
+			PRI.PRINTER_CODE,
+			PRI.PRINTER_NAME,
+			PRI.ARGUMENT,
+			PRI.DESCRIPTION,
+			PRI.CREATED_BY,
+			PRI.CREATION_DATE,
+			PRI.LAST_UPDATED_BY,
+			PRI.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		FROM
+			BSE_PRINTERS PRI LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PRI.LAST_UPDATED_BY)
+		<where>
+			<if test="printerName != null">
+				UPPER(PRINTER_NAME) LIKE UPPER(#{printerName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+</mapper>

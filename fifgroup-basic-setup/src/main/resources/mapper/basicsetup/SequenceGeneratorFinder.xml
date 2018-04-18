@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.SequenceGeneratorFinder">
+
+<resultMap id="BaseResultMapInquiry" type="co.id.fifgroup.basicsetup.dto.SequenceGeneratorDTO" >
+    <id column="SEQUENCE_GENERATOR_ID" property="sequenceGeneratorId" jdbcType="DECIMAL" />
+    <result column="COMPANY_SCOPE" property="companyScope" jdbcType="DECIMAL" />
+    <result column="TRX_CODE" property="trxCode" jdbcType="VARCHAR" />
+    <result column="LENGTH" property="length" jdbcType="DECIMAL" />
+    <result column="IS_PADDING" property="isPadding" jdbcType="DECIMAL" />
+    <result column="PADDING_CHAR" property="paddingChar" jdbcType="CHAR" />
+    <result column="PREFIX" property="prefix" jdbcType="VARCHAR" />
+    <result column="SEQUENCE_START_FROM" property="sequenceStartFrom" jdbcType="DECIMAL" />
+    <result column="SEQ_INCREMENT" property="seqIncrement" jdbcType="DECIMAL" />
+    <result column="IS_RESET_PER_YEAR" jdbcType="DECIMAL" property="isResetPerYear" />
+    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="TRX_TYPE" property="trxType" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="FORMAT" property="format" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="getCountSequenceGeneratorBySequenceGeneratorId" parameterType="map" resultType="int">
+  		SELECT
+			COUNT(*)
+		FROM
+			BSE_SEQUENCE_GENERATORS SQG LEFT JOIN BSE_TRANSACTION_TYPES TRX ON(TRX.TRX_CODE = SQG.TRX_CODE)
+		<where>
+			<if test="sequenceGeneratorId != null">
+				SEQUENCE_GENERATOR_ID = #{sequenceGeneratorId, jdbcType=DECIMAL}
+			</if>
+		</where>
+  </select>
+  
+  <select id="getSequenceGeneratorBySequenceGeneratorIdWithRowBounds" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			SQG.SEQUENCE_GENERATOR_ID,
+			SQG.COMPANY_SCOPE,
+			SQG.TRX_CODE,
+			SQG.LENGTH,
+			SQG.IS_PADDING,
+			SQG.PADDING_CHAR,
+			SQG.PREFIX,
+			SQG.SEQUENCE_START_FROM,
+			SQG.SEQ_INCREMENT,
+			SQG.IS_RESET_PER_YEAR,
+			SQG.CREATED_BY,
+			SQG.CREATION_DATE,
+			SQG.LAST_UPDATED_BY,
+			SQG.LAST_UPDATE_DATE,
+			TRX.TRX_TYPE
+		FROM
+			BSE_SEQUENCE_GENERATORS SQG LEFT JOIN BSE_TRANSACTION_TYPES TRX ON(TRX.TRX_CODE = SQG.TRX_CODE)
+		<where>
+			<if test="sequenceGeneratorId != null">
+				SEQUENCE_GENERATOR_ID = #{sequenceGeneratorId, jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+	
+	 <select id="getCountSequenceGeneratorDtoByTrxCode" parameterType="map" resultType="int">
+  		SELECT
+			COUNT(*)
+		FROM
+			BSE_SEQUENCE_GENERATORS SQG LEFT JOIN BSE_TRANSACTION_TYPES TRX ON(TRX.TRX_CODE = SQG.TRX_CODE)
+		<where>
+			<if test="trxCode != null">
+				UPPER(TRX.TRX_CODE) LIKE UPPER(#{trxCode, jdbcType=VARCHAR})
+			</if>
+			<if test="groupId != null">
+				AND SQG.GROUP_ID = #{groupId, jdbcType=DECIMAL}
+			</if>
+		</where>
+  </select>
+  
+  <select id="getSequenceGeneratorByTrxCodeWithRowBounds" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			SQG.SEQUENCE_GENERATOR_ID,
+			SQG.COMPANY_SCOPE,
+			SQG.TRX_CODE,
+			SQG.LENGTH,
+			SQG.IS_PADDING,
+			SQG.PADDING_CHAR,
+			SQG.PREFIX,
+			SQG.SEQUENCE_START_FROM,
+			SQG.SEQ_INCREMENT,
+			SQG.IS_RESET_PER_YEAR,
+			SQG.CREATED_BY,
+			SQG.CREATION_DATE,
+			SQG.LAST_UPDATED_BY,
+			SQG.LAST_UPDATE_DATE,
+			TRX.TRX_TYPE,
+			SU.USER_NAME,
+			TRIM(CONCAT(NVL(PREFIX, ' '), LPAD(SEQUENCE_START_FROM, LENGTH, NVL(PADDING_CHAR, ' ')))) AS FORMAT,
+			CASE SQG.COMPANY_SCOPE
+			WHEN -1 THEN 'COMMON'
+			ELSE CO.COMPANY_NAME
+			END AS COMPANY_NAME
+			FROM BSE_SEQUENCE_GENERATORS SQG 
+			LEFT JOIN BSE_TRANSACTION_TYPES TRX ON(TRX.TRX_CODE = SQG.TRX_CODE) 
+			LEFT JOIN SAM_USERS SU ON(sqg.last_updated_by=su.user_id) 
+			LEFT JOIN BSE_COMPANIES CO ON(sqg.company_scope = co.company_id and trunc(sysdate) between co.effective_start_date and co.effective_end_date)
+		<where>
+			<if test="trxCode != null">
+				and UPPER(TRX.TRX_CODE) LIKE UPPER(#{trxCode, jdbcType=VARCHAR})
+			</if>
+			<if test="groupId != null">
+				AND SQG.GROUP_ID = #{groupId, jdbcType=DECIMAL}
+			</if>
+		</where>
+	</select>
+
+	<insert id="executeSequenceGenerator" parameterType="map">
+		CREATE SEQUENCE ${sequenceName} INCREMENT BY ${increment} START WITH ${minValue} MAXVALUE ${maxValue} MINVALUE ${minValue} CACHE 20
+	</insert>
+
+	<insert id="dropSequenceGenerator" parameterType="map">
+		DROP SEQUENCE ${sequenceName}
+	</insert>
+
+</mapper>

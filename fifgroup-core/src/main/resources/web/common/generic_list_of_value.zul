@@ -1,0 +1,39 @@
+<window id="winGenericLov" title="new page title" border="normal" width="400px" height="600px" closable="true"
+apply="co.id.fifgroup.core.ui.lookup.ListOfValueComposer">
+<groupbox>
+	<caption label="Filters" />
+	<grid>
+		<columns>
+			<column align="right" hflex="min" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label id="lblSearchText" />
+				<textbox id="txtSearchCriteria" width="90%" use="co.id.fifgroup.core.ui.Searchtextbox"/>
+			</row>
+			<row>
+				<label />
+				<hlayout>
+				<button id="btnFind" label="Find" mold="trendy" image="${labels.image.link.search}"  />
+				<button id="btnDeselect" label="${labels.common.deselect }" mold="trendy" image="${labels.image.link.cancel}" />
+				</hlayout>
+			</row>
+		</rows>
+	</grid>
+</groupbox>
+<groupbox>
+	<caption label="Search Results" />
+	<listbox id="listbox" height="350px" emptyMessage="${labels.common.err.noDataFound}">
+		<listhead>
+			<listheader id="listHeadLabel" />
+		</listhead>
+		<template name="model">
+			<listitem value="${each}">
+				<listcell label="${each.description}"></listcell>
+			</listitem>
+		</template>
+	</listbox>
+	<paging id="pgListOfValue" />
+</groupbox>
+</window>

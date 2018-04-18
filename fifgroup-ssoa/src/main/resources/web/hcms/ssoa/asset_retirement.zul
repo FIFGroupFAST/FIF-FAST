@@ -1,0 +1,159 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?xel-method prefix="c" name="formatNumber" class="co.id.fifgroup.ssoa.util.FormatNumber" signature="java.lang.String formatNumber(double)" ?>
+<?page title="Asset Retirement"?>
+<window id="winAssetRetirement" apply="co.id.fifgroup.ssoa.controller.AssetRetirementComposer">
+	<groupbox id="gbAssetRetirement" closable="false" mold="3d">
+		<caption label="Asset Retirements" />
+		<grid>
+			<columns>
+				<column width="180px" align="right" />
+				<column width="310px" align="left"/>
+				<column width="" align="left" />
+			</columns>
+			<rows >
+				<row >
+					<label value="Document No" />
+					<div style="width:310px;">
+					<textbox id="txtDocNo" width="300px"  />
+					</div>
+					<label/>
+				</row>
+				<row >
+					<label value="Branch" />
+					<div style="width:310px;">
+					<bandbox id="bnbBranch" readonly="true" width="280px" use="co.id.fifgroup.ssoa.common.SSOACommonPopupBandbox" 
+										title="Branch" searchTextCode="Branch Code" searchTextName="Branch Name" 
+										headerLabel="Branch Code" descLabel="Branch Name"> </bandbox>
+					</div>
+					<label/>
+				</row>
+				<row >
+					<label value="Request Date" />
+					<div style="width:310px;">
+						<datebox id="dtRequestDateFrom" format="dd-MMM-yyyy"  />
+						<label value="To" />
+						<datebox id="dtRequestDateTo" format="dd-MMM-yyyy"  />
+					</div>
+					<label id="lblErrorDate"></label>
+				</row>
+				<row >
+					<label value="Retirement Type" />
+					<div style="width:310px;">
+					<listbox mold="select" id="cbRetirementType">
+								<template name="model">
+									<listitem label="${each.description}" value="${each.key}" />
+								</template>
+								
+				    </listbox>
+				    </div>
+				    <label/>
+				</row>
+				<row >
+					<label/>
+					<div style="width:310px;">
+					<hbox pack="center" align="center">
+					<!-- <cell align="center" style="margin-left:15px;"> -->
+						<button id="btnFind" label="${labels.common.find}" 
+							mold="trendy" image="${labels.image.link.search}" />
+						<button id="btnNew" label="${labels.common.create}" 
+							mold="trendy" image="${labels.image.link.add}" style="margin-left:15px;" />
+					<!-- </cell> -->
+					</hbox>
+					</div> 	
+					<label/>
+				</row>
+			</rows>
+		</grid>
+		
+		<separator/>
+		<paging id="pgListOfValueTop"  />	
+		<listbox id="lstAssetRetirements" height="auto" emptyMessage="No Data Found">
+			<listhead style="text-align:left;" menupopup="auto">
+							<listheader label="Action" width="200px" />
+							<listheader id="hdrDocNo" label="Document No" sort="auto(requestNo)" width="200px" />
+							<listheader id="hdrRequestDate" label="Request Date" sort="auto(requestDate)" width="150px"/>
+							<listheader id="hdrRetirementType" label="Retirement Type" sort="auto(retirementType)" width="150px"/>
+							<listheader id="hdrPenerima" label="Penerima" sort="auto(recipient)" width="120px"/>
+							<listheader id="hdrNilaiJual" label="Nilai Jual" sort="auto(quotationPrice)" width="120px"/>
+							<listheader id="hdrStatus" label="Status" sort="auto(status)" width="100px"/>
+							<listheader id="hdrBastStatus" label="BAST Status" sort="auto(bastStatus)" width="120px" />
+							<listheader id="hdrRVNumber" label="RV Number" sort="auto(rvNumber)" width="150px" />
+							<listheader id="hdrLastUpdateBy" label="Last update by" sort="auto(userName)" width="190px" />
+							<listheader id="hdrLastUpdateDate" label="Last update date" sort="auto(lastUpdateDate)" width="160px"/>
+						</listhead>
+						<template name="model">
+						<listitem>
+						    <listcell>
+						    <a label="Detail" forward="onDetail(${each})"  style="color:blue" visible="${(each.statusCode != 'RETIREMENT_STATUS_ON_PROGRESS' and each.statusCode != 'RETIREMENT_STATUS_APPROVED'and each.statusCode != 'RETIREMENT_STATUS_REJECTED') ? false : true}"/>
+						    <span style="color:blue;" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_GRANT' and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId) ? true : false}"> || </span>
+						    <a label="BAST" forward="onBAST(${each})"  style="color:blue" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_GRANT' and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId) ? true : false}"/>
+						    <span style="color:blue;"  visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and  each.retirementTypeCode == 'RETIREMENT_TYPE_SELL' and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId and each.rvNumber != '-') ? true : false}"> || </span>
+						    <a label="BAST" forward="onBAST(${each})"  style="color:blue" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and  each.retirementTypeCode == 'RETIREMENT_TYPE_SELL' and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId and each.rvNumber != '-') ? true : false}"/>
+						    <span style="color:blue;"  visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_GRANT' and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId) ? true : false}"> || </span>
+						    <a label="Print BAST" forward="onPrintBast(${each})"  style="color:blue" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_GRANT' and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId) ? true : false}"/>
+						    <span style="color:blue;" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_SELL'  and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId and each.rvNumber != '-') ? true : false}"> || </span>
+						    <a label="Print BAST" forward="onPrintBast(${each})"  style="color:blue" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_SELL'  and (each.bastStatusCode == null or each.bastStatusCode == '-') and each.branchId ==  win$composer.bnbBranchId and each.rvNumber != '-') ? true : false}"/>
+						    <span style="color:blue;" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_SELL' and each.branchId ==  win$composer.bnbBranchId) and each.rvNumber == '-' ? true : false }"> || </span>
+						    <a label="Input RV Number" forward="onCreateRV(${each})"  style="color:blue" visible="${(each.statusCode == 'RETIREMENT_STATUS_APPROVED' and each.retirementTypeCode == 'RETIREMENT_TYPE_SELL' and each.branchId ==  win$composer.bnbBranchId) and each.rvNumber == '-' ? true : false }"/>
+						    </listcell>
+							<listcell label="${each.requestNo}"></listcell>
+							<listcell label="${date:format(each.requestDate,'dd MMM yyyy')}"></listcell>
+							<listcell label="${each.retirementType}"></listcell>
+							<listcell label="${each.recipient}"></listcell>
+							<listcell label="${c:formatNumber(each.quotationPrice)}"></listcell>
+							<listcell>
+							<a label="${each.status}" forward="onStatus(${each})"/>
+							</listcell>
+							<listcell>
+							<a label="${each.bastStatus}" forward="onStatusBast(${each})"/>
+							</listcell>
+							<listcell label="${each.rvNumber}"></listcell>
+							<listcell label="${each.userName}"></listcell>
+							<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"></listcell>
+						</listitem>
+			</template>
+					</listbox>
+		<paging id="pgListOfValue"  />
+		<listbox id="lstAssetRetirementsDownload" height="auto" visible="false">
+			<listhead style="text-align:left;" menupopup="auto">
+							<listheader label="Document No" sort="auto(documentNo)" width="200px" />
+							<listheader label="Request Date" sort="auto(requestDate)" width="150px"/>
+							<listheader label="Retirement Type" sort="auto(origin)" width="150px"/>
+							<listheader label="Destination" sort="auto(destination)" width="150px"/>
+							<listheader label="Nilai Jual" sort="auto(nilaiJual)" width="250px"/>
+							<listheader label="Status" sort="auto(status)" width="120px"/>
+							<listheader label="BAST Status" sort="auto(bastStatus)" width="120px" />
+							<listheader label="RV Number" sort="auto(rvNumber)" width="120px" />
+							<listheader label="Last update by" sort="auto(updatedBy)" width="110px" />
+							<listheader label="Last update date" sort="auto(updatedOn)" width="110px"/>
+						</listhead>
+						<template name="model">
+						<listitem>
+							<listcell label="${each.requestNo}"></listcell>
+							<listcell label="${date:format(each.requestDate,'dd MMM yyyy')}"></listcell>
+							<listcell label="${each.retirementType}"></listcell>
+							<listcell label="${each.recipient}"></listcell>
+							<listcell label="${each.quotationPrice}"></listcell>
+							<listcell label="${each.status}"></listcell>
+							<listcell label="${each.bastStatus}"></listcell>
+							<listcell label="${each.rvNumber}"></listcell>
+							<listcell label="${each.userName}"></listcell>
+							<listcell label="${date:format(each.lastUpdateDate,'dd-MMM-yyyy HH:mm')}"></listcell>
+						</listitem>
+			</template>
+					</listbox>
+		<separator/>
+		
+		<!--  <exporter referenceId="lstAssetRetirementsDownload" />-->
+		<div style="float:right;">
+		<div>
+		<label>Download as </label>
+		<combobox id="cmbDownloadAs" width="90px" value="PDF" style="background-color:#fff;">
+									<comboitem label="PDF" />
+									<comboitem label="XLS" />
+		</combobox>
+		<button id="btnDownload"  label="Download" />
+		</div>
+		</div>
+	</groupbox>
+</window>

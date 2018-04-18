@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<context id="coreTables" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+	
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.68:1521:sit"
+			userId="hcms"
+			password="hcms" />
+			
+			
+		<javaModelGenerator targetPackage="co.id.fifgroup.core.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.core" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.core.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>
+		
+<!-- 		<table tableName="FS_MST_PROVINSI_TEST" domainObjectName="Province" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMPANY_ID" sqlStatement="select BSE_COMPANIES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="PROV_CODE" property="provinsiCode" /> -->
+<!-- 			<columnOverride column="VERSION" property="objectVersion" /> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="FS_MST_CITIES_TEST" domainObjectName="City" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMPANY_ID" sqlStatement="select BSE_COMPANIES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="PROV_CODE" property="provinsiCode" /> -->
+<!-- 			<columnOverride column="VERSION" property="objectVersion" /> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="FS_MST_KECAMATAN_TEST" domainObjectName="Kecamatan" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMPANY_ID" sqlStatement="select BSE_COMPANIES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="KEC_CODE" property="kecamatanCode" /> -->
+<!-- 			<columnOverride column="VERSION" property="objectVersion" /> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="FS_MST_KELURAHAN_TEST" domainObjectName="Kelurahan" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMPANY_ID" sqlStatement="select BSE_COMPANIES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="KEL_CODE" property="kelurahanCode" /> -->
+<!-- 			<columnOverride column="VERSION" property="objectVersion" /> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="FS_MST_ZIP_TEST" domainObjectName="ZipCode" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMPANY_ID" sqlStatement="select BSE_COMPANIES_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="PROV_CODE" property="provinsiCode" /> -->
+<!-- 			<columnOverride column="KEC_CODE" property="kecamatanCode" /> -->
+<!-- 			<columnOverride column="KEL_CODE" property="kelurahanCode" /> -->
+<!-- 			<columnOverride column="VERSION" property="objectVersion" /> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="WOS_LOCATION_VERSIONS" domainObjectName="LocationVersion" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="LOCATION_VERSION_ID" sqlStatement="select WOS_LOCATION_VERSIONS_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="LOCATION_VERSION_ID" property="versionId" /> -->
+<!-- 			<columnOverride column="EFFECTIVE_START_DATE" jdbcType="DATE" /> -->
+<!-- 			<columnOverride column="EFFECTIVE_END_DATE" jdbcType="DATE" /> -->
+<!-- 		</table> -->
+		
+	<!-- 	<table tableName="BATCH_UPLOADS" domainObjectName="BatchUpload"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+		</table>
+		<table tableName="UPLOAD_ELEMENTS" domainObjectName="UploadElement"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="UPLOAD_ID" sqlStatement="select ${sequenceName}.nextVal from dual" type="pre"/>
+		</table>
+		<table tableName="UPLOAD_ERRORS" domainObjectName="UploadError"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="ERROR_ID" sqlStatement="select ${sequenceName}.nextVal from dual" type="pre"/>
+		</table> -->
+		
+		<table tableName="TBL_ACTIVITY" domainObjectName="Activity"
+			modelType="flat" 
+			enableDeleteByExample="false"
+			enableUpdateByExample="false"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+ 		</table>
+ 		
+	</context>
+</generatorConfiguration>

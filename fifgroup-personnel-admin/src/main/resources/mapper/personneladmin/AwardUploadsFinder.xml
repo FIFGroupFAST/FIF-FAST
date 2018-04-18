@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AwardUploadsFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.AwardUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<select id="getAwardUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PAU.BATCH_NUMBER,
+		  PAU.COMPANY_ID,
+		  PAU.STATUS,
+		  PAU.CREATED_BY,
+		  PAU.CREATION_DATE,
+		  PAU.LAST_UPDATED_BY,
+		  PAU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PAE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_AWARD_ELEMENTS PAE_1
+					WHERE 
+						PAE_1.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PAE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_AWARD_ELEMENTS PAE_2
+					WHERE 
+						PAE_2.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_AWARD_UPLOADS PAU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PAU.LAST_UPDATED_BY)
+		WHERE
+		 PAU.BATCH_NUMBER IN (
+			SELECT 
+				PAE.BATCH_NUMBER 
+			FROM 
+				PEA_AWARD_ELEMENTS PAE
+				<where>
+					<if test="dateFrom != null">
+						AND PAE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PAE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND PAU.BATCH_NUMBER &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND PAU.BATCH_NUMBER &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PAU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<select id="getAwardBatchUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PAU.BATCH_NUMBER,
+		  PAU.COMPANY_ID,
+		  PAU.STATUS,
+		  PAU.CREATED_BY,
+		  PAU.CREATION_DATE,
+		  PAU.LAST_UPDATED_BY,
+		  PAU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PAE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_AWARD_ELEMENTS PAE_1
+					WHERE 
+						PAE_1.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PAE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_AWARD_ELEMENTS PAE_2
+					WHERE 
+						PAE_2.BATCH_NUMBER = PAU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_AWARD_UPLOADS PAU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PAU.LAST_UPDATED_BY)
+		WHERE
+		 PAU.BATCH_NUMBER IN (
+			SELECT 
+				PAE.BATCH_NUMBER 
+			FROM 
+				PEA_AWARD_ELEMENTS PAE
+				<where>
+					<if test="dateFrom != null">
+						AND PAE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PAE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND TO_NUMBER(PAU.BATCH_NUMBER) &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND TO_NUMBER(PAU.BATCH_NUMBER) &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PAU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.AwardStageDTO" id="resultStage">
+		<result column="UPLOAD_ID" jdbcType="DECIMAL" property="uploadId" />
+	   <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+	   <result column="AWARD_DATE" jdbcType="DATE" property="awardDate" />
+	   <result column="JOB_CODE" jdbcType="VARCHAR" property="jobCode" />
+	   <result column="AWARD_TYPE" jdbcType="VARCHAR" property="awardType" />
+	   <result column="AWARD_PRIZE" jdbcType="VARCHAR" property="awardPrize" />
+	   <result column="AMOUNT" jdbcType="DECIMAL" property="amount" />
+	   <result column="ROW_NUMBER" jdbcType="DECIMAL" property="rowNumber" />
+	   <result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+	   <result column="IS_CLOSED" jdbcType="DECIMAL" property="isClosed" />
+	</resultMap>
+	
+	<select id="getStageObjectByUploadId" parameterType="map" resultMap="resultStage">
+		SELECT
+			UPLOAD_ID, 
+			EMPLOYEE_NUMBER, 
+			AWARD_DATE, 
+			JOB_CODE, 
+			AWARD_TYPE, 
+			AWARD_PRIZE, 
+			AMOUNT, 
+    		ROW_NUMBER, 
+    		RAW_DATA, 
+    		IS_CLOSED
+    	FROM
+    		PEA_AWARD_STG
+    	WHERE
+    		UPLOAD_ID = #{uploadId}
+    	ORDER BY UPLOAD_ID ASC
+	</select>
+</mapper>

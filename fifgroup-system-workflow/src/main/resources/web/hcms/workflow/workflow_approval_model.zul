@@ -1,0 +1,97 @@
+<window border="none" id="winWorkflowApprovalModel"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalModelComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption
+					label="${labels.swf.approvalModel}">
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column label="" width="180px" align="right"/>
+						<column label="" width="580px" />
+						<column label="" width="180px" align="right"/>
+						<column label="" width="" />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.swf.approvalModelName}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<textbox id="txtAVMName" maxlength="50" width="300px"/>
+							<label value="${labels.common.version}" />
+							<listbox id="cmbVersion" mold="select" />
+						</row>
+						<row>
+							<label />
+							<label />
+							<hbox>
+								<label value="${labels.common.effectiveDateFrom}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>							
+							<datebox id="dtbEffectiveFrom" use="co.id.fifgroup.core.ui.DateBoxFrom" width="200px" />
+						</row>
+						<row>
+							<label />
+							<label />
+							<hbox>
+								<label value="${labels.common.effectiveDateTo}" />
+							</hbox>
+							<datebox id="dtbEffectiveTo" use="co.id.fifgroup.core.ui.DateBoxMax" width="200px" />
+						</row>						
+					</rows>
+				</grid>
+				<separator />
+				<button label="${labels.swf.addApprovalLevel}"
+					id="btnAddApprovalLevel" mold="trendy" image="${labels.image.link.add }" />
+				<separator />
+				<vbox>
+					<div id="errListApprovalLevel" />
+					<hbox>
+						<listbox id="lbxApprovalLevel" checkmark="true" >
+							<listhead>
+								<listheader label="" width="30px"/>
+								<listheader label="${labels.swf.sequence}" align="center" />
+								<listheader label="${labels.swf.levelName}" align="center" />
+								<listheader label="${labels.swf.method}" align="center" />
+								<listheader label="${labels.swf.rule}" align="center" />
+								<listheader label="${labels.swf.listApprover}" align="center" />
+								<listheader label="${labels.common.action}" align="center" />
+							</listhead>
+						</listbox>
+						<vbox>
+							<button label="${labels.swf.top}"
+							id="btnTop" width="50px" />
+							<button label="${labels.swf.up}"
+								id="btnUp" width="50px" />
+							<button label="${labels.swf.down}"
+								id="btnDown" width="50px" />
+							<button label="${labels.swf.bottom}"
+								id="btnBottom" width="50px" />
+						</vbox>
+					</hbox>
+					<button label="${labels.common.delete}"
+						id="btnDeleteApprovalLevel" mold="trendy" image="${labels.image.link.delete}"/>
+				</vbox>
+			</groupbox>
+			<separator />
+			<hbox>
+				<cell align="center" style="width:1250px;">
+					<button id="btnSave"
+						label="${labels.common.save}" mold="trendy" 
+						image="${labels.image.link.save}" />
+					<space width="20px" />
+					<button id="btnDelete"
+						label="${labels.common.delete}" mold="trendy" 
+						image="${labels.image.link.delete}" />
+				</cell>
+				<cell align="right">
+					<button id="btnCancel"
+						label="${labels.common.cancel}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+		</panelchildren>
+	</panel>
+</window>

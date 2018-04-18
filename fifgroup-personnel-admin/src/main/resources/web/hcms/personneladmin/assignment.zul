@@ -1,0 +1,198 @@
+<window id="winAssignment" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AssignmentComposer">
+	<tabbox>
+		<tabs>
+			<tab id="tabAssignment" label="${labels.pea.assignment }" selected="true"/>
+			<tab id="tabAssignmentOtherInfo" label="${labels.pea.assignmentOtherInfo }" disabled="true"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" valign="top"/>
+						<column />
+					</columns>
+					<rows>
+						<row id="rowEffectiveDateFrom">
+							<hbox>
+								<label value="${labels.pea.effectiveDateFrom }" />  
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<hbox>
+								<datebox id="dtbEffectiveStartDate" width="100px" />
+								<label value="to"/>
+								<datebox id="dtbEffectiveEndDate" width="100px" />
+							</hbox>
+						</row>
+						<row>
+							<label value="${labels.pea.assignmentType }" />
+							<label id="lblAssignmentType" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.organization }" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<bandbox id="bnbOrganization" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfOrganization}" searchText1="${labels.pea.organizationCode}" searchText2="${labels.pea.organizationName}" headerLabel1="${labels.pea.organizationCode}" headerLabel2="${labels.pea.organizationName}"></bandbox>
+						</row>
+						<row>
+							<label value="${labels.pea.location }" />
+							<label id="lblLocation" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.job }" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<bandbox id="bnbJob" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfJob}" searchText1="${labels.pea.jobCode}" searchText2="${labels.pea.jobName}" headerLabel1="${labels.pea.jobCode}" headerLabel2="${labels.pea.jobName}"></bandbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.grade }" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<bandbox id="bnbGrade" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.listOfGrade}" searchText1="${labels.pea.gradeCode }" searchText2="${labels.pea.gradeName}" headerLabel1="${labels.pea.gradeCode }" headerLabel2="${labels.pea.gradeName}"></bandbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.actionType }" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<listbox id="cmbActionType" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.transferedBy }" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<listbox id="cmbTransferedBy" mold="select">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.pea.assignmentStatus }" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>	
+							<listbox id="cmbAssignmentStatus" mold="select" disabled="true">
+								<template name="model">
+									<listitem value="${each }">
+										<listcell label="${each.description }" />
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+						<row>
+							<cell rowspan="2" valign="top">
+								<label value="${labels.pea.firstSupervisor }" />
+							</cell>
+							<hbox>
+								<label id="lblJobNameSPV1" />
+								<label value=" - " />
+								<label id="lblOrganizationNameSPV1" />				
+							</hbox>
+						</row>
+						<row>
+							<cell align="left">
+								<hbox>
+									<label id="lblEmployeeNumberSPV1" />
+								</hbox>
+							</cell>
+						</row>
+						<row>
+							<cell rowspan="2" valign="top">
+								<label value="${labels.pea.secondSupervisor }" />
+							</cell>
+							<hbox>
+								<label id="lblJobNameSPV2" />
+								<label value=" - " />
+								<label id="lblOrganizationNameSPV2" />
+							</hbox>
+						</row>
+						<row>
+							<cell align="left">
+								<hbox>
+									<label id="lblEmployeeNumberSPV2" />
+								</hbox>
+							</cell>
+						</row>
+<!-- 						<row> -->
+<!-- 							<label value="${labels.pea.housingAllowanceFlag }" /> -->
+<!-- 							<radiogroup id="rdgHousingAllowanceFlag" /> -->
+<!-- 							<label /> -->
+<!-- 						</row> -->
+					</rows>				
+				</grid>
+				<hbox pack="center" align="center">
+					<cell align="center" style="width:1250px;">
+						<hbox>
+						<button id="btnBackBankInformation"
+							label="${labels.common.back}" mold="trendy"
+							image="${labels.image.link.back}" />
+						<space width="10px"></space>
+						<button id="btnNextAssignmentOtherInfo"
+							label="${labels.common.next}" mold="trendy"
+							image="${labels.image.link.next}" />
+						</hbox>
+					</cell>
+					<cell align="right">
+						<button id="btnCancelAssignment"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" />
+						<button id="btnCancelWizardAssignment" visible="false"
+								label="${labels.common.cancel}" mold="trendy"
+								image="${labels.image.link.cancel}" />
+					</cell>
+				</hbox>
+			</tabpanel>
+			<tabpanel>
+				<vbox>
+					<div id="divPanelOtherInfo"></div>
+					<hbox pack="center" align="center">
+						<cell align="center" style="width:1250px;">
+							<hbox>
+								<hbox id="hboxNavigation">
+									<button id="btnBackAssignment"
+										label="${labels.common.back}" mold="trendy"
+										image="${labels.image.link.back}" />
+									<space width="10px"></space>
+									<button id="btnNextCommunicationMedia"
+										label="${labels.common.next}" mold="trendy"
+										image="${labels.image.link.next}" />
+								</hbox>
+								<hbox id="hboxSaveDelete">
+									<button id="btnSave"
+										label="${labels.common.save}" mold="trendy"
+										image="${labels.image.link.save}" />
+									<space width="10px"></space>
+									<button id="btnDelete"
+										label="${labels.common.delete}" mold="trendy"
+										image="${labels.image.link.delete}" />
+								</hbox>
+							</hbox>			
+						</cell>
+						<cell align="right">
+							<button id="btnCancelOtherInfo"
+								label="${labels.common.cancel}" mold="trendy"
+								image="${labels.image.link.cancel}" />
+							<button id="btnCancelWizard" visible="false"
+								label="${labels.common.cancel}" mold="trendy"
+								image="${labels.image.link.cancel}" />
+						</cell>
+					</hbox>				
+				</vbox>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+	
+</window>

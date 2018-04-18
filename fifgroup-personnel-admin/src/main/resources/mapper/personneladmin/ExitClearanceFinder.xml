@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.ExitClearanceFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.ExitClearanceDTO">
+		<id column="EXIT_CLEARANCE_ID" property="exitClearanceId" jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="TERMINATION_TRX_ID" property="terminationTrxId" jdbcType="DECIMAL" />
+	    <result column="PERSON_REPLACEMENT_ID" property="personReplacementId" jdbcType="DECIMAL" />
+	    <result column="JOB_HANDOVER" property="jobHandover" jdbcType="VARCHAR" />
+	    <result column="HANDOVER_FILE" property="handoverFile" jdbcType="VARCHAR" />
+	    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="EMPLOYEE_NUMBER" property="employeeNumber" jdbcType="VARCHAR"/>
+	    <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR"/>
+	    <result column="BRANCH_ID" property="branchId" jdbcType="DECIMAL"/>
+	    <result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR"/>
+	    <result column="ORGANIZATION_ID" property="organizationId" jdbcType="DECIMAL"/>
+	    <result column="ORGANIZATION_NAME" property="organizationName" jdbcType="VARCHAR"/>
+	    <result column="JOB_ID" property="jobId" jdbcType="DECIMAL"/>
+	    <result column="JOB_NAME" property="jobName" jdbcType="VARCHAR"/>
+	    <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+	    <result column="TERMINATION_DATE" property="terminationDate" jdbcType="TIMESTAMP" />
+	    <result column="TERMINATION_TYPE_ID" property="terminationTypeId" jdbcType="DECIMAL" />
+	    <result column="TERMINATION_REASON" property="terminationReason" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="findSql">
+		SELECT pec.exit_clearance_id,
+		  pec.person_id,
+		  pec.company_id,
+		  pec.termination_trx_id,
+		  pec.person_replacement_id,
+		  pec.job_handover,
+		  pec.handover_file,
+		  pec.status,
+		  pec.created_by,
+		  pec.creation_date,
+		  pec.last_updated_by,
+		  pec.last_update_date,
+		  ppi.employee_number,
+		  ppi.full_name,
+		  bh.branch_id,
+		  bh.branch_name,
+		  ppa.organization_id,
+		  wo.organization_name,
+		  ppa.job_id,
+		  wj.job_name,
+		  su.user_name,
+		  tr.termination_date,
+		  tr.termination_type_id,
+		  tt.termination_reason
+		FROM PEA_EXIT_CLEARANCES pec
+		JOIN ter_requests tr
+		ON tr.request_id = pec.termination_trx_id
+		JOIN ter_types tt
+		ON tt.type_id = tr.termination_type_id
+		JOIN pea_personal_informations ppi
+		ON ppi.person_id = pec.person_id
+		AND TRUNC(pec.creation_date) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id = pec.person_id
+		AND TRUNC(pec.creation_date) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		JOIN wos_organizations wo
+		ON wo.organization_id = ppa.organization_id
+		JOIN wos_jobs wj
+		ON wj.job_id = ppa.job_id
+		LEFT JOIN branch_hierarchy_v bh
+		ON bh.organization_id = ppa.organization_id
+		LEFT JOIN SAM_USERS su
+		ON su.user_id        = pec.last_updated_by
+		WHERE bh.org_hier_id =
+		  (SELECT org_hier_id
+		  FROM EWS.wos_organization_hier
+		  WHERE company_id         = pec.company_id
+		  AND upper(org_hier_type) = upper('STRUCTURAL')
+		  )
+	</sql>
+	
+	<sql id="whereClause">
+		<if test="companyId != null">
+			AND pec.company_id = #{companyId}		
+		</if>
+		<if test="branchId != null">
+			AND bh.branch_id = #{branchId}
+		</if>
+		<if test="organizationId != null">
+			AND ppa.organization_id = #{organizationId}
+		</if>
+		<if test="jobId != null">
+			AND ppa.job_id = #{jobId}
+		</if>
+		<if test="personId != null">
+			AND pec.person_id = #{personId}
+		</if>
+		<if test="terminationDateFrom != null">
+			AND tr.termination_date &gt;= #{terminationDateFrom}
+		</if>
+		<if test="terminationDateTo != null">
+			AND tr.termination_date &lt;= #{terminationDateTo}
+		</if>
+		<if test="terminationTypeId != null">
+			AND tr.termination_type_id = #{terminationTypeId}
+		</if>
+		<if test="status != null">
+			AND pec.status = #{status}
+		</if>
+		<if test="employeeNumber != null">
+			AND ppi.employee_number like #{employeeNumber}
+		</if>
+		<if test="fullName != null">
+			AND ppi.full_name like #{fullName}
+		</if>
+		<if test="inOrganizations != null">
+			<if test="inOrganizations.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="inOrganizations">
+					ppa.organization_id = #{item}
+				</foreach>			
+			</if>
+		</if>
+		<if test="notInOrganizations != null">
+			<if test="notInOrganizations.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="notInOrganizations">
+					ppa.organization_id &lt;&gt; #{item}
+				</foreach>	
+			</if>
+		</if>
+	</sql>
+	
+	<select id="selectByExample" resultMap="baseResult" parameterType="co.id.fifgroup.personneladmin.dto.ExitClearanceDTO">
+		<include refid="findSql"/>
+		<include refid="whereClause"/>
+		ORDER BY pec.last_update_date DESC
+	</select>
+	
+	<select id="countByExample" resultType="Integer" parameterType="co.id.fifgroup.personneladmin.dto.ExitClearanceDTO">
+		select count(*)
+		FROM PEA_EXIT_CLEARANCES pec
+		JOIN ter_requests tr
+		ON tr.request_id = pec.termination_trx_id
+		JOIN ter_types tt
+		ON tt.type_id = tr.termination_type_id
+		JOIN pea_personal_informations ppi
+		ON ppi.person_id = pec.person_id
+		AND TRUNC(pec.creation_date) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+		JOIN pea_primary_assignments ppa
+		ON ppa.person_id = pec.person_id
+		AND TRUNC(pec.creation_date) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+		JOIN wos_organizations wo
+		ON wo.organization_id = ppa.organization_id
+		JOIN wos_jobs wj
+		ON wj.job_id = ppa.job_id
+		LEFT JOIN branch_hierarchy_v bh
+		ON bh.organization_id = ppa.organization_id
+		LEFT JOIN SAM_USERS su
+		ON su.user_id        = pec.last_updated_by
+		WHERE bh.org_hier_id =
+		  (SELECT org_hier_id
+		  FROM EWS.wos_organization_hier
+		  WHERE company_id         = pec.company_id
+		  AND upper(org_hier_type) = upper('STRUCTURAL')
+		  )
+		<include refid="whereClause"/>
+	</select>
+	
+	<select id="selectByExampleWithRowbounds" resultMap="baseResult" parameterType="co.id.fifgroup.personneladmin.dto.ExitClearanceDTO">
+		<include refid="findSql"/>
+		<include refid="whereClause"/>
+		ORDER BY to_number(ppi.employee_number) ASC
+	</select>
+	
+</mapper>

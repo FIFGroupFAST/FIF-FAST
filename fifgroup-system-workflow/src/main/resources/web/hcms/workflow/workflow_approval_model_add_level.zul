@@ -1,0 +1,90 @@
+<window border="none" id="winWorkflowApprovalModelAddLevel"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowApprovalModelAddLevelComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption label="${labels.swf.addApprovalLevel}" />
+				<grid sclass="form-entry">
+					<columns sizable="true">
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<hbox>
+								<label value="${labels.swf.levelName}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<textbox id="txtLevelName" width="200px" maxlength="50" />
+						</row>
+						<row>
+							<hbox>
+								<label value="${labels.swf.levelApproveMethod}" />
+								<label value="${labels.common.required}" style="color:red" />
+							</hbox>
+							<hbox>
+								<radiogroup id="rdgApproveMethod" >
+									<radio id="rdoOrWord" value="0" label="${labels.swf.orWord}" radiogroup="rdgApproveMethod"/>
+									<space width="20px" />
+									<radio id="rdoAndAll" value="1" label="${labels.swf.andAll}" radiogroup="rdgApproveMethod"/>
+									<space width="20px" />
+									<radio id="rdoAndMinimum" value="2" label="${labels.swf.andMinimum}" radiogroup="rdgApproveMethod"/>
+								</radiogroup>
+								<space width="20px" />
+								<intbox id="intMinimunRequired" disabled="true" maxlength="2"/>
+							</hbox>
+						</row>
+						<row>
+							<label value="${labels.swf.rule}" />
+							<vbox>
+								<hbox>
+									<label id="errRuleValidate" />
+								</hbox>
+								<hbox>
+									<grid id="gridRule" width="700px" sizedByContent="true"></grid>
+								</hbox>
+								<hbox>
+									<button id="btnAddRuleStatement"
+										label="${labels.swf.addRuleStatement}"
+										mold="trendy" />
+								</hbox>
+							</vbox>							
+						</row>						
+					</rows>
+				</grid>
+				<separator />
+				<div id="errListApprover"/>
+				<panel>
+					<panelchildren id="gridPanelApprover">
+					<separator />
+					<listbox id="lbxApprover" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+						<listhead>
+							<listheader label="" width="30px"/>
+							<listheader label="${labels.swf.approverType}" />
+							<listheader label="${labels.swf.approver}" />
+							<listheader label="${labels.swf.basedOn}" />
+						</listhead>
+					</listbox>
+					<hbox>
+						<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+						<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+					</hbox>
+					</panelchildren>
+				</panel>
+			</groupbox>
+			<separator />
+			<hbox>
+				<cell align="center" style="width:1250px;">
+					<button id="btnAdd"
+						label="${labels.common.add}" mold="trendy" 
+						image="${labels.image.link.add}" />
+				</cell>
+				<cell align="right">
+					<button id="btnCancel"
+						label="${labels.common.cancel}" mold="trendy"
+						image="${labels.image.link.cancel}" />
+				</cell>
+			</hbox>
+		</panelchildren>
+	</panel>
+</window>

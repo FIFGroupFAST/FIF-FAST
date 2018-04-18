@@ -1,0 +1,42 @@
+<window id="winAccountNumberDetail" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.UploadAccountNumberDetailComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.uploadAccountNumberDetail}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" valign="top"  />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.accountType}" />
+					<label id="lblAccountType" />
+				</row>
+				<row>
+					<label value="${labels.pea.batchNumber}" />
+					<label id="lblBatchNumber" />
+				</row>
+			</rows>	
+		</grid>
+		<separator />
+		<groupbox closable="false"> 
+			<listbox id="lstUploadAccountNumberDetail" mold="paging" emptyMessage="${labels.common.noDataFound}">
+				<listhead>
+					<listheader label="${labels.pea.processDate}" align="center" />		
+					<listheader label="${labels.pea.uploadBy}" align="center" />				
+					<listheader label="${labels.pea.totalRecord}" align="center" />	
+					<listheader label="${labels.pea.totalRecordSuccessed}" align="center" />
+					<listheader label="${labels.pea.totalRecordFailed}" align="center" />
+				</listhead>			
+			</listbox>		
+			<hbox pack="end" align="center" style="width:100%;">
+				<button id="btnDownloadCloseBatchError" label="${labels.common.downloadCloseBatchError}" 
+					mold="trendy" />
+			</hbox>
+		</groupbox>
+		<hbox pack="end" align="center" style="width:100%;">
+		<button id="btnBack" label="${labels.common.back}" 
+			mold="trendy" image="${labels.image.link.cancel}" />
+		</hbox>	
+	</groupbox>
+</window>

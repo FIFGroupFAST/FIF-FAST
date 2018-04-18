@@ -1,0 +1,30 @@
+<window id="winRoleInformation" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.RoleInformationComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.role }" />
+		<panel>
+			<panelchildren>
+				<listbox id="lbxRoles" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+					<listhead>
+						<listheader label="" width="30px"/>
+						<listheader label="${labels.pea.typeHcManagement}" />
+						<listheader label="${labels.pea.active}" />
+					</listhead>
+				</listbox>
+				<hbox>
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRow" />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>		
+</window>

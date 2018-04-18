@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.finder.AuditFinder">
+	
+	<select id="countAuditByExample" parameterType="map" resultMap="countResultMap">
+		SELECT COUNT(*) AS TOTAL
+		FROM SAM_AUDIT_TRAIL A JOIN SAM_AUDIT_DETAIL B ON A.SEQUENCE_NUMBER = B.SEQUENCE_NUMBER
+		<if test="moduleId != null">
+			AND A.MODULE_ID = #{moduleId, jdbcType=NUMERIC}
+		</if>
+		<if test="transactionType != null">
+			AND UPPER(A.TRANSACTION_TYPE) = UPPER(#{transactionType, jdbcType=VARCHAR})
+		</if>
+		<if test="dateFrom != null">
+			AND A.AUDIT_TIMESTAMP >= #{dateFrom, jdbcType=TIMESTAMP}
+		</if>
+		<if test="dateTo != null">
+			AND #{dateTo, jdbcType=TIMESTAMP} >= A.AUDIT_TIMESTAMP
+		</if>
+		JOIN BSE_MODULES C ON C.MODULE_ID = A.MODULE_ID
+		JOIN SAM_USERS D ON D.USER_ID = A.USER_ID
+		<if test="userName != null">
+			AND UPPER(D.USER_NAME) = UPPER(#{userName, jdbcType=VARCHAR})
+		</if>
+	</select>
+	
+	<select id="findAuditByExample" parameterType="map" resultMap="BaseResultMap">
+		SELECT ROWNUM, trail.* from 
+		(select C.MODULE_NAME, A.TRANSACTION_TYPE, A.CONTROL_TYPE, A.TRX_ID, B.ATTRIBUTE_NAME, 
+		B.ATTRIBUTE_CURRENT_VALUE, B.ATTRIBUTE_NEW_VALUE, D.USER_NAME, A.AUDIT_TIMESTAMP
+		FROM SAM_AUDIT_TRAIL A 
+		JOIN SAM_AUDIT_DETAIL B ON A.SEQUENCE_NUMBER = B.SEQUENCE_NUMBER
+		LEFT JOIN BSE_MODULES C ON C.MODULE_ID = A.MODULE_ID
+		LEFT JOIN SAM_USERS D ON D.USER_ID = A.USER_ID
+		<where>
+			<if test="moduleId != null">
+				AND A.MODULE_ID = #{moduleId, jdbcType=NUMERIC}
+			</if>
+			<if test="transactionType != null">
+				AND UPPER(A.TRANSACTION_TYPE) = upper(#{transactionType, jdbcType=VARCHAR})
+			</if>
+			<if test="dateFrom != null and dateTo != null">
+				AND (trunc(A.AUDIT_TIMESTAMP) between #{dateFrom, jdbcType=TIMESTAMP} and #{dateTo, jdbcType=TIMESTAMP})
+			</if>
+			<if test="dateFrom != null and dateTo == null">
+				AND (trunc(A.AUDIT_TIMESTAMP) &gt;= #{dateFrom, jdbcType=TIMESTAMP})
+			</if>
+			<if test="dateFrom == null and dateTo != null">
+				AND (trunc(A.AUDIT_TIMESTAMP) &lt;= #{dateTo, jdbcType=TIMESTAMP})
+			</if>
+			<if test="userName != null">
+				AND UPPER(D.USER_NAME) = upper(#{userName, jdbcType=VARCHAR})
+			</if>
+		</where>
+		
+		ORDER BY A.AUDIT_TIMESTAMP DESC
+		) trail
+	</select>
+	
+	<resultMap id="countResultMap" type="java.lang.Integer">
+		<result column="TOTAL" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.AuditTrailDTO">
+		<id column="ROWNUM" property="number" jdbcType="VARCHAR" />
+		<result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR" />
+		<result column="TRANSACTION_TYPE" property="transactionType" jdbcType="VARCHAR" />
+		<result column="CONTROL_TYPE" property="controlType" jdbcType="NUMERIC" />
+		<result column="TRX_ID" property="trxId" jdbcType="NUMERIC" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="AUDIT_TIMESTAMP" property="auditTimestamp" jdbcType="TIMESTAMP" />
+		<result column="ATTRIBUTE_NAME" property="auditDetail.attributeName" jdbcType="VARCHAR" />
+		<result column="ATTRIBUTE_CURRENT_VALUE" property="auditDetail.attributeCurrentValue" jdbcType="VARCHAR" />
+		<result column="ATTRIBUTE_NEW_VALUE" property="auditDetail.attributeNewValue" jdbcType="VARCHAR" />
+	</resultMap>
+	
+</mapper>

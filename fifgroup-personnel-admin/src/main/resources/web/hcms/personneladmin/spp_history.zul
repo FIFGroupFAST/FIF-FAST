@@ -1,0 +1,38 @@
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<window id="winSPPHistory" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.SPPHistoryComposer">
+	<groupbox>
+		<listbox id="lbxSPPHistory" pagingPosition="both"
+			mold="paging" emptyMessage="${labels.common.err.noDataFound}">
+			<auxhead>
+				<auxheader id="devOrganizerAuxHeader" label="${labels.tra.developmentorganizer}" rowspan="2" align="center"></auxheader>
+				<auxheader id="devCategoryAuxHeader" label="${labels.tra.developmentcategory}" rowspan="2" align="center" ></auxheader>
+				<auxheader id="devTypeAuxHeader" label="${labels.tra.developmenttype}" rowspan="2" align="center" ></auxheader>
+				<auxheader id="devNameAuxHeader" label="${labels.tra.developmentname}" rowspan="2" align="center" ></auxheader>
+				<auxheader id="coeNameAuxHeader" label="${labels.tra.coename}" rowspan="2" align="center" ></auxheader>
+				<auxheader id="devStartDateAuxHeader" label="${labels.tra.sppstartdate}" rowspan="2" align="center" ></auxheader>
+				<auxheader id="devEndDateAuxHeader" label="${labels.tra.sppenddate}" rowspan="2" align="center" ></auxheader>
+				<auxheader label="${labels.tra.sppDetail}" colspan="3" align="center" />
+				<auxheader id="downloadAuxHeader" label="${labels.tra.sppDownload}" rowspan="2" align="center" ></auxheader>
+			</auxhead>
+			<auxhead>
+				<auxheader id="contractPeriod" label="${labels.tra.contractPeriod}" align="center"></auxheader>
+				<auxheader id="penaltyAmountFormat" label="${labels.tra.penaltyAmount}" align="center"></auxheader>
+				<auxheader id="failedDevelopment" label="${labels.tra.faileddevelopment}" align="center"></auxheader>
+			</auxhead>
+				<listhead visible="false" menupopup="auto">
+					<listheader width="150px"></listheader>
+					<listheader width="180px" ></listheader>
+					<listheader width="200px" ></listheader>
+					<listheader width="280px" ></listheader>
+					<listheader width="280px" ></listheader>
+					<listheader width="120px" ></listheader>
+					<listheader width="120px" ></listheader>
+					<listheader width="170px"></listheader>
+					<listheader width="150px" ></listheader>
+					<listheader width="150px" ></listheader>
+					<listheader width="100px"></listheader>
+				</listhead>
+		</listbox>
+	</groupbox>
+</window>

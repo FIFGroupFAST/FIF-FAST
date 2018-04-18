@@ -1,0 +1,296 @@
+<?page title="Asset Labeling"?>
+<window id="mainwin" apply="co.id.fifgroup.ssoa.controller.AssetMutationController" title="">
+	<style src="/styles/lat.css"/>
+						<groupbox  id="gbAssetMutation" mold="3d" width="auto">
+							<caption label="Asset Mutation"/>
+							<grid>
+								<columns>
+									<column width="210px" align="right"></column>
+									<column></column>
+								</columns>
+								
+								<rows>
+									<row class="margin-left">
+										<div class="right">
+											<label>Document No</label>
+										</div>
+											<textbox width="200px"/>
+									</row>
+									<row>
+										<label />
+										<hbox pack="center" align="center">
+											<button id="btnFind"
+												label="${labels.common.find}" mold="trendy"
+												image="${labels.image.link.search}" />
+											<space width="20px" />
+											<button id="btnNew"
+												label="${labels.common.create}" mold="trendy"
+												image="${labels.image.link.add}" onClick="grpboxAdd.setVisible(true);
+																						gbAssetMutation.setVisible(false);" />
+										</hbox>
+									</row>
+									
+								</rows>	
+							</grid>
+							
+							<separator></separator>
+							
+							<listbox id="listbox" mold="paging" pageSize="3" pagingPosition="both">
+								<listhead sizable="true">
+									<listheader label="Action"></listheader>
+									<listheader label="Document No"></listheader>
+									<listheader label="Request Date"></listheader>
+									<listheader label="Origin"></listheader>
+									<listheader label="Destination"></listheader>
+									<listheader label="Reason"></listheader>
+									<listheader label="Status"></listheader>
+									<listheader label="Last Updated By"></listheader>
+									<listheader label="Last Updated Date"></listheader>
+								</listhead>
+								<listitem>
+									<listcell>
+										<a href="#"><label id="lbledit" value="Edit" onClick="grpboxAdd.setVisible(true);
+																							gbAssetMutation.setVisible(false)"></label></a>
+										<a href="#"><label id="lbldelete" value="Delete"></label></a>	
+										<a href="#"><label id="lblresend" value="Submit" ></label></a>
+									</listcell>
+									<listcell label="MI/GSD-FIF/DUPAT/161/I/2015"></listcell>
+									<listcell label="4-Dec-2015"></listcell>
+									<listcell label="Depok"></listcell>
+									<listcell label="Cinere"></listcell>
+									<listcell label="Split Cabang"></listcell>
+									<listcell label="New"></listcell>
+									<listcell label="System.admin"></listcell>
+									<listcell label="22-Feb-2016 10:00"></listcell>
+								</listitem>
+								<listitem>
+									<listcell>
+										<!-- <a href="#"><label id="lblResend" value="Resend"></label></a>-->
+										<a href="#"><label value="Detail" onClick="grpboxDetail.setVisible(true);
+																					gbAssetMutation.setVisible(false);"></label></a>
+									</listcell>
+									<listcell label="MI/GSD-FIF/DUPAT/156/I/2015"></listcell>	
+									<listcell label="30-Nov-2015"></listcell>
+									<listcell label="Depok"></listcell>
+									<listcell label="Cinere"></listcell>
+									<listcell label="Split Cabang"></listcell>
+									<listcell label="On Approval"></listcell>
+									<listcell label="System.admin"></listcell>
+									<listcell label="22-Feb-2016 10:00"></listcell>
+								</listitem>
+								<listitem>
+									<listcell>
+										<a href=""><label value="Detail" onClick="grpboxDetail.setVisible(true);
+																					gbAssetMutation.setVisible(false)"></label></a>
+									</listcell>
+									<listcell label="MI/GSD-FIF/DUPAT/159/I/2015"></listcell>
+									<listcell label="27-Nov-2015"></listcell>
+									<listcell label="Depok"></listcell>
+									<listcell label="Cinere"></listcell>
+									<listcell label="Split Cabang"></listcell>
+									<listcell label="Completed"></listcell>
+									<listcell label="System.admin"></listcell>
+									<listcell label="22-Feb-2016 10:00"></listcell>							
+								</listitem>
+							</listbox>
+							<separator></separator>
+							<hbox style="float:right;">
+								<label value="Download As "></label>
+								<!-- <combobox>
+									<comboitem label="PDF"></comboitem>
+									<comboitem label="XLS"></comboitem>
+								</combobox>-->
+								
+								<listbox id="lbxDownload" mold="select">
+									<listitem>
+										<listcell label="PDF"></listcell>
+									</listitem>
+									<listitem>
+										<listcell label="XLS"></listcell>
+									</listitem>
+									</listbox>
+								<button id='download' label="Download"></button>
+							</hbox>
+						</groupbox>
+				
+				
+				<separator></separator>
+					<groupbox id="grpboxAdd" mold="3d" visible="false">
+						<caption label="Asset Mutation - Add"></caption>
+						<grid >
+							<columns>
+								<column width="200px" align="right"></column>
+								<column width="230px"></column>
+								<column width="200px" align="right"></column>
+								<column width=""></column>
+							</columns>
+								
+							<rows id="rows">
+								<row >
+										<div><label>Document No</label><span style="color:red;"> *</span></div>
+										<textbox width="200px"/>
+										<div><label>Destination</label><span style="color:red;"> *</span></div>
+										<bandbox></bandbox>
+								</row>
+								<row>
+										<div><label>Request Date</label><span style="color:red;"> *</span></div>
+										<datebox></datebox>
+										<label>Reason</label>
+										<textbox cols="40" rows="2"></textbox>
+								</row>
+									
+								<row>
+										<div class="right"><label>Origin</label></div>
+										<textbox width="220px"></textbox>
+								</row>
+							</rows>		
+						</grid>
+						<separator spacing="10px"></separator>
+						
+					
+						<separator></separator>
+						<groupbox mold="3d">
+						<caption>Asset</caption>
+						<separator></separator>
+						<listbox id="lstmutationasset" height="auto">
+							<listhead>
+								<listheader width="40px"></listheader>
+								<listheader label="No Asset" width="230px" sort="auto"></listheader>
+								<listheader label="Own Type" width="120px" sort="auto"></listheader>
+								<listheader label="Branch Code" width="120px" sort="auto"></listheader>
+								<listheader label="Branch Name" width="120px"></listheader>
+								<listheader label="Location Code" width="120px"></listheader>
+								<listheader label="Location Name" width="120px"></listheader>
+								<listheader label="Item Category" width="200px"></listheader>
+							    <listheader label="Tanggal Perolehan" width="200px" sort="auto"></listheader>
+								<listheader label="Description" width="300px"></listheader>
+								<listheader label="Serial Number" width="300px"></listheader>
+								<listheader label="Stock Opname Result" width="300px"></listheader>
+								<listheader label="Recomendation" width="300px"></listheader>
+							</listhead>
+							<template name="model">
+							<listitem>
+								<listcell>
+									<checkbox value="${each.check}"></checkbox>
+								</listcell>
+								<listcell label="${each.no_asset}"></listcell>
+								<listcell label="${each.type}"></listcell>
+								<listcell label="${each.branch_code}"></listcell>
+								<listcell label="${each.branch_name}"></listcell>
+								<listcell label="${each.location_code}"></listcell>
+								<listcell label="${each.location_name}"></listcell>
+								<listcell label="${each.item_category}"></listcell>	
+								<listcell label="${each.date_of_service}"></listcell>
+								<listcell label="${each.description}"></listcell>
+								<listcell label="${each.serial_number}"></listcell>
+								<listcell label="${each.stock_opname_result}"></listcell>	
+								<listcell label="${each.recomendation}"></listcell>	
+							</listitem>
+							</template>
+						</listbox>
+						<separator></separator>
+						
+							<div apply="co.id.fifgroup.ssoa.ui.AssetPopUpComposer">
+  							 <button id="orderBtn" label="Add Asset" autodisable="self" />
+  							 <button label="Delete"></button>
+							</div>
+    						
+    						
+    						
+						</groupbox>
+						
+						
+						
+						
+						<separator></separator>
+						<hbox style="float:left;margin-left:50%">
+							<button id="addRecord" 
+									label="Submit" 
+									onClick="grpboxAdd.setVisible(false);
+											gbAssetMutation.setVisible(true)"></button>
+							
+							<button id="btnSave" 
+									label="Save" 
+									onClick="grpboxAdd.setVisible(false);
+											gbAssetMutation.setVisible(true)"
+									></button> 
+								</hbox>
+						<button id="btnCancel" 
+								style="float:right"
+								label="	Cancel" 
+								onClick="grpboxAdd.setVisible(false);
+										gbAssetMutation.setVisible(true)"
+								></button>
+					</groupbox>
+				
+				<separator spacing="10px"></separator>
+					<groupbox id="grpboxDetail" mold="3d" visible="false">
+						<caption label="Asset Mutation - Detail"></caption>
+						<grid >
+							<columns>
+								<column width="200px" align="right"></column>
+								<column width="230px"></column>
+								<column width="200px" align="right"></column>
+								<column width=""></column>
+							</columns>
+								
+							<rows>
+								<row >
+										<div class="right">
+												<label>Document No</label></div>
+										<textbox width="200px"/>
+										<div class="right"><label>Destination</label></div>
+										<textbox></textbox>
+								</row>
+								<row>
+										<div class="right"><label>Request Date</label></div>
+										<datebox></datebox>
+										<div class="right"><label>Reason</label></div>
+										<textbox cols="40" rows="2"></textbox>
+								</row>
+									
+								<row>
+										<div class="right"><label>Origin</label></div>
+										<textbox readonly="true"></textbox>
+								</row>
+							</rows>	
+						</grid>
+						<separator spacing="10px"></separator>
+						<listbox id="lstdetail" style="margin-bottom:5px;" width="auto">
+							<listhead>
+								<listheader label="No Asset" width="120px" sort="auto"></listheader>
+								<listheader label="Own Type" width="120px" sort="auto"></listheader>
+								<listheader label="Branch Code" width="120px" sort="auto"></listheader>
+								<listheader label="Branch Name" width="120px"></listheader>
+								<listheader label="Location Code" width="120px"></listheader>
+								<listheader label="Location Name" width="120px"></listheader>
+								<listheader label="Item Category" width="200px"></listheader>
+							    <listheader label="Tanggal Perolehan" width="200px" sort="auto"></listheader>
+								<listheader label="Description" width="300px"></listheader>
+								<listheader label="Serial Number" width="150px"></listheader>
+								<listheader label="Stock Opname Result" width="200px"></listheader>
+								<listheader label="Recomendation" width="200px"></listheader>
+							</listhead>
+							<template name="model">
+							<listitem>
+								<listcell label="${each.no_asset}"></listcell>
+								<listcell label="${each.type}"></listcell>
+								<listcell label="${each.branch_code}"></listcell>
+								<listcell label="${each.branch_name}"></listcell>
+								<listcell label="${each.location_code}"></listcell>
+								<listcell label="${each.location_name}"></listcell>
+								<listcell label="${each.item_category}"></listcell>	
+								<listcell label="${each.date_of_service}"></listcell>
+								<listcell label="${each.description}"></listcell>
+								<listcell label="${each.serial_number}"></listcell>
+								<listcell label="${each.stock_opname_result}"></listcell>	
+								<listcell label="${each.recomendation}"></listcell>	
+							</listitem>
+							</template>
+						</listbox>
+						<div class="btn-left"> 
+							<button id="" label="Back" onClick="grpboxDetail.setVisible(false);
+																gbAssetMutation.setVisible(true);" style="float:right;" ></button>
+						</div>
+					</groupbox>			
+</window>

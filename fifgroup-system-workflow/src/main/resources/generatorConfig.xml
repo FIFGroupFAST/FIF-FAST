@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="SystemWorkflowTables" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+	
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.68:1521:sit"
+			userId="hcms"
+			password="hcms" />
+			
+		<javaModelGenerator targetPackage="co.id.fifgroup.systemworkflow.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.systemworkflow" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.systemworkflow.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>
+		
+<!-- 		<table tableName="SWF_APPROVER_MAPPING" domainObjectName="ApproverMapping" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<columnOverride column="APPROVER_ID" property="approverId" jdbcType="VARBINARY" -->
+<!-- 				typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="SWF_TEMPLATE_MESSAGE_MAPPING" domainObjectName="TemplateMessageMapping" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="TEMPLATE_MAPPING_ID" sqlStatement="select SWF_TEMPLATE_MESSAGE_MAPPING_S.nextVal from dual" type="pre"/>	 -->
+<!-- 		</table> -->
+
+		<table tableName="SWF_PARAMETER_MESSAGE" domainObjectName="ParameterMessage"
+			modelType="flat"
+			enableDeleteByExample="false"
+			enableUpdateByExample="true"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="PARAMETER_ID" sqlStatement="select SWF_PARAMETER_MESSAGE_S.nextVal from dual" type="pre"/>
+		</table>
+
+<!-- 		<table tableName="SWF_VACATION_RULE" domainObjectName="VacationRule" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="VACATION_RULE_ID" sqlStatement="select SWF_VACATION_RULE_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="APPROVER_ID" property="approverId" jdbcType="VARBINARY" -->
+<!-- 				typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+<!-- 			<columnOverride column="SUBSTITUTE_APPROVER_ID" property="substituteApproverId" jdbcType="VARBINARY" -->
+<!-- 				typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="SWF_AVM_MAPPING_HEADER" domainObjectName="ApprovalModelMappingHeader" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="MODEL_MAPPING_ID" sqlStatement="select SWF_AVM_MAPPING_HEADER_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="SWF_AVM_MAPPING_DETAIL" domainObjectName="ApprovalModelMappingDetail" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="MAPPING_DETAIL_ID" sqlStatement="select SWF_AVM_MAPPING_DETAIL_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="APPROVAL_MODEL" property="approvalModel" jdbcType="VARBINARY" -->
+<!-- 				typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" javaType="java.util.UUID"/> -->
+<!-- 		</table> -->
+				
+<!-- 		<table tableName="SWF_LEVEL_MESSAGE_MAPPING" domainObjectName="LevelMessageMapping" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="LEVEL_MESSAGE_ID" sqlStatement="select SWF_LEVEL_MESSAGE_MAPPING_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+			
+<!-- 		<table tableName="SWF_MESSAGE_MAPPING" domainObjectName="MessageMapping" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="MESSAGE_MAPPING_ID" sqlStatement="select SWF_MESSAGE_MAPPING_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+	</context>
+</generatorConfiguration>

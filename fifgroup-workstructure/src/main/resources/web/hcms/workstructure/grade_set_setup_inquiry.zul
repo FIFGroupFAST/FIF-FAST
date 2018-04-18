@@ -1,0 +1,68 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<?xel-method prefix="date" name="formatDate" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDate(java.util.Date)" ?>
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winGradeSetSetupInquiry"
+	apply="co.id.fifgroup.workstructure.controller.GradeSetSetupInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.gradeSet}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.wos.gradeSetName}" />
+					<bandbox id="bnbGradeSet" width="50%" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.wos.listOfGradeSet}" searchText="${labels.wos.gradeSet}" headerLabel="${labels.wos.gradeSet}" />
+				</row>
+				<row>
+					<label value="${labels.wos.effectiveOnDate}" />
+					<datebox id="dtbEffectiveOnDate" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy" 
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.wos.gradeSet}" />
+			<listbox id="lstGradeSet" emptyMessage="${labels.common.noDataFound}" mold="paging" pagingPosition="both">
+				<listhead menupopup="auto">
+					<listheader label="${labels.wos.gradeSetName}" align="center" sort="auto(gradeSetName)"/>
+					<listheader label="${labels.wos.gradeSetDescription}" align="center" sort="auto(lower(description))"/>
+					<listheader label="${labels.common.startDate}" align="center" sort="auto(startDate)"/>
+					<listheader label="${labels.common.endDate}" align="center" sort="auto(endDate)"/>
+					<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+					<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(userName)"/>
+					<listheader label="${labels.common.action}" align="center"/>
+				</listhead>
+				<template name="model">
+					<listitem>
+						<listcell value="${each}" label="${each.gradeSetName}"></listcell>
+						<listcell value="${each}" label="${each.description}"></listcell>
+						<listcell value="${each}" label="${date:formatDate(each.startDate)}"></listcell>
+						<listcell value="${each}" label="${date:formatDate(each.endDate)}"></listcell>
+						<listcell value="${each}" label="${date:formatDateTime(each.lastUpdateDate)}"></listcell>
+						<listcell value="${each}" label="${each.userName}"></listcell>
+						<listcell><a label="${labels.common.detail}" forward="onDetail(${each})" style="color:blue" /></listcell>
+					</listitem>
+				</template>				
+			</listbox>
+			<exporter referenceId="lstGradeSet" />
+		</groupbox>		
+	</groupbox>
+</window>

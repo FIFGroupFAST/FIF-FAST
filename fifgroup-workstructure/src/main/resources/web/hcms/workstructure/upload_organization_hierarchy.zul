@@ -1,0 +1,150 @@
+<window id="windowUploadOrganizationHierarchy"
+	apply="co.id.fifgroup.workstructure.controller.UploadOrganizationHierarchyComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Upload Organization Hierarchy" />
+		<groupbox mold="default">
+			<caption label="Download" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="Organization Hierarchy Type"></label>
+						<div width="100%">
+							<combobox id="comboboxOrgHierType"
+								maxlength="50" readonly="true" />
+							<label id="lblErrorOrgHierType"
+								style="color:red" />
+						</div>
+					</row>
+					<row>
+						<label value="Organization Hierarchy Name"></label>
+						<div width="100%">
+							<combobox id="comboboxOrgHierName"
+								maxlength="50" readonly="true" width="50%">
+								<template name="model">
+									<comboitem value="${each}"
+										label="${each.orgHierName}">
+									</comboitem>
+								</template>
+							</combobox>
+							<label id="lblErrorOrgHierName"
+								style="color:red" />
+						</div>
+					</row>
+					<row>
+						<label value="1st Parent Organization Name"></label>
+						<combobox id="comboboxOrgName" maxlength="50"
+							readonly="true" width="50%">
+							<template name="model">
+								<comboitem value="${each}"
+									label="${each.description}">
+								</comboitem>
+							</template>
+						</combobox>
+					</row>
+					<row>
+						<label />
+						<button id="btnDownloadTemplate"
+							label="Download Template" mold="trendy"
+							image="${labels.image.link.save}" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<groupbox>
+			<caption label="Upload" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="Batch Number" />
+						<label id="lblBatchNumber" />
+					</row>
+					<row>
+						<label value="File" />
+						<hbox>
+							<textbox id="txtFile" readonly="true"/>
+							<button id="btnBrowse" label="Browse"
+								use="co.id.fifgroup.core.ui.ButtonUpload" mold="trendy" />
+						</hbox>
+					</row>
+					<row>
+						<label />
+						<button id="btnProcess" label="Process"
+							mold="trendy" />
+					</row>
+					<row>
+						<label />
+						<grid sclass="form-entry" width="400px">
+							<columns>
+								<column width="180px" align="right" />
+								<column />
+							</columns>
+							<rows>
+								<row>
+									<label value="Total Record" />
+									<label id="lblTotalRecord" />
+								</row>
+								<row>
+									<label value="Total Succeed Record" />
+									<label id="lblTotalSucceed" />
+								</row>
+								<row>
+									<label value="Total Failed Record" />
+									<label id="lblTotalFailed" />
+								</row>
+							</rows>
+						</grid>
+					</row>
+					<row>
+						<label />
+						<groupbox>
+							<caption label="Failed Rows" />
+							<listbox id="lstFailedRow" mold="paging">
+								<listhead>
+									<listheader label="Row Number"
+										align="center" width="100px" />
+									<listheader label="Error Message"
+										align="center" sort="auto(rowNumber)" />
+								</listhead>
+								<template name="model">
+									<listitem>
+										<listcell value="${each}"
+											label="${each.rowNumber}">
+										</listcell>
+										<listcell value="${each}"
+											label="${each.errorMessage}">
+										</listcell>
+									</listitem>
+								</template>
+							</listbox>
+							<separator />
+							<hbox pack="end" align="center"
+								style="width:100%;">
+								<button id="btnDownload"
+									label="Download" mold="trendy" />
+							</hbox>
+						</groupbox>
+					</row>
+					<row>
+						<label />
+						<button id="btnCloseBatch" label="Close Batch"
+							mold="trendy" disabled="true" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnCancel" label="Back" mold="trendy"
+				image="${labels.image.link.cancel}" />
+		</hbox>
+	</groupbox>
+</window>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.PtkpUploadsFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.PtkpUploadsDTO">
+		<result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+	    <result column="PROCESS_DATE_FROM" jdbcType="TIMESTAMP" property="processDateFrom" />
+	    <result column="PROCESS_DATE_TO" jdbcType="TIMESTAMP" property="processDateTo" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+	</resultMap>
+	
+	<select id="getPtkpUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PPU.BATCH_NUMBER,
+		  PPU.COMPANY_ID,
+		  PPU.STATUS,
+		  PPU.CREATED_BY,
+		  PPU.CREATION_DATE,
+		  PPU.LAST_UPDATED_BY,
+		  PPU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PPE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_PTKP_ELEMENTS PPE_1
+					WHERE 
+						PPE_1.BATCH_NUMBER = PPU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PPE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_PTKP_ELEMENTS PPE_2
+					WHERE 
+						PPE_2.BATCH_NUMBER = PPU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_PTKP_UPLOADS PPU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PPU.LAST_UPDATED_BY)
+		WHERE
+		 PPU.BATCH_NUMBER IN (
+			SELECT 
+				PPE.BATCH_NUMBER 
+			FROM 
+				PEA_PTKP_ELEMENTS PPE
+				<where>
+					<if test="dateFrom != null">
+						AND PPE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PPE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND PPU.BATCH_NUMBER &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND PPU.BATCH_NUMBER &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PPU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<select id="getPtkpBatchUploads" parameterType="map" resultMap="baseResult">
+		SELECT 
+		  PPU.BATCH_NUMBER,
+		  PPU.COMPANY_ID,
+		  PPU.STATUS,
+		  PPU.CREATED_BY,
+		  PPU.CREATION_DATE,
+		  PPU.LAST_UPDATED_BY,
+		  PPU.LAST_UPDATE_DATE,
+		  (
+				SELECT 
+					MIN(PPE_1.UPLOAD_DATE) 
+				FROM 
+					PEA_PTKP_ELEMENTS PPE_1
+					WHERE 
+						PPE_1.BATCH_NUMBER = PPU.BATCH_NUMBER
+			) AS PROCESS_DATE_FROM,
+			(
+				SELECT 
+					MAX(PPE_2.UPLOAD_DATE) 
+				FROM 
+					PEA_PTKP_ELEMENTS PPE_2
+					WHERE 
+						PPE_2.BATCH_NUMBER = PPU.BATCH_NUMBER
+			) AS PROCESS_DATE_TO,
+			SU.USER_NAME
+		FROM PEA_PTKP_UPLOADS PPU
+		LEFT JOIN SAM_USERS SU ON(SU.USER_ID = PPU.LAST_UPDATED_BY)
+		WHERE
+		 PPU.BATCH_NUMBER IN (
+			SELECT 
+				PPE.BATCH_NUMBER 
+			FROM 
+				PEA_PTKP_ELEMENTS PPE
+				<where>
+					<if test="dateFrom != null">
+						AND PPE.UPLOAD_DATE &gt;= #{dateFrom, jdbcType=TIMESTAMP}
+					</if>
+					<if test="dateTo != null">
+						AND PPE.UPLOAD_DATE &lt;= #{dateTo, jdbcType=TIMESTAMP}
+					</if>
+				</where>
+		)
+		<if test="batchNumberFrom != null">
+			AND TO_NUMBER(PPU.BATCH_NUMBER) &gt;= #{batchNumberFrom}
+		</if>
+		<if test="batchNumberTo != null">
+			AND TO_NUMBER(PPU.BATCH_NUMBER) &lt;= #{batchNumberTo}
+		</if>
+		<if test="companyId != null">
+			AND PPU.COMPANY_ID = #{companyId}
+		</if>
+	</select>
+	
+	<resultMap type="co.id.fifgroup.personneladmin.dto.PtkpStageDTO" id="resultStage">
+		<result column="UPLOAD_ID" jdbcType="DECIMAL" property="uploadId" />
+	    <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+	    <result column="PTKP_STATUS" jdbcType="VARCHAR" property="ptkpStatus" />
+	    <result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+	    <result column="WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="workingScheduleId" />
+	    <result column="ROW_NUMBER" jdbcType="DECIMAL" property="rowNumber" />
+	    <result column="RAW_DATA" jdbcType="VARCHAR" property="rawData" />
+	    <result column="IS_CLOSED" jdbcType="DECIMAL" property="isClosed" />
+	</resultMap>
+	
+	<select id="getStageObjectByUploadId" parameterType="map" resultMap="resultStage">
+		SELECT
+			UPLOAD_ID, 
+			EMPLOYEE_NUMBER, 
+			PTKP_STATUS, 
+			EFFECTIVE_START_DATE, 
+			WORKING_SCHEDULE_ID, 
+    		ROW_NUMBER, 
+    		RAW_DATA, 
+    		IS_CLOSED
+    	FROM
+    		PEA_PTKP_STG
+    	WHERE
+    		UPLOAD_ID = #{uploadId}
+    	ORDER BY UPLOAD_ID ASC
+	</select>
+</mapper>

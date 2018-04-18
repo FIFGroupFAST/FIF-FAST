@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<!-- Context -->
+	<context id="EligibilityRuleTables" targetRuntime="MyBatis3">
+
+		<!-- Plugins -->
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<!-- JDBC Connection Localhost 
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@localhost:1521:orcl"
+			userId="hcms"
+			password="hcms" />
+			-->
+		
+		<!-- JDBC Connection -->
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.68:1521:SIT"
+			userId="hcms"
+			password="hcms" />
+		
+			
+		<!-- Generators Config -->
+		<javaModelGenerator targetPackage="co.id.fifgroup.eligibility.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.eligibility" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.eligibility.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>			
+		
+		<!-- Eligibility Tables -->
+		<table tableName="ELR_FACT_TYPES" domainObjectName="FactType"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+			<columnOverride column="FACT_TYPE_ID" property="id" />
+			<columnOverride column="COMPANY_ID" javaType="Long" />
+			<columnOverride column="FACT_TYPE_NAME" property="name" />
+			<columnOverride column="RETRIEVAL_MODE" javaType="co.id.fifgroup.eligibility.constant.RetrievalMode" />
+		</table>
+		
+		<table tableName="ELR_FACT_TYPE_FIELDS" domainObjectName="FactTypeField"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+			<columnOverride column="FIELD_ID" property="id" />
+			<columnOverride column="FIELD_NAME" property="name" />
+			<columnOverride column="FIELD_TYPE" javaType="co.id.fifgroup.eligibility.constant.FieldType" />
+			<columnOverride column="LOOKUP_VALUE_FROM" javaType="co.id.fifgroup.eligibility.constant.LookupValueFrom" />
+		</table>
+		
+		<table tableName="ELR_DEC_TBL_MODELS" domainObjectName="DecisionTableModel"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+			<columnOverride column="MODEL_ID" property="id" />
+			<columnOverride column="MODEL_NAME" property="name" />
+			<columnOverride column="VERSION_NUMBER" javaType="Integer" />
+		</table>
+		<table tableName="ELR_DEC_TBL_COLUMNS" domainObjectName="DecisionTableColumn"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="COLUMN_ID" sqlStatement="select ELR_DEC_TBL_COLUMNS_S.nextVal from dual" type="pre"/> 
+			<columnOverride column="COLUMN_ID" property="id" />
+			<columnOverride column="VERSION_NUMBER" property="versionNumber" javaType="Integer" />
+			<columnOverride column="COLUMN_TYPE" javaType="co.id.fifgroup.eligibility.constant.ColumnType" />
+			<columnOverride column="COLUMN_NAME" property="name" />
+			<columnOverride column="OPERATOR" javaType="co.id.fifgroup.eligibility.constant.Operator" />
+			<columnOverride column="VALUE_TYPE" javaType="co.id.fifgroup.eligibility.constant.ValueType" />
+		</table>
+		<!-- 
+		<table tableName="ELR_DEC_TABLES" domainObjectName="DecisionTable"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="DEC_TABLE_ID" sqlStatement="select ELR_DEC_TABLES_S.nextVal from dual" type="pre"/> 
+			<columnOverride column="DEC_TABLE_ID" property="id" />
+			<columnOverride column="SETUP_TYPE_ID" jdbcType="NUMERIC" javaType="Long" />
+			<columnOverride column="SETUP_TYPE_VERSION_ID" jdbcType="NUMERIC" javaType="Integer" />
+			<columnOverride column="CREATED_BY" jdbcType="NUMERIC" javaType="Long" />
+			<columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" />
+			<columnOverride column="LAST_UPDATED_BY" jdbcType="NUMERIC" javaType="Long" />
+			<columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" />
+		</table>
+		
+		<table tableName="ELR_DEC_TBL_ROWS" domainObjectName="DecisionTableRow"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false"/>
+			<generatedKey column="ROW_ID" sqlStatement="select ELR_DEC_TBL_ROWS_S.nextVal from dual" type="pre"/> 
+			<columnOverride column="ROW_ID" property="id" />
+			<columnOverride column="DEC_TABLE_ID" property="decisionTableId" />
+			<columnOverride column="CREATED_BY" jdbcType="NUMERIC" javaType="Long" />
+			<columnOverride column="CREATION_DATE" jdbcType="TIMESTAMP" />
+			<columnOverride column="LAST_UPDATED_BY" jdbcType="NUMERIC" javaType="Long" />
+			<columnOverride column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" />
+		</table>
+		
+		<table tableName="ELR_UPLOAD_STG" domainObjectName="DecisionTableStage"
+			modelType="flat"
+			selectByPrimaryKeyQueryId="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+		</table>
+		-->
+	</context>
+</generatorConfiguration>
+	
+	

@@ -1,0 +1,77 @@
+<window id="winExitClearance" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.ExitClearanceComposer">
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.documents }" />
+		<listbox id="lbxDocuments">
+			<listhead>
+				<listheader label="${labels.pea.documentName }"/>
+				<listheader label="${labels.pea.completed }"/>
+			</listhead>
+		</listbox>
+	</groupbox>
+		
+	<groupbox closable="false">
+		<caption label="${labels.pea.workingEquipment }" />
+		<listbox id="lbxWorkingEquipment">
+			<listhead>
+				<listheader label="${labels.pea.equipmentType }"/>
+				<listheader label="${labels.pea.dateAssigned }"/>
+				<listheader label="${labels.pea.assetNumber }"/>
+				<listheader label="${labels.pea.returnDate }"/>
+				<listheader label="${labels.pea.reason }"/>
+			</listhead>
+		</listbox>
+	</groupbox>
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.exitInterview }"/>
+		<separator />
+		<listbox>
+			<listhead>
+				<listheader label="${labels.pea.documentName}" align="center" />
+				<listheader label="${labels.pea.completed}" align="center" />
+			</listhead>
+			<listitem>
+				<listcell label="${labels.pea.exitInterviewFile}"></listcell>
+				<listcell><checkbox id="chkInterviewCompleted" disabled="true"/></listcell>
+			</listitem>	
+		</listbox>	
+	</groupbox>
+	
+	<groupbox closable="false">
+		<caption label="${labels.pea.jobHandover }" />
+		<grid>
+			<columns>
+				<column width="180px" align="right" valign="top" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.pea.replacement }" />
+					<label id="lblReplacement" />
+				</row>
+				<row>
+					<label value="${labels.pea.jobHandover }" />
+					<label id="lblJobHandover" />
+				</row>
+				<row>
+					<label value="${labels.pea.jobHandoverFile }" />
+					<a id="lblJobHandoverFile" style="color:blue" visible="false"/>
+				</row>
+			</rows>
+		</grid>
+	</groupbox>
+	<hbox pack="center" align="center">		
+		<cell align="left">
+			<hbox>
+				<button id="btnCancelJoin"
+					label="${labels.pea.cancelJoin}" mold="trendy"
+					image="${labels.image.link.delete}" />
+				<button id="btnReverseTermination"
+					label="${labels.pea.reverseTermination}" mold="trendy"
+					image="${labels.image.link.back}" />
+			</hbox>			
+		</cell>
+	</hbox>		
+</window>

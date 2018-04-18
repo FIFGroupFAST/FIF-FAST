@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.systemadmin.finder.UserAccessRecordFinder">
+	<resultMap id="BaseResultMapInquiry"
+		type="co.id.fifgroup.systemadmin.dto.UserAccessRecordDTO">
+		<id column="USER_ACCESS_RECORD_ID" jdbcType="DECIMAL" property="userAccessRecordId" />
+		<result column="MODULE_NAME" jdbcType="VARCHAR" property="moduleName" />
+		<result column="FUNCTION_NAME" jdbcType="VARCHAR" property="functionName" />
+		<result column="USERNAME" jdbcType="VARCHAR" property="username" />
+		<result column="ACCESS_DATE" jdbcType="TIMESTAMP" property="accessDate" />
+		<result column="NUMBER_OF_ACCESS" jdbcType="DECIMAL" property="numberOfAccess" />
+	</resultMap>
+	
+	<select id="countUserAccessRecordDtoByAllParameter" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM (SELECT 
+		module_name,
+		function_name,
+		TRUNC(ACCESS_DATE) access_date,
+		USERNAME,
+		COUNT(USERNAME) number_of_access
+		FROM sam_user_access_records
+		WHERE trunc(access_date) between 
+		<if test="dateFrom != null">
+			TRUNC(#{dateFrom, jdbcType=DATE})
+		</if>
+		<if test="dateFrom == null">
+			TRUNC(SYSDATE-10)
+		</if>
+		AND 
+		<if test="dateTo != null">
+			TRUNC(#{dateTo, jdbcType=DATE})
+		</if>
+		<if test="dateTo== null">
+			TRUNC(SYSDATE)
+		</if>
+		
+		<if test="moduleName != null">
+			AND UPPER(MODULE_NAME) LIKE UPPER(#{moduleName, jdbcType=VARCHAR})
+
+		</if>
+		<if test="functionName != null">
+			AND UPPER(FUNCTION_NAME) LIKE UPPER(#{functionName, jdbcType=VARCHAR})
+		</if>
+
+		<if test="userName != null">
+			and UPPER(USERNAME) LIKE UPPER(#{userName, jdbcType=VARCHAR})
+		</if>
+		
+		
+		GROUP BY MODULE_NAME, function_name, TRUNC(ACCESS_DATE), USERNAME
+		)
+	</select>
+	
+	<select id="getUserAccessRecordDtoByAllParameter" resultMap="BaseResultMapInquiry" parameterType="map">
+		SELECT 
+		module_name,
+		function_name,
+		TRUNC(ACCESS_DATE) access_date,
+		USERNAME,
+		COUNT(USERNAME) number_of_access
+		FROM sam_user_access_records
+		WHERE trunc(access_date) between 
+		<if test="dateFrom != null">
+			TRUNC(#{dateFrom, jdbcType=DATE})
+		</if>
+		<if test="dateFrom == null">
+			TRUNC(to_date('1-JAN-1989','DD-MON-YYYY'))
+		</if>
+		AND 
+		<if test="dateTo != null">
+			TRUNC(#{dateTo, jdbcType=DATE})
+		</if>
+		<if test="dateTo== null">
+			TRUNC(SYSDATE)
+		</if>
+		
+		<if test="moduleName != null">
+			AND UPPER(MODULE_NAME) LIKE UPPER(#{moduleName, jdbcType=VARCHAR})
+
+		</if>
+		<if test="functionName != null">
+			AND UPPER(FUNCTION_NAME) LIKE UPPER(#{functionName, jdbcType=VARCHAR})
+		</if>
+
+		<if test="userName != null">
+			and UPPER(USERNAME) LIKE UPPER(#{userName, jdbcType=VARCHAR})
+		</if>
+		
+		
+		GROUP BY MODULE_NAME, function_name, TRUNC(ACCESS_DATE), USERNAME
+
+	</select>
+	
+</mapper>

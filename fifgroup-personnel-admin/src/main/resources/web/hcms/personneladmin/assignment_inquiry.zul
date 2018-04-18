@@ -1,0 +1,65 @@
+<window id="winAssignmentInquiry" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.AssignmentInquiryComposer">
+	<grid>
+		<columns>
+			<column width="180px" align="right" valign="top" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<label value="${labels.pea.assignmentType }" />
+				<hlayout>
+					<listbox id="cmbAssignmentType" mold="select">
+						<template name="model">
+							<listitem value="${each }">
+								<listcell label="${each.description }" />
+							</listitem>
+						</template>
+					</listbox>
+					<space hflex="1" />
+					<button id="btnAssTrackHistory"
+						label="Assignment Track History" />
+				</hlayout>
+			</row>
+			<row>
+				<label />
+				<hbox>
+					<button label="${labels.common.find}" id="btnFind"
+						mold="trendy" image="${labels.image.link.search}" />
+					<button label="${labels.common.newHistory}"
+						id="btnNew" mold="trendy" image="${labels.image.link.add}" />
+				</hbox>
+			</row>
+		</rows>
+	</grid>
+	<groupbox closable="false">
+		<caption label="${labels.pea.assignmentList }" />
+		<listbox id="lbxAssignments"
+			emptyMessage="${labels.common.err.noDataFound}">
+			<listhead menupopup="auto">
+				<listheader label="${labels.common.action }"
+					width="80px" />
+				<listheader label="${labels.common.startDate }"
+					sort="auto(startDate)" width="150px" />
+				<listheader label="${labels.common.endDate }"
+					sort="auto(endDate)" width="150px" />
+				<listheader label="${labels.pea.assignmentType }"
+					sort="auto(assignmentType)" width="150px" />
+				<listheader
+					label="${labels.pea.secondaryAssignmentType }"
+					sort="auto(secondaryType)" width="200px" />
+				<listheader label="${labels.pea.organization }"
+					sort="auto(organizationName)" width="200px" />
+				<listheader label="${labels.pea.location }"
+					sort="auto(locationName)" width="200px" />
+				<listheader label="${labels.pea.job }"
+					sort="auto(jobName)" width="200px" />
+				<listheader label="${labels.pea.grade }"
+					sort="auto(fullGrade)" width="100px" />
+				<listheader label="${labels.pea.fifappsAccess }"
+					sort="auto(sortAccess)" width="170px" />
+			</listhead>
+		</listbox>
+		<exporter referenceId="lbxAssignments" />
+	</groupbox>
+</window>

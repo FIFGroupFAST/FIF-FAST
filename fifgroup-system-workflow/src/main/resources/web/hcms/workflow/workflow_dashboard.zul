@@ -1,0 +1,230 @@
+<window id="winWorkflowDashboard" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowDashboardComposer">
+	<style>
+		.z-panel-noheader .z-panel-body{
+			padding : 0px !important;
+		} 
+	</style>
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true" closable="false">
+				<caption label="${labels.swf.workflowDashboard}">
+					<button id="btnRefresh" image="${labels.image.link.refresh}" label="${labels.common.refresh}" /> 
+				</caption>
+				<tabbox id="tabboxDekstop" >
+					<tabs>
+						<tab id="tabNotificationMessage" />
+						<tab id="tabApprovalTask" selected="true"/>
+						<tab id="tabOutgoingTask" />
+						<tab id="tabRejectedTask" />
+						
+						<!-- start added for phase 2 Training Administrator -->
+						<tab id="tabTraining" label="Training Dashboard"/>
+						<!-- end added for phase 2 Training Administrator -->
+						
+					</tabs>
+					<tabpanels>
+						<tabpanel>
+							<separator />
+							<listbox id="lbxNotificationMessage" checkmark="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader width="60px" align="left" />
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)"/>
+									<listheader label="${labels.swf.from}" align="center" sort="auto(name)"/>
+									<listheader label="${labels.swf.receivedTime}" align="center" sort="auto(receivedTime)"/>
+								</listhead>
+							</listbox>
+							<separator />
+							<button label="${labels.swf.close}"
+								id="btnCloseNotif" mold="trendy"/>
+						</tabpanel>
+						<tabpanel>
+							<separator />							
+							<hbox>
+								<space width="80px" />
+								<textbox id="txtFilterSubjectApproval" width="190px" maxlength="255"/>
+								<space width="5px" />
+								<bandbox id="bnbTrxTypeApproval" readonly="true" width="190px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" 
+										title="${labels.swf.listOfTransactionType}" searchText="${labels.swf.transactionType}" 
+										headerLabel="${labels.swf.transactionType}">
+								</bandbox>
+							</hbox>
+							<separator />
+							<listbox id="lbxApprovalTask" checkmark="true" multiple="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader width="90px" align="left" />
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" width="200px"/>
+									<listheader label="${labels.swf.transactionType}" align="center" sort="auto(transactionName)" width="200px"/>
+									<listheader label="${labels.swf.submittedTime}" align="center" sort="auto(actionTime)"/>
+									<listheader label="${labels.swf.lastApprover}" align="center" sort="auto(name)"/>
+									<listheader label="${labels.swf.lastApproverRemarks}" align="center" sort="auto(lastRemarks)"/>
+									<listheader label="${labels.swf.approvedTime}" align="center" sort="auto(approvedTime)"/>
+								</listhead>
+							</listbox>
+							<separator />
+								<hbox>
+									<button label="${labels.swf.approve}"
+										id="btnApproveApproval" mold="trendy"/>
+									<button
+										id="btnRejectApproval" mold="trendy"/>
+									<button label="Open"
+										id="btnOpen" mold="trendy"/>
+								</hbox>
+							<separator />
+						</tabpanel>
+						<tabpanel>
+							<separator />						
+							<hbox>
+								<textbox id="txtFilterSubjectOutgoing" width="190px" maxlength="255"/>
+								<space width="5px" />
+								<bandbox id="bnbTrxTypeOutgoing" readonly="true" width="190px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" 
+										title="${labels.swf.listOfTransactionType}" searchText="${labels.swf.transactionType}" 
+										headerLabel="${labels.swf.transactionType}">
+								</bandbox>
+							</hbox>
+							<separator />
+							<listbox id="lbxOutgoingTask" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" width="200px"/>
+									<listheader label="${labels.swf.transactionType}" align="center" sort="auto(transactionName)" width="200px"/>
+									<listheader label="${labels.swf.submittedTime}" align="center" sort="auto(submittedTime)"/>
+									<listheader label="${labels.swf.currentApprovalList}" align="center" />
+									<listheader label="${labels.swf.currentApprovalState}" align="center" />
+								</listhead>
+							</listbox>
+							<separator />
+						</tabpanel>
+						<tabpanel>
+							<separator />
+							<hbox>
+								<space width="60px" />
+								<textbox id="txtFilterSubjectRejected" width="190px" maxlength="255"/>
+								<space width="5px" />
+								<bandbox id="bnbTrxTypeRejected" readonly="true" width="190px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" 
+										title="${labels.swf.listOfTransactionType}" searchText="${labels.swf.transactionType}" 
+										headerLabel="${labels.swf.transactionType}">
+								</bandbox>
+							</hbox>
+							<separator />
+							<listbox id="lbxRejectedTask" checkmark="true" multiple="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader width="60px" align="left" />
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" width="200px"/>
+									<listheader label="${labels.swf.transactionType}" align="center" sort="auto(trxType)" width="200px"/>
+									<listheader label="${labels.swf.submittedTime}" align="center" sort="auto(submitTime)"/>
+									<listheader label="${labels.swf.rejecter}" align="center" sort="auto(name)"/>
+									<listheader label="${labels.swf.remarks}" align="center" sort="auto(remarks)"/>
+								</listhead>
+							</listbox>
+							<separator />
+							<button label="${labels.swf.close}"	id="btnCloseRejected" mold="trendy"/>
+							<separator />			
+						</tabpanel>
+						
+						<!-- start added for phase 2 Training Administrator -->
+						<tabpanel>
+							<div id="divTrainingAdmin"> 
+							</div>
+						</tabpanel>
+						<!-- end added for phase 2 Training Administrator -->
+						
+					</tabpanels>
+				</tabbox>
+				
+				<!-- MOBILE ||||||||||||||||||||||||||||||||||||||||||||||| -->
+				<tabbox mold="accordion" id="tabboxMobile" visible="false">
+					<tabs>
+						<tab id="tabNotificationMessageMobile" />
+						<tab id="tabApprovalTaskMobile" selected="true"/>
+						<tab id="tabOutgoingTaskMobile" />
+						<tab id="tabRejectedTaskMobile" />
+					</tabs>
+					<tabpanels>
+						<tabpanel>
+							<separator />						
+							<listbox id="lbxNotificationMessageMobile" checkmark="true" emptyMessage="${labels.common.noDataFound}" >
+								<listhead menupopup="auto">
+									<listheader width="60px" align="left" />
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)"/>
+								</listhead>
+							</listbox>
+							<separator />
+							<button label="${labels.swf.close}"
+								id="btnCloseNotifMobile" mold="trendy"/>
+						</tabpanel>
+						<tabpanel>
+							<separator />							
+							<hbox>
+								<space width="60px" />
+								<textbox id="txtFilterSubjectApprovalMobile" width="190px" maxlength="255"/>
+								<space width="5px" />
+								<bandbox id="bnbTrxTypeApprovalMobile" readonly="true" width="190px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" 
+										title="${labels.swf.listOfTransactionType}" searchText="${labels.swf.transactionType}" 
+										headerLabel="${labels.swf.transactionType}">
+								</bandbox>
+							</hbox>
+							<separator />
+							<listbox id="lbxApprovalTaskMobile" checkmark="true" multiple="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader width="60px" align="left" />
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" />
+								</listhead>
+							</listbox>
+							<separator />
+								<hbox>
+									<button label="${labels.swf.approve}"
+										id="btnApproveApprovalMobile" mold="trendy"/>
+									<button label="${labels.swf.reject}"
+										id="btnRejectApprovalMobile" mold="trendy"/>
+									<button label="Open"
+										id="btnOpenMobile" mold="trendy"/>
+								</hbox>
+							<separator />
+						</tabpanel>
+						<tabpanel>
+							<separator />						
+							<hbox>
+								<textbox id="txtFilterSubjectOutgoingMobile" width="190px" maxlength="255"/>
+								<space width="5px" />
+								<bandbox id="bnbTrxTypeOutgoingMobile" readonly="true" width="190px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" 
+										title="${labels.swf.listOfTransactionType}" searchText="${labels.swf.transactionType}" 
+										headerLabel="${labels.swf.transactionType}">
+								</bandbox>
+							</hbox>
+							<separator />
+							<listbox id="lbxOutgoingTaskMobile" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" />
+								</listhead>
+							</listbox>
+							<separator />
+						</tabpanel>
+						<tabpanel>
+							<separator />
+							<hbox>
+								<space width="60px" />
+								<textbox id="txtFilterSubjectRejectedMobile" width="190px" maxlength="255"/>
+								<space width="5px" />
+								<bandbox id="bnbTrxTypeRejectedMobile" readonly="true" width="190px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" 
+										title="${labels.swf.listOfTransactionType}" searchText="${labels.swf.transactionType}" 
+										headerLabel="${labels.swf.transactionType}">
+								</bandbox>
+							</hbox>
+							<separator />
+							<listbox id="lbxRejectedTaskMobile" checkmark="true" multiple="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+								<listhead menupopup="auto">
+									<listheader width="60px" align="left" />
+									<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" />
+								</listhead>
+							</listbox>
+							<separator />
+							<button label="${labels.swf.close}"	id="btnCloseRejectedMobile" mold="trendy"/>
+							<separator />			
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+				<!-- |||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

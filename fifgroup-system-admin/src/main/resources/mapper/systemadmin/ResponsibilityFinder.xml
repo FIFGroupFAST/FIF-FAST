@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemadmin.finder.ResponsibilityFinder">
+	
+	<select id="selectResponsibilityAndMenuByParameter" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityDTO" resultMap="responsibilityAndMenuResult">
+		SELECT 
+			A.RESPONSIBILITY_ID, 
+			A.RESPONSIBILITY_NAME, 
+			A.DATE_FROM, 
+			A.DATE_TO, 
+			A.LAST_UPDATED_BY, 
+			A.LAST_UPDATE_DATE,
+			A.TASK_GROUP_ID,
+			B.MENU_ID, 
+			B.MENU_NAME,
+			C.USER_NAME
+		FROM SAM_RESPONSIBILITIES A JOIN SAM_MENU_HDR B
+		ON A.MENU_ID = B.MENU_ID
+		LEFT JOIN SAM_USERS C ON C.USER_ID = A.LAST_UPDATED_BY		
+		<where>
+			<if test="responsibilityName != null">
+				UPPER(A.RESPONSIBILITY_NAME) like UPPER(#{responsibilityName, jdbcType=VARCHAR})
+			</if>
+			<if test="menuId != null">
+				AND B.MENU_ID = #{menuId, jdbcType=NUMERIC}
+			</if>
+		</where>
+		order by A.RESPONSIBILITY_NAME asc
+	</select>
+	
+	<select id="selectResponsibilityAndMenuByParameterWithRowbounds" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityDTO" resultMap="responsibilityAndMenuResult">
+		SELECT 
+			A.RESPONSIBILITY_ID, 
+			A.RESPONSIBILITY_NAME, 
+			A.DATE_FROM, 
+			A.DATE_TO,
+			A.CREATED_BY,
+			A.CREATION_DATE,
+			A.LAST_UPDATED_BY, 
+			A.LAST_UPDATE_DATE,
+			A.TASK_GROUP_ID,
+			A.BUSINESS_GROUP_ID,
+			B.MENU_ID, 
+			B.MENU_NAME,
+			C.USER_NAME
+		FROM SAM_RESPONSIBILITIES A JOIN SAM_MENU_HDR B ON A.MENU_ID = B.MENU_ID
+		LEFT JOIN SAM_USERS C ON C.USER_ID = A.LAST_UPDATED_BY 		
+		<where>
+			<if test="responsibilityName != null">
+				UPPER(A.RESPONSIBILITY_NAME) like UPPER(#{responsibilityName, jdbcType=VARCHAR})
+			</if>
+			<if test="menuId != null">
+				AND B.MENU_ID = #{menuId, jdbcType=NUMERIC}
+			</if>
+		</where>
+		ORDER BY A.LAST_UPDATE_DATE DESC
+	</select>
+	
+	<select id="countResponsibilityAndMenuByParameter" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityDTO" resultMap="countResponsibilityAndMenuResult">
+		SELECT COUNT(*) AS TOTAL
+		FROM SAM_RESPONSIBILITIES A JOIN SAM_MENU_HDR B
+		ON A.MENU_ID = B.MENU_ID		
+		<where>
+			<if test="responsibilityName != null">
+				UPPER(A.RESPONSIBILITY_NAME) like UPPER(#{responsibilityName, jdbcType=VARCHAR})
+			</if>
+			<if test="menuId != null">
+				AND B.MENU_ID = #{menuId, jdbcType=NUMERIC}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findFunctionByRootMenuId" parameterType="map" resultMap="functionOrSubmenuResults">
+		SELECT
+		  MD.ACTION_ID AS ACTION_ID,
+		  SF.FUNCTION_NAME item_name
+		FROM  SAM_MENU_HDR MH 
+	    INNER JOIN SAM_MENU_DTL MD ON MD.MENU_ID = MH.MENU_ID AND SYSDATE BETWEEN MH.DATE_FROM AND MH.DATE_TO AND TRUNC(SYSDATE) BETWEEN MD.DATE_FROM AND MD.DATE_TO
+			inner join  SAM_FUNCTIONS sf on SF.FUNCTION_ID = MD.ACTION_ID
+	    WHERE MD.MENU_ID = #{menuId, jdbcType=NUMERIC}
+	    and MD.MENU_ITEM_TYPE = 'FUNCTION'
+	</select>
+	
+	
+	<select id="countFunctionByRootMenuId" parameterType="map" resultType="Integer">
+		select count (*) from (
+		SELECT DISTINCT Y.FUNCTION_ID AS ACTION_ID, Y.FUNCTION_NAME AS ITEM_NAME FROM (
+		SELECT * FROM (
+		SELECT md.menu_id,
+		  md.action_id as parent,
+		  mh.menu_name,
+		  md.menu_item_type,
+		  md.prompt,
+		  mh.DATE_FROM,
+      	  mh.DATE_TO
+		FROM  sam_menu_hdr mh INNER JOIN sam_menu_dtl md ON md.menu_id = mh.menu_id
+		AND SYSDATE between mh.DATE_FROM and mh.DATE_TO
+		AND trunc(SYSDATE) BETWEEN md.DATE_FROM AND md.DATE_TO
+		where md.menu_id = #{menuId, jdbcType=NUMERIC})
+		START WITH MENU_ID = #{menuId, jdbcType=NUMERIC}
+		CONNECT BY PRIOR parent = menu_id
+		) X INNER JOIN SAM_FUNCTIONS Y
+		ON X.parent = Y.function_id
+		AND X.menu_item_type = 'FUNCTION'
+		AND SYSDATE between X.DATE_FROM and X.DATE_TO
+		AND UPPER(Y.FUNCTION_NAME) like UPPER(#{itemName, jdbcType=VARCHAR})
+		ORDER BY Y.FUNCTION_NAME )
+	</select>
+	
+	<select id="findSubmenuByRootMenuId" parameterType="map" resultMap="functionOrSubmenuResults">
+		SELECT
+	      MD.ACTION_ID,
+	      DTL.MENU_NAME item_name
+	    FROM SAM_MENU_HDR MH
+	    JOIN SAM_MENU_DTL MD ON MD.MENU_ID = MH.MENU_ID AND trunc(SYSDATE) BETWEEN MH.DATE_FROM AND MH.DATE_TO AND TRUNC(SYSDATE) BETWEEN MD.DATE_FROM AND MD.DATE_TO
+	    join sam_menu_hdr dtl on dtl.menu_id = md.action_id and (trunc(sysdate) BETWEEN DTL.DATE_FROM and DTL.DATE_TO)
+	    WHERE MH.MENU_ID =  #{menuId, jdbcType=NUMERIC}
+	    AND MD.MENU_ITEM_TYPE = 'SUBMENU'
+	    and upper(DTL.MENU_NAME) like UPPER(#{itemName, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="countSubmenuByRootMenuId" parameterType="map" resultType="Integer">
+		SELECT
+	      count(*)
+	    FROM SAM_MENU_HDR MH
+	    JOIN SAM_MENU_DTL MD ON MD.MENU_ID = MH.MENU_ID AND trunc(SYSDATE) BETWEEN MH.DATE_FROM AND MH.DATE_TO AND TRUNC(SYSDATE) BETWEEN MD.DATE_FROM AND MD.DATE_TO
+	    join sam_menu_hdr dtl on dtl.menu_id = md.action_id and (trunc(sysdate) BETWEEN DTL.DATE_FROM and DTL.DATE_TO)
+	    WHERE MH.MENU_ID =  #{menuId, jdbcType=NUMERIC}
+	    AND MD.MENU_ITEM_TYPE = 'SUBMENU'
+	    and upper(DTL.MENU_NAME) like UPPER(#{itemName, jdbcType=VARCHAR})
+	</select>
+
+	<select id="getResponsibilityName" resultMap="responsibilityAndMenuResult">
+		SELECT RESPONSIBILITY_NAME FROM SAM_RESPONSIBILITIES
+	</select>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.ItemExclusionDTO" id="functionOrSubmenuResults">
+		<id column="ACTION_ID" property="actionId" jdbcType="NUMERIC" />
+		<result column="ITEM_NAME" property="menuItem.itemName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="java.lang.Integer" id="countResponsibilityAndMenuResult">
+		<result column="TOTAL" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.ResponsibilityDTO" id="responsibilityAndMenuResult">
+		<id column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="id" />
+		<result column="RESPONSIBILITY_NAME" jdbcType="VARCHAR" property="responsibilityName" />
+		<result column="DATE_FROM" jdbcType="DATE" property="dateFrom" />
+		<result column="DATE_TO" jdbcType="DATE" property="dateTo" />
+		<result column="TASK_GROUP_ID" jdbcType="DECIMAL" property="taskGroupId" />
+		<result column="MENU_ID" jdbcType="DECIMAL" property="menuId" />
+		<result column="BUSINESS_GROUP_ID" jdbcType="DECIMAL" property="businessGroupId" />
+		<result column="FUNCTION_DEFAULT_ACCESS" jdbcType="VARCHAR" property="functionDefaultAccess" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="MENU_NAME" jdbcType="VARCHAR" property="menu.menuName" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getResponsibilityCompanyByResponsibilityId" parameterType="java.lang.Long" resultMap="companyResults">
+		SELECT B.RESP_COMPANY_ID, A.COMPANY_ID, A.COMPANY_NAME, B.RESPONSIBILITY_ID, B.SECURITY_BY_ASSIGN, 
+			B.ORG_LEVEL_ID_BY_ASSIGN, B.FILTER_BY_ASSIGN, B.FLAG_RECURSIVE_BY_ASSIGN, B.SECURITY_MULTI_COY, 
+			B.ORG_LEVEL_ID_MULTI, B.FILTER_MULTI, B.FLAG_RECURSIVE_MULTI, B.FLAG_OTHER_USER_MULTI
+		FROM BSE_COMPANIES A 
+		JOIN SAM_RESPONSIBILITY_COMPANIES B
+			ON B.COMPANY_ID = A.COMPANY_ID
+			AND trunc(SYSDATE) BETWEEN A.EFFECTIVE_START_DATE AND A.EFFECTIVE_END_DATE
+	    	AND B.RESPONSIBILITY_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<resultMap type="co.id.fifgroup.systemadmin.dto.ResponsibilityCompanyDTO" id="companyResults">
+		<id column="RESP_COMPANY_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" javaType="Long" jdbcType="NUMERIC" />
+		<result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+		<result column="RESPONSIBILITY_ID" property="responsibilityId" jdbcType="NUMERIC" />
+		<result column="SECURITY_BY_ASSIGN" property="securityByAssign" jdbcType="VARCHAR" />
+		<result column="ORG_LEVEL_ID_BY_ASSIGN" property="orgLevelIdByAssign" jdbcType="NUMERIC" />
+		<result column="FILTER_BY_ASSIGN" property="filterByAssign" jdbcType="VARCHAR" />	
+		<result column="FLAG_RECURSIVE_BY_ASSIGN" property="recursiveByAssignment" jdbcType="NUMERIC" />
+		<result column="SECURITY_MULTI_COY" property="securityMultiCompany" jdbcType="VARCHAR" />
+		<result column="ORG_LEVEL_ID_MULTI" property="organizationLevelIdMultiCompany" jdbcType="NUMERIC" />
+		<result column="FILTER_MULTI" property="filterMultyCompany" jdbcType="VARCHAR" />
+		<result column="FLAG_RECURSIVE_MULTI" property="recursiveMultiCompany" jdbcType="NUMERIC" />
+		<result column="FLAG_OTHER_USER_MULTI" property="grantAccessToOtherUser" jdbcType="NUMERIC" />	
+	</resultMap>
+	
+	<select id="getItemExclusionAndItemName" parameterType="java.lang.Long" resultMap="ItemExclusionAndItemNameResult">
+		select 
+		  ITEM_EXCLUSION_ID,
+		  RESPONSIBILITY_ID,
+		  ACTION_ID,
+		  ITEM_TYPE,
+		  MENU_NAME AS ITEM_NAME
+		  from sam_item_exclusions ie join sam_menu_hdr me on me.menu_id = ie.action_id 
+		  where item_type = 'SUBMENU' and ie.responsibility_id = #{responsibilityId, jdbcType=NUMERIC}
+		union
+		select 
+		  ITEM_EXCLUSION_ID,
+		  RESPONSIBILITY_ID,
+		  ACTION_ID,
+		  ITEM_TYPE,
+		  FUNCTION_NAME AS ITEM_NAME
+		  from sam_item_exclusions ie join sam_functions me on me.function_id = ie.action_id 
+		  where item_type = 'FUNCTION' and ie.responsibility_id = #{responsibilityId, jdbcType=NUMERIC}
+	</select>
+
+	<resultMap type="co.id.fifgroup.systemadmin.dto.ItemExclusionDTO" id="ItemExclusionAndItemNameResult">
+		<result column="ITEM_EXCLUSION_ID" jdbcType="DECIMAL" property="id" />
+		<result column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="responsibilityId" />
+		<result column="ACTION_ID" jdbcType="DECIMAL" property="actionId" />
+		<result column="ITEM_TYPE" jdbcType="VARCHAR" property="itemType" />
+		<result column="ITEM_NAME" jdbcType="VARCHAR" property="menuItem.itemName" />
+	</resultMap>
+	
+	<select id="findFunctionAndSubmenuByNotInActionIdUseItemExclusion" resultMap="BaseResultMap" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityDTO" >
+		SELECT DISTINCT B.CUSTOM_FUNCTION_ACCESS_ID, B.RESPONSIBILITY_ID, A.FUNCTION_ID, A.ITEM_NAME, 
+		B.FLAG_WRITABLE, B.FLAG_EDITABLE, B.FLAG_ERASABLE
+		FROM (
+		SELECT DISTINCT Y.FUNCTION_ID AS FUNCTION_ID, Y.FUNCTION_NAME AS ITEM_NAME FROM (
+		SELECT * FROM (
+		SELECT md.menu_id,
+		md.action_id as parent,
+		mh.menu_name,
+		md.menu_item_type,
+		md.prompt
+		FROM sam_menu_hdr mh JOIN sam_menu_dtl md ON md.menu_id = mh.menu_id)
+		START WITH MENU_ID = #{menuId, jdbcType=NUMERIC}
+		CONNECT BY PRIOR parent = menu_id
+		) X INNER JOIN SAM_FUNCTIONS Y 
+		ON X.parent = Y.function_id
+		AND X.menu_item_type = 'FUNCTION'
+		AND Y.FUNCTION_ID
+		<foreach collection="itemExclusions" item="itemExclusion" open="NOT IN (" close=")" separator=",">
+			#{itemExclusion.actionId, jdbcType=NUMERIC}
+		</foreach>
+		UNION
+		SELECT DISTINCT Y.MENU_ID AS FUNCTION_ID, Y.MENU_NAME AS ITEM_NAME FROM (
+		SELECT * FROM (
+		SELECT md.menu_id,
+		md.action_id as parent,
+		mh.menu_name,
+		md.menu_item_type,
+		md.prompt
+		FROM  sam_menu_hdr mh JOIN sam_menu_dtl md ON md.menu_id = mh.menu_id)
+		START WITH MENU_ID = #{menuId, jdbcType=NUMERIC}
+		CONNECT BY PRIOR parent = menu_id
+		) X INNER JOIN SAM_MENU_HDR Y
+		ON X.parent = Y.MENU_ID
+		AND X.menu_item_type = 'SUBMENU'
+		AND Y.MENU_ID
+		<foreach collection="itemExclusions" item="itemExclusion" open="NOT IN (" close=")" separator=",">
+			#{itemExclusion.actionId, jdbcType=NUMERIC}
+		</foreach>	
+		) A LEFT JOIN SAM_CUSTOM_FUNCTION_ACCESS B
+		ON B.FUNCTION_ID = A.FUNCTION_ID
+		<if test="id != null" >
+			AND B.RESPONSIBILITY_ID = #{id, jdbcType=NUMERIC}
+		</if>
+		ORDER BY A.ITEM_NAME
+	</select>
+  
+  	<select id="findFunctionAndSubmenuByNotInActionIdNotUseItemExclusion" resultMap="BaseResultMap" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityDTO" >
+		SELECT DISTINCT B.CUSTOM_FUNCTION_ACCESS_ID, B.RESPONSIBILITY_ID, A.FUNCTION_ID, A.ITEM_NAME, 
+		B.FLAG_WRITABLE, B.FLAG_EDITABLE, B.FLAG_ERASABLE
+		FROM (
+		SELECT DISTINCT Y.FUNCTION_ID AS FUNCTION_ID, Y.FUNCTION_NAME AS ITEM_NAME FROM (
+		SELECT * FROM (
+		SELECT md.menu_id,
+		md.action_id as parent,
+		mh.menu_name,
+		md.menu_item_type,
+		md.prompt
+		FROM sam_menu_hdr mh JOIN sam_menu_dtl md ON md.menu_id = mh.menu_id)
+		START WITH MENU_ID = #{menuId, jdbcType=NUMERIC}
+		CONNECT BY PRIOR parent = menu_id
+		) X INNER JOIN SAM_FUNCTIONS Y 
+		ON X.parent = Y.function_id
+		AND X.menu_item_type = 'FUNCTION'
+		UNION
+		SELECT DISTINCT Y.MENU_ID AS FUNCTION_ID, Y.MENU_NAME AS ITEM_NAME FROM (
+		SELECT * FROM (
+		SELECT md.menu_id,
+		md.action_id as parent,
+		mh.menu_name,
+		md.menu_item_type,
+		md.prompt
+		FROM  sam_menu_hdr mh JOIN sam_menu_dtl md ON md.menu_id = mh.menu_id)
+		START WITH MENU_ID = #{menuId, jdbcType=NUMERIC}
+		CONNECT BY PRIOR parent = menu_id
+		) X INNER JOIN SAM_MENU_HDR Y
+		ON X.parent = Y.MENU_ID
+		AND X.menu_item_type = 'SUBMENU'	
+		) A LEFT JOIN SAM_CUSTOM_FUNCTION_ACCESS B
+		ON B.FUNCTION_ID = A.FUNCTION_ID
+		<if test="id != null" >
+			AND B.RESPONSIBILITY_ID = #{id, jdbcType=NUMERIC}
+		</if>
+		ORDER BY A.ITEM_NAME
+	</select>
+	
+  	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.FunctionAccessDTO" >
+	  	<id column="CUSTOM_FUNCTION_ACCESS_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="responsibilityId" />
+	    <result column="FUNCTION_ID" jdbcType="DECIMAL" property="functionId" />
+	    <result column="ITEM_NAME" jdbcType="VARCHAR" property="itemName" />
+	    <result column="FLAG_WRITABLE" jdbcType="DECIMAL" property="writable" />
+	    <result column="FLAG_EDITABLE" jdbcType="DECIMAL" property="editable" />
+	    <result column="FLAG_ERASABLE" jdbcType="DECIMAL" property="erasable" />
+  	</resultMap>
+  	
+  	<select id="findResponsibilityKeyValue" resultMap="ResponsibilityKeyValueResult">
+		select responsibility_id, responsibility_name from sam_responsibilities
+	</select>
+	
+	<select id="findResponsibilityKeyValueById" parameterType="java.lang.Long"  resultMap="ResponsibilityKeyValueResult">
+		select responsibility_id, responsibility_name from sam_responsibilities
+		 where responsibility_id = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<resultMap id="ResponsibilityKeyValueResult" type="co.id.fifgroup.core.ui.lookup.KeyValue" >
+	  	<id column="responsibility_id" jdbcType="DECIMAL" property="key" />
+	    <result column="responsibility_name" jdbcType="VARCHAR" property="value" />
+	    <result column="responsibility_name" jdbcType="VARCHAR" property="description" />
+  	</resultMap>
+	
+	<select id="getGradeExclusionByAssignment" resultMap="GradeExclusionResultMap" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityCompanyDTO" >
+		SELECT A.GRADE_EXCLUSION_ID, A.SECURITY_COY_TYPE, A.RESP_COMPANY_ID, A.GRADE_ID, B.GRADE_CODE || ' - ' || B.GRADE || ' - ' || B.SUB_GRADE AS GRADE
+		FROM SAM_GRADE_EXCLUSIONS A JOIN WOS_GRADES B ON B.GRADE_ID = A.GRADE_ID
+		AND A.SECURITY_COY_TYPE = 'ASSIGNMENT'
+		AND A.RESP_COMPANY_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getGradeExclusionByMultiCompany" resultMap="GradeExclusionResultMap" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityCompanyDTO" >
+		SELECT A.GRADE_EXCLUSION_ID, A.SECURITY_COY_TYPE, A.RESP_COMPANY_ID, A.GRADE_ID, B.GRADE_CODE || ' - ' || B.GRADE || ' - ' || B.SUB_GRADE AS GRADE
+		FROM SAM_GRADE_EXCLUSIONS A JOIN WOS_GRADES B ON B.GRADE_ID = A.GRADE_ID
+		AND A.SECURITY_COY_TYPE = 'MULTICOY'
+		AND A.RESP_COMPANY_ID = #{id, jdbcType=NUMERIC}
+	</select>
+		
+	<resultMap id="GradeExclusionResultMap" type="co.id.fifgroup.systemadmin.dto.GradeExclusionDTO" >
+	  	<id column="GRADE_EXCLUSION_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="SECURITY_COY_TYPE" jdbcType="VARCHAR" property="securityCompanyType" />
+	    <result column="RESP_COMPANY_ID" jdbcType="DECIMAL" property="respCompanyId" />
+	    <result column="GRADE_ID" jdbcType="DECIMAL" property="gradeId" />
+	    <result column="GRADE" jdbcType="VARCHAR" property="gradeName" />
+  	</resultMap>
+  	
+  	<select id="getIncludedOrganizationByAssignment" resultMap="IncludedOrganizationResultMap" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityCompanyDTO" >
+		SELECT A.INCLUDED_EXCLUDED_ID, A.RESP_COMPANY_ID, A.SECURITY_COY_TYPE, A.ORGANIZATION_ID, B.ORGANIZATION_NAME
+		FROM SAM_INCLUDED_EXCLUDED_ORG A JOIN WOS_ORGANIZATIONS B ON B.ORGANIZATION_ID = A.ORGANIZATION_ID
+		AND A.SECURITY_COY_TYPE = 'ASSIGNMENT'
+		AND A.RESP_COMPANY_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="getIncludedOrganizationByMultiCompany" resultMap="IncludedOrganizationResultMap" parameterType="co.id.fifgroup.systemadmin.dto.ResponsibilityCompanyDTO" >
+		SELECT A.INCLUDED_EXCLUDED_ID, A.RESP_COMPANY_ID, A.SECURITY_COY_TYPE, A.ORGANIZATION_ID, B.ORGANIZATION_NAME
+		FROM SAM_INCLUDED_EXCLUDED_ORG A JOIN WOS_ORGANIZATIONS B ON B.ORGANIZATION_ID = A.ORGANIZATION_ID
+		AND A.SECURITY_COY_TYPE = 'MULTICOY'
+		AND A.RESP_COMPANY_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<resultMap id="IncludedOrganizationResultMap" type="co.id.fifgroup.systemadmin.dto.IncludedOrganizationDTO" >
+	  	<id column="INCLUDED_EXCLUDED_ID" jdbcType="DECIMAL" property="id" />
+	    <result column="RESP_COMPANY_ID" jdbcType="DECIMAL" property="respCompanyId" />
+	    <result column="SECURITY_COY_TYPE" jdbcType="VARCHAR" property="securityCompanyType" />
+	    <result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="organizationId" />
+	    <result column="ORGANIZATION_NAME" jdbcType="VARCHAR" property="organizationName" />
+  	</resultMap>
+  	
+  	<delete id="deleteGradeExclusionAssignmentByRespCompanyId" parameterType="Long">
+  		DELETE FROM SAM_GRADE_EXCLUSIONS WHERE RESP_COMPANY_ID = #{Id, jdbcType=NUMERIC} AND SECURITY_COY_TYPE = 'ASSIGNMENT'
+  	</delete>
+  	
+  	<delete id="deleteIncludedOrganizationAssignmentByRespCompanyId" parameterType="Long">
+  		DELETE FROM SAM_INCLUDED_EXCLUDED_ORG WHERE RESP_COMPANY_ID = #{Id, jdbcType=NUMERIC} AND SECURITY_COY_TYPE = 'ASSIGNMENT'
+  	</delete>
+  	
+  	<delete id="deleteGradeExclusionMultiCompanyByRespCompanyId" parameterType="Long">
+  		DELETE FROM SAM_GRADE_EXCLUSIONS WHERE RESP_COMPANY_ID = #{Id, jdbcType=NUMERIC} AND SECURITY_COY_TYPE = 'MULTICOY'
+  	</delete>
+  	
+  	<delete id="deleteIncludedOrganizationMultiCompanyByRespCompanyId" parameterType="Long">
+  		DELETE FROM SAM_INCLUDED_EXCLUDED_ORG WHERE RESP_COMPANY_ID = #{Id, jdbcType=NUMERIC} AND SECURITY_COY_TYPE = 'MULTICOY'
+  	</delete>
+  	
+  	<delete id="deleteItemExclusionByResponsibilityId" parameterType="map">
+		DELETE FROM SAM_ITEM_EXCLUSIONS WHERE RESPONSIBILITY_ID = #{responsibilityId, jdbcType=NUMERIC}
+	</delete>
+	
+	<delete id="deleteFieldPermissionByResponsibilityId" parameterType="map">
+		DELETE FROM SAM_FIELD_PERMISSIONS WHERE RESPONSIBILITY_ID = #{responsibilityId, jdbcType=NUMERIC}
+	</delete>
+	
+	<delete id="deleteFunctionAccessByResponsibilityId" parameterType="map">
+		DELETE FROM SAM_CUSTOM_FUNCTION_ACCESS WHERE RESPONSIBILITY_ID = #{responsibilityId, jdbcType=NUMERIC}
+	</delete>
+	
+	<delete id="deleteIncludedOrganizationByResponsibilityId" parameterType="java.lang.Long">
+		DELETE FROM sam_included_excluded_org where resp_company_id in (select resp_company_id from sam_responsibility_companies where responsibility_id= #{respId, jdbcType=NUMERIC} )
+	</delete>
+	
+	<delete id="deleteGradeExclusionByREsponsibilityId" parameterType="java.lang.Long">
+		DELETE FROM sam_grade_exclusions where resp_company_id in (select resp_company_id from sam_responsibility_companies where responsibility_id= #{respId, jdbcType=NUMERIC} )
+	</delete>
+	
+	<resultMap id="functionAccessResult" type="co.id.fifgroup.systemadmin.dto.FunctionAccessDTO" >
+	  	<id column="action_id" jdbcType="DECIMAL" property="functionId" />
+	    <result column="menu_item_type" jdbcType="VARCHAR" property="itemType" />
+	    <result column="item_name" jdbcType="VARCHAR" property="itemName" />
+	    <result column="flag_editable" jdbcType="NUMERIC" property="editable" />
+	    <result column="flag_erasable" jdbcType="NUMERIC" property="erasable" />
+	    <result column="flag_writable" jdbcType="NUMERIC" property="writable" />
+  	</resultMap>
+	
+	<select id="getFunctionAccessByMenuAndRespId" parameterType="map" resultMap="functionAccessResult">
+		select 
+		  action_id, 
+		  menu_item_type, 
+		  prompt item_name,
+		  fu.flag_editable,
+		  fu.flag_erasable,
+		  fu.flag_writable
+		  from sam_menu_dtl dtl
+		left join sam_custom_function_access fu on fu.function_id = dtl.action_id 
+		<if test="respId != null" >
+			and fu.responsibility_id = #{respId}
+		</if>
+		where menu_id = #{menuId}
+		
+	</select>
+	
+	<select id="getFunctionAccessByMenuId" parameterType="java.lang.Long" resultMap="functionAccessResult">
+		select 
+		  action_id, 
+		  menu_item_type, 
+		  prompt item_name,
+		  null,
+		  null,
+		  null
+		  from sam_menu_dtl dtl
+		where menu_id = #{menuId}
+	</select>
+	
+  	
+</mapper>

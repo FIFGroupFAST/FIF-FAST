@@ -1,0 +1,29 @@
+<?page title="Define Task Parameters" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="Define Task Parameters" border="normal" width="850px" height="500px" closable="true"
+		apply="co.id.fifgroup.systemadmin.controller.LookupTaskParameterComposer" style="overflow: auto">
+			<div height="400px" align="left" style="overflow: auto">
+				<separator />
+				<label id="lblErrorTask" style="color:red" />
+				<listbox id="parameterListbox" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" >
+					<listhead>
+						<listheader label="" width="35px" />
+						<listheader label="${labels.sam.key }" />
+						<listheader label="${labels.sam.displayName }" />
+						<listheader label="${labels.sam.dataType }" />
+						<listheader label="${labels.sam.lookupCode }" />
+						<listheader label="${labels.sam.mandatory }" width="70px" />
+					</listhead>
+				</listbox>
+				<hbox align="start" pack="start">
+				<div align="left">
+					<button label="${labels.common.addRow}" mold="trendy" id="btnAddRow" />
+					<button label="${labels.common.delete}" mold="trendy" id="btnDelete" />
+				</div>
+				</hbox>
+			</div>
+			<div align="center">
+				<button label="${labels.common.ok}" mold="trendy" id="btnOk" />
+			</div>
+	</window>
+</zk>

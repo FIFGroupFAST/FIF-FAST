@@ -1,0 +1,36 @@
+<?page id="workspace"?>
+<zk>
+	<style src="styles/css/default.css" />
+	<window id="mainWindow" width="100%" height="100%" apply="co.id.fifgroup.workstructure.controller.WorkstructureMainComposer">
+		<borderlayout height="100%" width="100%">
+			<north  border="normal">
+				<vlayout id="header">
+				<div sclass="title-container">
+					<label sclass="title"
+						value="Work Structure Module" />
+					<div sclass="title-menu">
+						Logged in as
+						<label id="username" />
+					</div>
+				</div>
+				<toolbar id="toolbar" height="75px"/>
+				</vlayout>
+			</north>
+		
+			<!-- Main -->
+			<center border="normal" style="padding:5px"
+				autoscroll="true">
+				<vlayout id="centerId">
+					
+				</vlayout>
+			</center>
+
+			<!-- Footer -->
+			<south size="40px" border="0"
+				style="background: none repeat scroll 0 0 ;padding-top:10px; padding-left:10px">
+				Powered by Federal International Finance, PT
+			</south>
+
+		</borderlayout>
+	</window>
+</zk>

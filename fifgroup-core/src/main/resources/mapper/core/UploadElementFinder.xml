@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.finder.UploadElementFinder">
+
+	<resultMap type="co.id.fifgroup.core.domain.UploadElement" id="BaseResultMap">
+		<id column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="BATCH_NUMBER" property="batchNumber" jdbcType="VARCHAR"/>
+		<result column="UPLOAD_DATE" property="uploadDate" jdbcType="TIMESTAMP"/>
+		<result column="SUCCESS_ROWS" property="successRows" jdbcType="DECIMAL"/>
+		<result column="FAILED_ROWS" property="failedRows" jdbcType="DECIMAL"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.core.dto.UploadElementDTO" id="BaseResultMapDto">
+		<id column="UPLOAD_ID" property="uploadId" jdbcType="DECIMAL"/>
+		<result column="BATCH_NUMBER" property="batchNumber" jdbcType="VARCHAR"/>
+		<result column="UPLOAD_DATE" property="uploadDate" jdbcType="TIMESTAMP"/>
+		<result column="SUCCESS_ROWS" property="successRows" jdbcType="DECIMAL"/>
+		<result column="FAILED_ROWS" property="failedRows" jdbcType="DECIMAL"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		<result column="USER_NAME" property="uploadedBy" jdbcType="VARCHAR"/>
+		<association property="batchUpload" javaType="co.id.fifgroup.core.domain.BatchUpload">
+			<id column="BATCH_NUMBER" property="batchNumber" jdbcType="VARCHAR"/>
+			<result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL"/>
+			<result column="BRANCH_ID" property="branchId" jdbcType="DECIMAL"/>
+			<result column="FORMAT_REFERENCE_ID" property="formatReferenceId" jdbcType="DECIMAL"/>
+			<result column="STATUS" property="status" jdbcType="VARCHAR"/>
+			<result column="CREATED_BY_UPLOAD" property="createdBy" jdbcType="DECIMAL"/>
+			<result column="CREATION_DATE_UPLOAD" property="creationDate" jdbcType="TIMESTAMP"/>
+			<result column="LAST_UPDATED_BY_UPLOAD" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+			<result column="LAST_UPDATE_DATE_UPLOAD" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		</association>
+	</resultMap>
+
+	<sql id="whereClause">
+		<where>
+			<if test="criteria.uploadId != null">
+				AND UPLOAD_ID = #{criteria.uploadId, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.batchNumber != null">
+				AND BATCH_NUMBER = #{criteria.batchNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.uploadDate != null">
+				AND UPLOAD_DATE = #{criteria.uploadDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.successRows != null">
+				AND SUCCESS_ROWS = #{criteria.successRows, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.failedRows != null">
+				AND FAILED_ROWS = #{criteria.failedRows, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.createdBy != null">
+				AND CREATED_BY = #{criteria.createdBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.creationDate != null">
+				AND CREATION_DATE = #{criteria.creationDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.lastUpdatedBy != null">
+				AND LAST_UPDATED_BY = #{criteria.lastUpdatedBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.lastUpdateDate != null">
+				AND LAST_UPDATE_DATE = #{criteria.lastUpdateDate, jdbcType=TIMESTAMP}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="whereClauseDto">
+		<where>
+			<if test="criteria.uploadId != null">
+				AND UE.UPLOAD_ID = #{criteria.uploadId, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.batchNumber != null">
+				AND UE.BATCH_NUMBER = #{criteria.batchNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.uploadDate != null">
+				AND UE.UPLOAD_DATE = #{criteria.uploadDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.successRows != null">
+				AND UE.SUCCESS_ROWS = #{criteria.successRows, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.failedRows != null">
+				AND UE.FAILED_ROWS = #{criteria.failedRows, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.createdBy != null">
+				AND UE.CREATED_BY = #{criteria.createdBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.creationDate != null">
+				AND UE.CREATION_DATE = #{criteria.creationDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.lastUpdatedBy != null">
+				AND UE.LAST_UPDATED_BY = #{criteria.lastUpdatedBy, jdbcType=DECIMAL}
+			</if>
+			<if test="criteria.lastUpdateDate != null">
+				AND UE.LAST_UPDATE_DATE = #{criteria.lastUpdateDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.uploadedBy != null">
+				AND UPPER(SU.USER_NAME) LIKE UPPER(#{uploadedBy, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.batchUpload != null">
+				<if test="criteria.batchUpload.batchNumber != null">
+					AND BU.BATCH_NUMBER = #{criteria.batchUpload.batchNumber, jdbcType=VARCHAR}
+				</if>
+				<if test="criteria.batchUpload.companyId != null">
+					AND BU.COMPANY_ID = #{criteria.batchUpload.companyId, jdbcType=DECIMAL}
+				</if>
+				<if test="criteria.batchUpload.branchId != null">
+					AND BU.BRANCH_ID = #{criteria.batchUpload.branchId, jdbcType=DECIMAL}
+				</if>
+				<if test="criteria.batchUpload.formatReferenceId != null">
+					AND BU.FORMAT_REFERENCE_ID = #{criteria.batchUpload.formatReferenceId, jdbcType=DECIMAL}
+				</if>
+				<if test="criteria.batchUpload.status != null">
+					AND BU.STATUS = #{criteria.batchUpload.status, jdbcType=VARCHAR}
+				</if>
+				<if test="criteria.batchUpload.createdBy != null">
+					AND BU.CREATED_BY = #{criteria.batchUpload.createdBy, jdbcType=DECIMAL}
+				</if>
+				<if test="criteria.batchUpload.creationDate != null">
+					AND BU.CREATION_DATE = #{criteria.batchUpload.creationDate, jdbcType=TIMESTAMP}
+				</if>
+				<if test="criteria.batchUpload.lastUpdatedBy != null">
+					AND BU.LAST_UPDATED_BY = #{criteria.batchUpload.lastUpdatedBy, jdbcType=DECIMAL}
+				</if>
+				<if test="criteria.batchUpload.lastUpdateDate != null">
+					AND BU.LAST_UPDATE_DATE = #{criteria.batchUpload.lastUpdateDate, jdbcType=TIMESTAMP}
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="map">
+		<selectKey keyProperty="uploadElement.uploadId" resultType="Long" order="BEFORE">
+			SELECT ${sequenceName}.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO ${tableName} 
+			(
+				UPLOAD_ID, BATCH_NUMBER, UPLOAD_DATE, SUCCESS_ROWS, FAILED_ROWS, CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE
+			)
+		VALUES
+			(
+				#{uploadElement.uploadId, jdbcType=DECIMAL},
+				#{uploadElement.batchNumber, jdbcType=VARCHAR},
+				#{uploadElement.uploadDate, jdbcType=TIMESTAMP},
+				#{uploadElement.successRows, jdbcType=DECIMAL},
+				#{uploadElement.failedRows, jdbcType=DECIMAL},
+				#{uploadElement.createdBy, jdbcType=DECIMAL},
+				#{uploadElement.creationDate, jdbcType=TIMESTAMP},
+				#{uploadElement.lastUpdatedBy, jdbcType=DECIMAL},
+				#{uploadElement.lastUpdateDate, jdbcType=TIMESTAMP}
+			)
+	</insert>
+
+	<update id="updateById" parameterType="map">
+		UPDATE ${tableName}
+		SET
+			BATCH_NUMBER = #{uploadElement.batchNumber, jdbcType=VARCHAR}, 
+			UPLOAD_DATE = #{uploadElement.uploadDate, jdbcType=TIMESTAMP}, 
+			SUCCESS_ROWS = #{uploadElement.successRows, jdbcType=DECIMAL}, 
+			FAILED_ROWS = #{uploadElement.failedRows, jdbcType=DECIMAL}, 
+			CREATED_BY = #{uploadElement.createdBy, jdbcType=DECIMAL}, 
+			CREATION_DATE = #{uploadElement.creationDate, jdbcType=TIMESTAMP}, 
+			LAST_UPDATED_BY = #{uploadElement.lastUpdatedBy, jdbcType=DECIMAL}, 
+			LAST_UPDATE_DATE = #{uploadElement.lastUpdateDate, jdbcType=TIMESTAMP}
+		WHERE
+			UPLOAD_ID = #{uploadElement.uploadId, jdbcType=DECIMAL}
+	</update>
+
+	<select id="selectByExample" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			UPLOAD_ID, BATCH_NUMBER, UPLOAD_DATE, SUCCESS_ROWS, FAILED_ROWS, CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE
+		FROM
+			${tableName}
+		<include refid="whereClause"/>
+	</select>
+
+	<select id="selectUploadElementDtoByExample" parameterType="map" resultMap="BaseResultMapDto">
+		SELECT
+			UE.UPLOAD_ID, 
+			UE.BATCH_NUMBER, 
+			UE.UPLOAD_DATE, 
+			UE.SUCCESS_ROWS, 
+			UE.FAILED_ROWS, 
+			UE.CREATED_BY, 
+			UE.CREATION_DATE, 
+			UE.LAST_UPDATED_BY, 
+			UE.LAST_UPDATE_DATE,
+			SU.USER_NAME,
+			BU.COMPANY_ID, 
+			BU.BRANCH_ID, 
+			BU.FORMAT_REFERENCE_ID, 
+			BU.STATUS, 
+			BU.CREATED_BY AS CREATED_BY_UPLOAD, 
+			BU.CREATION_DATE AS CREATION_DATE_UPLOAD, 
+			BU.LAST_UPDATED_BY AS LAST_UPDATED_BY_UPLOAD, 
+			BU.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_UPLOAD
+		FROM
+			${uploadElementTableName} UE
+			LEFT JOIN SAM_USERS SU ON(SU.USER_ID = UE.CREATED_BY)
+			LEFT JOIN ${batchUploadTableName} BU ON(BU.BATCH_NUMBER = UE.BATCH_NUMBER)
+		<include refid="whereClauseDto"/>
+	</select>
+
+	<select id="selectUploadElementDtoById" parameterType="long" resultMap="BaseResultMapDto">
+		SELECT
+			UE.UPLOAD_ID, 
+			UE.BATCH_NUMBER, 
+			UE.UPLOAD_DATE, 
+			UE.SUCCESS_ROWS, 
+			UE.FAILED_ROWS, 
+			UE.CREATED_BY, 
+			UE.CREATION_DATE, 
+			UE.LAST_UPDATED_BY, 
+			UE.LAST_UPDATE_DATE,
+			BU.COMPANY_ID, 
+			BU.BRANCH_ID, 
+			BU.FORMAT_REFERENCE_ID, 
+			BU.STATUS, 
+			BU.CREATED_BY AS CREATED_BY_UPLOAD, 
+			BU.CREATION_DATE AS CREATION_DATE_UPLOAD, 
+			BU.LAST_UPDATED_BY AS LAST_UPDATED_BY_UPLOAD, 
+			BU.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_UPLOAD
+		FROM
+			${uploadElementTableName} UE
+			JOIN ${batchUploadTableName} BU ON(BU.BATCH_NUMBER = UE.BATCH_NUMBER)
+		WHERE
+			UE.UPLOAD_ID = #{uploadId, jdbcType=DECIMAL}
+	</select>
+
+	<select id="getUploadElementById" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			UE.UPLOAD_ID, 
+			UE.BATCH_NUMBER, 
+			UE.UPLOAD_DATE, 
+			UE.SUCCESS_ROWS, 
+			UE.FAILED_ROWS, 
+			UE.CREATED_BY, 
+			UE.CREATION_DATE, 
+			UE.LAST_UPDATED_BY, 
+			UE.LAST_UPDATE_DATE
+		FROM
+			${uploadElementTableName} UE
+		WHERE
+			UE.UPLOAD_ID = #{uploadId, jdbcType=DECIMAL}
+	</select>
+
+</mapper>

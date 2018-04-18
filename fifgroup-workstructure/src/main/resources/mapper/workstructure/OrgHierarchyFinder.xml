@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.workstructure.finder.OrganizationHierarchyFinder">
+
+	<resultMap id="orgHierDtoResultMap" type="co.id.fifgroup.workstructure.dto.OrgHierarchyDTO">
+		<id column="ORG_HIER_ID" property="id" jdbcType="NUMERIC" />
+		<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" jdbcType="NUMERIC" />
+		<result column="VERSION_NUMBER" property="versionNumber" jdbcType="NUMERIC" />
+		<result column="ORG_HIER_TYPE" property="orgHierType" jdbcType="VARCHAR" />
+		<result column="ORG_HIER_NAME" property="orgHierName" jdbcType="VARCHAR" />
+		<result column="IS_DEPT_OWNER" property="isDeptOwner" jdbcType="DECIMAL" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="CREATED_BY" property="createdBy" jdbcType="NUMERIC" />
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="NUMERIC" />
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+		<result column="DATE_FROM" property="dateFrom" />
+		<result column="DATE_TO" property="dateTo" />
+		<collection property="elements" ofType="co.id.fifgroup.workstructure.dto.OrgHierElementDTO">
+			<result column="ORG_HIER_ELEMENT_ID" property="orgHierElementId"/>
+			<result column="VERSION_ID" property="versionId" jdbcType="NUMERIC" />
+			<result column="COMPANY_ID" property="companyId" jdbcType="NUMERIC" />
+			<result column="PARENT_ID" property="parentId" jdbcType="NUMERIC" />
+			<result column="ORGANIZATION_ID" property="organizationId" jdbcType="NUMERIC" />
+			<result column="CREATED_BY" property="createdBy" jdbcType="NUMERIC" />
+			<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+			<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="NUMERIC" />
+			<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+		</collection>
+	</resultMap>
+	
+	<select id="findByInquiry" parameterType="co.id.fifgroup.workstructure.dto.OrgHierarchyDTO" resultMap="orgHierDtoResultMap">
+		select
+			oh.ORG_HIER_ID,
+			oh.ORG_HIER_TYPE,
+			oh.ORG_HIER_NAME,
+			oh.DESCRIPTION,
+			ohv.VERSION_NUMBER,
+			ohv.LAST_UPDATE_DATE,
+			us.user_name
+		from WOS_ORGANIZATION_HIER oh
+		join WOS_ORG_HIER_VERSIONS ohv on oh.ORG_HIER_ID = ohv.ORG_HIER_ID
+		join sam_users us on us.user_id = oh.last_updated_by
+		<where>
+			<if test="companyId != null">
+				and oh.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="orgHierName != null">
+				and oh.ORG_HIER_NAME = #{orgHierName, jdbcType=VARCHAR}
+			</if>
+			<if test="orgHierType != null">
+				and oh.ORG_HIER_TYPE = #{orgHierType, jdbcType=VARCHAR}
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) between ohv.DATE_FROM and ohv.DATE_TO
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.OrgHierarchyDTO" resultMap="orgHierDtoResultMap">
+		select
+			oh.ORG_HIER_ID,
+			oh.ORG_HIER_TYPE,
+			oh.IS_DEPT_OWNER,
+			oh.ORG_HIER_NAME,
+			oh.DESCRIPTION,
+			oh.LAST_UPDATED_BY,
+			oh.LAST_UPDATE_DATE,
+			ohv.VERSION_NUMBER,
+			ohv.DATE_FROM,
+			ohv.DATE_TO,
+			ohe.PARENT_ID,
+			ohe.ORGANIZATION_ID
+		from WOS_ORGANIZATION_HIER oh
+		join WOS_ORG_HIER_VERSIONS ohv on oh.ORG_HIER_ID = ohv.ORG_HIER_ID
+		join WOS_ORG_HIER_ELEMENTS ohe on ohv.VERSION_ID = ohe.VERSION_ID
+		<where>
+			<if test="id != null">
+				and oh.ORG_HIER_ID = #{id, jdbcType=NUMERIC}
+			</if>
+			<if test="companyId != null">
+				and oh.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="orgHierType != null">
+				and oh.ORG_HIER_TYPE = #{orgHierType, jdbcType=VARCHAR}
+			</if>
+			<if test="orgHierName != null">
+				and oh.ORG_HIER_NAME = #{orgHierName, jdbcType=VARCHAR}
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) between ohv.DATE_FROM and ohv.DATE_TO
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByIdAndVersionNumber" parameterType="map" resultMap="orgHierDtoResultMap">
+		select 
+			oh.company_id,
+			oh.ORG_HIER_ID,
+			oh.ORG_HIER_TYPE,
+			oh.ORG_HIER_NAME,
+			oh.DESCRIPTION,
+			oh.IS_DEPT_OWNER,
+			oh.CREATED_BY,
+			oh.CREATION_DATE,
+			oh.LAST_UPDATED_BY,
+			oh.LAST_UPDATE_DATE,
+			ohv.VERSION_NUMBER,
+			ohv.VERSION_ID,
+			ohv.DATE_FROM,
+			ohv.DATE_TO,
+			ohe.PARENT_ID,
+			ohe.ORGANIZATION_ID
+		  from WOS_ORGANIZATION_HIER oh
+		  join WOS_ORG_HIER_VERSIONS ohv on oh.ORG_HIER_ID = ohv.ORG_HIER_ID
+		  left join WOS_ORG_HIER_ELEMENTS ohe on ohv.VERSION_ID = ohe.VERSION_ID
+	      where oh.ORG_HIER_ID = #{id, jdbcType=NUMERIC}
+		  	and ohv.VERSION_NUMBER = #{versionNumber, jdbcType=DECIMAL}
+		  order by ohv.VERSION_NUMBER
+	</select>
+	
+	<select id="findVersionsById" parameterType="Long" resultType="Integer">
+		select 
+			ohv.VERSION_NUMBER
+		from WOS_ORGANIZATION_HIER oh
+		join WOS_ORG_HIER_VERSIONS ohv on oh.ORG_HIER_ID = ohv.ORG_HIER_ID
+		where oh.ORG_HIER_ID = #{id, jdbcType=NUMERIC}
+		order by ohv.VERSION_NUMBER
+	</select>
+	
+	<select id="findAll" parameterType="Long" resultMap="orgHierDtoResultMap">
+		select 
+			oh.ORG_HIER_ID,
+			oh.ORG_HIER_TYPE,
+			oh.ORG_HIER_NAME,
+			oh.DESCRIPTION,
+			oh.LAST_UPDATED_BY,
+			oh.LAST_UPDATE_DATE,
+			ohv.VERSION_NUMBER,
+			ohv.DATE_FROM,
+			ohv.DATE_TO,
+			ohe.PARENT_ID,
+			ohe.ORGANIZATION_ID
+		  from WOS_ORGANIZATION_HIER oh
+		  join WOS_ORG_HIER_VERSIONS ohv on oh.ORG_HIER_ID = ohv.ORG_HIER_ID
+		  join WOS_ORG_HIER_ELEMENTS ohe on ohv.VERSION_ID = ohe.VERSION_ID
+		  where oh.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="orgHierDtoResultMap">
+		select 
+			oh.ORG_HIER_ID,
+			oh.ORG_HIER_TYPE,
+			oh.ORG_HIER_NAME,
+			oh.DESCRIPTION,
+			oh.LAST_UPDATED_BY,
+			oh.LAST_UPDATE_DATE,
+			ohv.VERSION_NUMBER,
+			ohv.DATE_FROM,
+			ohv.DATE_TO,
+			ohe.PARENT_ID,
+			ohe.ORGANIZATION_ID
+		  from WOS_ORGANIZATION_HIER oh
+		  join WOS_ORG_HIER_VERSIONS ohv on oh.ORG_HIER_ID = ohv.ORG_HIER_ID
+		  join WOS_ORG_HIER_ELEMENTS ohe on ohv.VERSION_ID = ohe.VERSION_ID
+		  where oh.ORG_HIER_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="findHierarchyIsDeptOwnerByOrgId" parameterType="map" resultMap="orgHierDtoResultMap">
+		select 
+			  oh.org_hier_id,
+			  hv.version_id
+			from wos_organization_hier oh
+			join wos_org_hier_versions hv on oh.org_hier_id = hv.org_hier_id and trunc(sysdate) between hv.date_from and hv.date_to
+			join wos_org_hier_elements he on hv.version_id = he.version_id
+			where oh.org_hier_type = 'FUNCTIONAL'
+				and oh.is_dept_owner = 1
+				and he.organization_id = #{organizationId, jdbcType=NUMERIC}				
+	</select>
+	
+	<select id="isHaveFuture" parameterType="Long" resultType="int">
+		SELECT
+			COUNT(WOV.VERSION_NUMBER)
+		FROM WOS_ORG_HIER_VERSIONS WOV 
+		JOIN WOS_ORGANIZATION_HIER WO ON(WOV.ORG_HIER_ID = WO.ORG_HIER_ID)
+		<where>
+			<if test="id != null">
+				WOV.ORG_HIER_ID = #{id, jdbcType=DECIMAL}
+				and wov.version_number > 
+					(SELECT WOV.VERSION_NUMBER
+					FROM WOS_ORG_HIER_VERSIONS WOV
+					JOIN WOS_ORGANIZATION_HIER WO ON(WOV.ORG_HIER_ID = WO.ORG_HIER_ID)
+					<where>
+					WO.ORG_HIER_ID = #{id, jdbcType=DECIMAL}
+					AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO)
+					</where>
+			</if>
+		</where>
+	</select>
+	
+	<select id="findHierarchy" parameterType="map"	resultMap="orgHierDtoResultMap">
+		select 
+		    oh.org_hier_id,
+		    oh.org_hier_type,
+		    oh.org_hier_name,
+		    oh.is_dept_owner,
+		    ohv.date_from,
+		    ohv.date_to,
+		    ohv.version_number
+		  from wos_organization_hier oh
+		  join wos_org_hier_versions ohv on oh.org_hier_id = ohv.org_hier_id
+		where upper(oh.org_hier_type) = upper(#{type, jdbcType=VARCHAR})
+		and oh.company_id = #{companyId, jdbcType=NUMERIC}
+		and trunc(#{date, jdbcType=DATE}) between ohv.date_from and ohv.date_to
+	</select>
+	
+	<select id="findOrganizationInHierarchy" parameterType="Long" resultType="Long">
+		select 
+			ohe.organization_id 
+				from wos_org_hier_elements ohe
+				join wos_org_hier_versions ohv on ohe.version_id = ohv.version_id
+				join wos_organization_hier oh on ohv.org_hier_id = oh.org_hier_id
+				where oh.org_hier_id = (select 
+						    oh.org_hier_id
+						  from wos_organization_hier oh
+						  join wos_org_hier_versions ohv on oh.org_hier_id = ohv.org_hier_id
+						where upper(oh.org_hier_type) = upper('STRUCTURAL')
+						and oh.company_id = #{companyId, jdbcType=NUMERIC}
+						and trunc(sysdate) between ohv.date_from and ohv.date_to)
+	</select>
+	
+	<select id="isFutureExist" parameterType="Long" resultType="Integer">
+		select count(ver.version_id) from wos_org_hier_versions ver
+			where ver.org_hier_id = #{id}
+			and ver.date_from > trunc(sysdate)
+	</select>
+</mapper>

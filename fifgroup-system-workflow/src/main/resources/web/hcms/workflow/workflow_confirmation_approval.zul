@@ -1,0 +1,45 @@
+<window id="winWorkflowConfirmationApproval" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowConfirmationApprovalComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption label="${labels.swf.confirmationApproval}" />
+				<listbox id="lbxMultipleTask">
+					<listhead>
+						<listheader label="${labels.common.rowNum}" align="center" width="50px" />
+						<listheader label="${labels.swf.subject}" align="center" />
+						<listheader label="${labels.swf.transactionType}" align="center" />
+						<listheader label="${labels.swf.submittedTime}" align="center" />
+						<listheader label="${labels.swf.lastApprover}" align="center" />
+						<listheader label="${labels.swf.lastApproverRemarks}" align="center" />
+						<listheader label="${labels.swf.approvedTime}" align="center" />
+					</listhead>
+				</listbox>
+				<separator />
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.remarks}" />
+							<textbox id="txtRemark" rows="5" width="600px" maxlength="255" />
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<div align="center">
+						<button id="btnApprove"
+							label="${labels.swf.approve}" mold="trendy" />
+						<space width="20px" />
+						<button id="btnReject"
+							label="${labels.swf.reject}" mold="trendy" />
+						<button id="btnCancel"
+							label="${labels.common.cancel}" mold="trendy"
+							image="${labels.image.link.cancel}" style="float:right"/>
+				</div>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	 
+	<context:property-placeholder location="classpath:email.properties" order="3" ignore-unresolvable="true" />
+	
+	<context:annotation-config />
+	
+	<!-- aop for transaction manager -->
+	<aop:aspectj-autoproxy />
+	
+	<tx:advice id="notificationTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="count*" read-only="true" />
+			<tx:method name="*" rollback-for="java.lang.Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:pointcut id="notificationTxManager" expression="execution(* co.id.fifgroup.notification.manager.**.*(..))" />
+		<aop:advisor advice-ref="notificationTxAdvice" pointcut-ref="notificationTxManager" />
+	</aop:config>
+	<!-- end of aop for transaction manager -->
+	
+<!-- 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> -->
+<!-- 		<property name="url" value="jdbc:oracle:thin:@10.17.18.95:1521:hcmdev" /> -->
+<!-- 		<property name="username" value="fifhcms" /> -->
+<!-- 		<property name="password" value="password" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
+<!-- 		<property name="dataSource" ref="dataSource" /> -->
+<!-- 		<property name="mapperLocations" value="classpath*:mapper/xml/*.xml" /> -->
+<!-- 	</bean> -->
+
+<!-- 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"> -->
+<!-- 		<constructor-arg index="0" ref="sqlSessionFactory" /> -->
+<!-- 	</bean> -->
+	
+	<bean id="notificationMessageDAO" class="co.id.fifgroup.notification.dao.mybatis.MyBatisNotificationMessageDAO">
+	</bean>
+	
+	<bean id="templateMessageDAO" class="co.id.fifgroup.notification.dao.mybatis.MyBatisTemplateMessageDAO">
+	</bean>
+	
+	<bean id="notificationManager" class="co.id.fifgroup.notification.manager.NotificationManager">
+		<property name="notificationMessageDAO" ref="notificationMessageDAO"/>
+		<property name="templateMessageDAO" ref="templateMessageDAO"/>
+	</bean>
+	
+	<!-- setting email -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+		<property name="port" value="${email.port}" />
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">false</prop>
+				<prop key="mail.smtp.ssl.trust">"${email.host}"</prop>
+				<prop key="mail.smtp.ssl.enable">false</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="sendEmailManager" class="co.id.fifgroup.notification.manager.SendEmailManager">
+		<property name="mailSender" ref="mailSender" />
+		<property name="emailAddressFrom" value="${email.from}" />
+		<property name="emailTo" value="${email.to}" />
+		<property name="emailDomain" value="${email.domain}" />
+	</bean>
+</beans>

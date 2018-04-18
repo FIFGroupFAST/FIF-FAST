@@ -1,0 +1,62 @@
+import groovy.transform.CompileStatic
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+import co.id.fifgroup.core.ui.lookup.KeyValue
+
+@CompileStatic
+public class BusinessTripPrepayment {
+	ServiceModel serviceModel;
+	Long personId;
+	Date processDate;
+	Long companyId;
+	Long terTypeId;
+
+	public Object getParam(){
+		List<KeyValue> keyvalues = new ArrayList<KeyValue>();
+
+		String sqlAmountBT = """
+				Select 
+					Rt.Prepayment_Number Contract_Number, 
+					Sum(Rt.Prepayment_Amount) Amount , 
+					bh.branch_name branch 
+				From 
+					Btr_Request_Trn Rt  
+					Left Join Btr_Settlement_Trn St On Rt.Request_Trn_Id = St.Request_Trn_Id  
+					Left Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Rt.Person_Id And (Trunc(Sysdate) Between Ppa.Effective_Start_Date And Ppa.Effective_End_Date) 
+					Left Join Ews.Branch_Hierarchy_V Bh  On Bh.Organization_Id = Ppa.Organization_Id 
+				Where 
+					Rt.Person_Id = ${personId} 
+					And Rt.Prepayment_Number Is Not Null  
+					and (
+						(Upper(Rt.Approval_Status) = 'APPROVED' and upper(rt.transaction_status) = 'OPEN')
+						or
+						(Upper(Rt.Approval_Status) = 'APPROVED' and upper(rt.transaction_status) = 'PAID')
+						or
+						(Upper(Rt.Approval_Status) = 'APPROVED' and upper(rt.transaction_status) = 'SETTLEMENT_IN_PROGRESS')
+					    )  
+				group by rt.prepayment_number, bh.branch_name
+				""";
+
+		List<Map<String, Object>> results = serviceModel.getFromQuery(sqlAmountBT);
+		
+		if(!results.isEmpty()){
+			for(Map<String, Object> result : results){
+				KeyValue KeyValue = new KeyValue();
+				KeyValue.setKey(result.get("CONTRACT_NUMBER"));
+				KeyValue.setValue(result.get("AMOUNT"));
+				KeyValue.setDescription(result.get("BRANCH"));
+                                keyvalues.add(KeyValue);
+		}
+			println("result : "+results.size()+" records");
+		} else {
+			println("result : 0 record");
+		}
+		return keyvalues;
+	 };
+}
+
+
+BusinessTripPrepayment subject = new BusinessTripPrepayment();
+subject.setServiceModel(serviceModel);
+subject.setPersonId(person_id);
+return subject.getParam();

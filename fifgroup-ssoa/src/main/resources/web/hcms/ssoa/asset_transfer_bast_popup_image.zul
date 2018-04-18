@@ -1,0 +1,9 @@
+<window id="winImagePopup" title="Photo" border="normal" width="340px" height="auto"
+closable="true" position="center,center" action="show: slideDown;hide: slideUp"
+apply="co.id.fifgroup.ssoa.ui.AssetTransferBastPopupImageComposer">
+	<groupbox>
+		<image id="image"  style="width:350px; height:300px;" />
+		<separator/>
+		<button id="btnClose" style="float:right;" label="Close" image="${labels.image.link.cancel}"></button>
+	</groupbox>
+</window>

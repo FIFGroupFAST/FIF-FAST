@@ -1,0 +1,112 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winOrganizationHierarchySetup"
+	apply="co.id.fifgroup.workstructure.controller.OrganizationHierarchySetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.wos.organizationHierarchySetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="240px" align="right" />
+				<column />
+				<column width="100px" align="right"/>
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationHierarchyType}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<hbox>
+						<listbox id="lstType" mold="select">
+							<listhead>
+								<listheader></listheader>
+							</listhead>
+							<template name="model">
+								<listitem value="${each}">
+									<listcell label="${each.desc}"></listcell>
+								</listitem>
+							</template>
+						</listbox>
+						<checkbox id="chkDeptOwn" label="${labels.wos.isDepartmentOwner}" width="220px"/>
+					</hbox>
+					<label value="${labels.common.version}" />
+					<listbox id="lstVersion" mold="select" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.wos.organizationHierarchyName}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<textbox id="txtHierName" width="220px" maxlength="100" />
+					<hbox>	
+						<label value="${labels.common.effectiveDateFrom}" />
+						<label value="${labels.common.required}" style="color:red;" />
+					</hbox>
+					<datebox id="dtbFrom" use="co.id.fifgroup.core.ui.DateBoxFrom" format="dd-MMM-yyyy" />
+				</row>
+				<row>
+					<label value="${labels.wos.organizationHierarchyDescription}" />
+					<textbox id="txtHierDesc" width="220px" rows="2" maxlength="250" />
+					<label value="${labels.common.effectiveDateTo}" />
+					<datebox id="dtbTo" use="co.id.fifgroup.core.ui.DateBoxMax" format="dd-MMM-yyyy" />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<groupbox mold="default">
+			<caption label="${labels.common.organization}" />
+				<grid sclass="form-entry">
+					<columns>
+						<column width="250px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.wos.organizationName}" />
+							<hbox>
+								<bandbox id="bnbOrgParent" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.wos.listOfOrganization}" searchText1="${labels.wos.organizationCode}" searchText2="${labels.wos.organizationName}" headerLabel1="${labels.wos.organizationCode}" headerLabel2="${labels.wos.organizationName}" />
+								<button id="btnUp" label="${labels.wos.up}" mold="trendy"/>
+							</hbox>							
+						</row>
+						<row>
+							<label value="${labels.wos.numberOfSubordinates}" />
+							<label id="lblNumOfSubordinates" />
+						</row>						
+					</rows>
+				</grid>
+				<separator />
+				<groupbox>
+					<caption label="${labels.wos.subordinate}" />
+					<listbox id="lstElement" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry"
+						emptyMessage="${labels.notif.emptyMessage }" mold="paging" pagingPosition="both">
+						<listhead>
+							<listheader label="" width="30px"/>
+							<listheader label="${labels.wos.organizationName}" align="center"/>
+							<listheader width="250px" label="${labels.wos.numberOfSubordinate}" align="center"/>
+							<listheader width="250px" />
+						</listhead>
+					</listbox>
+					<separator />
+					<hbox>
+						<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowElement" />
+						<button label="${labels.common.delete}" mold="trendy" id="btnDeleteElement" />
+					</hbox>
+				</groupbox>
+		</groupbox>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" 
+					mold="trendy" image="${labels.image.link.save}" />
+				<space width="20px" />
+				<button id="btnDelete" label="${labels.common.delete}" 
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>	
+	</groupbox>
+</window>

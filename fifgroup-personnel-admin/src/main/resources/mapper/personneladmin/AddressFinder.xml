@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.AddressFinder">
+	
+	<resultMap id="baseResult" type="co.id.fifgroup.personneladmin.dto.AddressDTO">
+		<id column="ADDRESS_ID" property="addressId" jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="COUNTRY_CODE" property="countryCode" jdbcType="VARCHAR" />
+	    <result column="PROVINCE_CODE" property="provinceCode" jdbcType="VARCHAR" />
+	    <result column="PROVINSI" property="provinceName" jdbcType="VARCHAR" />
+	    <result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+	    <result column="CITY" property="cityName" jdbcType="VARCHAR" />
+	    <result column="KECAMATAN_CODE" property="kecamatanCode" jdbcType="VARCHAR" />
+	    <result column="KECAMATAN" property="kecamatanName" jdbcType="VARCHAR" />
+	    <result column="KELURAHAN_CODE" property="kelurahanCode" jdbcType="VARCHAR" />
+	    <result column="KELURAHAN" property="kelurahanName" jdbcType="VARCHAR" />
+	    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+	    <result column="ADDRESS_LINE" property="addressLine" jdbcType="VARCHAR" />
+	    <result column="IS_PHYSICAL" property="physical" jdbcType="DECIMAL" />
+	    <result column="IS_KTP" property="ktp" jdbcType="DECIMAL" />
+	    <result column="START_DATE" property="startDate" jdbcType="TIMESTAMP" />
+	    <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+	    <association property="zipCodeObject" javaType="co.id.fifgroup.core.domain.ZipCode">
+			<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR"/>
+			<result column="SUB_ZIP_CODE" property="subZipCode" jdbcType="VARCHAR"/>
+			<result column="ZIP_DESC" property="zipDesc" jdbcType="VARCHAR"/>
+		</association>
+	</resultMap>
+	
+	<sql id="findAddress">
+		select 
+			PA.ADDRESS_ID, 
+			PA.PERSON_ID, 
+			PA.COMPANY_ID, 
+			PA.COUNTRY_CODE, 
+			PA.PROVINCE_CODE, 
+			FMP.PROVINSI, 
+			PA.CITY_CODE, 
+			FMC.CITY, 
+			PA.KECAMATAN_CODE, 
+			FMK.KECAMATAN, 
+			PA.KELURAHAN_CODE, 
+			FMKL.KELURAHAN, 
+			PA.ADDRESS_LINE, 
+			PA.IS_PHYSICAL, 
+			PA.IS_KTP, 
+			PA.START_DATE, 
+			PA.END_DATE, 
+			FMZ.ZIP_CODE, 
+			FMZ.SUB_ZIP_CODE, 
+			FMZ.ZIP_DESC 
+		from PEA_ADDRESSES PA 
+		LEFT JOIN FS_MST_PROVINSI FMP ON PA.PROVINCE_CODE = FMP.PROV_CODE 
+		LEFT JOIN FS_MST_CITIES FMC ON PA.CITY_CODE = FMC.CITY_CODE 
+		LEFT JOIN FS_MST_KECAMATAN FMK ON PA.KECAMATAN_CODE = FMK.KEC_CODE 
+		LEFT JOIN FS_MST_KELURAHAN FMKL ON PA.KELURAHAN_CODE = FMKL.KEL_CODE 
+		LEFT JOIN FS_MST_ZIP FMZ ON PA.ZIP_CODE = FMZ.ZIP_CODE
+		where 1 = 1
+	</sql>
+	
+	<select id="getAddressByPersonIdAndCompanyId" parameterType="map" resultMap="baseResult">
+		<include refid="findAddress"/>
+		<if test="personId != null">
+			AND PA.PERSON_ID = #{personId}
+		</if>
+		<if test="companyId != null">
+			AND PA.COMPANY_ID = #{companyId}
+		</if>
+		ORDER BY PA.START_DATE DESC, PA.END_DATE DESC		
+	</select>
+	
+	<select id="getAddressByCriteria" parameterType="map" resultMap="baseResult">
+		<include refid="findAddress"/>
+		<if test="personId != null">
+			AND PA.PERSON_ID = #{personId}
+		</if>
+		<if test="companyId != null">
+			AND PA.COMPANY_ID = #{companyId}
+		</if>
+		<if test="physical != null">
+			AND PA.IS_PHYSICAL = #{physical} 
+		</if>
+		<if test="ktp!= null">
+			AND PA.IS_KTP = #{ktp} 
+		</if>
+		ORDER BY PA.START_DATE DESC, PA.END_DATE DESC
+	</select>
+</mapper>

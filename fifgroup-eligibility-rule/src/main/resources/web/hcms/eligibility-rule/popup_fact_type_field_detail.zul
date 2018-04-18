@@ -1,0 +1,57 @@
+<window id="winPopupFactTypeFieldType" width="600px" mode="modal"
+	apply="co.id.fifgroup.eligibility.controller.FactTypeFieldDetailComposer">
+	<groupbox mold="3d" closable="false">
+		<caption label="${labels.elr.factTypeFieldDetail}" />
+		<grid>
+			<columns>
+				<column width="180px" align="right"/>
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.elr.fieldName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtFieldName" disabled="${arg.field == null ? false : !arg.field.editable }"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.elr.fieldType}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstFieldType" mold="select" use="co.id.fifgroup.core.ui.EnumListbox"
+						disabled="${arg.field == null ? false : !arg.field.editable }" />
+				</row>
+				<row id="rowLookupName">
+					<label value="${labels.elr.lookupName}" />
+					<listbox id="lstLookupName" mold="select" disabled="${arg.field == null ? false : !arg.field.editable }">
+					<template name="model">
+						<listitem label="${each.name }" value="${each.name }"/>
+					</template>
+					</listbox>
+					
+				</row>
+				<row id="rowLookupValueFrom">
+					<label value="Lookup Value From" />
+					<listbox id="lstLookupValueFrom" use="co.id.fifgroup.core.ui.EnumListbox" disabled="${arg.field == null ? false : !arg.field.editable }">
+					</listbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}"
+					visible="${arg.field == null ? true : arg.field.editable }" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}"
+					forward="onClose" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

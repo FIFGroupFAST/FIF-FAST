@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.systemadmin.dao.NotificationTemplateFinder">
+	
+	
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.systemadmin.dto.NotificationTemplateDTO">
+	    <id column="TEMPLATE_ID" jdbcType="DECIMAL" property="templateId" />
+	    <result column="TEMPLATE_NAME" jdbcType="VARCHAR" property="templateName" />
+	    <result column="TRANSACTION_TYPE" jdbcType="VARCHAR" property="transactionType" />
+	    <result column="SUBJECT" jdbcType="VARCHAR" property="subject" />
+	    <result column="URL_DETAIL" jdbcType="VARCHAR" property="urlDetail" />
+	    <result column="NOTIF_BY" jdbcType="VARCHAR" property="notifBy" />
+	    <result column="CONTENT_MESSAGE" jdbcType="CLOB" property="contentMessage" />
+	    <collection property="receivers" ofType="co.id.fifgroup.systemadmin.domain.NotificationReceiver">
+			<result column="RECEIVER_TYPE" jdbcType="VARCHAR" property="receiverType" />
+		    <result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		    <result column="SEND_TO" jdbcType="VARCHAR" property="sendTo" />
+		    <result column="ROLE_TYPE" jdbcType="VARCHAR" property="roleType" />
+		</collection>
+    </resultMap>
+  
+  
+	<sql id="notificationTemplateQuery">
+		SELECT 
+		  NT.TEMPLATE_ID,
+		  NT.TEMPLATE_NAME,
+		  NT.TRANSACTION_TYPE,
+		  NT.SUBJECT,
+		  NT.CONTENT_MESSAGE,
+		  NT.URL_DETAIL,
+		  NT.URL_DETAIL,
+		  NT.NOTIF_BY,
+		  NR.RECEIVER_TYPE,
+		  NR.PERSON_ID,
+		  NR.PERSON_ID,
+		  NR.SEND_TO,
+		  NR.ROLE_TYPE
+		FROM NOTIF_TEMPLATES NT
+		LEFT JOIN NOTIF_RECEIVER NR ON NT.TEMPLATE_ID = NR.TEMPLATE_ID
+	</sql>
+	
+	<select id="getTemplateByType" parameterType="String" resultMap="BaseResultMap">
+		<include refid="notificationTemplateQuery" />
+		where
+			 NT.TRANSACTION_TYPE = #{transactionType}
+	</select>
+	
+	
+	<resultMap id="personResultMap" type="co.id.fifgroup.personneladmin.dto.PersonDTO">	
+		<id column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="PERSON_UUID" jdbcType="VARBINARY" property="personUUID" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber" jdbcType="VARCHAR" />		
+		<result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+
+	</resultMap>
+	
+	<!-- Modified by Jatis 
+		- handle too many result exception because this query return more than one row
+		- by adding where condition for PEA_PERSONAL_INFORMATIONS and CWK_PERSONAL_INFORMATIONS, filter the data by effective on date
+	-->
+	<select id="getReceiverName" parameterType="map" resultMap="personResultMap">
+		SELECT DISTINCT 
+		  ppi.person_id,
+		  EMPLOYEE_NUMBER, 
+		  FULL_NAME, 
+		  PA.PERSON_UUID  
+		FROM PEA_PERSONAL_INFORMATIONS PPI 
+		JOIN PEA_PEOPLE PA ON PPI.PERSON_ID = PA.PERSON_ID 
+		where ppi.PERSON_ID = #{personId}
+			AND TRUNC(SYSDATE) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE
+		 UNION
+		select cp.CWK_PERSON_ID person_id, cpi.CWK_NUMBER EMPLOYEE_NUMBER,  cpi.FULL_NAME, cp.PERSON_UUID from cwk_people cp join cwk_personal_informations cpi on cpi.cwk_person_id = cp.cwk_person_id
+ 			where cp.CWK_PERSON_ID =#{personId}
+ 			AND TRUNC(SYSDATE) BETWEEN CPI.EFFECTIVE_START_DATE AND CPI.EFFECTIVE_END_DATE
+
+	</select>
+	<!-- End Modified by Jatis -->
+	
+</mapper>

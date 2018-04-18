@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.OtherInfoFinder">
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.OtherInfoDTO" id="BaseResultMapInquiry">
+		<id column="OTHER_INFO_HDR_ID" jdbcType="DECIMAL" property="otherInfoHdrId" />
+	    <result column="FORM_NAME" jdbcType="VARCHAR" property="formName" />
+	    <result column="GROUP_ID" jdbcType="DECIMAL" property="groupId" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <collection property="otherInfoDetail" javaType="ArrayList" ofType="co.id.fifgroup.basicsetup.dto.OtherInfoDetailDTO">
+		    <id column="OTHER_INFO_DTL_ID" jdbcType="DECIMAL" property="otherInfoDtlId" />
+		    <result column="OTHER_INFO_HDR_ID_DETAIL" jdbcType="DECIMAL" property="otherInfoHdrId" />
+		    <result column="DETAIL_CODE" jdbcType="VARCHAR" property="detailCode" />
+		    <result column="PROMPT_NAME" jdbcType="VARCHAR" property="promptName" />
+		    <result column="DATA_TYPE" jdbcType="VARCHAR" property="dataType" />
+		    <result column="IS_MANDATORY" jdbcType="DECIMAL" property="isMandatory" />
+		    <result column="LOOKUP_ID" jdbcType="DECIMAL" property="lookupId" />
+		    <result column="IS_ENABLED" jdbcType="DECIMAL" property="isEnabled" />
+		    <result column="IS_DISPLAYED" jdbcType="DECIMAL" property="isDisplayed" />
+		    <result column="MAX_LENGTH" jdbcType="DECIMAL" property="maxLength" />
+		    <result column="COMPANY_SCOPE" jdbcType="DECIMAL" property="companyScope" />
+		    <result column="CREATED_BY_DETAIL" jdbcType="DECIMAL" property="createdBy" />
+		    <result column="CREATION_DATE_DETAIL" jdbcType="TIMESTAMP" property="creationDate" />
+		    <result column="LAST_UPDATED_BY_DETAIL" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		    <result column="LAST_UPDATE_DATE_DETAIL" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    </collection>
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.OtherInfoDetailDTO" id="BaseResultMapDetail">
+		<id column="OTHER_INFO_DTL_ID" jdbcType="DECIMAL" property="otherInfoDtlId" />
+	    <result column="OTHER_INFO_HDR_ID" jdbcType="DECIMAL" property="otherInfoHdrId" />
+	    <result column="DETAIL_CODE" jdbcType="VARCHAR" property="detailCode" />
+	    <result column="PROMPT_NAME" jdbcType="VARCHAR" property="promptName" />
+	    <result column="DATA_TYPE" jdbcType="VARCHAR" property="dataType" />
+	    <result column="IS_MANDATORY" jdbcType="DECIMAL" property="isMandatory" />
+	    <result column="LOOKUP_ID" jdbcType="DECIMAL" property="lookupId" />
+	    <result column="IS_ENABLED" jdbcType="DECIMAL" property="isEnabled" />
+	    <result column="IS_DISPLAYED" jdbcType="DECIMAL" property="isDisplayed" />
+	    <result column="MAX_LENGTH" jdbcType="DECIMAL" property="maxLength" />
+	    <result column="COMPANY_SCOPE" jdbcType="DECIMAL" property="companyScope" />
+	    <result column="CREATED_BY_DETAIL" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE_DETAIL" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY_DETAIL" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE_DETAIL" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <association property="otherInfoHeader" javaType="co.id.fifgroup.basicsetup.domain.OtherInfoHeader">
+	    	<id column="OTHER_INFO_HDR_ID" jdbcType="DECIMAL" property="otherInfoHdrId" />
+		    <result column="FORM_NAME" jdbcType="VARCHAR" property="formName" />
+		    <result column="GROUP_ID" jdbcType="DECIMAL" property="groupId" />
+		    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    </association>
+	</resultMap>
+
+	<select id="getOtherInfoDtoByFormNameAndGroupId" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			BOIH.OTHER_INFO_HDR_ID,
+			BOIH.FORM_NAME,
+			BOIH.GROUP_ID,
+			BOIH.CREATED_BY,
+			BOIH.CREATION_DATE,
+			BOIH.LAST_UPDATED_BY,
+			BOIH.LAST_UPDATE_DATE,
+			BOID.OTHER_INFO_DTL_ID,
+			BOID.OTHER_INFO_HDR_ID AS OTHER_INFO_HDR_ID_DETAIL,
+			BOID.DETAIL_CODE,
+			BOID.PROMPT_NAME,
+			BOID.DATA_TYPE,
+			BOID.IS_MANDATORY,
+			BOID.LOOKUP_ID,
+			BOID.IS_ENABLED,
+			BOID.IS_DISPLAYED,
+			BOID.MAX_LENGTH,
+			BOID.COMPANY_SCOPE,
+			BOID.CREATED_BY AS CREATED_BY_DETAIL,
+			BOID.CREATION_DATE AS CREATION_DATE_DETAIL,
+			BOID.LAST_UPDATED_BY AS LAST_UPDATED_BY_DETAIL,
+			BOID.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_DETAIL
+		FROM
+			BSE_OTHER_INFO_HDR BOIH LEFT JOIN BSE_OTHER_INFO_DTL BOID ON (BOID.OTHER_INFO_HDR_ID = BOIH.OTHER_INFO_HDR_ID)
+		WHERE
+			BOIH.FORM_NAME = #{formName, jdbcType=VARCHAR} AND BOIH.GROUP_ID = #{groupId, jdbcType=DECIMAL}
+		ORDER BY
+			BOID.OTHER_INFO_DTL_ID ASC
+	</select>
+	
+	<select id="getEnableOtherInfoDtoByFormNameAndGroupId" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			BOIH.OTHER_INFO_HDR_ID,
+			BOIH.FORM_NAME,
+			BOIH.GROUP_ID,
+			BOIH.CREATED_BY,
+			BOIH.CREATION_DATE,
+			BOIH.LAST_UPDATED_BY,
+			BOIH.LAST_UPDATE_DATE,
+			BOID.OTHER_INFO_DTL_ID,
+			BOID.OTHER_INFO_HDR_ID AS OTHER_INFO_HDR_ID_DETAIL,
+			BOID.DETAIL_CODE,
+			BOID.PROMPT_NAME,
+			BOID.DATA_TYPE,
+			BOID.IS_MANDATORY,
+			BOID.LOOKUP_ID,
+			BOID.IS_ENABLED,
+			BOID.IS_DISPLAYED,
+			BOID.MAX_LENGTH,
+			BOID.COMPANY_SCOPE,
+			BOID.CREATED_BY AS CREATED_BY_DETAIL,
+			BOID.CREATION_DATE AS CREATION_DATE_DETAIL,
+			BOID.LAST_UPDATED_BY AS LAST_UPDATED_BY_DETAIL,
+			BOID.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_DETAIL
+		FROM
+			BSE_OTHER_INFO_HDR BOIH LEFT JOIN BSE_OTHER_INFO_DTL BOID ON (BOID.OTHER_INFO_HDR_ID = BOIH.OTHER_INFO_HDR_ID)
+		WHERE
+			BOIH.FORM_NAME = #{formName, jdbcType=VARCHAR} 
+			AND BOIH.GROUP_ID = #{groupId, jdbcType=DECIMAL}
+			AND BOID.IS_ENABLED = 1
+		ORDER BY
+			BOID.OTHER_INFO_DTL_ID ASC
+	</select>
+
+	<select id="getOtherInfoDetail" parameterType="map" resultMap="BaseResultMapDetail">
+		SELECT
+			BOIH.OTHER_INFO_HDR_ID,
+			BOIH.FORM_NAME,
+			BOIH.GROUP_ID,
+			BOIH.CREATED_BY,
+			BOIH.CREATION_DATE,
+			BOIH.LAST_UPDATED_BY,
+			BOIH.LAST_UPDATE_DATE,
+			BOID.OTHER_INFO_DTL_ID,
+			BOID.DETAIL_CODE,
+			BOID.PROMPT_NAME,
+			BOID.DATA_TYPE,
+			BOID.IS_MANDATORY,
+			BOID.LOOKUP_ID,
+			BOID.IS_ENABLED,
+			BOID.IS_DISPLAYED,
+			BOID.MAX_LENGTH,
+			BOID.COMPANY_SCOPE,
+			BOID.CREATED_BY AS CREATED_BY_DETAIL,
+			BOID.CREATION_DATE AS CREATION_DATE_DETAIL,
+			BOID.LAST_UPDATED_BY AS LAST_UPDATED_BY_DETAIL,
+			BOID.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_DETAIL
+		FROM
+			BSE_OTHER_INFO_DTL BOID JOIN BSE_OTHER_INFO_HDR BOIH ON(BOIH.OTHER_INFO_HDR_ID = BOID.OTHER_INFO_HDR_ID)
+		WHERE
+			BOIH.FORM_NAME = #{formName, jdbcType=VARCHAR} AND
+			<if test="groupId != null">
+				BOIH.GROUP_ID = #{groupId, jdbcType=DECIMAL} AND
+			</if>
+			BOID.DETAIL_CODE = #{detailCode, jdbcType=VARCHAR} AND
+			(BOID.COMPANY_SCOPE = -1 OR BOID.COMPANY_SCOPE = #{companyId, jdbcType=DECIMAL})
+	</select>
+
+</mapper>

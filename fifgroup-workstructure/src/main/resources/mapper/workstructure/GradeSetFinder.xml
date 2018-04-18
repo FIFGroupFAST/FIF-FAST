@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.workstructure.finder.GradeSetFinder">
+	
+	<resultMap type="co.id.fifgroup.workstructure.dto.GradeSetDTO" id="gradeSetDtoResult">
+		<id column="GRADE_SET_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="COMPANY_ID" property="companyId" javaType="Long" jdbcType="NUMERIC"/>
+		<result column="GRADE_SET_NAME" property="gradeSetName" jdbcType="VARCHAR"/>
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+		<result column="START_DATE" property="startDate" jdbcType="VARCHAR"/>
+		<result column="END_DATE" property="endDate" jdbcType="VARCHAR"/>
+		<result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+		<result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+		<result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+		<result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+		<collection property="gradeSetElements" ofType="co.id.fifgroup.workstructure.dto.GradeSetElementDTO">
+			<result column="GRADE_SET_ELEMENT_ID" property="elementId" jdbcType="NUMERIC"/>
+			<result column="GRADE_SEQUENCE" property="gradeSequence" jdbcType="NUMERIC"/>
+			<result column="GRADE_ID" property="gradeId" jdbcType="NUMERIC"/>
+			<result column="CONCORDANCE_LEVEL" property="concordanceLevel" jdbcType="NUMERIC"/>
+			<result column="GRADE_CODE" property="gradeCode" jdbcType="VARCHAR" />
+			<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+			<result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.workstructure.dto.GradeSetElementDTO" id="gradeSetElementDtoResult">
+		<result column="GRADE_SET_ID" property="id" javaType="Long" jdbcType="NUMERIC" />
+		<result column="GRADE_SET_ELEMENT_ID" property="elementId" jdbcType="NUMERIC"/>
+		<result column="GRADE_SEQUENCE" property="gradeSequence" jdbcType="NUMERIC"/>
+		<result column="GRADE_ID" property="gradeId" jdbcType="NUMERIC"/>
+		<result column="CONCORDANCE_LEVEL" property="concordanceLevel" jdbcType="NUMERIC"/>
+		<result column="GRADE_CODE" property="gradeCode" jdbcType="VARCHAR" />
+		<result column="GRADE" property="grade" jdbcType="VARCHAR" />
+		<result column="SUB_GRADE" property="subGrade" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.GradeSetDTO" resultMap="gradeSetDtoResult">
+		SELECT
+			GS.COMPANY_ID,
+			GS.GRADE_SET_ID,
+			GS.GRADE_SET_NAME,
+			GS.DESCRIPTION,
+			GS.START_DATE,
+			GS.END_DATE,
+			GS.LAST_UPDATED_BY,
+			GS.LAST_UPDATE_DATE,
+			GSE.GRADE_SEQUENCE,
+			GSE.GRADE_ID,
+			GSE.CONCORDANCE_LEVEL			
+		FROM WOS_GRADE_SETS GS
+		LEFT JOIN WOS_GRADE_SET_ELEMENTS GSE ON GS.GRADE_SET_ID = GSE.GRADE_SET_ID
+		<where>
+			<if test="companyId!= null">
+				and GS.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="gradeSetName != null">
+				and GS.GRADE_SET_NAME like #{gradeSetName, jdbcType=VARCHAR}
+			</if>
+			<if test="endDate != null">
+				and GS.END_DATE = TRUNC(#{endDate, jdbcType=DATE})
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) BETWEEN GS.START_DATE AND GS.END_DATE
+			</if>
+		</where>
+	</select>
+	
+	<select id="countByExample" parameterType="co.id.fifgroup.workstructure.dto.GradeSetDTO" resultType="Integer">
+		SELECT 
+			count(GS.GRADE_SET_ID)			
+		FROM WOS_GRADE_SETS GS
+		LEFT JOIN WOS_GRADE_SET_ELEMENTS GSE
+			ON GS.GRADE_SET_ID = GSE.GRADE_SET_ID
+		<where>
+			<if test="companyId!= null">
+				and GS.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="gradeSetName != null">
+				and GS.GRADE_SET_NAME like #{gradeSetName, jdbcType=VARCHAR}
+			</if>
+			<if test="endDate != null">
+				and GS.END_DATE = TRUNC(#{endDate, jdbcType=DATE})
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) BETWEEN GS.START_DATE AND GS.END_DATE
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByInquiry" parameterType="co.id.fifgroup.workstructure.dto.GradeSetDTO" resultMap="gradeSetDtoResult">
+		SELECT 
+				GS.GRADE_SET_ID,
+				GS.GRADE_SET_NAME,
+				GS.DESCRIPTION,
+				GS.START_DATE,
+				GS.END_DATE,
+				GS.LAST_UPDATED_BY,
+				GS.LAST_UPDATE_DATE,
+				us.user_name
+			FROM WOS_GRADE_SETS GS
+			join sam_users us on us.user_id = GS.LAST_UPDATED_BY
+		<where>
+			<if test="companyId!= null">
+				and GS.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			</if>
+			<if test="gradeSetName != null">
+				and GS.GRADE_SET_NAME = #{gradeSetName, jdbcType=NUMERIC}
+			</if>
+			<if test="effectiveOnDate != null">
+				and trunc(#{effectiveOnDate, jdbcType=DATE}) BETWEEN GS.START_DATE AND GS.END_DATE
+			</if>
+		</where>
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="gradeSetDtoResult">
+		SELECT
+			GS.COMPANY_ID,
+			GS.GRADE_SET_ID,
+			GS.GRADE_SET_NAME,
+			GS.DESCRIPTION,
+			GS.START_DATE,
+			GS.END_DATE,
+			GS.CREATED_BY,
+			GS.CREATION_DATE,
+			GS.LAST_UPDATED_BY,
+			GS.LAST_UPDATE_DATE,
+			GSE.GRADE_SEQUENCE,
+			GSE.GRADE_ID,
+			GSE.CONCORDANCE_LEVEL,
+			grade.grade,
+     		grade.sub_grade,
+     		grade.grade_code
+		FROM WOS_GRADE_SETS GS
+		LEFT JOIN WOS_GRADE_SET_ELEMENTS GSE ON GS.GRADE_SET_ID = GSE.GRADE_SET_ID
+		join wos_grades grade on GSE.grade_id = grade.grade_id
+		WHERE GS.GRADE_SET_ID = #{id, jdbcType=NUMERIC}
+	</select>
+
+	<select id="findByIdForPromotion" parameterType="Long" resultMap="gradeSetDtoResult">
+		SELECT
+			GS.COMPANY_ID,
+			GS.GRADE_SET_ID,
+			GS.GRADE_SET_NAME,
+			GS.DESCRIPTION,
+			GS.START_DATE,
+			GS.END_DATE,
+			GS.CREATED_BY,
+			GS.CREATION_DATE,
+			GS.LAST_UPDATED_BY,
+			GS.LAST_UPDATE_DATE,
+			GSE.GRADE_SEQUENCE,
+			GSE.GRADE_ID,
+			GSE.CONCORDANCE_LEVEL,
+			grade.grade,
+     		grade.sub_grade,
+     		grade.grade_code
+		FROM WOS_GRADE_SETS GS
+		LEFT JOIN WOS_GRADE_SET_ELEMENTS GSE ON GS.GRADE_SET_ID = GSE.GRADE_SET_ID
+		join wos_grades grade on GSE.grade_id = grade.grade_id
+		WHERE GS.GRADE_SET_ID = #{id, jdbcType=NUMERIC}
+		ORDER BY grade.grade asc, grade.sub_grade asc
+	</select>
+
+	<select id="findIdByName" parameterType="map" resultType="Long">
+		select
+			gs.grade_set_id
+	      from wos_grade_sets gs
+		  where upper(gs.grade_set_name) = upper(#{gradeSetName})
+		  and gs.company_id = #{companyId}
+	</select>
+	
+	<select id="findGradeSetElementByGradeIdInOneGradeSet" parameterType="Long" resultMap="gradeSetElementDtoResult">
+		select
+			ele.grade_set_id,
+			ele.grade_id,
+			ele.grade_sequence,
+			ele.concordance_level,
+			grade.grade,
+			grade.sub_grade,
+			grade.grade_code
+		from wos_grade_set_elements ele
+		join wos_grade_versions ver on ele.grade_id = ver.grade_id
+		join wos_grades grade on ver.grade_id = grade.grade_id
+		where grade_set_id = (select grade_set_id from wos_grade_set_elements where grade_id = #{gradeId, jdbcType=NUMERIC})
+		and trunc(sysdate) between ver.date_from and ver.date_to
+	</select>
+
+	<select id="findGradeIdInGradeSetId" parameterType="map" resultMap="gradeSetElementDtoResult">
+		select
+			wgs.grade_set_id,
+			grade.grade_id,
+			grade.grade,
+			grade.sub_grade
+		from
+			wos_grade_sets wgs
+			join wos_grade_set_elements wgse on(wgse.grade_set_id = wgs.grade_set_id)
+			join wos_grade_versions ver on ver.grade_id = wgse.grade_id
+			join wos_grades grade on grade.grade_id = ver.grade_id
+		<where>
+			and trunc(sysdate) between ver.date_from and ver.date_to
+			and trunc(sysdate) between wgs.start_date and wgs.end_date
+			and
+			<foreach collection="gradeSetIds" item="gradeSetId" open="(" close=")" separator=" or ">
+				wgs.grade_set_id = #{gradeSetId, jdbcType=DECIMAL}
+			</foreach>
+		</where>
+		order by grade.grade asc, grade.sub_grade asc
+	</select>
+	
+	<select id="findGradeSetElementByGradeId" parameterType="Long" resultMap="gradeSetElementDtoResult">
+		select
+			ele.grade_set_id,
+			ele.grade_id,
+			ele.grade_sequence,
+			ele.concordance_level,
+			grade.grade,
+			grade.sub_grade,
+			grade.grade_code
+		from wos_grade_set_elements ele
+		join wos_grade_versions ver on ele.grade_id = ver.grade_id
+		join wos_grades grade on ver.grade_id = grade.grade_id
+		where ele.grade_id = #{gradeId}
+	</select>
+	
+	<select id="findValidGradeElementById" parameterType="Long" resultMap="gradeSetElementDtoResult">
+		select 
+		  jvg.grade_id,
+		  ele.grade_sequence,
+		  grade.grade_code,
+		  grade.grade,
+		  grade.sub_grade
+		from wos_job_valid_grades jvg
+		join wos_job_versions ver on ver.version_id = jvg.version_id
+		join wos_grade_sets grade_set on grade_set.grade_set_id = ver.grade_set_id
+		join wos_grade_set_elements ele on ele.grade_set_id = grade_set.grade_set_id and ele.grade_id = jvg.grade_id
+		join wos_grades grade on grade.grade_id = jvg.grade_id
+		join wos_grade_versions gv on grade.grade_id = gv.grade_id
+		where trunc(sysdate) between ver.date_from and ver.date_to
+		and jvg.job_id = #{jobId}
+		and trunc(sysdate) between gv.date_from and gv.date_to
+		ORDER BY grade.grade asc, grade.grade_code asc		  
+	</select>
+	
+	<select id="findOrderedGradeByGradeSetId" parameterType="map" resultMap="gradeSetElementDtoResult">
+		select
+			distinct
+			grade.grade,
+			grade.sub_grade
+		from
+			wos_grade_sets wgs
+			join wos_grade_set_elements wgse on wgse.grade_set_id = wgs.grade_set_id
+			join wos_grade_versions ver on ver.grade_id = wgse.grade_id and trunc(sysdate) between ver.date_from and ver.date_to
+			join wos_grades grade on grade.grade_id = ver.grade_id
+		where 
+			<foreach collection="gradeSetIds" item="gradeSetId" open="(" close=")" separator=" or ">
+				wgs.grade_set_id = #{gradeSetId, jdbcType=DECIMAL}
+			</foreach>
+		order by grade.grade asc, grade.sub_grade asc
+	</select>
+	
+	<select id="getMinimumValidGrade" parameterType="map" resultType="Long">
+		select grade_id from (
+			select 
+				  jvg.grade_id,
+				  ele.grade_sequence,
+				  grade.grade_code,
+				  grade.grade,
+				  grade.sub_grade
+				from wos_job_valid_grades jvg
+				join wos_job_versions ver on ver.version_id = jvg.version_id
+				join wos_grade_sets grade_set on grade_set.grade_set_id = ver.grade_set_id
+				join wos_grade_set_elements ele on ele.grade_set_id = grade_set.grade_set_id and ele.grade_id = jvg.grade_id
+				join wos_grades grade on grade.grade_id = jvg.grade_id
+				where trunc(#{effectiveDate}) between ver.date_from and ver.date_to
+		    and ver.job_id = #{jobId}
+				ORDER BY grade.grade asc, grade.grade_code asc) 
+			where rownum = 1
+	</select>
+	
+	<select id="findOrderedGradeByGradeSetIdAndEffectiveDate" parameterType="map" resultMap="gradeSetElementDtoResult">
+		select
+			distinct
+			grade.grade,
+			grade.sub_grade
+		from
+			wos_grade_sets wgs
+			join wos_grade_set_elements wgse on wgse.grade_set_id = wgs.grade_set_id
+			join wos_grade_versions ver on ver.grade_id = wgse.grade_id and trunc(#{effectiveOnDate}) between ver.date_from and ver.date_to
+			join wos_grades grade on grade.grade_id = ver.grade_id
+		where 
+			<foreach collection="gradeSetIds" item="gradeSetId" open="(" close=")" separator=" or ">
+				wgs.grade_set_id = #{gradeSetId, jdbcType=DECIMAL}
+			</foreach>
+		order by grade.grade asc, grade.sub_grade asc
+	</select>
+	
+	<select id="findValidGradeElementByIdAndEffectiveDate" parameterType="Long" resultMap="gradeSetElementDtoResult">
+		select 
+		  jvg.grade_id,
+		  ele.grade_sequence,
+		  grade.grade_code,
+		  grade.grade,
+		  grade.sub_grade
+		from wos_job_valid_grades jvg
+		join wos_job_versions ver on ver.version_id = jvg.version_id
+		join wos_grade_sets grade_set on grade_set.grade_set_id = ver.grade_set_id
+		join wos_grade_set_elements ele on ele.grade_set_id = grade_set.grade_set_id and ele.grade_id = jvg.grade_id
+		join wos_grades grade on grade.grade_id = jvg.grade_id
+		join wos_grade_versions gv on grade.grade_id = gv.grade_id
+		where trunc(#{effectiveOnDate}) between ver.date_from and ver.date_to
+		and jvg.job_id = #{jobId}
+		and trunc(#{effectiveOnDate}) between gv.date_from and gv.date_to
+		ORDER BY grade.grade asc, grade.grade_code asc		  
+	</select>
+			 
+</mapper>

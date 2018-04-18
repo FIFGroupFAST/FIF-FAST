@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration
+	PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="BasicSetupTables" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+	
+		<jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+			connectionURL="jdbc:oracle:thin:@10.17.18.95:1522:DEV"
+			userId="hcms"
+			password="hcms" />
+			
+		<javaModelGenerator targetPackage="co.id.fifgroup.basicsetup.domain" targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="mapper.basicsetup" targetProject="src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator targetPackage="co.id.fifgroup.basicsetup.dao" 
+			targetProject="src/main/java" type="XMLMAPPER">
+			<property name="enableSubPackages" value="true" />	
+		</javaClientGenerator>
+		
+<!-- 		<table tableName="BSE_BUSINESS_GROUPS" domainObjectName="BusinessGroup" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="GROUP_ID" sqlStatement="select BSE_BUSINESS_GROUPS_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_COMPANIES" domainObjectName="Company" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COMPANY_SEQ_NUM" sqlStatement="select BSE_COMPANIES_SEQ_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_COY_OTHER_INFO_VAL" domainObjectName="CompanyOtherInfo" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COY_OTHER_INFO_VAL_ID" sqlStatement="select BSE_COY_OTHER_INFO_VAL_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_COY_CONTACTS" domainObjectName="CompanyContact" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="CONTACT_ID" sqlStatement="select BSE_COY_CONTACTS_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_GLOBAL_SETTINGS" domainObjectName="GlobalSetting" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="GLOBAL_SETTING_ID" sqlStatement="select BSE_GLOBAL_SETTINGS_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_LOOKUP_QUERIES" domainObjectName="LookupDynamic" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="LOOKUP_QUERY_ID" sqlStatement="select BSE_LOOKUP_QUERIES_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_LOOKUP_DEPENDENTS" domainObjectName="LookupDependent" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_LOOKUP_HDR" domainObjectName="LookupHeader" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="LOOKUP_ID" sqlStatement="select BSE_LOOKUP_HDR_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="BSE_COY_OTHER_INFO_VAL" domainObjectName="CompanyOtherInfoValue" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COY_OTHER_INFO_VAL_ID" sqlStatement="select BSE_COY_OTHER_INFO_VAL_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="BSE_TRANSACTION_TYPES" domainObjectName="TransactionType" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<columnOverride column="" property=""></columnOverride> --> 
+<!-- 			<generatedKey column="TRX_TYPE_ID" sqlStatement="select BSE_TRANSACTION_TYPES_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="BSE_SEQUENCE_GENERATORS" domainObjectName="SequenceGenerator" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="SEQUENCE_GENERATOR_ID" sqlStatement="select BSE_SEQUENCE_GENERATORS_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="IS_PADDING" javaType="java.lang.Boolean"/> -->
+<!-- 			<columnOverride column="IS_RESET_PER_YEAR" javaType="java.lang.Boolean"/> -->
+<!-- 		</table> -->
+		
+		
+<!-- 		<table tableName="BSE_MODULES" domainObjectName="Module" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="MODULE_ID" sqlStatement="select BSE_MODULES_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+
+
+<!-- 		<table tableName="BSE_OTHER_INFO_HDR" domainObjectName="OtherInfoHeader" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="OTHER_INFO_HDR_ID" sqlStatement="select BSE_OTHER_INFO_HDR_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_OTHER_INFO_DTL" domainObjectName="OtherInfoDetail" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="false" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="OTHER_INFO_DTL_ID" sqlStatement="select BSE_OTHER_INFO_DTL_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="IS_MANDATORY" javaType="java.lang.Boolean"></columnOverride> -->
+<!-- 			<columnOverride column="IS_ENABLED" javaType="java.lang.Boolean"></columnOverride> -->
+<!-- 			<columnOverride column="IS_DISPLAYED" javaType="java.lang.Boolean"></columnOverride> -->
+<!-- 		</table> -->
+<!-- 		<table tableName="BSE_COY_OTHER_INFO_VAL" domainObjectName="CompanyOtherInfoValue" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 		<table tableName="BSE_FORMULA_VERSIONS" domainObjectName="FormulaVersion" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="VERSION_ID" sqlStatement="select BSE_FORMULA_VERSIONS_S.nextVal from dual" type="pre"/> -->
+<!-- 			<columnOverride column="FORMULA_ID" property="id"></columnOverride> -->
+<!-- 		</table> -->
+		
+<!-- 		<table tableName="BSE_COY_OTHER_INFO_VAL" domainObjectName="CompanyOtherInfoValue" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="COY_OTHER_INFO_VAL_ID" sqlStatement="select BSE_COY_OTHER_INFO_VAL_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="BSE_FORMULA_PARAMETERS" domainObjectName="FormulaParameter" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="FORMULA_PARAMETER_ID" sqlStatement="select BSE_FORMULA_PARAMETERS_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="BSE_FORMULA_VERSION_PARAMS" domainObjectName="FormulaVersionParam" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 		</table> -->
+
+<!-- 		<table tableName="BSE_FORMULA_USAGES" domainObjectName="FormulaUsage" -->
+<!-- 			modelType="flat" -->
+<!-- 			enableDeleteByExample="true" -->
+<!-- 			enableUpdateByExample="true" -->
+<!-- 			selectByPrimaryKeyQueryId="false" -->
+<!-- 			selectByExampleQueryId="false"> -->
+<!-- 			<property name="useActualColumnNames" value="false"/> -->
+<!-- 			<generatedKey column="FORMULA_USAGE_ID" sqlStatement="select BSE_FORMULA_USAGES_S.nextVal from dual" type="pre"/> -->
+<!-- 		</table> -->
+	</context>
+</generatorConfiguration>

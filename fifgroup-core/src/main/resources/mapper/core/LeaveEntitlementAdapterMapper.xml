@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.dao.LeaveEntitlementAdapterMapper">
+	
+	<resultMap id="baseResultMap" type="co.id.fifgroup.core.dto.LeaveEntitlementDTO">
+	    <id column="ENTITLEMENT_ID" jdbcType="DECIMAL" property="entitlementId" />
+	    <result column="LEAVE_TYPE_ID" jdbcType="DECIMAL" property="leaveTypeId" />
+	    <result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+	    <result column="START_ACTIVE_DATE" jdbcType="DATE" property="startActiveDate" />
+	    <result column="END_ACTIVE_DATE" jdbcType="DATE" property="endActiveDate" />
+	    <result column="ENTITLEMENT" jdbcType="DECIMAL" property="entitlement" />
+	    <result column="CF_ENTITLEMENT" jdbcType="DECIMAL" property="cfEntitlement" />
+	    <result column="CF_END_ACTIVE_DATE" jdbcType="TIMESTAMP" property="cfEndActiveDate" />
+	    <result column="ENTITLEMENT_SOURCE_ID" jdbcType="DECIMAL" property="entitlementSourceId" />
+	    <result column="PAYROLL_PROCESS_FLAG" jdbcType="DECIMAL" property="payrollProcessFlag" />
+	    <result column="ADJUSTED_ENTITLEMENT" jdbcType="DECIMAL" property="adjustedEntitlement" />
+	    <result column="ADJUSTMENT_REASON" jdbcType="VARCHAR" property="adjustmentReason" />
+	    <result column="PRIOR_PERIOD_ADVANCE_NUM" jdbcType="DECIMAL" property="priorPeriodAdvanceNum" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+	    <result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+	    <result column="LEAVE_TYPE" jdbcType="VARCHAR" property="leaveType" />
+	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+	  </resultMap>
+	  
+	<select id="getEntitlement" parameterType="map" resultMap="baseResultMap">
+		select
+			lle.ENTITLEMENT_ID, 
+			lle.LEAVE_TYPE_ID, 
+			lle.PERSON_ID, 
+			lle.START_ACTIVE_DATE, 
+			lle.END_ACTIVE_DATE, 
+			lle.ENTITLEMENT, 
+	    	lle.CF_ENTITLEMENT, 
+	    	lle.CF_END_ACTIVE_DATE, 
+	    	lle.ENTITLEMENT_SOURCE_ID, 
+	    	lle.PAYROLL_PROCESS_FLAG, 
+	    	lle.ADJUSTED_ENTITLEMENT, 
+	    	lle.ADJUSTMENT_REASON, 
+	    	lle.PRIOR_PERIOD_ADVANCE_NUM, 
+	    	lle.CREATED_BY, 
+	    	lle.CREATION_DATE, 
+	    	lle.LAST_UPDATED_BY, 
+	    	lle.LAST_UPDATE_DATE, 
+	    	lle.COMPANY_ID, 
+	    	llt.LEAVE_TYPE, 
+	    	llt.DESCRIPTION
+	    from LEA_LEAVE_ENTITLEMENTS lle
+	    join LEA_LEAVE_TYPES llt on llt.LEAVE_TYPE_ID = lle.LEAVE_TYPE_ID
+   		where
+   			lle.PERSON_ID = #{personId}
+   			and lle.COMPANY_ID = #{companyId}
+   			and trunc(sysdate) between lle.START_ACTIVE_DATE and lle.END_ACTIVE_DATE
+   		ORDER BY lle.START_ACTIVE_DATE desc, lle.END_ACTIVE_DATE desc
+	</select>
+	
+	<update id="updateEntitlement" parameterType="co.id.fifgroup.core.dto.LeaveEntitlementDTO">
+    update LEA_LEAVE_ENTITLEMENTS
+    set 
+      ADJUSTED_ENTITLEMENT = #{adjustedEntitlement,jdbcType=DECIMAL},
+      ADJUSTMENT_REASON = #{adjustmentReason,jdbcType=VARCHAR},
+      LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=DECIMAL},
+      LAST_UPDATE_DATE = #{lastUpdateDate,jdbcType=TIMESTAMP}
+    where ENTITLEMENT_ID = #{entitlementId,jdbcType=DECIMAL}
+  </update>
+	
+	<insert id="insertEntitlementSource" parameterType="co.id.fifgroup.core.dto.LeaveEntitlementSourceDTO">
+    <selectKey keyProperty="entitlementSourceId" order="BEFORE" resultType="java.lang.Long">
+      select LEA_ENTITLEMENT_SOURCES_S.nextVal from dual
+    </selectKey>
+    insert into LEA_ENTITLEMENT_SOURCES (ENTITLEMENT_SOURCE_ID, SOURCE, COMPANY_ID, 
+      REASON, PERSON_ID, EFFECTIVE_START_DATE, 
+      PROCESSED_FLAG, CREATED_BY, CREATION_DATE, 
+      LAST_UPDATED_BY, LAST_UPDATE_DATE)
+    values (#{entitlementSourceId,jdbcType=DECIMAL}, #{source,jdbcType=VARCHAR}, #{companyId,jdbcType=DECIMAL}, 
+      #{reason,jdbcType=VARCHAR}, #{personId,jdbcType=DECIMAL}, #{effectiveStartDate,jdbcType=TIMESTAMP}, 
+      #{processedFlag,jdbcType=DECIMAL}, #{createdBy,jdbcType=DECIMAL}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{lastUpdatedBy,jdbcType=DECIMAL}, #{lastUpdateDate,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <delete id="deleteEntitlementSource" parameterType="map">
+  	delete from LEA_ENTITLEMENT_SOURCES
+    where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE = #{effectiveStartDate}
+    and COMPANY_ID = #{companyId}
+  </delete>
+  
+  <resultMap type="co.id.fifgroup.core.dto.LeaveEntitlementSourceDTO" id="sourceResultMap">
+  	<id column="ENTITLEMENT_SOURCE_ID" jdbcType="DECIMAL" property="entitlementSourceId"/>
+  	<result column="SOURCE" jdbcType="VARCHAR" property="source"/>
+  	<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId"/>
+  	<result column="REASON" jdbcType="VARCHAR" property="reason"/>
+  	<result column="PERSON_ID" jdbcType="DECIMAL" property="personId"/>
+  	<result column="EFFECTIVE_START_DATE" jdbcType="TIMESTAMP" property="effectiveStartDate"/>
+  	<result column="PROCESSED_FLAG" jdbcType="DECIMAL" javaType="boolean" property="processedFlag"/>
+  	<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy"/>
+  	<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate"/>
+  	<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy"/>
+  	<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate"/>
+  </resultMap>
+  
+  <select id="getEntitlementSource" parameterType="map" resultMap="sourceResultMap">
+  	select * from LEA_ENTITLEMENT_SOURCES
+  	where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE = #{effectiveStartDate}
+    and COMPANY_ID = #{companyId}
+  </select>
+  
+  <update id="updateEntitlementSource" parameterType="co.id.fifgroup.core.dto.LeaveEntitlementSourceDTO">
+  	update LEA_ENTITLEMENT_SOURCES
+	  	set source = #{source,jdbcType=VARCHAR},
+	  	reason = #{reason,jdbcType=VARCHAR},
+	  	processed_flag = #{processedFlag,jdbcType=DECIMAL},
+	  	last_updated_by = #{lastUpdatedBy,jdbcType=DECIMAL}, 
+	  	last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP}
+  	where PERSON_ID = #{personId}
+	    and EFFECTIVE_START_DATE = #{effectiveStartDate}
+	    and COMPANY_ID = #{companyId}
+  </update>
+  
+  <update id="updateProcessFlagPrevious" parameterType="map">
+  	UPDATE
+  		LEA_ENTITLEMENT_SOURCES
+  	SET
+  		PROCESSED_FLAG = 1
+  	where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE &lt; #{effectiveOnDate}
+    and COMPANY_ID = #{companyId}
+    and PROCESSED_FLAG = 0
+  </update>
+  
+</mapper>

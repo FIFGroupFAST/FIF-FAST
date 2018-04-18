@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.basicsetup.dao.FormulaUsageFinder">
+
+	<resultMap type="co.id.fifgroup.basicsetup.dto.FormulaUsageDTO" id="BaseResultMapInquiry">
+		<id column="FORMULA_USAGE_ID" property="formulaUsageId" jdbcType="DECIMAL" />
+	    <result column="FORMULA_ID" property="formulaId" jdbcType="DECIMAL" />
+	    <result column="SETUP_ID" property="setupId" jdbcType="DECIMAL" />
+	    <result column="SETUP_NAME" property="setupName" jdbcType="VARCHAR" />
+	    <result column="SETUP_VERSION" property="setupVersion" jdbcType="DECIMAL" />
+	    <result column="MODULE_TYPE" property="moduleType" jdbcType="VARCHAR" />
+	    <result column="DATE_FROM" property="dateFrom" jdbcType="TIMESTAMP" />
+	    <result column="DATE_TO" property="dateTo" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+		<association property="formula" javaType="co.id.fifgroup.basicsetup.domain.Formula">
+    		<result column="FORMULA_NAME" jdbcType="VARCHAR" property="formulaName" />
+		</association>
+	</resultMap>
+
+	<select id="getFormulaUsageDtoByFormulaName" parameterType="map" resultMap="BaseResultMapInquiry">
+		SELECT
+			BFU.FORMULA_USAGE_ID,
+			BFU.FORMULA_ID,
+			BFU.SETUP_ID,
+			BFU.SETUP_NAME,
+			BFU.SETUP_VERSION,
+			BFU.MODULE_TYPE,
+			BFU.DATE_FROM,
+			BFU.DATE_TO,
+			BFU.LAST_UPDATE_DATE,
+			BFU.CREATED_BY,
+			BFU.CREATION_DATE,
+			BFU.LAST_UPDATED_BY,
+			BF.FORMULA_NAME
+		FROM
+			BSE_FORMULA_USAGES BFU JOIN BSE_FORMULA BF ON(BFU.FORMULA_ID = BF.FORMULA_ID)
+		<where>
+			<if test="formulaName != null">
+				UPPER(BF.FORMULA_NAME) LIKE UPPER(#{formulaName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+	<select id="getCountFormulaUsageDtoByFormulaName" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			BSE_FORMULA_USAGES BFU JOIN BSE_FORMULA BF ON(BFU.FORMULA_ID = BF.FORMULA_ID)
+		<where>
+			<if test="formulaName != null">
+				UPPER(BF.FORMULA_NAME) LIKE UPPER(#{formulaName, jdbcType=VARCHAR})
+			</if>
+		</where>
+	</select>
+
+</mapper>

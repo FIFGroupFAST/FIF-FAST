@@ -1,0 +1,277 @@
+<window id="winCompanySetup"
+	apply="co.id.fifgroup.basicsetup.controller.CompanySetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.masterCompanySetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.bse.companyCode}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>					
+					<textbox id="txtCompanyCode" maxlength="30" width="200px" />
+					<hbox>
+						<label value="${labels.common.effectiveDateFrom}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>					
+					<datebox id="dtbEffectiveFrom" width="100px" use="co.id.fifgroup.core.ui.DateBoxFrom" />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.companyName}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>					
+					<textbox id="txtCompanyName" maxlength="60" width="200px" />
+					<label value="${labels.common.effectiveDateTo}" />
+					<datebox id="dtbEffectiveTo" width="100px" use="co.id.fifgroup.core.ui.DateBoxMax" />
+				</row>
+				<row>
+					<label value="${labels.bse.companyDescription}" />
+					<textbox id="txtCompanyDesc" maxlength="255" width="200px" />
+					<label />
+					<label />
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.bse.businessGroup}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstBusinessGroup" mold="select">
+						<listhead>
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.groupName}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+					<label />
+					<label />
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<tabbox>
+			<tabs>
+				<tab label="${labels.bse.companyInfo}" />
+				<tab label="${labels.address.address}" />
+				<tab label="${labels.bse.contact}" />
+				<tab label="${labels.bse.timeManagement}" />
+				<tab label="${labels.bse.defaultResponsibility}" />
+				<tab label="${labels.bse.otherInfo}" />
+			</tabs>
+			<tabpanels>
+				<tabpanel id="tpCompanyInfo">
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label />
+								<div width="150px" height="130px" style="border:1px #000 solid">
+									<image id="companyLogo" width="150px" height="130px"></image>
+								</div>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.bse.companyLogo}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>					
+								<hbox>
+									<textbox id="txtCompanyLogo" maxlength="255" width="250px" readonly="true" />
+									<button id="btnBrowse" label="${labels.upload.browse}"
+										mold="trendy" upload="true" />
+									<space />	
+									<button id="btnUpload" label="${labels.upload.upload}"
+										mold="trendy" />
+								</hbox>								
+							</row>
+							<row>
+								<label value="${labels.bse.npwp}" />
+								<textbox id="txtNpwp" maxlength="20" width="250px" />
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.bse.kpp}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>					
+								<bandbox id="bnbKpp" width="250px" use="co.id.fifgroup.basicsetup.common.LookupWindowBasicSetup"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.bse.kpjNumber}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>					
+								<textbox id="txtKpjNumber" maxlength="11" width="250px"/>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.bse.glCode}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>					
+								<listbox id="lstGlCode" mold="select">
+									<listhead>
+										<listheader></listheader>
+									</listhead>
+									<template name="model">
+										<listitem value="${each}">
+											<listcell label="${each.flexValue} - ${each.segmentName}"></listcell>
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.bse.currency}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<listbox id="lstCurrency" mold="select">
+									<listhead>
+										<listheader></listheader>
+									</listhead>
+									<template name="model">
+										<listitem value="${each}">
+											<listcell label="${each.description}"></listcell>
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+						</rows>
+					</grid>
+				</tabpanel>
+				<tabpanel id="tpAddress">
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<hbox>
+									<label value="${labels.address.country}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<bandbox id="bnbCountry" readonly="true" width="250px" use="co.id.fifgroup.basicsetup.common.LookupWindowBasicSetup" title="${labels.bse.listOfCountry}" searchText="${labels.bse.countryName}" headerLabel="${labels.bse.countryName}"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.address.province}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<bandbox id="bnbProvince" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.bse.listOfProvince}" searchText="${labels.bse.provinceName}" headerLabel="${labels.bse.provinceName}"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.address.city}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<bandbox id="bnbCity" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.bse.listOfCity}" searchText="${labels.bse.cityName}" headerLabel="${labels.bse.cityName}"></bandbox>
+							</row>
+							<row>
+								<label value="${labels.address.kecamatan}" />
+								<bandbox id="bnbKecamatan" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.bse.listOfKecamatan}" searchText="${labels.address.kecamatan}" headerLabel="${labels.address.kecamatan}"></bandbox>
+							</row>
+							<row>
+								<label value="${labels.address.kelurahan}" />
+								<bandbox id="bnbKelurahan" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonPopupBandbox" title="${labels.bse.listOfKelurahan}" searchText="${labels.address.kelurahan}" headerLabel="${labels.address.kelurahan}"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.address.zipcode}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<bandbox id="bnbZipCode" readonly="true" use="co.id.fifgroup.core.ui.CommonPopupZipCodeBandbox"></bandbox>
+							</row>
+							<row>
+								<hbox>
+									<label value="${labels.address.address}" />
+									<label value="${labels.common.required}" style="color:red" />
+								</hbox>
+								<textbox id="txtAddress" maxlength="300" width="250px" rows="3" />
+							</row>
+						</rows>
+					</grid>
+				</tabpanel>
+				<tabpanel id="tpContact">
+					<groupbox id="grbContact" mold="3d" closable="false">
+						<caption label="${labels.bse.communicationMedia}" />
+						<listbox id="lstCompanyContacs" checkmark="true" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+							<listhead>
+								<listheader label="" width="30px"></listheader>
+								<listheader label="${labels.bse.contactType}"></listheader>
+								<listheader label="${labels.bse.contactInformation}"></listheader>
+							</listhead>
+						</listbox>
+						<hbox>
+							<button label="${labels.common.addRow}" mold="trendy" id="btnAddRowCompanyContact" />
+							<button label="${labels.common.delete}" mold="trendy" id="btnDeleteRowCompanyContact" />
+						</hbox>
+					</groupbox>
+				</tabpanel>
+				<tabpanel id="tpTimeManagement">
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="${labels.bse.workingSchedule}" />
+								<listbox id="lstWorkingSchedule" mold="select">
+									<listhead>
+										<listheader></listheader>
+									</listhead>
+									<template name="model">
+										<listitem value="${each}">
+											<listcell label="${each.value}"></listcell>
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+						</rows>
+					</grid>
+				</tabpanel>
+				<tabpanel id="tpDefaultRespon">
+					<grid sclass="form-entry">
+						<columns>
+							<column width="180px" align="right" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="${labels.bse.responsibility}" />
+								<bandbox id="bnbDefaultResponsibility" use="co.id.fifgroup.basicsetup.common.LookupWindowBasicSetup" width="300px"></bandbox>
+							</row>
+						</rows>
+					</grid>
+				</tabpanel>
+				<tabpanel id="tpOtherInfo">
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+		<separator></separator>
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+					<space width="20px" />
+				<button id="btnDelete" label="${labels.common.delete}"
+					mold="trendy" image="${labels.image.link.delete}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

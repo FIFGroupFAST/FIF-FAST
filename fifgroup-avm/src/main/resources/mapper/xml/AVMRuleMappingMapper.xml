@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.avm.dao.mybatis.mapper.AVMRuleMappingMapper">
+	<!-- Result Map -->
+  		<resultMap type="co.id.fifgroup.avm.domain.AVMRuleMapping" id="mappingResultMap">
+    		<result column="MAPPING_ID" jdbcType="DECIMAL" property="mappingId"/>
+			<result column="CLASS_NAME" jdbcType="VARCHAR" property="className"/>
+    		<result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName" />
+    		<result column="ATTRIBUTE_LABEL" jdbcType="VARCHAR" property="attributeLabel"/> 
+    		<result column="LOOKUP_HEADER" jdbcType="VARCHAR" property="lookupHeaderId"/> 
+    		<result column="WITH_VALUE" jdbcType="DECIMAL" property="withValue" />
+  		</resultMap>
+  		<resultMap type="String" id="methodName">
+    		<result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName" />
+  		</resultMap>
+  		<resultMap id="avmRuleLookupDetailResultMap" type="co.id.fifgroup.avm.domain.AVMRuleLookupDetail">
+			<result column="LOOKUP_DETAIL_ID" property="lookupDetailId" jdbcType="NUMERIC"/>
+			<result column="LOOKUP_HEADER_ID" property="lookupHeaderId" jdbcType="VARCHAR"/>
+       		<result column="LOOKUP_DETAIL_VALUE" property="lookupDetailValue" jdbcType="VARCHAR" />
+    		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+ 			<result column="ACTIVE_STATUS" property="activeStatus" jdbcType="NUMERIC"/>
+    		<result column="LOOKUP_DETAIL_CODE" property="lookupDetailCode" jdbcType="VARCHAR" />
+		</resultMap>
+  	<!-- Result Map -->
+  	<!-- Select -->
+  		<select id="getAVMRuleMapping" parameterType="String" resultMap="mappingResultMap">
+  			select MAPPING_ID, CLASS_NAME, METHOD_NAME, ATTRIBUTE_LABEL,
+				rulemapping.LOOKUP_HEADER_ID as LOOKUP_HEADER, WITH_VALUE
+			from AVM_RULE_MAPPING rulemapping
+			inner join AVM_RULE_LOOKUP_HEADER lookupheader
+			on rulemapping.LOOKUP_HEADER_ID = lookupheader.LOOKUP_HEADER_ID
+  			and ATTRIBUTE_LABEL=#{attributeLabel}
+  		</select> 
+		<select id="getAVMRuleLookupDetails" parameterType="map" resultMap="avmRuleLookupDetailResultMap">
+			select *
+			from AVM_RULE_LOOKUP_DETAIL
+			where LOOKUP_HEADER_ID = #{lookupHeaderId}
+			<if test="lookupValueDomain!=null">
+				and LOOKUP_VALUE_DOMAIN = #{lookupValueDomain}
+			</if> 
+			<if test="lookupValue!=null">
+				and LOOKUP_DETAIL_VALUE = #{lookupValue}	
+			</if>
+			ORDER BY DESCRIPTION ASC 
+		</select>
+  	<!-- Select -->
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.eligibility.finder.DecisionTableFinder" >
+
+	<!--
+		[16022316000474] HCMS ph 2- CAM - performance upload career path
+		By Jatis (HS) 24/03/2016
+	 -->
+	<resultMap type="co.id.fifgroup.eligibility.dto.DecisionTableRowDTO" id="decisionTableRow">
+		<result column="ROW_ID" 		property="id" 				jdbcType="NUMERIC"/>
+		<result column="CONDITIONS" 	property="conditions" 		jdbcType="VARCHAR"/>
+		<result column="RESULTS" 		property="results" 			jdbcType="VARCHAR"/>
+	</resultMap>
+	<!--END 16022316000474  -->
+
+	<resultMap type="co.id.fifgroup.eligibility.dto.DecisionTableDTO" id="decisionTable">
+		<id column="DEC_TABLE_ID" property="id" jdbcType="NUMERIC" />
+		<result column="MODEL_ID" property="model.id" />
+		<result column="VERSION_NUMBER" property="model.versionNumber" />
+		<result column="DRL" property="drl" />
+		<result column="MODULE_PREFIX" property="modulePrefix" />
+		<collection property="rows" ofType="co.id.fifgroup.eligibility.dto.DecisionTableRowDTO">
+			<result column="ROW_ID" property="id" jdbcType="NUMERIC"/>
+			<result column="CONDITIONS" property="conditions" jdbcType="VARCHAR"/>
+			<result column="RESULTS" property="results" jdbcType="VARCHAR"/>
+		</collection>
+	</resultMap>
+	
+	<!-- used by housing for performance issue [15051914073236] - 28/05/2015 | PHI -->
+	<resultMap id="rows" type="co.id.fifgroup.eligibility.dto.DecisionTableRowDTO">
+		<id column="ROW_ID" property="id" jdbcType="NUMERIC"/>
+		<result column="CONDITIONS" property="conditions" jdbcType="VARCHAR"/>
+		<result column="RESULTS" property="results" jdbcType="VARCHAR"/>
+	</resultMap>
+	<!-- end used by housing for performance issue [15051914073236] - 28/05/2015 | PHI -->
+	
+	<select id="findById" resultMap="decisionTable" parameterType="java.util.Map">
+		select t.DEC_TABLE_ID,
+			MODEL_ID,
+			VERSION_NUMBER,
+			t.DRL,
+			ROW_ID,
+			CONDITIONS,
+			RESULTS,
+			'${modulePrefix}' as MODULE_PREFIX
+		from ${modulePrefix}_DEC_TABLES t
+		left join ${modulePrefix}_DEC_TBL_ROWS r
+			on r.DEC_TABLE_ID = t.DEC_TABLE_ID
+		where
+			t.DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<!-- used by housing for performance issue [15051914073236] - 28/05/2015 | PHI -->
+	<select id="findByIdAndConditions" resultMap="decisionTable" parameterType="java.util.Map">
+		select t.DEC_TABLE_ID,
+			MODEL_ID,
+			VERSION_NUMBER,
+			t.DRL,
+			ROW_ID,
+			CONDITIONS,
+			RESULTS,
+			'${modulePrefix}' as MODULE_PREFIX
+		from ${modulePrefix}_DEC_TABLES t
+		left join ${modulePrefix}_DEC_TBL_ROWS r
+			on r.DEC_TABLE_ID = t.DEC_TABLE_ID
+		where
+			t.DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+			<if test="conditions != null">
+				AND CONDITIONS like #{conditions, jdbcType=VARCHAR}
+			</if>
+	</select>
+	
+	<select id="findHeaderById" resultMap="decisionTable" parameterType="java.util.Map">
+		select DEC_TABLE_ID,
+			MODEL_ID,
+			VERSION_NUMBER,
+			DRL,
+			'${modulePrefix}' as MODULE_PREFIX
+		from ${modulePrefix}_DEC_TABLES t
+		where
+			DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	<!--
+		[16022316000474] HCMS ph 2- CAM - performance upload career path
+		By Jatis (HS) 24/03/2016
+	 -->
+	<select id="findRowById" resultMap="decisionTableRow" parameterType="java.util.Map">
+		select 
+			ROW_ID,
+			CONDITIONS,
+			RESULTS
+		from ${modulePrefix}_DEC_TBL_ROWS r
+		where
+			DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	<!--END 16022316000474  -->
+	
+	<select id="findRowsByIdAndConditions" resultMap="rows" parameterType="java.util.Map">
+		select 
+			ROW_ID,
+			CONDITIONS,
+			RESULTS
+		from ${modulePrefix}_DEC_TBL_ROWS
+		where
+			DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+			<!-- 15051913370470 - Improve performance for eligibility task runner | By : PHI -->
+			<if test="conditions != null">
+				AND CONDITIONS like #{conditions, jdbcType=VARCHAR}
+			</if>
+	</select>
+	<!-- end used by housing for performance issue [15051914073236] - 28/05/2015 | PHI -->
+	
+    <select id="findByIdAndRowBound" resultMap="decisionTable" parameterType="java.util.Map">
+		select * from (
+				select t.DEC_TABLE_ID,
+					MODEL_ID,
+					VERSION_NUMBER,
+					<!--  t.DRL,  -->
+					ROW_ID,
+					CONDITIONS,
+					RESULTS,
+					'${modulePrefix}' as MODULE_PREFIX,
+					row_number()over (order by ROW_ID asc) rn
+				from ${modulePrefix}_DEC_TABLES t
+				left join ${modulePrefix}_DEC_TBL_ROWS r
+					on r.DEC_TABLE_ID = t.DEC_TABLE_ID
+				where
+					t.DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+			) where (rn &gt; #{rowFrom} and rn &lt;= #{rowEnd})
+	</select>
+	
+	<select id="findByIdWithoutDRL" resultMap="decisionTable" parameterType="java.util.Map">
+		select t.DEC_TABLE_ID,
+			MODEL_ID,
+			VERSION_NUMBER,
+			ROW_ID,
+			CONDITIONS,
+			RESULTS,
+			'${modulePrefix}' as MODULE_PREFIX
+		from ${modulePrefix}_DEC_TABLES t
+		left join ${modulePrefix}_DEC_TBL_ROWS r
+			on r.DEC_TABLE_ID = t.DEC_TABLE_ID
+		where
+			t.DEC_TABLE_ID = #{id, jdbcType=NUMERIC}
+	</select>
+	
+	
+	<select id="findByCriteriaWithoutDRL" resultMap="decisionTable" parameterType="java.util.Map">
+		select t.DEC_TABLE_ID,
+			MODEL_ID,
+			VERSION_NUMBER,
+			ROW_ID,
+			CONDITIONS,
+			RESULTS,
+			'${modulePrefix}' as MODULE_PREFIX
+		from ${modulePrefix}_DEC_TABLES t
+		left join ${modulePrefix}_DEC_TBL_ROWS r
+			on r.DEC_TABLE_ID = t.DEC_TABLE_ID
+		where
+			t.DEC_TABLE_ID = #{criteria.id, jdbcType=NUMERIC}
+			<if test="criteria.conditions != null">
+				AND CONDITIONS like #{criteria.conditions, jdbcType=VARCHAR}
+			</if>
+	</select>
+	
+
+</mapper>

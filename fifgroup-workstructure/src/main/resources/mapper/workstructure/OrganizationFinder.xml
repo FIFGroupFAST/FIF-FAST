@@ -1,0 +1,2920 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.workstructure.finder.OrganizationFinder">
+    <resultMap id="organizationDtoResultMap" type="co.id.fifgroup.workstructure.dto.OrganizationDTO">
+        <result column="ORGANIZATION_ID" jdbcType="NUMERIC" property="id" />
+        <result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+        <result column="COMPANY_NAME" jdbcType="VARCHAR" property="companyName" />
+        <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="code" />
+        <result column="ORGANIZATION_NAME" jdbcType="VARCHAR" property="name" />
+        <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+        <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+        <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+        <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" /> 
+        <result column="VERSION_ID" jdbcType="NUMERIC" property="versionId" />
+        <result column="VERSION_NUMBER" jdbcType="DECIMAL" property="versionNumber" />
+        <result column="DATE_FROM" jdbcType="TIMESTAMP" property="dateFrom" />
+        <result column="DATE_TO" jdbcType="TIMESTAMP" property="dateTo" />
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+        <result column="LEVEL_CODE" jdbcType="VARCHAR" property="levelCode" />
+        <result column="LEVEL_NAME" jdbcType="VARCHAR" property="levelName" />
+        <result column="NPWP" jdbcType="VARCHAR" property="npwp" />
+        <result column="KPP_CODE" jdbcType="VARCHAR" property="kppCode" />
+        <result column="LOCATION_ID" jdbcType="DECIMAL" property="location.id" />
+        <result column="LOCATION_NAME" jdbcType="VARCHAR" property="location.locationName" />
+        <result column="LOCATION_CODE" jdbcType="VARCHAR" property="location.locationCode" />
+        <result column="HEAD_OF_ORGANIZATION" jdbcType="DECIMAL" property="organizationHeadId" />
+        <result column="PIC_ID" jdbcType="DECIMAL" property="picId" />
+        <result column="IS_HEAD_OFFICE" jdbcType="DECIMAL" property="isHeadOffice" />
+        <result column="ORGANIZATION_SPV_ID" jdbcType="DECIMAL" property="organizationSpvId" />
+        <result column="BRANCH_CODE" jdbcType="VARCHAR" property="branchCode" />
+        <result column="COST_CENTER_CODE" jdbcType="VARCHAR" property="costCenterCode" />
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+        <result column="KELURAHAN_CODE" jdbcType="VARCHAR" property="kelurahanCode" />
+        <result column="KECAMATAN_CODE" jdbcType="VARCHAR" property="kecamatanCode" />
+        <result column="ZIP_CODE" jdbcType="VARCHAR" property="zipCode" />
+        <result column="WORKING_SCHEDULE_ID" jdbcType="DECIMAL" property="workingScheduleId" />
+        <result column="COLOR" jdbcType="VARCHAR" property="color" />
+        <!-- add by RIM -->
+        <result column="BRANCH_OWNER" jdbcType="VARCHAR" property="branchOwner" />
+        <!-- end add by RIM -->
+        <collection property="contacts" ofType="co.id.fifgroup.workstructure.dto.OrganizationContactDTO">
+            <result column="TYPE_CODE" jdbcType="VARCHAR" property="typeCode" />
+            <result column="INFORMATION" jdbcType="VARCHAR" property="information" />
+            <result column="START_DATE" jdbcType="DATE" property="startDate" />
+            <result column="END_DATE" jdbcType="DATE" property="endDate" />
+        </collection>
+        <collection property="organizationInfos" ofType="co.id.fifgroup.workstructure.dto.OtherInfoDTO">
+            <id column="INFO_ID" property="infoId" javaType="Long" jdbcType="NUMERIC" />
+            <result column="ORGANIZATION_ID" property="id" javaType="Long" jdbcType="NUMERIC"/>
+            <result column="VERSION_ID" property="versionId" javaType="Long" jdbcType="NUMERIC"/>
+            <result column="INFO_VALUE" property="infoValue" jdbcType="VARCHAR"/>
+            <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+            <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP"/>
+            <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="VARCHAR"/>
+            <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+        </collection>
+    </resultMap>
+    
+    <resultMap id="organizationNameResultMap" type="co.id.fifgroup.workstructure.domain.Organization">
+        <result column="ORGANIZATION_ID" jdbcType="NUMERIC" property="id" />
+        <result column="ORGANIZATION_CODE" jdbcType="VARCHAR" property="organizationCode" />
+        <result column="ORGANIZATION_NAME" jdbcType="VARCHAR" property="organizationName" />
+        <result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+    </resultMap>
+    
+    <resultMap id="HooHistoryResultMap" type="co.id.fifgroup.workstructure.dto.HeadOfOrganizationDTO">
+        <result column="VERSION_NUMBER" jdbcType="NUMERIC" property="versionNumber" />
+        <result column="EFFECTIVE_START_DATE" jdbcType="TIMESTAMP" property="dateFrom" />
+        <result column="EFFECTIVE_END_DATE" jdbcType="TIMESTAMP" property="dateTo" />
+        <result column="LEVEL_CODE" jdbcType="VARCHAR" property="levelCode" />
+        <result column="LEVEL_NAME" jdbcType="VARCHAR" property="levelName" />
+        <result column="JOB_ID" jdbcType="NUMERIC" property="jobId" />
+        <result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
+        <result column="PERSON_ID" jdbcType="NUMERIC" property="personId" />
+        <result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber" />
+        <result column="FULL_NAME" jdbcType="VARCHAR" property="fullName" />
+        <result column="PHOTO_FILE_PATH" jdbcType="VARCHAR" property="photoFilePath" />
+    </resultMap>
+    
+    <resultMap id="segmentResult" type="co.id.fifgroup.core.ui.lookup.KeyValue">
+        <!-- Replace TPS 20140908 ticket 14090114521185 -->
+        <!-- <id column="FLEX_VALUE" property="key" javaType="Long"/> -->
+        <id column="FLEX_VALUE" property="key" javaType="String" />
+        <result column="DESCRIPTION" property="description" />
+        <result column="DESCRIPTION" property="value" />
+    </resultMap>
+    
+    <select id="findNameById" parameterType="Long" resultMap="organizationNameResultMap">
+        select 
+            wo.company_id,
+            wo.organization_id,
+            wo.ORGANIZATION_ID,
+            wo.ORGANIZATION_NAME
+        from WOS_ORGANIZATIONS wo
+        where wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+    </select>
+    
+    <select id="findById" parameterType="map" resultMap="organizationDtoResultMap">
+        select 
+            wo.ORGANIZATION_ID,
+            wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            loc.LOCATION_NAME,
+            loc.LOCATION_CODE,
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.BRANCH_CODE,
+            wov.COST_CENTER_CODE,
+            wov.ADDRESS,
+            wov.KELURAHAN_CODE,
+            wov.KECAMATAN_CODE,
+            wov.ZIP_CODE,
+            wov.WORKING_SCHEDULE_ID,
+            lvl.color,
+            lvl.level_name,
+            bhv.gl_code AS BRANCH_OWNER
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        join WOS_LOCATIONS loc on loc.LOCATION_ID = wov.LOCATION_ID
+        join wos_organization_levels lvl on lvl.level_code = wov.level_code and lvl.company_id = wo.company_id
+        join branch_hierarchy_v bhv on bhv.organization_id = wo.organization_id and bhv.company_id = wo.company_id 
+        <where>
+            and trunc(#{processDate}) between wov.DATE_FROM and wov.DATE_TO
+            <if test="id != null">
+                and wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+            </if>
+            <if test="companyId != null">
+                and wo.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findByIdWithoutDate" parameterType="map" resultMap="organizationDtoResultMap">
+        select 
+            wo.ORGANIZATION_ID,
+            wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            loc.LOCATION_NAME,
+            loc.LOCATION_CODE,
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.BRANCH_CODE,
+            wov.COST_CENTER_CODE,
+            wov.ADDRESS,
+            wov.KELURAHAN_CODE,
+            wov.KECAMATAN_CODE,
+            wov.ZIP_CODE,
+            wov.WORKING_SCHEDULE_ID,
+            lvl.color,
+            lvl.level_name,
+            bhv.gl_code AS BRANCH_OWNER
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        join WOS_LOCATIONS loc on loc.LOCATION_ID = wov.LOCATION_ID
+        join wos_organization_levels lvl on lvl.level_code = wov.level_code and lvl.company_id = wo.company_id
+        join branch_hierarchy_v bhv on bhv.organization_id = wo.organization_id and bhv.company_id = wo.company_id 
+        <where>
+        	<!-- Remark By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+            <!-- add TPS ITSM 15021210450311, code asli by HBP agar tidak kena too many rows -->
+	            <!-- and date_to = (select max(date_to) from wos_organization_versions wov where wov.organization_id = wo.organization_id)
+	            <if test="id != null">
+	                wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+	            </if> -->
+	            
+	            date_to = (select max(date_to) from wos_organization_versions wov where wov.organization_id = wo.organization_id)
+	            <if test="id != null">
+	                and wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+	            </if>
+            <!-- End Remark By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+        </where>
+    </select>
+    
+    <select id="findByExample" parameterType="co.id.fifgroup.workstructure.dto.OrganizationDTO" resultMap="organizationDtoResultMap">
+        select
+            wo.ORGANIZATION_ID,
+            wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            loc.LOCATION_NAME,
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.BRANCH_CODE,
+            wov.COST_CENTER_CODE,
+            wov.ADDRESS,
+            wov.KELURAHAN_CODE,
+            wov.KECAMATAN_CODE,
+            wov.ZIP_CODE,
+            wov.WORKING_SCHEDULE_ID,
+            woc.TYPE_CODE,
+            woc.INFORMATION
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        join WOS_LOCATIONS loc on loc.LOCATION_ID = wov.LOCATION_ID
+        left join WOS_ORGANIZATION_CONTACTS woc on wov.VERSION_ID = woc.VERSION_ID
+        <where>
+            <if test="companyId!= null">
+                and (wo.COMPANY_ID) =(#{companyId, jdbcType=NUMERIC})
+            </if>
+            <if test="name != null">
+                and upper(wo.ORGANIZATION_NAME) like upper(#{name, jdbcType=VARCHAR})
+            </if>
+            <if test="code != null">
+                and upper(wo.ORGANIZATION_CODE) like upper(#{code, jdbcType=VARCHAR})
+            </if>
+            <if test="levelCode != null">
+                and upper(wov.LEVEL_CODE) like upper(#{levelCode, jdbcType=VARCHAR})
+            </if>
+            <if test="kppCode != null">
+                and upper(wov.KPP_CODE) like upper(#{kppCode, jdbcType=VARCHAR})
+            </if>
+            <if test="dateTo != null">
+                and wov.date_to = TRUNC(#{dateTo, jdbcType=DATE})
+            </if>
+            <if test="location != null">
+                <if test="location.id != null">
+                    and (wov.LOCATION_ID) = #{location.id, jdbcType=NUMERIC}
+                </if>
+            </if>
+            <if test="isHeadOffice != null">
+                or wov.is_head_office = #{isHeadOffice, jdbcType=NUMERIC}
+            </if>
+            <if test="effectiveOnDate != null">
+                and trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.DATE_FROM and wov.DATE_TO
+            </if>
+        </where>
+        order by UPPER(wo.organization_code) ASC
+    </select>
+    
+    <select id="findByInquiry" parameterType="co.id.fifgroup.workstructure.dto.OrganizationDTO" resultMap="organizationDtoResultMap">
+            select 
+                wo.ORGANIZATION_ID,
+                wo.ORGANIZATION_CODE,
+                wo.ORGANIZATION_NAME,
+                us.user_name,
+                wo.LAST_UPDATE_DATE,
+                wov.VERSION_NUMBER,
+                wov.DATE_FROM,
+                wov.DATE_TO,
+                wov.DESCRIPTION,
+                lvl.level_name level_code,
+                wov.NPWP,
+                loc.location_name,
+                dpd.description kpp_code
+            from WOS_ORGANIZATIONS wo
+            join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+            join wos_organization_levels lvl on lvl.level_code = wov.level_code
+            join wos_locations loc on loc.location_id = wov.location_id
+            join sam_users us on us.user_id = wo.last_updated_by
+            join bse_lookup_hdr hdr on hdr.name         = 'MST_KPP'
+            JOIN bse_lookup_dependents dpd ON hdr.lookup_id       = dpd.lookup_id
+              and dpd.detail_code    = wov.kpp_code
+              AND dpd.company_scope IN (-1, wo.company_id)
+        <where>
+            <if test="companyId!= null">
+                and (wo.COMPANY_ID) = (#{companyId, jdbcType=NUMERIC})
+            </if>
+            <if test="name != null">
+                and upper(wo.ORGANIZATION_NAME) like upper(#{name, jdbcType=VARCHAR})
+            </if>
+            <if test="levelCode != null">
+                and upper(wov.LEVEL_CODE) like upper(#{levelCode, jdbcType=VARCHAR})
+            </if>
+            <if test="kppCode != null">
+                and upper(wov.KPP_CODE) like upper(#{kppCode, jdbcType=VARCHAR})
+            </if>
+            <if test="location != null">
+                <if test="location.id != null">
+                    and (wov.LOCATION_ID) = #{location.id, jdbcType=NUMERIC}
+                </if>
+            </if>
+            <if test="isHeadOffice != null">
+                or wov.is_head_office = #{isHeadOffice, jdbcType=NUMERIC}
+            </if>
+            <if test="effectiveOnDate != null">
+                and trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.DATE_FROM and wov.DATE_TO
+            </if>
+        </where>
+    </select>
+        
+    <select id="countByExample" parameterType="co.id.fifgroup.workstructure.dto.OrganizationDTO" resultType="Integer">
+        select count(distinct wo.organization_id)         
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        left join WOS_ORGANIZATION_CONTACTS woc on wov.VERSION_ID = woc.VERSION_ID
+        <where>
+            <if test="companyId!= null">
+                and (wo.COMPANY_ID) = (#{companyId, jdbcType=NUMERIC})
+            </if>
+            <if test="name != null">
+                and upper(wo.ORGANIZATION_NAME) like upper(#{name, jdbcType=VARCHAR})
+            </if>
+            <if test="code != null">
+                and upper(wo.ORGANIZATION_CODE) like upper(#{code, jdbcType=VARCHAR})
+            </if>
+            <if test="levelCode != null">
+                and upper(wov.LEVEL_CODE) like upper(#{levelCode, jdbcType=VARCHAR})
+            </if>
+            <if test="kppCode != null">
+                and upper(wov.KPP_CODE) like upper(#{kppCode, jdbcType=VARCHAR})
+            </if>
+            <if test="dateTo != null">
+                and wov.date_to = TRUNC(#{dateTo, jdbcType=DATE})
+            </if>
+            <if test="location != null">
+                <if test="location.id != null">
+                    and (wov.LOCATION_ID) = #{location.id, jdbcType=NUMERIC}
+                </if>
+            </if>
+            <if test="effectiveOnDate != null">
+                and trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.DATE_FROM and wov.DATE_TO
+            </if>
+        </where>
+    </select>
+        
+    <select id="findByIdAndVersionNumber" parameterType="Map" resultMap="organizationDtoResultMap">
+        select 
+            wo.ORGANIZATION_ID,
+            wo.ORGANIZATION_UUID,
+            wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.BRANCH_CODE,
+            wov.COST_CENTER_CODE,
+            wov.ADDRESS,
+            wov.KELURAHAN_CODE,
+            wov.KECAMATAN_CODE,
+            wov.ZIP_CODE,
+            wov.WORKING_SCHEDULE_ID,
+            woc.TYPE_CODE,
+            woc.INFORMATION,
+            woc.start_date,
+            woc.end_date,
+            WOI.INFO_ID,
+            WOI.INFO_VALUE
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        left join WOS_ORGANIZATION_CONTACTS woc on wov.VERSION_ID = woc.VERSION_ID
+        LEFT JOIN WOS_ORGANIZATION_INFOS WOI on WOI.VERSION_ID = WOV.VERSION_ID
+        where
+            wov.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+            and wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+    </select>
+    
+    <select id="findByIdAndDate" parameterType="map" resultMap="organizationDtoResultMap">
+
+
+
+        select
+        	wo.ORGANIZATION_ID,
+      		wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            loc.LOCATION_NAME,
+ 	        loc.LOCATION_CODE, 
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.BRANCH_CODE,
+            wov.COST_CENTER_CODE,
+            wov.ADDRESS,
+            wov.KELURAHAN_CODE,
+            wov.KECAMATAN_CODE,
+            wov.ZIP_CODE,
+            wov.WORKING_SCHEDULE_ID,
+            woc.TYPE_CODE,
+            woc.INFORMATION,
+            woc.start_date,
+            woc.end_date
+
+
+       from WOS_ORGANIZATIONS wo
+       join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+       join WOS_LOCATIONS loc on loc.LOCATION_ID = wov.LOCATION_ID
+       left join WOS_ORGANIZATION_CONTACTS woc on wov.VERSION_ID = woc.VERSION_ID
+        <where>
+            <if test="id != null">
+                and wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+            </if>
+            <if test="id == -1">
+                and wov.IS_HEAD_OFFICE = 1
+            </if>
+            <if test="effectiveDate">
+                and trunc(#{effectiveDate, jdbcType=DATE}) between wov.date_from and wov.date_to
+            </if>
+        </where>
+    </select>
+    
+    <select id="findByLevelIdAndOrgName" parameterType="Map" resultMap="organizationDtoResultMap">
+        select
+            wo.ORGANIZATION_ID,
+            wo.ORGANIZATION_NAME    
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        join WOS_ORGANIZATION_LEVELS lvl on wov.level_code = lvl.level_code
+        where wo.company_id = #{companyId, jdbcType=NUMERIC}
+        and lvl.level_id = #{levelId, jdbcType=NUMERIC}
+        and upper(wo.organization_name) like upper(#{orgName, jdbcType=VARCHAR})
+        and trunc(sysdate) between wov.date_from and wov.date_to
+        ORDER BY UPPER(wo.ORGANIZATION_NAME) ASC
+    </select>
+    
+    <select id="countByLevelIdAndOrgName" parameterType="map" resultType="Integer">
+        select
+            count(*)
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        join WOS_ORGANIZATION_LEVELS lvl on wov.level_code = lvl.level_code
+        where wo.company_id = #{companyId, jdbcType=NUMERIC}
+        and lvl.level_id = #{levelId, jdbcType=NUMERIC}
+        and upper(wo.organization_name) like upper(#{orgName, jdbcType=VARCHAR})
+        and trunc(sysdate) between wov.date_from and wov.date_to
+    </select>
+    
+    <select id="findVersionsById" parameterType="Long" resultType="Integer">
+        select
+            wov.VERSION_NUMBER
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        where
+            wo.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+        order by wov.VERSION_NUMBER
+    </select>
+    
+    <select id="findOrganizationBySequenceLevel" parameterType="map" resultMap="organizationDtoResultMap">
+        select distinct
+            org.organization_id,
+            org.organization_code,
+            org.organization_name,
+            ver.is_head_office
+          from wos_organizations org
+          join wos_organization_versions ver on org.organization_id = ver.organization_id
+          join wos_organization_levels lvl on ver.level_code = lvl.level_code
+          join wos_org_level_hier_elements elm on lvl.level_id = elm.level_id
+          where elm.sequence &gt; (select
+                  he.sequence 
+                from wos_organization_levels lvl
+                join wos_org_level_hier_elements he on lvl.level_id = he.level_id
+                join wos_org_level_hier_versions hv on he.version_id = hv.version_id
+                join wos_org_level_hier lh on hv.level_hier_id = lh.level_hier_id
+                where lh.company_id = #{companyId, jdbcType=NUMERIC}
+                and lvl.company_id = #{companyId, jdbcType=NUMERIC}
+                and trunc(#{effectiveOnDate, jdbcType=DATE}) between hv.date_from and hv.date_to
+                and lvl.level_code = (select 
+                      lvl.level_code
+                      from wos_organization_versions ov
+                      join wos_organization_levels lvl on ov.level_code = lvl.level_code
+                      where ov.organization_id = #{parentId, jdbcType=NUMERIC}
+                      and lvl.company_id = #{companyId, jdbcType=NUMERIC}
+                      AND TRUNC(#{effectiveOnDate, jdbcType=DATE}) BETWEEN ov.date_from AND ov.date_to))
+          and org.company_id = #{companyId, jdbcType=NUMERIC}
+          <if test="isHeadOffice == 0">
+             and ver.is_head_office = 0
+          </if>
+          <if test="code != null">
+             and upper(org.organization_code) like upper(#{code, jdbcType=VARCHAR})
+          </if>
+          <if test="name != null">
+             and upper(org.organization_name) like upper(#{name, jdbcType=VARCHAR})
+          </if>
+          <if test="effectiveOnDate != null">
+             and trunc(#{effectiveOnDate, jdbcType=DATE}) between ver.DATE_FROM and ver.DATE_TO
+          </if>
+          <if test="dateTo != null">
+             and ver.date_to = TRUNC(#{dateTo, jdbcType=DATE})
+          </if>
+    </select>
+    
+    <select id="countOrganizationBySequenceLevel" parameterType="map" resultType="Integer">
+        select
+            count(distinct org.organization_id)
+          from wos_organizations org
+          join wos_organization_versions ver on org.organization_id = ver.organization_id
+          join wos_organization_levels lvl on ver.level_code = lvl.level_code
+          join wos_org_level_hier_elements elm on lvl.level_id = elm.level_id
+          where elm.sequence &gt; (select
+                  he.sequence 
+                from wos_organization_levels lvl
+                join wos_org_level_hier_elements he on lvl.level_id = he.level_id
+                join wos_org_level_hier_versions hv on he.version_id = hv.version_id
+                join wos_org_level_hier lh on hv.level_hier_id = lh.level_hier_id
+                where lh.company_id = #{companyId, jdbcType=NUMERIC}
+                and lvl.company_id = #{companyId, jdbcType=NUMERIC}
+                and trunc(sysdate) between hv.date_from and hv.date_to
+                and lvl.level_code = (select 
+                      lvl.level_code
+                      from wos_organization_versions ov
+                      join wos_organization_levels lvl on ov.level_code = lvl.level_code
+                      where ov.organization_id = #{parentId, jdbcType=NUMERIC}
+                      and lvl.company_id = #{companyId, jdbcType=NUMERIC}
+                       AND TRUNC(sysdate) BETWEEN ov.date_from AND ov.date_to))
+          and org.company_id = #{companyId, jdbcType=NUMERIC}
+          <if test="isHeadOffice == 0">
+             and ver.is_head_office = 0
+          </if>
+          <if test="code != null">
+             and upper(org.organization_code) like upper(#{code, jdbcType=VARCHAR})
+          </if>
+          <if test="name != null">
+             and upper(org.organization_name) like upper(#{name, jdbcType=VARCHAR})
+          </if>
+          <if test="effectiveOnDate != null">
+             and trunc(#{effectiveOnDate, jdbcType=DATE}) between ver.DATE_FROM and ver.DATE_TO
+          </if>
+          <if test="dateTo != null">
+             and ver.date_to = TRUNC(#{dateTo, jdbcType=DATE})
+          </if>
+    </select>
+    
+    <select id="findOrgParentByHierarchyIdAndOrgId" parameterType="map" resultMap="organizationDtoResultMap">
+        select
+              ov.organization_id,
+              ov.level_code,
+              ov.npwp,
+              ov.kpp_code,
+              ov.location_id,
+              ov.head_of_organization,
+              ov.organization_spv_id,
+              ov.is_head_office
+            from wos_organization_versions ov
+            join wos_organizations wo on ov.organization_id = wo.organization_id
+            where ov.organization_id = (select
+                  he.parent_id
+                from wos_org_hier_versions hv
+                join wos_org_hier_elements he on hv.version_id = he.version_id
+                where hv.org_hier_id = #{hierarchyId, jdbcType=NUMERIC}
+                and he.organization_id = #{organizationId, jdbcType=NUMERIC}
+                AND trunc(sysdate) between hv.date_from and hv.date_to)
+            and trunc(sysdate) between ov.date_from and ov.date_to
+    </select>
+    
+    <select id="findBranches" parameterType="map" resultMap="organizationNameResultMap">
+        select * from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name, wo.company_id
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          and wl.company_id = #{companyId, jdbcType=NUMERIC}
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            null
+        from dual
+        ) br
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    
+    <select id="findBranchesCommon" parameterType="map" resultMap="organizationNameResultMap">
+        select * from (
+        select 
+            distinct wo.organization_id,wo.organization_code,
+            company_name || ' - ' || wo.organization_name as organization_name, wo.company_id
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+            JOIN bse_companies bc ON wo.company_id = bc.company_id
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            null
+        from dual
+        ) br
+        <where>
+           <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    <select id="countBranchesCommon" parameterType="map" resultType="int">
+        select count(1) from (
+        select 
+            distinct wo.organization_id,wo.organization_code,
+            company_name || ' - ' || wo.organization_name as organization_name, wo.company_id
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+            JOIN bse_companies bc ON wo.company_id = bc.company_id
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            null
+        from dual
+        ) br
+        <where>
+           <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+        order by UPPER(br.organization_name) ASC
+    </select>
+    
+    <select id="countBranches" parameterType="map" resultType="int">
+    select count(distinct organization_id) from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          and wl.company_id = #{companyId, jdbcType=NUMERIC}
+         <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name
+        from dual
+        ) br
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+    </select>
+    
+    <select id="isHaveFuture" parameterType="Long"  resultType="int">
+        SELECT
+            COUNT(WOV.VERSION_NUMBER)
+        FROM WOS_ORGANIZATION_VERSIONS WOV 
+        JOIN WOS_ORGANIZATIONS WO ON(WOV.ORGANIZATION_ID = WO.ORGANIZATION_ID)
+        <where>
+            <if test="id != null">
+                WOV.ORGANIZATION_ID = #{id, jdbcType=DECIMAL}
+                and wov.version_number &gt;
+                    (SELECT WOV.VERSION_NUMBER
+                    FROM
+                    WOS_ORGANIZATION_VERSIONS WOV
+                    JOIN WOS_ORGANIZATIONS WO ON(WOV.ORGANIZATION_ID = WO.ORGANIZATION_ID)
+                    <where>
+                    WO.ORGANIZATION_ID = #{id, jdbcType=NUMERIC}
+                    AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO)
+                    </where>
+            </if>
+        </where>
+    </select>
+    
+    <select id="findBranchOrganization" parameterType="map" resultMap="organizationNameResultMap">
+        select 
+          h.organization_id,
+          wo.organization_code,
+          wo.organization_name
+        from BRANCH_HIERARCHY_V h
+        join wos_organizations wo on h.organization_id = wo.organization_id
+        where h.branch_id = (select h.branch_id from BRANCH_HIERARCHY_V h 
+              where h.company_id = #{companyId, jdbcType=NUMERIC}
+              and h.organization_id = #{id, jdbcType=NUMERIC})
+        and h.company_id = #{companyId, jdbcType=NUMERIC}
+    </select>
+    
+    <select id="findBranch" parameterType="map" resultMap="organizationDtoResultMap">
+        select 
+            wo.ORGANIZATION_ID,
+            wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.WORKING_SCHEDULE_ID,
+            wov.BRANCH_CODE
+        from wos_organizations wo
+        join wos_organization_versions wov on wo.organization_id = wov.organization_id
+        where wo.organization_id = #{organizationId, jdbcType=NUMERIC}
+        and trunc(#{date, jdbcType=DATE}) between wov.date_from and wov.date_to
+    </select>
+    
+    <select id="findBranchCode" parameterType="map" resultType="String">
+        select h.gl_code branch_code
+            from BRANCH_HIERARCHY_V h
+            where h.organization_id = #{organizationId, jdbcType=NUMERIC}
+            and h.company_id = #{companyId, jdbcType=NUMERIC}
+    </select>
+    
+    <select id="findParentOrganization" parameterType="map" resultMap="organizationDtoResultMap">
+        select 
+            wo.ORGANIZATION_ID,
+            wo.COMPANY_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME,
+            wo.CREATED_BY,
+            wo.CREATION_DATE,
+            wo.LAST_UPDATED_BY,
+            wo.LAST_UPDATE_DATE,
+            wov.VERSION_ID,
+            wov.VERSION_NUMBER,
+            wov.DATE_FROM,
+            wov.DATE_TO,
+            wov.DESCRIPTION,
+            wov.LEVEL_CODE,
+            wov.NPWP,
+            wov.KPP_CODE,
+            wov.LOCATION_ID,
+            wov.HEAD_OF_ORGANIZATION,
+            wov.IS_HEAD_OFFICE,
+            wov.ORGANIZATION_SPV_ID,
+            wov.WORKING_SCHEDULE_ID
+          from wos_organizations wo 
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id
+          where wo.organization_id = (select ohe.parent_id
+              from wos_org_hier_elements ohe
+                  join wos_org_hier_versions ohv on ohe.version_id = ohv.version_id and trunc(#{date, jdbcType=DATE}) between ohv.date_from and ohv.date_to
+                  join wos_organization_hier wh on ohv.org_hier_id = wh.org_hier_id
+                  where wh.org_hier_id = (select oh.org_hier_id
+                      from wos_organization_hier oh
+                      where upper(oh.org_hier_type) = upper(#{type, jdbcType=VARCHAR})
+                      and oh.company_id = #{companyId, jdbcType=NUMERIC})
+              and ohe.organization_id = #{id, jdbcType=NUMERIC})
+          and trunc(#{date, jdbcType=DATE}) between wov.date_from and wov.date_to
+    </select>
+    
+     <select id="findLastVersionByCode" parameterType="map" resultMap="organizationDtoResultMap" >
+        select 
+            *
+          from wos_organizations wo      
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id
+          where wov.version_number = (select count(wov.version_number)
+             from wos_organizations wo       
+             join wos_organization_versions wov on wo.organization_id = wov.organization_id
+             and upper(wo.organization_code) = upper(#{orgCode, jdbcType=VARCHAR}))
+             and upper(wo.organization_code) = upper(#{orgCode, jdbcType=VARCHAR})
+             and wo.company_id = (#{companyId, jdbcType=NUMERIC})   
+      </select>
+      
+      <select id="findOrganizationByBranch" parameterType="map" resultMap="organizationNameResultMap" >
+        select 
+            h.organization_id,
+            wo.organization_code,
+            wo.organization_name
+          from BRANCH_HIERARCHY_V h
+          join wos_organizations wo on h.organization_id = wo.organization_id
+          join wos_organization_versions ver on ver.organization_id = wo.organization_id
+          <where>
+              and h.company_id = #{companyId, jdbcType=NUMERIC}
+            <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between ver.date_from and ver.date_to
+            </if>
+            <if test="branchId != null">
+               and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+          </where>
+          order by UPPER(wo.organization_code) ASC
+      </select>
+      
+       <select id="countOrganizationByBranch" parameterType="map" resultType="int">
+        select 
+            count(*)
+          from BRANCH_HIERARCHY_V h
+          join wos_organizations wo on h.organization_id = wo.organization_id
+          join wos_organization_versions ver on ver.organization_id = wo.organization_id
+          <where>
+            and h.company_id = #{companyId, jdbcType=NUMERIC}
+            <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between ver.date_from and ver.date_to
+            </if>
+            <if test="branchId != null">
+              and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+          </where>
+      </select>
+      
+      <select id="findOrganizationsByCompany" parameterType="map" resultMap="organizationDtoResultMap" >
+        select distinct
+            wo.company_id,
+            bc.company_name,
+            wo.organization_id,
+            wo.organization_name,
+            wo.organization_code
+          from wos_organizations wo
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id
+          join bse_companies bc on wo.company_id = bc.company_id
+            <where>
+                <if test="groupId != null">
+                    and bc.group_id = #{groupId, jdbcType=NUMERIC}
+                </if>
+                <if test="companyName!= null">
+                    and upper(bc.company_name) like upper(#{companyName, jdbcType=VARCHAR})
+                </if>
+                <if test="code!= null">
+                    and upper(wo.organization_code) like upper(#{code, jdbcType=VARCHAR})
+                </if>
+                <if test="name != null">
+                    and upper(wo.organization_name) like upper(#{name, jdbcType=VARCHAR})
+                </if>
+                <if test="effectiveOnDate != null">
+                    and trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.DATE_FROM and wov.DATE_TO
+                    and trunc(#{effectiveOnDate, jdbcType=DATE}) between bc.effective_start_date and bc.effective_end_date
+                </if>
+                <if test="dateTo != null">
+                    and date_to = TRUNC(#{dateTo, jdbcType=DATE})
+                </if>
+                <if test="companyId != null">
+                    and wo.company_id = #{companyId}
+                </if>
+            </where>
+          order by UPPER(bc.company_name) ASC, UPPER(wo.organization_name) ASC
+      </select>
+      
+      <select id="countOrganizationByCompany" parameterType="map" resultType="Integer">
+        select count(1) from (
+        select distinct
+            wo.company_id,
+            bc.company_name,
+            wo.organization_id,
+            wo.organization_name,
+            wo.organization_code
+          from wos_organizations wo
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id
+          join bse_companies bc on wo.company_id = bc.company_id
+            <where>
+                <if test="groupId != null">
+                    and bc.group_id = #{groupId, jdbcType=NUMERIC}
+                </if>
+                <if test="companyName!= null">
+                    and upper(bc.company_name) like upper(#{companyName, jdbcType=VARCHAR})
+                </if>
+                <if test="code!= null">
+                    and upper(wo.organization_code) like upper(#{code, jdbcType=VARCHAR})
+                </if>
+                <if test="name != null">
+                    and upper(wo.organization_name) like upper(#{name, jdbcType=VARCHAR})
+                </if>
+                <if test="effectiveOnDate != null">
+                    and trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.DATE_FROM and wov.DATE_TO
+                    and trunc(#{effectiveOnDate, jdbcType=DATE}) between bc.effective_start_date and bc.effective_end_date
+                </if>
+                <if test="dateTo != null">
+                    and date_to = TRUNC(#{dateTo, jdbcType=DATE})
+                </if>
+                <if test="companyId != null">
+                    and wo.company_id = #{companyId}
+                </if>
+            </where>
+            )
+    </select>
+    
+    <select id="findByHierarchyId" parameterType="map" resultMap="organizationNameResultMap">
+        select 
+          he.organization_id,
+          wo.organization_code,
+          wo.organization_name
+        from wos_organization_hier oh
+        join wos_org_hier_versions hv on oh.org_hier_id = hv.org_hier_id
+        join wos_org_hier_elements he on hv.version_id = he.version_id
+        join wos_organizations wo on he.organization_id = wo.organization_id
+        <where>
+            oh.org_hier_id = #{hierarchyId, jdbcType=NUMERIC}
+            and he.version_id = #{versionId, jdbcType=NUMERIC}
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})       
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})       
+            </if>
+        </where>        
+    </select>
+    
+    <select id="countByHierarchyId" parameterType="map" resultType="Integer">
+        select 
+         count(wo.organization_name)
+        from wos_organization_hier oh
+        join wos_org_hier_versions hv on oh.org_hier_id = hv.org_hier_id
+        join wos_org_hier_elements he on hv.version_id = he.version_id
+        join wos_organizations wo on he.organization_id = wo.organization_id
+        <where>
+            oh.org_hier_id = #{hierarchyId, jdbcType=NUMERIC}
+            and he.version_id = #{versionId, jdbcType=NUMERIC}
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})       
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})       
+            </if>
+        </where>
+    </select>
+    
+    <select id="findHooHistoryByOrganizationId" parameterType="Long" resultMap="HooHistoryResultMap">
+        select distinct
+          pa.effective_start_date,
+          pa.effective_end_date,
+          wol.level_name,
+          pa.person_id,
+          pa.job_id,
+          pi.employee_number,
+          pi.full_name,
+          wj.job_name,
+          pi.photo_file_path
+        from pea_primary_assignments pa
+        join pea_personal_informations pi on pa.person_id = pi.person_id
+        join wos_organization_versions wov on wov.organization_id = pa.organization_id
+        join wos_organization_levels wol on wol.level_code = wov.level_code
+        join wos_jobs wj on wj.job_id = pa.job_id
+        where pa.job_id = (select head_of_organization from wos_organization_versions where organization_id = #{organizationId})
+        and pa.organization_id = #{organizationId}
+    </select>
+    
+    <select id="isHeadOffice" parameterType="map" resultType="Integer">
+        select wov.is_head_office
+            from wos_organization_versions wov
+            where wov.organization_id = #{organizationId}
+            and trunc(#{processDate}) between wov.date_from and wov.date_to
+    </select>
+    
+    <select id="findOrganizationBySecurityFilter" parameterType="map" resultMap="organizationNameResultMap">
+        select distinct 
+            wo.ORGANIZATION_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME
+          from wos_organizations wo
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id
+          <where>
+             <if test="companyId != null">
+              and wo.company_id = #{companyId, jdbcType=NUMERIC}
+             </if>
+             <if test="organizationCode != null">
+                 and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+             </if>
+             <if test="organizationName != null">
+                  and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+             </if>
+              <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    wo.organization_id = #{item}
+                 </foreach>
+                </if>
+              </if>
+              <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+                 </if>
+              </if>
+              <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+              </if>
+          </where>
+          order by UPPER(wo.organization_code) ASC
+    </select>
+    
+    <select id="countOrganizationBySecurityFilter" parameterType="map" resultType="Integer">
+        select count(1) from (select distinct
+            wo.ORGANIZATION_ID,
+            wo.ORGANIZATION_CODE,
+            wo.ORGANIZATION_NAME
+          from wos_organizations wo
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id
+           <where>
+             <if test="companyId != null">
+              and wo.company_id = #{companyId, jdbcType=NUMERIC}
+             </if>
+             <if test="organizationCode != null">
+                 and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+             </if>
+             <if test="organizationName != null">
+                  and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+             </if>
+              <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    wo.organization_id = #{item}
+                 </foreach> 
+                </if>
+              </if>
+              <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+                 </if>
+              </if>
+              <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+              </if>
+          </where>
+          )
+    </select>
+    
+    <select id="findSequenceOfOrganization" parameterType="map" resultType="Integer">
+        select 
+            le.sequence
+        from wos_org_level_hier_elements le
+        join wos_org_level_hier_versions lv on le.version_id = lv.version_id
+        join wos_org_level_hier lh on lh.level_hier_id = lv.level_hier_id
+        where lh.company_id = #{companyId} and trunc(sysdate) between lv.date_from and lv.date_to
+        and le.level_id = (select lvl.level_id from wos_organization_levels lvl
+                  where upper(lvl.level_code) = upper((select wov.level_code 
+                      from wos_organization_versions wov
+                      where wov.organization_id = #{id}
+                      and trunc(sysdate) between wov.date_from and wov.date_to))
+                  and lvl.company_id = #{companyId}
+                  and trunc(sysdate) between lvl.start_date and lvl.end_date)
+    </select>
+    
+    <select id="findByCode" parameterType="map" resultMap="organizationNameResultMap">
+        select 
+            wo.organization_id,
+            wo.organization_code,
+            wo.organization_name
+         from wos_organizations wo
+         join wos_organization_versions ver on wo.organization_id = ver.organization_id
+          where upper(wo.organization_code) = upper(#{organizationCode})
+          and wo.company_id = #{companyId}
+          and trunc(sysdate) between ver.date_from and ver.date_to
+    </select>
+    
+    <select id="findByCodeEffectiveOrganizationHierarchyDate" parameterType="map" resultMap="organizationNameResultMap">
+        select 
+            wo.organization_id,
+            wo.organization_code,
+            wo.organization_name
+         from wos_organizations wo
+         join wos_organization_versions ver on wo.organization_id = ver.organization_id
+          where upper(wo.organization_code) = upper(#{organizationCode})
+          and wo.company_id = #{companyId}
+          and trunc(#{effectiveDate}) between ver.date_from and ver.date_to
+    </select>
+    
+    <select id="findOrganizationIdByHierarchy" parameterType="map" resultType="Long">
+        select
+          ele.organization_id
+        from wos_org_hier_elements ele
+        where ele.version_id = (select
+              ver.version_id
+            from wos_org_hier_versions ver
+            where ver.org_hier_id = (select org_hier_id 
+                from wos_organization_hier 
+                where company_id = #{companyId}
+                and upper(org_hier_type) = upper('structural'))
+            and trunc(sysdate) between ver.date_from and ver.date_to)
+    </select>
+    
+    <select id="findOrganizationByHierarchy" parameterType="map" resultMap="organizationDtoResultMap">
+        select
+          ele.organization_id,
+          org.organization_code,
+          org.organization_name,
+          loc.location_name
+        from wos_org_hier_elements ele
+        join wos_organizations org on ele.organization_id = org.organization_id
+        join wos_organization_versions ver on ver.organization_id = org.organization_id
+        join wos_locations loc on loc.location_id = ver.location_id
+        where ele.version_id = (select
+                     ver.version_id
+                from wos_org_hier_versions ver
+                where ver.org_hier_id = (select org_hier_id 
+                from wos_organization_hier 
+                where company_id = #{companyId}
+                and upper(org_hier_type) = upper('structural'))
+                and trunc(sysdate) between ver.date_from and ver.date_to)
+    </select>
+    
+    <select id="findOrganizationByBranchAndSecurityFilter" parameterType="map" resultMap="organizationNameResultMap" >
+        select 
+            wo.organization_id,
+            wo.organization_code,
+            wo.organization_name
+          from wos_organizations wo
+          left join BRANCH_HIERARCHY_V h on h.organization_id = wo.organization_id
+          <if test="effectiveOnDate != null">
+            join wos_organization_versions wov on wov.organization_id = wo.organization_id and trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+          </if>
+          <where>
+          	<if test="companyId!= null">
+            	wo.company_id = #{companyId, jdbcType=NUMERIC}
+            </if>
+            <if test="branchId != null">
+                and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                  and 
+                     <foreach item="item" open="(" close=")" separator=" OR "
+                        collection="inOrganizationId">
+                        wo.organization_id = #{item}
+                     </foreach> 
+                 </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+                 </if>
+            </if>
+          </where>
+          ORDER BY UPPER(wo.organization_code) ASC
+      </select>
+      
+      <select id="countOrganizationByBranchAndSecurityFilter" parameterType="map" resultType="Integer" >
+        select 
+            count(1)
+          from wos_organizations wo
+          left join BRANCH_HIERARCHY_V h on h.organization_id = wo.organization_id
+          <if test="effectiveOnDate != null">
+            join wos_organization_versions wov on wov.organization_id = wo.organization_id and trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+          </if>
+          <where>
+            <if test="companyId!= null">
+            	wo.company_id = #{companyId, jdbcType=NUMERIC}
+            </if>
+            <if test="branchId != null">
+              and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="inOrganizationId != null">
+             <if test="inOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    wo.organization_id = #{item}
+                 </foreach>
+             </if>
+            </if>
+            <if test="notInOrganizationId != null">
+              <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+              </if>
+            </if>
+          </where>
+      </select>
+      
+      <select id="findBranchBySecurityFilterAndExample" parameterType="map" resultMap="organizationNameResultMap">
+        select * from (
+        
+            select 
+                wo.ORGANIZATION_ID,
+                wo.ORGANIZATION_CODE,
+                wo.ORGANIZATION_NAME,
+                wo.COMPANY_ID
+              from wos_organizations wo
+              join wos_organization_versions wov on wo.organization_id = wov.organization_id
+              <where>
+                  and upper(wov.level_code) = upper('BO')
+                  <if test="org != null">
+                      <if test="org.companyId != null">
+                         and wo.company_id = #{org.companyId, jdbcType=NUMERIC}
+                      </if>
+                      <if test="org.effectiveOnDate != null">
+                        and #{org.effectiveOnDate, jdbcType=TIMESTAMP} between wov.date_from and wov.date_to
+                      </if>
+                  </if>
+              </where>
+          
+            union
+            
+            select
+                -1 AS ORGANIZATION_ID,
+                'HEADOFFICE' organization_code,
+                'Head Office' organization_name,
+                null as company_id
+            from
+                dual
+          
+        )
+        <where>
+          <if test="org.code != null">
+             and upper(organization_code) like upper(#{org.code, jdbcType=VARCHAR})
+          </if>
+          <if test="org.name != null">
+             and upper(organization_name) like upper(#{org.name, jdbcType=VARCHAR})
+          </if>
+          <if test="inOrganizationId != null">
+            <if test="inOrganizationId.size() != 0">
+             and 
+             <foreach item="item" open="(" close=")" separator=" OR "
+                collection="inOrganizationId">
+                wo.organization_id = #{item}
+             </foreach>
+            </if>
+          </if>
+          <if test="notInOrganizationId != null">
+            <if test="notInOrganizationId.size() != 0">
+             and 
+             <foreach item="item" open="(" close=")" separator=" AND "
+                collection="notInOrganizationId">
+                wo.organization_id &lt;&gt; #{item}
+             </foreach>
+             </if>
+          </if>
+        </where>
+          order by UPPER(ORGANIZATION_CODE) ASC
+    </select>
+    
+    <select id="countBranchBySecurityFilterAndExample" parameterType="map" resultType="Integer">
+        select count(*) from
+        (
+            select 
+            wo.ORGANIZATION_ID,
+                wo.ORGANIZATION_CODE,
+                wo.ORGANIZATION_NAME,
+                wo.COMPANY_ID
+              from wos_organizations wo
+              join wos_organization_versions wov on wo.organization_id = wov.organization_id
+              <where>
+                  and upper(wov.level_code) = upper('BO')
+                  <if test="org != null">
+                      <if test="org.companyId != null">
+                         and wo.company_id = #{org.companyId, jdbcType=NUMERIC}
+                      </if>
+                      <if test="org.effectiveOnDate != null">
+                        and #{org.effectiveOnDate, jdbcType=TIMESTAMP} between wov.date_from and wov.date_to
+                      </if>
+                  </if>
+              </where>
+          
+            union
+            
+            select
+                -1 AS ORGANIZATION_ID,
+                'HEADOFFICE' organization_code,
+                'Head Office' organization_name,
+                null as company_id
+            from
+                dual
+        )
+        <where>
+          <if test="org.code != null">
+             and upper(organization_code) like upper(#{org.code, jdbcType=VARCHAR})
+          </if>
+          <if test="org.name != null">
+             and upper(organization_name) like upper(#{org.name, jdbcType=VARCHAR})
+          </if>
+          <if test="inOrganizationId != null">
+            <if test="inOrganizationId.size() != 0">
+             and 
+             <foreach item="item" open="(" close=")" separator=" OR "
+                collection="inOrganizationId">
+                organization_id = #{item}
+             </foreach>
+            </if>
+          </if>
+          <if test="notInOrganizationId != null">
+            <if test="notInOrganizationId.size() != 0">
+             and 
+             <foreach item="item" open="(" close=")" separator=" AND "
+                collection="notInOrganizationId">
+                organization_id &lt;&gt; #{item}
+             </foreach>
+             </if>
+          </if>
+        </where>
+    </select>
+    
+    <select id="getHeadOfficeGlCodeByCompanyId" parameterType="java.lang.Long" resultType="String">
+        select distinct gl_code from branch_hierarchy_v where branch_id= -1 and company_id = #{companyId}
+    </select>
+    
+    <select id="isFutureExist" parameterType="Long" resultType="Integer">
+        select count(ver.version_id) from wos_organization_versions ver
+            where ver.organization_id = #{id}
+            and ver.date_from &gt; trunc(sysdate)
+    </select>
+    
+    <select id="getOrgGlCodeByOrgId" parameterType="map" resultType="String">
+        SELECT  
+            branch_code
+        FROM wos_organization_versions wov
+        <where>
+            wov.organization_id = #{orgId}
+            <if test="effectiveOnDate != null">
+                AND trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.date_from and wov.date_to 
+            </if>
+        </where>
+    </select>
+    
+    <select id="getOrgGlCodeByBranchId" parameterType="map" resultType="String">
+        SELECT DISTINCT bh.gl_code
+            FROM branch_hierarchy_v bh
+            WHERE bh.company_id    = #{companyId}
+            AND bh.branch_id = #{branchId}
+    </select>
+    
+    <select id="getGlCodes" parameterType="map" resultMap="segmentResult">
+        select flex_value, description from fif_gl_coa_v
+        <where>
+            and segment_num=2
+            <if test="code != null">
+                and flex_value like #{code}
+            </if>
+        </where> 
+        order by flex_value
+    </select>
+    
+    <select id="countGlCodes" parameterType="map" resultType="Integer">
+        select count(*) from fif_gl_coa_v
+        <where>
+            and segment_num=2
+            <if test="code != null">
+                and flex_value like #{code}
+            </if>
+        </where>
+        order by flex_value
+    </select>
+    
+    <select id="getCostCenter" parameterType="map" resultMap="segmentResult">
+        select flex_value, description from fif_gl_coa_v
+        <where>
+            and segment_num=3
+            <if test="code != null">
+                and flex_value like #{code}
+            </if>
+        </where>
+        order by flex_value
+    </select>
+    
+    <select id="countCostCenter" parameterType="map" resultType="Integer">
+        select count(*) from fif_gl_coa_v
+        <where>
+            and segment_num=3
+            <if test="code != null">
+                and flex_value like #{code}
+            </if>
+        </where>
+        order by flex_value
+    </select>
+    
+    <select id="findProviceCodeByExample" parameterType="co.id.fifgroup.workstructure.dto.OrganizationDTO" resultType="String">
+        select 
+            locv.province_code
+        from WOS_ORGANIZATIONS wo
+        join WOS_ORGANIZATION_VERSIONS wov on wo.ORGANIZATION_ID = wov.ORGANIZATION_ID
+        join WOS_LOCATIONS loc on loc.LOCATION_ID = wov.LOCATION_ID
+        join WOS_LOCATION_VERSIONS locv on (locv.location_id = loc.location_id and trunc(#{effectiveOnDate, jdbcType=DATE}) between locv.DATE_FROM and locv.DATE_TO)
+        left join WOS_ORGANIZATION_CONTACTS woc on wov.VERSION_ID = woc.VERSION_ID
+        <where>
+            <if test="companyId!= null">
+                and (wo.COMPANY_ID) =(#{companyId, jdbcType=NUMERIC})
+            </if>
+            <if test="name != null">
+                and upper(wo.ORGANIZATION_NAME) like upper(#{name, jdbcType=VARCHAR})
+            </if>
+            <if test="code != null">
+                and upper(wo.ORGANIZATION_CODE) like upper(#{code, jdbcType=VARCHAR})
+            </if>
+            <if test="levelCode != null">
+                and upper(wov.LEVEL_CODE) like upper(#{levelCode, jdbcType=VARCHAR})
+            </if>
+            <if test="kppCode != null">
+                and upper(wov.KPP_CODE) like upper(#{kppCode, jdbcType=VARCHAR})
+            </if>
+            <if test="dateTo != null">
+                and wov.date_to = TRUNC(#{dateTo, jdbcType=DATE})
+            </if>
+            <if test="location != null">
+                <if test="location.id != null">
+                    and (wov.LOCATION_ID) = #{location.id, jdbcType=NUMERIC}
+                </if>
+            </if>
+            <if test="isHeadOffice != null">
+                or wov.is_head_office = #{isHeadOffice, jdbcType=NUMERIC}
+            </if>
+            <if test="effectiveOnDate != null">
+                and trunc(#{effectiveOnDate, jdbcType=DATE}) between wov.DATE_FROM and wov.DATE_TO
+            </if>
+            <if test="id != null">
+                and wo.organization_id = #{id, jdbcType=DECIMAL}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findBranchByDeptOwner" parameterType="map" resultMap="organizationDtoResultMap">
+        SELECT 
+          BHV.BRANCH_ID AS ORGANIZATION_ID,
+          BHV.BRANCH_CODE AS ORGANIZATION_CODE,
+          BHV.BRANCH_NAME AS ORGANIZATION_NAME
+        FROM 
+            WOS_ORG_HIER_ELEMENTS WOHE
+            JOIN WOS_ORGANIZATIONS WO ON(WO.ORGANIZATION_ID = WOHE.ORGANIZATION_ID)
+            JOIN WOS_ORGANIZATION_VERSIONS WOV ON(WOV.ORGANIZATION_ID = WO.ORGANIZATION_ID AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO)
+            JOIN BRANCH_HIERARCHY_V BHV ON(BHV.ORGANIZATION_ID = WO.ORGANIZATION_ID)
+        <where>
+            <foreach collection="versionId" open="(" close=")" separator=" or " item="item">
+                WOHE.VERSION_ID = #{item, jdbcType=DECIMAL}
+            </foreach>
+            and
+            <foreach collection="organizationId" open="(" close=")" separator=" or " item="item">
+                WOHE.PARENT_ID = #{item, jdbcType=DECIMAL}
+            </foreach>
+            and UPPER(WO.ORGANIZATION_CODE) LIKE UPPER(#{organizationCode, jdbcType=VARCHAR})
+            and UPPER(WO.ORGANIZATION_NAME) LIKE UPPER(#{organizationName, jdbcType=VARCHAR})
+        </where>
+        GROUP BY
+            BHV.BRANCH_ID,
+            BHV.BRANCH_CODE,
+            BHV.BRANCH_NAME
+    </select>
+    
+    <select id="countBranchByDeptOwner" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM (
+            SELECT
+                BHV.BRANCH_ID AS ORGANIZATION_ID,
+                BHV.BRANCH_CODE AS ORGANIZATION_CODE,
+                BHV.BRANCH_NAME AS ORGANIZATION_NAME
+            FROM
+                WOS_ORG_HIER_ELEMENTS WOHE
+                JOIN WOS_ORGANIZATIONS WO ON(WO.ORGANIZATION_ID = WOHE.ORGANIZATION_ID)
+                JOIN WOS_ORGANIZATION_VERSIONS WOV ON(WOV.ORGANIZATION_ID = WO.ORGANIZATION_ID AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO)
+                JOIN BRANCH_HIERARCHY_V BHV ON(BHV.ORGANIZATION_ID = WO.ORGANIZATION_ID)
+            <where>
+                <foreach collection="versionId" open="(" close=")" separator=" or " item="item">
+                    WOHE.VERSION_ID = #{item, jdbcType=DECIMAL}
+                </foreach>
+                and
+                <foreach collection="organizationId" open="(" close=")" separator=" or " item="item">
+                    WOHE.PARENT_ID = #{item, jdbcType=DECIMAL}
+                </foreach>
+                and UPPER(WO.ORGANIZATION_CODE) LIKE UPPER(#{organizationCode, jdbcType=VARCHAR})
+                and UPPER(WO.ORGANIZATION_NAME) LIKE UPPER(#{organizationName, jdbcType=VARCHAR})
+            </where>
+            GROUP BY
+                BHV.BRANCH_ID,
+                BHV.BRANCH_CODE,
+                BHV.BRANCH_NAME
+        )
+    </select>
+    
+    <select id="findBranchesWithKpp" parameterType="map" resultMap="organizationNameResultMap">
+        select * from
+        (select 
+          wo.organization_id,
+          wo.organization_code,
+          wo.organization_name
+        from wos_organization_hier hier
+        join wos_org_hier_versions ohv on ohv.org_hier_id = hier.org_hier_id
+        join wos_org_hier_elements ele on ele.version_id = ohv.version_id
+        join wos_organizations wo on wo.organization_id = ele.organization_id
+        join wos_organization_versions wov on wo.organization_id = wov.organization_id
+        <where>
+         upper(hier.org_hier_type) = upper('STRUCTURAL')
+              and trunc(sysdate) between ohv.date_from and ohv.date_to
+              and upper(wov.level_code) = upper('BO')
+            <if test="companyId != null">
+              and hier.company_id = #{companyId, jdbcType=NUMERIC}
+            </if>   
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    wo.organization_id = #{item}
+                 </foreach>             
+                </if>
+              </if>
+              <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                    and 
+                     <foreach item="item" open="(" close=")" separator=" AND "
+                        collection="notInOrganizationId">
+                        wo.organization_id &lt;&gt; #{item}
+                     </foreach>             
+                </if>
+              </if>
+              <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+              </if>
+              <if test="kppCode != null">
+                and wov.KPP_CODE = #{kppCode, jdbcType=VARCHAR}
+              </if>
+            </where> 
+        union
+        select distinct -1 organization_id,'Head Office' organization_code,'Head Office' organization_name FROM dual
+        join branch_hierarchy_v bhv on(bhv.branch_id = -1)
+        join wos_organizations wo on(wo.organization_id = bhv.organization_id)
+        join wos_organization_versions wov on(wov.organization_id = wo.organization_id and trunc(sysdate) between wov.date_from and wov.date_to)
+            <where>
+                <if test="kppCode != null">
+                  and wov.KPP_CODE = #{kppCode, jdbcType=VARCHAR}
+                </if>
+            </where>
+        )
+          <where>
+            <if test="organizationCode != null">
+              and upper(organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+          </where>
+        order by UPPER(organization_code) ASC
+    </select>
+    
+    <select id="countBranchesWithKpp" parameterType="map" resultType="int">
+    select
+    count(1) from
+    (select
+        wo.organization_id,
+        wo.organization_code,
+        wo.organization_name
+    from wos_organization_hier hier
+    join wos_org_hier_versions ohv on ohv.org_hier_id = hier.org_hier_id
+    join wos_org_hier_elements ele on ele.version_id = ohv.version_id
+    join wos_organizations wo on wo.organization_id = ele.organization_id
+    join wos_organization_versions wov on wo.organization_id =
+    wov.organization_id
+    <where>
+        upper(hier.org_hier_type) = upper('STRUCTURAL')
+        and trunc(sysdate) between ohv.date_from and ohv.date_to
+        and upper(wov.level_code) = upper('BO')
+        <if test="companyId != null">
+            and hier.company_id = #{companyId, jdbcType=NUMERIC}
+        </if>
+        <if test="inOrganizationId != null">
+            <if test="inOrganizationId.size() != 0">
+                and 
+                <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    wo.organization_id = #{item}
+                </foreach>
+            </if>
+        </if>
+        <if test="notInOrganizationId != null">
+            <if test="notInOrganizationId.size() != 0">
+                and 
+                <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                </foreach>
+            </if>
+        </if>
+        <if test="effectiveDate != null">
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+         <if test="kppCode != null">
+            and wov.KPP_CODE = #{kppCode, jdbcType=VARCHAR}
+          </if>
+    </where>
+    union
+    select distinct -1 organization_id,'Head Office' organization_code,'Head Office' organization_name FROM dual
+    join branch_hierarchy_v bhv on(bhv.branch_id = -1)
+    join wos_organizations wo on(wo.organization_id = bhv.organization_id)
+    join wos_organization_versions wov on(wov.organization_id = wo.organization_id and trunc(sysdate) between wov.date_from and wov.date_to)
+        <where>
+            <if test="kppCode != null">
+              and wov.KPP_CODE = #{kppCode, jdbcType=VARCHAR}
+            </if>
+        </where>
+    )
+          <where>
+                      
+            <if test="organizationCode != null">
+              and upper(organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+          </where>
+    </select>
+    
+    <select id="getBranchId" parameterType="map" resultType="Long">
+        select h.branch_id from BRANCH_HIERARCHY_V h
+            where h.organization_id = #{id, jdbcType=NUMERIC}
+            <if test="companyId != null">
+              and h.company_id = #{companyId, jdbcType=NUMERIC}
+            </if>
+    </select>
+    
+    <select id="findBranchesBySecurityFilter" parameterType="map" resultMap="organizationNameResultMap">
+        select * from
+        (select 
+          wo.organization_id,
+          wo.organization_code,
+          wo.organization_name
+        from wos_organization_hier hier
+        join wos_org_hier_versions ohv on ohv.org_hier_id = hier.org_hier_id
+        join wos_org_hier_elements ele on ele.version_id = ohv.version_id
+        join wos_organizations wo on wo.organization_id = ele.organization_id
+        join wos_organization_versions wov on wo.organization_id = wov.organization_id
+        <where>
+         upper(hier.org_hier_type) = upper('STRUCTURAL')
+              and trunc(sysdate) between ohv.date_from and ohv.date_to
+              and upper(wov.level_code) = upper('BO')
+              <if test="companyId != null">
+                and hier.company_id = #{companyId, jdbcType=NUMERIC}
+              </if> 
+              <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+              </if> 
+            </where> 
+        union
+        select -1 organization_id,'Head Office' organization_code,'Head Office' organization_name 
+        FROM dual)
+          <where>
+                      
+            <if test="organizationCode != null">
+              and upper(organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                 and
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                     organization_id = #{item}
+                 </foreach>             
+                </if>
+              </if>
+              <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                    and 
+                     <foreach item="item" open="(" close=")" separator=" AND "
+                        collection="notInOrganizationId">
+                        organization_id &lt;&gt; #{item}
+                     </foreach>             
+                </if>
+              </if>     
+          </where>
+        order by UPPER(organization_code) ASC
+    </select>
+    
+    <select id="countBranchesBySecurityFilter" parameterType="map" resultType="Integer">
+        select count(*) from
+        (select 
+          wo.organization_id,
+          wo.organization_code,
+          wo.organization_name
+        from wos_organization_hier hier
+        join wos_org_hier_versions ohv on ohv.org_hier_id = hier.org_hier_id
+        join wos_org_hier_elements ele on ele.version_id = ohv.version_id
+        join wos_organizations wo on wo.organization_id = ele.organization_id
+        join wos_organization_versions wov on wo.organization_id = wov.organization_id
+        <where>
+         upper(hier.org_hier_type) = upper('STRUCTURAL')
+              and trunc(sysdate) between ohv.date_from and ohv.date_to
+              and upper(wov.level_code) = upper('BO')
+              <if test="companyId != null">
+                and hier.company_id = #{companyId, jdbcType=NUMERIC}
+              </if> 
+              <if test="effectiveDate != null">
+                and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+              </if> 
+            </where> 
+        union
+        select -1 organization_id,'Head Office' organization_code,'Head Office' organization_name 
+        FROM dual)
+          <where>
+                      
+            <if test="organizationCode != null">
+              and upper(organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    organization_id = #{item}
+                 </foreach>             
+                </if>
+              </if>
+              <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                    and 
+                     <foreach item="item" open="(" close=")" separator=" AND "
+                        collection="notInOrganizationId">
+                        organization_id &lt;&gt; #{item}
+                     </foreach>             
+                </if>
+              </if>     
+          </where>
+    </select>
+    <select id="getBranchOwnerByOrganizationId" parameterType="map" resultType="Long">
+        SELECT bh.branch_owner_id
+        FROM
+          (SELECT wo.organization_id,
+            wlv.branch_owner_id
+          FROM wos_organizations wo
+          JOIN wos_organization_versions wov
+          ON wov.organization_id = wo.organization_id
+          AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+          AND wov.is_head_office = 0
+          JOIN wos_location_versions wlv
+          ON wlv.location_id = wov.location_id
+          AND TRUNC(sysdate) BETWEEN wlv.date_from AND wlv.date_to
+          UNION
+          SELECT wo.organization_id,
+            -1 branch_owner_id
+          FROM wos_organizations wo
+          JOIN wos_organization_versions wov
+          ON wov.organization_id = wo.organization_id
+          AND wov.is_head_office = 1
+          AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+          ) bh
+         WHERE
+          bh.organization_id = #{organizationId}
+    </select>
+    
+    <select id="getCostCenterByPersonId" parameterType="map" resultType="String">
+        select wov.cost_center_code from pea_primary_assignments ppa
+            join wos_organization_versions wov on ppa.organization_id = wov.organization_id
+            where trunc(sysdate) between wov.date_from and wov.date_to
+            and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+            and ppa.person_id = #{personId}
+            and ppa.company_id = #{companyId}
+    </select>
+    
+    <select id="getCostCenterByOrganizationId" parameterType="map" resultType="String">
+        select cost_center_code from wos_organization_versions where organization_id = #{organizationId}
+            and trunc(sysdate) between date_from and date_to
+    </select>
+    
+    <select id="findBranchesWithCompanyName" parameterType="map" resultMap="organizationDtoResultMap">
+        select * from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name, wo.company_id, bc.company_name
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          and wl.company_id = #{companyId, jdbcType=NUMERIC}
+        join bse_companies bc on bc.company_id = wo.company_id 
+            and trunc(sysdate) between bc.effective_start_date and bc.effective_end_date
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            null,
+            null
+        from dual
+        ) br
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>   
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    <select id="findOrganizationActive" parameterType="map" resultMap="organizationNameResultMap">
+        select wo.organization_id, wo.organization_code, wo.organization_name
+        from wos_organizations wo 
+        join wos_organization_versions wov on wo.organization_id = wov.organization_id
+        where trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+        and wo.company_id = #{companyId}
+    </select>
+    
+    <select id="findOrganizationAvailableInMpp" parameterType="map" resultMap="organizationNameResultMap" >
+        select 
+            wo.organization_id,
+            wo.organization_code,
+            wo.organization_name
+          from wos_organizations wo
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id and trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+          join (select distinct organization_id from mpp_balances where trunc(#{effectiveOnDate}) between date_from and date_to) mpp on mpp.organization_id = wo.organization_id
+          left join branch_hierarchy_v h on h.organization_id = wo.organization_id
+          <where>
+            wo.company_id = #{companyId, jdbcType=NUMERIC}
+            <if test="branchId != null">
+                and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                  and 
+                     <foreach item="item" open="(" close=")" separator=" OR "
+                        collection="inOrganizationId">
+                        wo.organization_id = #{item}
+                     </foreach> 
+                 </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+                 </if>
+            </if>
+          </where>
+          ORDER BY UPPER(wo.organization_code) ASC
+      </select>
+      
+      <select id="countOrganizationAvailableInMpp" parameterType="map" resultType="Integer" >
+        select 
+            count(1)
+          from wos_organizations wo
+          join wos_organization_versions wov on wo.organization_id = wov.organization_id and trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+          join (select distinct organization_id from mpp_balances where trunc(#{effectiveOnDate}) between date_from and date_to) mpp on mpp.organization_id = wo.organization_id
+          left join branch_hierarchy_v h on h.organization_id = wo.organization_id
+          <where>
+            wo.company_id = #{companyId, jdbcType=NUMERIC}
+            <if test="branchId != null">
+              and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="inOrganizationId != null">
+             <if test="inOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" OR "
+                    collection="inOrganizationId">
+                    wo.organization_id = #{item}
+                 </foreach>
+             </if>
+            </if>
+            <if test="notInOrganizationId != null">
+              <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+              </if>
+            </if>
+          </where>
+      </select>
+    
+    <select id="getDepartmentHead" resultMap="organizationDtoResultMap">
+        select * from
+        (
+            select
+                wov.organization_id,
+                wov.head_of_organization,
+                wo.organization_name
+            from
+                hierarchy_structural hs
+                join wos_organization_versions wov on hs.branch_id = wov.organization_id and trunc(sysdate) between date_from and date_to
+                join wos_organizations wo on wo.organization_id = wov.organization_id
+            where
+                wov.level_code = 'DEPT' and hs.organization_id = #{id, jdbcType=DECIMAL}
+            order by level_org asc
+        )
+        where rownum = 1
+    </select>
+    
+    <select id="findOrganizationIdByCompanyAndHierTypeAndPersonId" parameterType="Map" resultType="Integer">
+        SELECT DISTINCT wohe.organization_id
+        FROM WOS_ORGANIZATION_HIER woh,
+          WOS_ORG_HIER_VERSIONS wohv,
+          WOS_ORG_HIER_ELEMENTS wohe
+        WHERE woh.company_id  = #{companyId}
+        AND woh.org_hier_Type = #{type}
+        AND woh.org_hier_id   = wohv.org_hier_id
+        AND wohe.version_id   = wohv.version_id
+        AND parent_id         =
+          (SELECT organization_id
+          FROM pea_primary_assignments
+          WHERE person_id = #{personId}
+          AND SYSDATE BETWEEN effective_start_date AND effective_end_date
+          )
+    </select>
+    
+
+
+        <select id="findBranchesCompany" parameterType="map" resultMap="organizationNameResultMap">
+        select * from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name, wo.company_id
+
+
+
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          <if test="companyId!=null">
+           and wo.company_id = #{companyId, jdbcType=NUMERIC}
+
+
+
+
+          </if>
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+                       null
+        from dual
+        ) br
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+      <select id="findBranchesCompanyandBranchId" parameterType="map" resultMap="organizationNameResultMap">
+        select * from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name, wo.company_id
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          <if test="companyId!=null">
+           and wo.company_id = #{companyId, jdbcType=NUMERIC}
+          </if>
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        <where>
+        trunc(sysdate) between wlv.date_from and wlv.date_to
+        <if test="organizationId!=null">
+        and wo.organization_id=#{organizationId}
+        </if>
+        </where>
+     
+        ) br
+     <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    <select id="countBranchesCompany" parameterType="map" resultType="int">
+    select count(distinct organization_id) from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          <if test="companyId!=null">
+           and wo.company_id = #{companyId, jdbcType=NUMERIC}
+          </if>
+         <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+
+
+
+
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name
+        from dual
+        ) br
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+    </select>
+    
+     <select id="countBranchesCompanyandBranch" parameterType="map" resultType="int">
+    select count(distinct organization_id) from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          and wo.company_id = #{companyId, jdbcType=NUMERIC}
+         <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+       <where>
+           trunc(sysdate) between wlv.date_from and wlv.date_to
+           <if test="organizationId!=null">
+          and wo.organization_id=#{organizationId}
+           </if> 
+       </where>
+                 
+        ) br
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>       
+        </where>
+    </select>
+
+
+    
+    <select id="findBranchesCompanyDTO" parameterType="map" resultMap="organizationDtoResultMap">
+        select * from (
+        SELECT distinct Wo.Organization_Id,
+  			Wo.Organization_Code,
+  			Wo.Organization_Name,
+  			wo.company_id
+		From Wos_Organizations Wo
+			JOIN wos_organization_versions wov
+				On Wov.Organization_Id=Wo.Organization_Id
+	    where
+         wov.level_code='BO'
+         <if test="companyId!=null">
+           and wo.company_id = #{companyId, jdbcType=NUMERIC}
+          </if>
+        <if test="effectiveDate != null">
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+                       null
+        from dual
+        ) br
+        <where>
+            <if test="code != null">
+              and upper(br.organization_code) like upper(#{code, jdbcType=VARCHAR})
+            </if>
+            <if test="name != null">
+              and upper(br.organization_name) like upper(#{name, jdbcType=VARCHAR})
+            </if>       
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    <select id="countBranchesCompanyDTO" parameterType="map" resultType="int">
+    select count(distinct organization_id) from (
+       Select distinct
+             Wo.Organization_Id,Wo.Organization_Code, Wo.Organization_Name,wo.company_id
+        From Wos_Organizations Wo
+        Join Wos_Organization_Versions  Wos On Wos.Organization_Id=Wo.Organization_Id
+        where wos.level_code='BO'
+         <if test="companyId!=null">
+           and wo.company_id = #{companyId, jdbcType=NUMERIC}
+          </if>
+        <if test="effectiveDate != null">
+            and trunc(#{effectiveDate}) between wos.date_from and wos.date_to
+        </if>
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            null company_id
+        from dual
+        ) br
+        <where>
+        
+            <if test="code != null">
+              and upper(br.organization_code) like upper(#{code, jdbcType=VARCHAR})
+            </if>
+            <if test="name != null">
+              and upper(br.organization_name) like upper(#{name, jdbcType=VARCHAR})
+            </if>       
+        </where>
+    </select>
+    
+    <select id="findBranchesWithAvailableMppByJob" parameterType="map" resultMap="organizationNameResultMap">
+		SELECT DISTINCT
+			TAB.BRANCH_ID ORGANIZATION_ID,
+			TAB.BRANCH_NAME ORGANIZATION_NAME,
+			TAB.BRANCH_CODE ORGANIZATION_CODE
+		FROM (
+			SELECT
+				BHV.BRANCH_NAME,
+				BHV.BRANCH_ID,
+				BHV.BRANCH_CODE,
+				WO.ORGANIZATION_NAME,
+				WO.ORGANIZATION_ID,
+				WO.ORGANIZATION_CODE,
+				WJ.JOB_ID,
+				WJ.JOB_NAME,
+				WJ.JOB_CODE,
+				MB.OPTIMUM_BALANCE -
+				NVL((SELECT SUM(MJT.RESERVED+MJT.EXISTING)
+					FROM MPP_JOURNAL_TRN MJT
+					WHERE
+						MJT.ORGANIZATION_ID = WO.ORGANIZATION_ID
+						AND MJT.JOB_ID = WJ.JOB_ID
+						AND MJT.MPP_TRN_DATE &gt;= MPS.START_DATE
+						AND MJT.MPP_TRN_DATE &lt;= TRUNC( COALESCE (MP.PERIOD_TO, #{effectiveDate}))),0) AS AVAILABLE
+			FROM
+				WOS_JOBS WJ  
+				JOIN WOS_JOB_VERSIONS WJV ON WJV.JOB_ID = WJ.JOB_ID
+				JOIN MPP_BALANCES MB ON MB.JOB_ID = WJ.JOB_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MB.DATE_FROM) AND TRUNC(MB.DATE_TO))
+				JOIN WOS_ORGANIZATIONS WO ON WO.ORGANIZATION_ID = MB.ORGANIZATION_ID
+				LEFT JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = WO.ORGANIZATION_ID
+				LEFT JOIN MPP_PERIOD_SETS MPS ON WO.COMPANY_ID = MPS.COMPANY_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MPS.START_DATE) AND TRUNC(MPS.END_DATE))
+				LEFT JOIN MPP_PERIODS MP ON MPS.PERIOD_SET_ID = MP.PERIOD_SET_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MP.PERIOD_FROM) AND TRUNC(MP.PERIOD_TO))
+			<where>
+				MB.JOB_FOR_CODE = 'NPK'
+				AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO))
+				<if test="companyId != null">
+					AND WO.COMPANY_ID = #{companyId}
+				</if>
+				<if test="jobId != null">
+					AND WJ.JOB_ID = #{jobId}
+				</if>
+				<if test="branchCode != null">
+					and upper(BHV.BRANCH_CODE) like upper(#{branchCode, jdbcType=VARCHAR})
+				</if>
+				<if test="branchName != null">
+					and upper(BHV.BRANCH_NAME) like upper(#{branchName, jdbcType=VARCHAR})
+				</if>
+				<if test="inOrganizationId != null">
+                	<if test="inOrganizationId.size() != 0">
+	                    and 
+	                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+	                        BHV.BRANCH_ID = #{item}
+	                    </foreach>              
+	                </if>
+	            </if>
+	            <if test="notInOrganizationId != null">
+	                <if test="notInOrganizationId .size() != 0">
+	                    and 
+	                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+	                        BHV.BRANCH_ID &lt;&gt; #{item}
+	                    </foreach>              
+	                </if>
+	            </if>
+			</where>
+			) TAB
+		WHERE
+		    TAB.AVAILABLE &gt; 0
+        ORDER BY UPPER(TAB.BRANCH_CODE) ASC
+    </select>
+    
+    <select id="countBranchesWithAvailableMppByJob" parameterType="map" resultType="Integer">
+    	SELECT COUNT(*) FROM (
+			SELECT DISTINCT
+				TAB.BRANCH_ID ORGANIZATION_ID,
+				TAB.BRANCH_NAME ORGANIZATION_NAME,
+				TAB.BRANCH_CODE ORGANIZATION_CODE
+			FROM (
+				SELECT
+					BHV.BRANCH_NAME,
+					BHV.BRANCH_ID,
+					BHV.BRANCH_CODE,
+					WO.ORGANIZATION_NAME,
+					WO.ORGANIZATION_ID,
+					WO.ORGANIZATION_CODE,
+					WJ.JOB_ID,
+					WJ.JOB_NAME,
+					WJ.JOB_CODE,
+					MB.OPTIMUM_BALANCE -
+					NVL((SELECT SUM(MJT.RESERVED+MJT.EXISTING)
+						FROM MPP_JOURNAL_TRN MJT
+						WHERE
+							MJT.ORGANIZATION_ID = WO.ORGANIZATION_ID
+							AND MJT.JOB_ID = WJ.JOB_ID
+							AND MJT.MPP_TRN_DATE &gt;= MPS.START_DATE
+							AND MJT.MPP_TRN_DATE &lt;= TRUNC( COALESCE (MP.PERIOD_TO, #{effectiveDate}))),0) AS AVAILABLE
+				FROM
+					WOS_JOBS WJ  
+					JOIN WOS_JOB_VERSIONS WJV ON WJV.JOB_ID = WJ.JOB_ID
+					JOIN MPP_BALANCES MB ON MB.JOB_ID = WJ.JOB_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MB.DATE_FROM) AND TRUNC(MB.DATE_TO))
+					JOIN WOS_ORGANIZATIONS WO ON WO.ORGANIZATION_ID = MB.ORGANIZATION_ID
+					LEFT JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = WO.ORGANIZATION_ID
+					LEFT JOIN MPP_PERIOD_SETS MPS ON WO.COMPANY_ID = MPS.COMPANY_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MPS.START_DATE) AND TRUNC(MPS.END_DATE))
+					LEFT JOIN MPP_PERIODS MP ON MPS.PERIOD_SET_ID = MP.PERIOD_SET_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MP.PERIOD_FROM) AND TRUNC(MP.PERIOD_TO))
+				<where>
+					MB.JOB_FOR_CODE = 'NPK'
+					AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO))
+					<if test="companyId != null">
+						AND WO.COMPANY_ID = #{companyId}
+					</if>
+					<if test="jobId != null">
+						AND WJ.JOB_ID = #{jobId}
+					</if>
+					<if test="branchCode != null">
+						and upper(BHV.BRANCH_CODE) like upper(#{branchCode, jdbcType=VARCHAR})
+					</if>
+					<if test="branchName != null">
+						and upper(BHV.BRANCH_NAME) like upper(#{branchName, jdbcType=VARCHAR})
+					</if>
+					<if test="inOrganizationId != null">
+	                	<if test="inOrganizationId.size() != 0">
+		                    and 
+		                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+		                        BHV.BRANCH_ID = #{item}
+		                    </foreach>              
+		                </if>
+		            </if>
+		            <if test="notInOrganizationId != null">
+		                <if test="notInOrganizationId .size() != 0">
+		                    and 
+		                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+		                        BHV.BRANCH_ID &lt;&gt; #{item}
+		                    </foreach>              
+		                </if>
+		            </if>
+				</where>
+				) TAB
+			WHERE
+			    TAB.AVAILABLE &gt; 0 )
+    </select>
+    
+    <select id="findOrganizationsWithAvailableMppByJobAndBranch" parameterType="map" resultMap="organizationNameResultMap">
+		SELECT DISTINCT
+			TAB.ORGANIZATION_ID ORGANIZATION_ID,
+			TAB.ORGANIZATION_NAME ORGANIZATION_NAME,
+			TAB.ORGANIZATION_CODE ORGANIZATION_CODE
+		FROM (
+			SELECT
+				BHV.BRANCH_NAME,
+				BHV.BRANCH_ID,
+				BHV.BRANCH_CODE,
+				WO.ORGANIZATION_NAME,
+				WO.ORGANIZATION_ID,
+				WO.ORGANIZATION_CODE,
+				WJ.JOB_ID,
+				WJ.JOB_NAME,
+				WJ.JOB_CODE,
+				MB.OPTIMUM_BALANCE -
+				NVL((SELECT SUM(MJT.RESERVED+MJT.EXISTING)
+					FROM MPP_JOURNAL_TRN MJT
+					WHERE
+						MJT.ORGANIZATION_ID = WO.ORGANIZATION_ID
+						AND MJT.JOB_ID = WJ.JOB_ID
+						AND MJT.MPP_TRN_DATE &gt;= MPS.START_DATE
+						AND MJT.MPP_TRN_DATE &lt;= TRUNC( COALESCE (MP.PERIOD_TO, #{effectiveDate}))),0) AS AVAILABLE
+			FROM
+				WOS_JOBS WJ  
+				JOIN WOS_JOB_VERSIONS WJV ON WJV.JOB_ID = WJ.JOB_ID
+				JOIN MPP_BALANCES MB ON MB.JOB_ID = WJ.JOB_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MB.DATE_FROM) AND TRUNC(MB.DATE_TO))
+				JOIN WOS_ORGANIZATIONS WO ON WO.ORGANIZATION_ID = MB.ORGANIZATION_ID
+				LEFT JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = WO.ORGANIZATION_ID
+				LEFT JOIN MPP_PERIOD_SETS MPS ON WO.COMPANY_ID = MPS.COMPANY_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MPS.START_DATE) AND TRUNC(MPS.END_DATE))
+				LEFT JOIN MPP_PERIODS MP ON MPS.PERIOD_SET_ID = MP.PERIOD_SET_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MP.PERIOD_FROM) AND TRUNC(MP.PERIOD_TO))
+			<where>
+				MB.JOB_FOR_CODE = 'NPK'
+				AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO))
+				<if test="companyId != null">
+					AND WO.COMPANY_ID = #{companyId}
+				</if>
+				<if test="jobId != null">
+					AND WJ.JOB_ID = #{jobId}
+				</if>
+				<if test="branchId != null">
+					AND BHV.BRANCH_ID = #{branchId}
+				</if>
+				<if test="organizationCode != null">
+					and upper(WO.ORGANIZATION_CODE) like upper(#{organizationCode, jdbcType=VARCHAR})
+				</if>
+				<if test="organizationName != null">
+					and upper(WO.ORGANIZATION_NAME) like upper(#{organizationName, jdbcType=VARCHAR})
+				</if>
+				<if test="inOrganizationId != null">
+                	<if test="inOrganizationId.size() != 0">
+	                    and 
+	                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+	                        WO.ORGANIZATION_ID = #{item}
+	                    </foreach>              
+	                </if>
+	            </if>
+	            <if test="notInOrganizationId != null">
+	                <if test="notInOrganizationId .size() != 0">
+	                    and 
+	                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+	                        WO.ORGANIZATION_ID &lt;&gt; #{item}
+	                    </foreach>              
+	                </if>
+	            </if>
+			</where>
+			) TAB
+		WHERE
+		    TAB.AVAILABLE &gt; 0
+        ORDER BY UPPER(TAB.ORGANIZATION_CODE) ASC
+    </select>
+    
+    <select id="countOrganizationsWithAvailableMppByJobAndBranch" parameterType="map" resultType="Integer">
+    	SELECT COUNT(*) FROM (
+			SELECT DISTINCT
+				TAB.ORGANIZATION_ID ORGANIZATION_ID,
+				TAB.ORGANIZATION_NAME ORGANIZATION_NAME,
+				TAB.ORGANIZATION_CODE ORGANIZATION_CODE
+			FROM (
+				SELECT
+					BHV.BRANCH_NAME,
+					BHV.BRANCH_ID,
+					BHV.BRANCH_CODE,
+					WO.ORGANIZATION_NAME,
+					WO.ORGANIZATION_ID,
+					WO.ORGANIZATION_CODE,
+					WJ.JOB_ID,
+					WJ.JOB_NAME,
+					WJ.JOB_CODE,
+					MB.OPTIMUM_BALANCE -
+					NVL((SELECT SUM(MJT.RESERVED+MJT.EXISTING)
+						FROM MPP_JOURNAL_TRN MJT
+						WHERE
+							MJT.ORGANIZATION_ID = WO.ORGANIZATION_ID
+							AND MJT.JOB_ID = WJ.JOB_ID
+							AND MJT.MPP_TRN_DATE &gt;= MPS.START_DATE
+							AND MJT.MPP_TRN_DATE &lt;= TRUNC( COALESCE (MP.PERIOD_TO, #{effectiveDate}))),0) AS AVAILABLE
+				FROM
+					WOS_JOBS WJ  
+					JOIN WOS_JOB_VERSIONS WJV ON WJV.JOB_ID = WJ.JOB_ID
+					JOIN MPP_BALANCES MB ON MB.JOB_ID = WJ.JOB_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MB.DATE_FROM) AND TRUNC(MB.DATE_TO))
+					JOIN WOS_ORGANIZATIONS WO ON WO.ORGANIZATION_ID = MB.ORGANIZATION_ID
+					LEFT JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = WO.ORGANIZATION_ID
+					LEFT JOIN MPP_PERIOD_SETS MPS ON WO.COMPANY_ID = MPS.COMPANY_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MPS.START_DATE) AND TRUNC(MPS.END_DATE))
+					LEFT JOIN MPP_PERIODS MP ON MPS.PERIOD_SET_ID = MP.PERIOD_SET_ID AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(MP.PERIOD_FROM) AND TRUNC(MP.PERIOD_TO))
+				<where>
+					MB.JOB_FOR_CODE = 'NPK'
+					AND (TRUNC(#{effectiveDate}) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO))
+					<if test="companyId != null">
+						AND WO.COMPANY_ID = #{companyId}
+					</if>
+					<if test="jobId != null">
+						AND WJ.JOB_ID = #{jobId}
+					</if>
+					<if test="branchId != null">
+						AND BHV.BRANCH_ID = #{branchId}
+					</if>
+					<if test="organizationCode != null">
+						and upper(WO.ORGANIZATION_CODE) like upper(#{organizationCode, jdbcType=VARCHAR})
+					</if>
+					<if test="organizationName != null">
+						and upper(WO.ORGANIZATION_NAME) like upper(#{organizationName, jdbcType=VARCHAR})
+					</if>
+					<if test="inOrganizationId != null">
+	                	<if test="inOrganizationId.size() != 0">
+		                    and 
+		                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+		                        WO.ORGANIZATION_ID = #{item}
+		                    </foreach>              
+		                </if>
+		            </if>
+		            <if test="notInOrganizationId != null">
+		                <if test="notInOrganizationId .size() != 0">
+		                    and 
+		                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+		                        WO.ORGANIZATION_ID &lt;&gt; #{item}
+		                    </foreach>              
+		                </if>
+		            </if>
+				</where>
+				) TAB
+			WHERE
+			    TAB.AVAILABLE &gt; 0)
+    </select>
+    
+    <!-- start added by WLY for phase 2 -->
+    <select id="findBranchesByCompanyNameAndBranchName" parameterType="map" resultMap="organizationDtoResultMap">
+        select * from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name, wl.company_id, bc.company_name
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          <if test="companyIdInLocation != null">
+          	and wl.company_id = #{companyIdInLocation, jdbcType=NUMERIC}
+          </if>
+        join bse_companies bc on bc.company_id = wl.company_id 
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            company_id,
+            company_name
+        from bse_companies 
+        <where>
+        	<if test="companyIdInLocation != null">
+         		and company_id = #{companyIdInLocation, jdbcType=NUMERIC}
+         	</if>
+        </where>
+        ) br
+        <if test="areaId != null">
+        JOIN (SELECT DISTINCT ELM.ORGANIZATION_ID
+			FROM WOS_ORG_HIER_ELEMENTS ELM
+			    JOIN WOS_ORG_HIER_VERSIONS VER
+			        ON ELM.VERSION_ID = VER.VERSION_ID
+			            AND TRUNC(SYSDATE) BETWEEN TRUNC(VER.DATE_FROM) AND TRUNC(VER.DATE_TO)
+			    JOIN WOS_ORGANIZATION_HIER HIER
+			        ON HIER.ORG_HIER_ID = VER.ORG_HIER_ID
+			            AND UPPER (HIER.ORG_HIER_NAME) = UPPER ('AREA_INS_DEPT_OWNER')
+			START WITH ELM.ORGANIZATION_ID = #{areaId}
+			CONNECT BY NOCYCLE PRIOR ELM.ORGANIZATION_ID = ELM.PARENT_ID) HIE ON HIE.ORGANIZATION_ID = BR.ORGANIZATION_ID
+        </if>
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="companyName != null">
+              and upper(br.company_name) like upper(#{companyName, jdbcType=VARCHAR})
+            </if>  
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    <select id="countBranchesByCompanyNameAndBranchName" parameterType="map" resultType="Integer">
+        select count(*) from (
+        select 
+            distinct wo.organization_id,wo.organization_code, wo.organization_name, wl.company_id, bc.company_name
+        from wos_location_versions wlv
+        join wos_locations wl
+          on wl.location_id = wlv.location_id
+        join wos_organizations wo
+          on wo.organization_id = wlv.branch_owner_id
+          <if test="companyIdInLocation != null">
+          	and wl.company_id = #{companyIdInLocation, jdbcType=NUMERIC}
+          </if>
+        join bse_companies bc on bc.company_id = wl.company_id
+        <if test="effectiveDate != null">
+            join wos_organization_versions wov 
+            on wov.organization_id = wlv.branch_owner_id
+            and trunc(#{effectiveDate}) between wov.date_from and wov.date_to
+        </if>
+        where
+          trunc(sysdate) between wlv.date_from and wlv.date_to
+        union
+        select 
+            -1 organization_id,
+            'HEADOFFICE' organization_code,
+            'Head Office' organization_name,
+            company_id,
+            company_name
+        from bse_companies 
+        <where>
+        	<if test="companyIdInLocation != null">
+         		and company_id = #{companyIdInLocation, jdbcType=NUMERIC}
+         	</if>
+        </where>
+        ) br
+        <if test="areaId != null">
+        JOIN (SELECT DISTINCT ELM.ORGANIZATION_ID
+			FROM WOS_ORG_HIER_ELEMENTS ELM
+			    JOIN WOS_ORG_HIER_VERSIONS VER
+			        ON ELM.VERSION_ID = VER.VERSION_ID
+			            AND TRUNC(SYSDATE) BETWEEN TRUNC(VER.DATE_FROM) AND TRUNC(VER.DATE_TO)
+			    JOIN WOS_ORGANIZATION_HIER HIER
+			        ON HIER.ORG_HIER_ID = VER.ORG_HIER_ID
+			            AND UPPER (HIER.ORG_HIER_NAME) = UPPER ('AREA_INS_DEPT_OWNER')
+			START WITH ELM.ORGANIZATION_ID = #{areaId}
+			CONNECT BY NOCYCLE PRIOR ELM.ORGANIZATION_ID = ELM.PARENT_ID) HIE ON HIE.ORGANIZATION_ID = BR.ORGANIZATION_ID
+        </if>
+        <where>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" OR " collection="inOrganizationId">
+                        br.organization_id = #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId .size() != 0">
+                    and 
+                    <foreach item="item" open="(" close=")" separator=" AND " collection="notInOrganizationId ">
+                        br.organization_id &lt;&gt; #{item}
+                    </foreach>              
+                </if>
+            </if>
+            <if test="organizationCode != null">
+              and upper(br.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationName != null">
+              and upper(br.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="companyName != null">
+              and upper(br.company_name) like upper(#{companyName, jdbcType=VARCHAR})
+            </if>  
+        </where>
+        order by UPPER(br.organization_code) ASC
+    </select>
+    
+    <select id="getOrganizationByBranchAndCompanyNameAndSecurityFilter" parameterType="map" resultMap="organizationDtoResultMap" >
+        select 
+            wo.organization_id,
+            wo.organization_code,
+            wo.organization_name,
+            bc.company_name
+          from wos_organizations wo
+          left join BRANCH_HIERARCHY_V h on h.organization_id = wo.organization_id
+          join bse_companies bc on bc.company_id = wo.company_id
+          <if test="effectiveOnDate != null">
+            join wos_organization_versions wov on wov.organization_id = wo.organization_id and trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+          </if>
+          <where>
+          	<if test="companyId!= null">
+            	wo.company_id = #{companyId, jdbcType=NUMERIC}
+            </if>
+            <if test="branchId != null">
+                and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="companyName != null">
+                and upper(bc.company_name) like upper(#{companyName, jdbcType=VARCHAR})
+            </if>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                  and 
+                     <foreach item="item" open="(" close=")" separator=" OR "
+                        collection="inOrganizationId">
+                        wo.organization_id = #{item}
+                     </foreach> 
+                 </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+                 </if>
+            </if>
+          </where>
+          ORDER BY UPPER(wo.organization_code) ASC
+      </select>
+      
+      <select id="countOrganizationByBranchAndCompanyNameAndSecurityFilter" parameterType="map" resultType="Integer" >
+        select 
+            count (*)
+          from wos_organizations wo
+          left join BRANCH_HIERARCHY_V h on h.organization_id = wo.organization_id
+          join bse_companies bc on bc.company_id = wo.company_id
+          <if test="effectiveOnDate != null">
+            join wos_organization_versions wov on wov.organization_id = wo.organization_id and trunc(#{effectiveOnDate}) between wov.date_from and wov.date_to
+          </if>
+          <where>
+          	<if test="companyId!= null">
+            	wo.company_id = #{companyId, jdbcType=NUMERIC}
+            </if>
+            <if test="branchId != null">
+                and h.branch_id = #{branchId, jdbcType=NUMERIC}
+            </if>
+            <if test="organizationName != null">
+                and upper(wo.organization_name) like upper(#{organizationName, jdbcType=VARCHAR})
+            </if>
+            <if test="organizationCode != null">
+                and upper(wo.organization_code) like upper(#{organizationCode, jdbcType=VARCHAR})
+            </if>
+            <if test="companyName != null">
+                and upper(bc.company_name) like upper(#{companyName, jdbcType=VARCHAR})
+            </if>
+            <if test="inOrganizationId != null">
+                <if test="inOrganizationId.size() != 0">
+                  and 
+                     <foreach item="item" open="(" close=")" separator=" OR "
+                        collection="inOrganizationId">
+                        wo.organization_id = #{item}
+                     </foreach> 
+                 </if>
+            </if>
+            <if test="notInOrganizationId != null">
+                <if test="notInOrganizationId.size() != 0">
+                 and 
+                 <foreach item="item" open="(" close=")" separator=" AND "
+                    collection="notInOrganizationId">
+                    wo.organization_id &lt;&gt; #{item}
+                 </foreach>
+                 </if>
+            </if>
+          </where>
+      </select>
+      <!-- end added by WLY for phase 2 -->
+</mapper>

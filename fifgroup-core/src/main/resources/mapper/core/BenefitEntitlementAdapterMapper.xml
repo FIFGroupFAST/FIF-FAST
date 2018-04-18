@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.dao.BenefitEntitlementAdapterMapper">
+	
+	<resultMap id="baseResultMap" type="co.id.fifgroup.core.dto.BenefitEntitlementDTO">
+	    <id column="ENTITLEMENT_ID" property="entitlementId" jdbcType="DECIMAL" />
+	    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+	    <result column="BENEFIT_TYPE_ID" property="benefitTypeId" jdbcType="DECIMAL" />
+	    <result column="PERSON_ID" property="personId" jdbcType="DECIMAL" />
+	    <result column="CONTACT_ID" property="contactId" jdbcType="DECIMAL" />
+	    <result column="BENEFICIARY" property="beneficiary" jdbcType="VARCHAR" />
+	    <result column="START_ACTIVE_DATE" property="startActiveDate" jdbcType="TIMESTAMP" />
+	    <result column="END_ACTIVE_DATE" property="endActiveDate" jdbcType="TIMESTAMP" />
+	    <result column="ENTITLEMENT_SOURCE_ID" property="entitlementSourceId" jdbcType="DECIMAL" />
+	    <result column="PLAFOND" property="plafond" jdbcType="DECIMAL" />
+	    <result column="ADJUSTED_PLAFOND" property="adjustedPlafond" jdbcType="DECIMAL" />
+	    <result column="ADJUSTMENT_REASON" property="adjustmentReason" jdbcType="VARCHAR" />
+	    <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+	    <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+	    <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="BENEFIT_TYPE" jdbcType="VARCHAR" property="benefitType" />
+	    <result column="PREPAYMENT" jdbcType="DECIMAL" property="prepayment" />
+	    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+	  </resultMap>
+	  
+	<select id="getEntitlement" parameterType="map" resultMap="baseResultMap">
+		select
+			be.ENTITLEMENT_ID, 
+			be.COMPANY_ID, 
+			be.BENEFIT_TYPE_ID, 
+			be.PERSON_ID, 
+			be.CONTACT_ID, 
+			be.BENEFICIARY, 
+    		be.START_ACTIVE_DATE, 
+    		be.END_ACTIVE_DATE, 
+    		be.ENTITLEMENT_SOURCE_ID, 
+    		be.PLAFOND, 
+    		be.ADJUSTED_PLAFOND,
+    		be.ADJUSTMENT_REASON, 
+    		be.CREATED_BY, 
+    		be.CREATION_DATE, 
+    		be.LAST_UPDATED_BY, 
+    		be.LAST_UPDATE_DATE, 
+    		bbt.BENEFIT_TYPE,
+    		bbt.DESCRIPTION, 
+    		bbtv.PREPAYMENT
+	    from BEN_ENTITLEMENTS be
+	    join BEN_BENEFIT_TYPES bbt on bbt.BENEFIT_TYPE_ID = be.BENEFIT_TYPE_ID
+	    join BEN_BENEFIT_TYPE_VERSION bbtv on bbtv.BENEFIT_TYPE_ID = bbt.BENEFIT_TYPE_ID
+	    	and trunc(sysdate) between bbtv.DATE_FROM and bbtv.DATE_TO
+   		where
+   			be.PERSON_ID = #{personId}
+   			and be.COMPANY_ID = #{companyId}
+   			and bbtv.PREPAYMENT = #{prepayment}
+   			and trunc(sysdate) between be.START_ACTIVE_DATE and be.END_ACTIVE_DATE
+   		ORDER BY be.START_ACTIVE_DATE desc, be.END_ACTIVE_DATE desc 
+	</select>
+	
+	<update id="updateEntitlement" parameterType="co.id.fifgroup.core.dto.BenefitEntitlementDTO">
+	    update BEN_ENTITLEMENTS
+	    set 
+	      ADJUSTED_PLAFOND = #{adjustedPlafond,jdbcType=DECIMAL},
+	      ADJUSTMENT_REASON = #{adjustmentReason,jdbcType=VARCHAR},
+	      LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=DECIMAL},
+	      LAST_UPDATE_DATE = #{lastUpdateDate,jdbcType=TIMESTAMP}
+	    where ENTITLEMENT_ID = #{entitlementId,jdbcType=DECIMAL}
+  </update>
+	
+	<insert id="insertEntitlementSource" parameterType="co.id.fifgroup.core.dto.BenefitEntitlementSourceDTO">
+	    <selectKey resultType="java.lang.Long" keyProperty="entitlementSourceId" order="BEFORE" >
+	      select BEN_ENTITLEMENT_SOURCES_S.nextVal from dual
+	    </selectKey>
+	    insert into BEN_ENTITLEMENT_SOURCES (ENTITLEMENT_SOURCE_ID, SOURCE, REASON, 
+	      PERSON_ID, ASSIGNMENT_ID, EFFECTIVE_START_DATE, PROCESSED_FLAG, 
+	      CREATED_BY, CREATION_DATE, LAST_UPDATED_BY, LAST_UPDATE_DATE, COMPANY_ID
+	      )
+	    values (#{entitlementSourceId,jdbcType=DECIMAL}, #{source,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, 
+	      #{personId,jdbcType=DECIMAL}, #{assignmentId,jdbcType=DECIMAL}, #{effectiveStartDate,jdbcType=TIMESTAMP}, #{processedFlag,jdbcType=DECIMAL}, 
+	      #{createdBy,jdbcType=DECIMAL}, #{creationDate,jdbcType=TIMESTAMP}, #{lastUpdatedBy,jdbcType=DECIMAL},
+	      #{lastUpdateDate,jdbcType=TIMESTAMP}, #{companyId,jdbcType=DECIMAL}
+	      )
+  </insert>
+  
+  <delete id="deleteEntitlementSource" parameterType="map">
+  	delete from BEN_ENTITLEMENT_SOURCES
+    where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE = #{effectiveStartDate}
+    and COMPANY_ID = #{companyId}
+  </delete>
+  
+  <resultMap type="co.id.fifgroup.core.dto.BenefitEntitlementSourceDTO" id="sourceResultMap">
+  	<id column="ENTITLEMENT_SOURCE_ID" jdbcType="DECIMAL" property="entitlementSourceId"/>
+  	<result column="SOURCE" jdbcType="VARCHAR" property="source"/>
+  	<result column="REASON" jdbcType="VARCHAR" property="reason"/>
+  	<result column="PERSON_ID" jdbcType="DECIMAL" property="personId"/>
+  	<result column="ASSIGNMENT_ID" jdbcType="DECIMAL" property="assignmentId"/>
+  	<result column="EFFECTIVE_START_DATE" jdbcType="TIMESTAMP" property="effectiveStartDate"/>
+  	<result column="PROCESSED_FLAG" jdbcType="DECIMAL" javaType="boolean" property="processedFlag"/>
+  	<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy"/>
+  	<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate"/>
+  	<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy"/>
+  	<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate"/>
+  	<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId"/>
+  </resultMap>
+  
+  <select id="getEntitlementSource" parameterType="map" resultMap="sourceResultMap">
+  	select * from BEN_ENTITLEMENT_SOURCES
+  	where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE = #{effectiveStartDate}
+    and COMPANY_ID = #{companyId}
+    <if test="reason != null">
+	    and UPPER(REASON) = #{reason}    
+    </if>
+  </select>
+  
+  <update id="updateEntitlementSource" parameterType="co.id.fifgroup.core.dto.BenefitEntitlementSourceDTO">
+  	update BEN_ENTITLEMENT_SOURCES
+  	set SOURCE = #{source,jdbcType=VARCHAR},
+  	ASSIGNMENT_ID = #{assignmentId,jdbcType=DECIMAL},
+  	PROCESSED_FLAG = #{processedFlag,jdbcType=DECIMAL},
+  	LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=DECIMAL},
+  	LAST_UPDATE_DATE = #{lastUpdateDate,jdbcType=TIMESTAMP},
+  	REASON = #{reason}
+  	where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE = #{effectiveStartDate}
+    and COMPANY_ID = #{companyId}
+  </update>
+  
+  <update id="updateBenefitRequestStatusByClaimNumber" parameterType="map">
+  	UPDATE
+  		BEN_REQUEST_TRN
+  	SET
+  		TRANSACTION_STATUS = #{newStatus, jdbcType=VARCHAR},
+  		LAST_UPDATED_BY = #{userId, jdbcType=DECIMAL},
+  		LAST_UDPATE_DATE = #{processDate, jdbcType=TIMESTAMP}
+  	WHERE
+  		CLAIM_NUMBER = #{claimNumber, jdbcType=VARCAHR}
+  </update>
+  
+   <update id="updateBenefitSettlementStatusByClaimNumber" parameterType="map">
+  	UPDATE
+  		BEN_SETTLEMENT_TRN
+  	SET
+  		TRANSACTION_STATUS = #{newStatus, jdbcType=VARCHAR},
+  		LAST_UPDATED_BY = #{userId, jdbcType=DECIMAL},
+  		LAST_UDPATE_DATE = #{processDate, jdbcType=TIMESTAMP}
+  	WHERE
+  		CLAIM_NUMBER = #{claimNumber, jdbcType=VARCAHR}
+  </update>
+  
+  <update id="updateProcessFlagPrevious" parameterType="map">
+  	UPDATE
+  		BEN_ENTITLEMENT_SOURCES
+  	SET
+  		PROCESSED_FLAG = 1
+  	where PERSON_ID = #{personId}
+    and EFFECTIVE_START_DATE &lt; #{effectiveOnDate}
+    and COMPANY_ID = #{companyId}
+    and PROCESSED_FLAG = 0
+  </update>
+  
+</mapper>

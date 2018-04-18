@@ -1,0 +1,28 @@
+<window id="winLeaveEntitlement" border="none"
+	apply="co.id.fifgroup.personneladmin.controller.LeaveEntitlementComposer">
+	<groupbox closable="false">
+		<caption label="${labels.pea.leaveEntitlementList }" />
+		<listbox id="lbxLeaveEntitlement" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry" checkmark="false">
+			<listhead>
+				<listheader label="${labels.pea.leaveType }" width="150px"/>
+				<listheader label="${labels.pea.description }" width="150px"/>
+				<listheader label="${labels.pea.startActiveDate }" width="150px"/>
+				<listheader label="${labels.pea.endActiveDate }" width="150px"/>
+				<listheader label="${labels.pea.entitlement }" width="150px"/>
+				<listheader label="${labels.pea.adjustmentEntitlement }" width="200px"/>
+				<listheader label="${labels.pea.remark }" width="150px"/>
+				<listheader label="${labels.pea.used }" width="150px"/>
+				<listheader label="${labels.pea.balance }" width="150px"/>
+			</listhead>
+		</listbox>
+	</groupbox>
+	<hbox pack="center" align="center">			
+		<cell align="center" style="width:1250px;">
+			<hbox id="hboxSave">
+				<button id="btnSave"
+					label="${labels.common.save}" mold="trendy"
+					image="${labels.image.link.save}" />
+			</hbox>			
+		</cell>
+	</hbox>
+</window>

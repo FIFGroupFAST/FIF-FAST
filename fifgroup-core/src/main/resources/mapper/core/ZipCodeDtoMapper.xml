@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.dao.ZipCodeDtoMapper">
+
+	<resultMap type="co.id.fifgroup.core.dto.ZipCodeDto" id="BaseResultMapZipCodeDto">
+		<association property="kecamatan" javaType="co.id.fifgroup.core.domain.Kecamatan">
+			<result column="KEC_CODE" property="kecamatanCode" jdbcType="VARCHAR" />
+    		<result column="KECAMATAN" property="kecamatan" jdbcType="VARCHAR" />
+		</association>
+		<association property="kelurahan" javaType="co.id.fifgroup.core.domain.Kelurahan">
+			<result column="KEL_CODE" property="kelurahanCode" jdbcType="VARCHAR" />
+    		<result column="KELURAHAN" property="kelurahan" jdbcType="VARCHAR" />
+		</association>
+		<association property="zipCode" javaType="co.id.fifgroup.core.domain.ZipCode">
+			<result column="ZIP_CODE" jdbcType="VARCHAR" property="zipCode" />
+		    <result column="SUB_ZIP_CODE" jdbcType="VARCHAR" property="subZipCode" />
+		    <result column="ZIP_DESC" jdbcType="VARCHAR" property="zipDesc" />
+		</association>
+	</resultMap>
+
+	<select id="getZipCodeByKecamatanAndKelurahanAndZipCode" parameterType="map" resultMap="BaseResultMapZipCodeDto">
+		SELECT
+			FMKT.KEC_CODE,
+			FMKT.KECAMATAN,
+			FMKR.KEL_CODE,
+			FMKR.KELURAHAN,
+			FMZP.ZIP_CODE,
+			FMZP.SUB_ZIP_CODE,
+			FMZP.ZIP_DESC
+		FROM
+			FS_MST_KECAMATAN FMKT
+			JOIN
+			FS_MST_KELURAHAN FMKR
+			ON (FMKR.KEC_CODE = FMKT.KEC_CODE)
+			JOIN
+			FS_MST_ZIP FMZP
+			ON (FMZP.KEL_CODE = FMKR.KEL_CODE AND FMZP.KEC_CODE = FMKT.KEC_CODE)
+		<where>
+			<if test="kecamatan != null">
+				UPPER(FMKT.KECAMATAN) LIKE UPPER(#{kecamatan, jdbcType=VARCHAR})
+			</if>
+			<if test="kelurahan != null">
+				AND UPPER(FMKR.KELURAHAN) LIKE UPPER(#{kelurahan, jdbcType=VARCHAR})
+			</if>
+			<if test="zipCode != null">
+				<if test="zipCode != ''">
+					AND UPPER(FMZP.ZIP_CODE) LIKE UPPER(#{zipCode, jdbcType=VARCHAR})
+				</if>
+			</if>
+			<if test="provinceCode != null">
+				AND FMZP.PROV_CODE = #{provinceCode, jdbcType=VARCHAR}
+			</if>
+			<if test="cityCode != null">
+				AND FMZP.CITY_CODE = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			<if test="kecamatanCode != null">
+				AND FMZP.KEC_CODE = #{kecamatanCode, jdbcType=VARCHAR}
+			</if>
+			<if test="kelurahanCode != null">
+				AND FMZP.KEL_CODE = #{kelurahanCode, jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY FMZP.ZIP_CODE ASC
+	</select>
+
+	<select id="getZipCodeByKecamatanAndKelurahanAndZipCodeWithRowbounds" parameterType="map" resultMap="BaseResultMapZipCodeDto">
+		SELECT
+			FMKT.KEC_CODE,
+			FMKT.KECAMATAN,
+			FMKR.KEL_CODE,
+			FMKR.KELURAHAN,
+			FMZP.ZIP_CODE,
+			FMZP.SUB_ZIP_CODE,
+			FMZP.ZIP_DESC
+		FROM
+			FS_MST_KECAMATAN FMKT
+			JOIN
+			FS_MST_KELURAHAN FMKR
+			ON (FMKR.KEC_CODE = FMKT.KEC_CODE)
+			JOIN
+			FS_MST_ZIP FMZP
+			ON (FMZP.KEL_CODE = FMKR.KEL_CODE AND FMZP.KEC_CODE = FMKT.KEC_CODE)
+		<where>
+			<if test="kecamatan != null">
+				UPPER(FMKT.KECAMATAN) LIKE UPPER(#{kecamatan, jdbcType=VARCHAR})
+			</if>
+			<if test="kelurahan != null">
+				AND UPPER(FMKR.KELURAHAN) LIKE UPPER(#{kelurahan, jdbcType=VARCHAR})
+			</if>
+			<if test="zipCode != null">
+				<if test="zipCode != ''">
+					AND UPPER(FMZP.ZIP_CODE) LIKE UPPER(#{zipCode, jdbcType=VARCHAR})
+				</if>
+			</if>
+			<if test="provinceCode != null">
+				AND FMZP.PROV_CODE = #{provinceCode, jdbcType=VARCHAR}
+			</if>
+			<if test="cityCode != null">
+				AND FMZP.CITY_CODE = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			<if test="kecamatanCode != null">
+				AND FMZP.KEC_CODE = #{kecamatanCode, jdbcType=VARCHAR}
+			</if>
+			<if test="kelurahanCode != null">
+				AND FMZP.KEL_CODE = #{kelurahanCode, jdbcType=VARCHAR}
+			</if>
+		</where>
+		ORDER BY FMZP.ZIP_CODE ASC
+	</select>
+
+	<select id="getCountZipCodeByKecamatanAndKelurahanAndZipCode" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			FS_MST_KECAMATAN FMKT
+			JOIN
+			FS_MST_KELURAHAN FMKR
+			ON (FMKR.KEC_CODE = FMKT.KEC_CODE)
+			JOIN
+			FS_MST_ZIP FMZP
+			ON (FMZP.KEL_CODE = FMKR.KEL_CODE AND FMZP.KEC_CODE = FMKT.KEC_CODE)
+		<where>
+			<if test="kecamatan != null">
+				UPPER(FMKT.KECAMATAN) LIKE UPPER(#{kecamatan, jdbcType=VARCHAR})
+			</if>
+			<if test="kelurahan != null">
+				AND UPPER(FMKR.KELURAHAN) LIKE UPPER(#{kelurahan, jdbcType=VARCHAR})
+			</if>
+			<if test="zipCode != null">
+				<if test="zipCode != ''">
+					AND UPPER(FMZP.ZIP_CODE) LIKE UPPER(#{zipCode, jdbcType=VARCHAR})
+				</if>
+			</if>
+			<if test="provinceCode != null">
+				AND FMZP.PROV_CODE = #{provinceCode, jdbcType=VARCHAR}
+			</if>
+			<if test="cityCode != null">
+				AND FMZP.CITY_CODE = #{cityCode, jdbcType=VARCHAR}
+			</if>
+			<if test="kecamatanCode != null">
+				AND FMZP.KEC_CODE = #{kecamatanCode, jdbcType=VARCHAR}
+			</if>
+			<if test="kelurahanCode != null">
+				AND FMZP.KEL_CODE = #{kelurahanCode, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+</mapper>

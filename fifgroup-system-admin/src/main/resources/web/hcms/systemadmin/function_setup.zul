@@ -1,0 +1,73 @@
+<?component name="searchtextbox" class="co.id.fifgroup.core.ui.Searchtextbox" ?>
+<window id="winFunctionSetup" 
+	apply="co.id.fifgroup.systemadmin.controller.FunctionSetupComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.sam.functionSetup}" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<hbox>
+						<label value="${labels.sam.module}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<listbox id="lstModule" mold="select" width="250px">
+						<template name="model">
+							<listitem value="${each}" label="${each.moduleName}"></listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.name}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtName" maxlength="50" width="250px"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.common.description}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtDesc" width="250px" maxlength="100"/>
+				</row>
+				<row>
+					<hbox>
+						<label value="${labels.sam.formLink}" />
+						<label value="${labels.common.required}" style="color:red" />
+					</hbox>
+					<textbox id="txtFormLink" value="~" width="250px" maxlength="255" />
+				</row>
+				<row>
+					<hbox>					
+						<label value="${labels.sam.userManual}" />
+					</hbox>
+					<vbox >
+					<hbox>
+						<textbox id="txtUserManual"  maxlength="255" readonly="true" width="250px"/>
+						<button id="btnBrowse" label="${labels.upload.browse}" mold="trendy" upload="true, maxsize=-1" />
+					</hbox>
+					<hbox>
+						<label id="lblfileName"></label><a id="linkDelete" label="x" style="color:blue" visible="false" />
+					</hbox>
+					</vbox>					
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<hbox pack="center" align="center">
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}"
+					mold="trendy" image="${labels.image.link.save}" />
+			</cell>
+			<cell align="right">
+				<button id="btnCancel"
+					label="${labels.common.cancel}" mold="trendy"
+					image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>
+</window>

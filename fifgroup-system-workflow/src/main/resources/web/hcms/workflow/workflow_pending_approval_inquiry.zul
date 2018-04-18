@@ -1,0 +1,69 @@
+<window id="winWorkflowPendingApprovalInquiry" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowPendingApprovalInquiryComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.pendingApproval}">
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.company}" />
+							<listbox id="cmbCompany" />
+						</row>
+						<row>
+							<label value="${labels.swf.approverJob}" />
+							<bandbox id="bnbJob" readonly="true" width="400px" use="co.id.fifgroup.systemworkflow.util.PopupJobRoleBandbox" title="${labels.swf.listOfEmployee}" searchText="${labels.swf.npkEmployee}" headerLabel="${labels.swf.employeeName}"></bandbox>
+						</row>
+						<row>
+							<label value="${labels.swf.approverName}" />
+							<bandbox id="bnbApproverName" readonly="true" width="400px" use="co.id.fifgroup.core.ui.lookup.CommonPopupDoubleBandbox" title="${labels.pea.employee}" searchText1="${labels.pea.employeeNumber}" searchText2="${labels.pea.employeeName}" headerLabel1="${labels.pea.employeeNumber}" headerLabel2="${labels.pea.employeeName}"></bandbox>
+						</row>
+						<row>
+							<label value="${labels.swf.transactionType}" />
+							<listbox id="cmbTrxType" /> 
+						</row>
+						<row>
+							<label value="${labels.swf.submittedDate}" />
+							<hbox>
+								<datebox id="dtbStartDate" width="100px" />
+								<label value="${labels.common.to}" />
+								<datebox id="dtbEndDate" width="100px" />
+							</hbox>							 
+						</row>
+						<row>
+							<label />
+							<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+								image="${labels.image.link.search}"/>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxPendingApproval" checkmark="true" multiple="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader width="60px" align="left" />
+						<listheader label="${labels.swf.company}" align="center" sort="auto(companyId)" width="150px"/>
+						<listheader label="${labels.swf.subject}" align="center" sort="auto(subject)" width="200px"/>
+						<listheader label="${labels.swf.transactionType}" align="center" sort="auto(trxType)" width="150px"/>
+						<listheader label="${labels.swf.submittedTime}" align="center" sort="auto(actionTime)" width="150px"/>
+						<listheader label="${labels.swf.pendingApprover}" align="center" width="150px"/>
+						<listheader label="${labels.swf.daysWithoutProgress}" align="center" width="150px"/>
+						<listheader label="${labels.swf.lastApprover}" align="center" width="150px"/>
+						<listheader label="${labels.swf.lastApproverRemarks}" align="center" width="150px"/>
+					</listhead>
+				</listbox>
+				<exporter referenceId="lbxPendingApproval" />
+				<separator />
+				<button label="${labels.swf.reassign}" id="btnReassign" mold="trendy" />
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

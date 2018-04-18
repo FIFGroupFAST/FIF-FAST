@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Entitlement Leave Karyawan" language="groovy" pageWidth="1350" pageHeight="595" orientation="Landscape" columnWidth="1310" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8020ac7a-d7a8-4603-a443-d159a7160b17">
+	<property name="ireport.zoom" value="2.8531167061100073"/>
+	<property name="ireport.x" value="2481"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="AS_OF_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LEAVE_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BRANCH_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AUTHORIZED_ORGANIZATIONS" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STATIC_PARAM_EMPLOYEE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT bc.company_name,
+  bh.branch_name,
+  wo.organization_name,
+  wj.job_name,
+  ppi.employee_number,
+  ppi.full_name,
+  llt.leave_type,
+  lltv.valid_for,
+  lltv.valid_from,
+  le.start_active_date,
+  le.end_active_date,
+  le.entitlement,
+  nvl(pea_report_employee_pkg.get_leave_trn_approved(ppi.person_id, ppi.company_id, le.leave_type_id, le.start_active_date, le.end_active_date), 0) used,
+  nvl(pea_report_employee_pkg.get_leave_balance(ppi.person_id, ppi.company_id, le.leave_type_id, TRUNC(TO_DATE($P{AS_OF_DATE}, 'DD-MON-YYYY'))), 0) balance
+FROM pea_personal_informations ppi
+JOIN pea_primary_assignments ppa
+ON ppa.person_id   = ppi.person_id
+AND ppa.company_id = ppi.company_id
+JOIN bse_companies bc
+ON bc.company_id = ppi.company_id
+JOIN branch_hierarchy_v bh
+ON bh.organization_id = ppa.organization_id
+JOIN wos_organizations wo
+ON wo.organization_id = ppa.organization_id
+JOIN wos_jobs wj
+ON wj.job_id = ppa.job_id
+JOIN lea_leave_entitlements le
+ON le.person_id = ppi.person_id
+AND le.company_id = ppi.company_id
+JOIN lea_leave_types llt
+ON llt.leave_type_id = le.leave_type_id
+JOIN lea_leave_type_versions lltv
+ON lltv.leave_type_id = llt.leave_type_id
+WHERE bh.org_hier_id     =
+  (SELECT org_hier_id
+  FROM EWS.wos_organization_hier
+  WHERE company_id         = ppi.company_id
+  AND upper(org_hier_type) = upper('STRUCTURAL')
+  )
+AND TRUNC(TO_DATE($P{AS_OF_DATE}, 'DD-MON-YYYY')) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+AND TRUNC(TO_DATE($P{AS_OF_DATE}, 'DD-MON-YYYY')) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+AND TRUNC(TO_DATE($P{AS_OF_DATE}, 'DD-MON-YYYY')) BETWEEN bc.effective_start_date AND bc.effective_end_date
+AND TRUNC(TO_DATE($P{AS_OF_DATE}, 'DD-MON-YYYY')) BETWEEN le.start_active_date AND le.end_active_date
+AND TRUNC(TO_DATE($P{AS_OF_DATE}, 'DD-MON-YYYY')) BETWEEN lltv.date_from AND lltv.date_to
+AND (le.leave_type_id = $P{LEAVE_TYPE} OR $P{LEAVE_TYPE} is null)
+AND (bh.branch_id = $P{BRANCH_ID} OR $P{BRANCH_ID} is null)
+AND (ppi.employee_number = $P{STATIC_PARAM_EMPLOYEE} OR $P{STATIC_PARAM_EMPLOYEE} is null)
+AND (ppi.company_id = $P{COMPANY_ID} OR $P{COMPANY_ID} is null)
+AND $X{IN, ppa.organization_id, AUTHORIZED_ORGANIZATIONS}
+ORDER BY bh.branch_name ASC, ppi.full_name ASC, le.start_active_date ASC]]>
+	</queryString>
+	<field name="COMPANY_NAME" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="ORGANIZATION_NAME" class="java.lang.String"/>
+	<field name="JOB_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_NUMBER" class="java.lang.String"/>
+	<field name="FULL_NAME" class="java.lang.String"/>
+	<field name="LEAVE_TYPE" class="java.lang.String"/>
+	<field name="VALID_FOR" class="java.lang.String"/>
+	<field name="VALID_FROM" class="java.lang.String"/>
+	<field name="START_ACTIVE_DATE" class="java.sql.Timestamp"/>
+	<field name="END_ACTIVE_DATE" class="java.sql.Timestamp"/>
+	<field name="ENTITLEMENT" class="java.math.BigDecimal"/>
+	<field name="USED" class="java.math.BigDecimal"/>
+	<field name="BALANCE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="3c38cfc9-4e8c-4942-8360-e277e80b6a8c" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Company]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="742b8b7a-b0b3-4447-8664-292fc5bbd25f" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3898b752-f24b-4a07-aca8-a0e6a153c496" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Organization]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="42cafd20-3fab-41bb-b555-b45c198e0c1d" x="300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Job]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="589457a5-172e-4682-a504-9f9b4125670d" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Employee Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="07e43821-ae57-4401-a198-fb862d669310" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Leave Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6d92fd3c-f538-47be-a87f-783725d13110" x="600" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Valid For]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d17738a4-d5e5-49e6-9bd6-2962d0ccb182" x="700" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Valid From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8f517765-0ce1-4d2c-bf0b-a72479d114ab" x="800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Start Active Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b86d28e-96aa-4fe5-9cb1-fcabe6d0e08b" x="900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[End Active Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5c2f5021-695e-40f2-a8ca-75d7e6caf9e8" x="1000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Entitlement]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="93e3e253-19db-44fe-8c2f-03bd356df433" x="1100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Used]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dbf2abe4-fe85-49e9-8474-9a188c75d095" x="1200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4ceada84-0ee6-4661-ba9f-0d32bb525deb" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f83bfcaf-4857-4a43-8dd4-407e96ab45d0" stretchType="RelativeToTallestObject" x="100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="b708c34b-1323-4196-bcce-b50d301ffdca" stretchType="RelativeToTallestObject" x="200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ORGANIZATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="239ca84a-c596-4a2d-81d3-d4ff81e7a66f" stretchType="RelativeToTallestObject" x="300" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{JOB_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f782462b-4dd2-4afd-9a57-f7f3c85904f8" stretchType="RelativeToTallestObject" x="400" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NUMBER} + " - " + $F{FULL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4b64f65f-dbac-417e-9dff-b455d83724f1" stretchType="RelativeToTallestObject" x="500" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{LEAVE_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="8d37b4d7-8123-4d01-a448-d410b2688744" stretchType="RelativeToTallestObject" x="600" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{VALID_FOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f7b5c200-d705-4d00-b578-776d80ea9b72" stretchType="RelativeToTallestObject" x="700" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{VALID_FROM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="4c1fbed0-b03a-4945-ac9e-7180077171ef" stretchType="RelativeToTallestObject" x="800" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{START_ACTIVE_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="0d1c28ab-be58-4241-927d-26732854da1a" stretchType="RelativeToTallestObject" x="900" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{END_ACTIVE_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="30e7ba4c-7a2d-4ed7-bd7d-e1e5f91bd86d" stretchType="RelativeToTallestObject" x="1000" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ENTITLEMENT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="80124f43-51fe-48b0-a53c-38218a679639" stretchType="RelativeToTallestObject" x="1100" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{USED}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c291f109-907a-42a5-8de0-90649e0cb38a" stretchType="RelativeToTallestObject" x="1200" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{BALANCE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

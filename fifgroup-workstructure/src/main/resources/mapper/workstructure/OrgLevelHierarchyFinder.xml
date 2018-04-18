@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.workstructure.finder.OrgLevelHierFinder">
+	<resultMap type="co.id.fifgroup.workstructure.dto.OrgLevelHierDTO" id="orgLevelHierDtoResult">
+		<result column="LEVEL_HIER_ID" jdbcType="NUMERIC" property="id" />
+	    <result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+	    <result column="LEVEL_HIER_NAME" jdbcType="VARCHAR" property="levelHierName" />
+	    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+	    <result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+	    <result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+	    <result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+	    <result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />	
+		<result column="VERSION_ID" jdbcType="NUMERIC" property="versionId" />
+	    <result column="VERSION_NUMBER" jdbcType="DECIMAL" property="versionNumber" />
+	    <result column="DATE_FROM" jdbcType="TIMESTAMP" property="dateFrom" />
+	    <result column="DATE_TO" jdbcType="TIMESTAMP" property="dateTo" />
+	  	<collection property="hierElements" ofType="co.id.fifgroup.workstructure.dto.OrgLevelHierElementDTO">
+	  		<result column="ELEMENT_ID" jdbcType="NUMERIC" property="elementId" />
+	  		<result column="VERSION_ID" jdbcType="NUMERIC" property="versionId" />
+	  		<result column="LEVEL_HIER_ID" jdbcType="NUMERIC" property="id" />
+	  		<result column="SEQUENCE" jdbcType="NUMERIC" property="sequence" />
+	  		<result column="LEVEL_ID" jdbcType="NUMERIC" property="levelId" />
+	  		<result column="LEVEL_NAME" jdbcType="VARCHAR" property="levelName" />
+	    </collection>
+	</resultMap>
+	
+	<select id="find" parameterType="Long" resultMap="orgLevelHierDtoResult">
+		select 
+			lh.level_hier_id,
+			lh.level_hier_name,
+			lh.description,
+			lh.last_updated_by,
+			lh.last_update_date,
+			lhv.version_number,
+			lhv.date_from,
+			lhv.date_to,
+			lhe.sequence,
+			lhe.level_id,
+			lvl.level_name
+		from WOS_ORG_LEVEL_HIER lh
+		join WOS_ORG_LEVEL_HIER_VERSIONS lhv on lh.LEVEL_HIER_ID = lhv.LEVEL_HIER_ID
+		left join WOS_ORG_LEVEL_HIER_ELEMENTS lhe on lhv.VERSION_ID = lhe.VERSION_ID
+		join wos_organization_levels lvl on lvl.level_id = lhe.level_id
+		where
+			lh.COMPANY_ID = #{companyId, jdbcType=NUMERIC}
+			and trunc(sysdate) between lhv.date_from and lhv.date_to
+	</select>
+	
+	<select id="findByIdAndVersionNumber" parameterType="map" resultMap="orgLevelHierDtoResult">
+		select
+			lh.company_id,
+			lh.level_hier_id,
+			lh.level_hier_name,
+			lh.description,
+			lh.created_by,
+			lh.creation_date,
+			lhv.last_updated_by,
+			lhv.last_update_date,
+			lhv.version_id,
+			lhv.version_number,
+			lhv.date_from,
+			lhv.date_to,
+			lhe.sequence,
+			lhe.level_id
+		from WOS_ORG_LEVEL_HIER lh
+		join WOS_ORG_LEVEL_HIER_VERSIONS lhv on lh.LEVEL_HIER_ID = lhv.LEVEL_HIER_ID
+		left join WOS_ORG_LEVEL_HIER_ELEMENTS lhe on lhv.VERSION_ID = lhe.VERSION_ID
+		where
+			lhv.VERSION_NUMBER = #{versionNumber, jdbcType=NUMERIC}
+			and lh.LEVEL_HIER_ID = #{id, jdbcType=NUMERIC}
+	</select>
+
+	 <select id="findVersionsById" parameterType="Long" resultType="Integer">
+		select
+			lhv.VERSION_NUMBER
+		from WOS_ORG_LEVEL_HIER lh
+		left join WOS_ORG_LEVEL_HIER_VERSIONS lhv on lh.LEVEL_HIER_ID = lhv.LEVEL_HIER_ID
+		where
+			lh.LEVEL_HIER_ID = #{id, jdbcType=NUMERIC}
+		order by lhv.VERSION_NUMBER
+	</select>
+	
+	<select id="isHaveFuture" parameterType="Long"	resultType="int">
+		SELECT
+			COUNT(WOV.VERSION_NUMBER)
+		FROM WOS_ORG_LEVEL_HIER_VERSIONS WOV 
+		JOIN WOS_ORG_LEVEL_HIER WO ON(WOV.LEVEL_HIER_ID = WO.LEVEL_HIER_ID)
+		<where>
+			<if test="id != null">
+				WOV.LEVEL_HIER_ID = #{id, jdbcType=DECIMAL}
+				and wov.version_number > 
+					(SELECT WOV.VERSION_NUMBER
+					FROM
+					WOS_ORG_LEVEL_HIER_VERSIONS WOV
+					JOIN WOS_ORG_LEVEL_HIER WO ON(WOV.LEVEL_HIER_ID = WO.LEVEL_HIER_ID)
+					<where>
+					WO.LEVEL_HIER_ID = #{id, jdbcType=DECIMAL}
+					AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO)
+					</where>
+			</if>
+		</where>
+	</select>
+	
+	<select id="isFutureExist" parameterType="Long" resultType="Integer">
+		select count(ver.version_id) from wos_org_level_hier_versions ver
+			where ver.level_hier_id = #{id}
+			and ver.date_from > trunc(sysdate)
+	</select>
+</mapper>

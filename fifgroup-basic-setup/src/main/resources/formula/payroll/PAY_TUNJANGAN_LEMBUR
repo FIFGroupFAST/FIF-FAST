@@ -1,0 +1,301 @@
+import groovy.transform.CompileStatic
+
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
+import org.joda.time.DateTime
+
+import co.id.fifgroup.basicsetup.service.ServiceModel
+import co.id.fifgroup.core.util.DateUtil
+import co.id.fifgroup.payroll.constant.PaymentCycleType
+import co.id.fifgroup.payroll.dto.PayrollProcessParameterDTO
+
+@CompileStatic
+class TunjanganLembur {
+
+	Long personId;
+	Date processDate;
+	Long companyId;
+	Double basicSalary;
+	ServiceModel serviceModel;
+	String processDateStr;
+	Map<String, Object> additionalParam;
+	boolean isRapel = false;
+	DateFormat dfDate = new SimpleDateFormat("dd-MMM-yyyy");
+	
+	public Double getTunjanganLembur() {
+		if(additionalParam.containsKey("isRapel") && (additionalParam.get("isRapel") instanceof Boolean && (Boolean) additionalParam.get("isRapel"))) {
+			isRapel = true;
+		}
+
+		processDateStr = dfDate.format(processDate);
+		
+		Double tunjanganLembur = Double.valueOf("0");
+		
+		Long presentDays = Long.valueOf("0");
+		
+		String sqlPresentDays = "";
+		
+		if(isRapel) {
+			DateTime dtProcessDate = new DateTime(processDate);
+			dtProcessDate = dtProcessDate.minusMonths(1);
+			String processDateRapel = DateUtil.format(dtProcessDate.toDate());
+
+			sqlPresentDays = """
+								SELECT
+									NVL(SUM(TOTAL_WORKING_DAYS), 0) AS TOTAL_WORKING_DAYS
+								FROM
+									TMS_FINALIZE_RESULTS
+								WHERE
+									TO_CHAR(TO_DATE('${processDateRapel}', 'DD-MON-YYYY'), 'MMYYYY') = TO_CHAR(PERIOD_START, 'MMYYYY')
+									AND TO_CHAR(TO_DATE('${processDateRapel}', 'DD-MON-YYYY'), 'MMYYYY') = TO_CHAR(PERIOD_END, 'MMYYYY')
+									AND PERSON_ID = ${personId}
+							""";
+							
+			List<Map<String, Object>> resultPresentDays = this.serviceModel.getFromQuery(sqlPresentDays);
+		
+			if(!resultPresentDays.isEmpty()) {
+				Map<String, Object> dataPresentDays = resultPresentDays.get(0);
+				if(dataPresentDays.get("TOTAL_WORKING_DAYS") != null) {
+					presentDays = Long.valueOf(dataPresentDays.get("TOTAL_WORKING_DAYS").toString());
+				}
+			}
+		
+			Double tunjanganMakan = Double.valueOf(presentDays.toString()).doubleValue() * getEpmdAmount("GA001").doubleValue();
+			Double tunjanganTransport = Double.valueOf(presentDays.toString()).doubleValue() * getEpmdAmount("GA003").doubleValue();
+		
+			DateFormat df = new SimpleDateFormat("MMyyyy");
+			String bulanProcess = df.format(processDate);
+		
+			String sqlIsOvertime = "";
+			sqlIsOvertime = """
+								SELECT
+									NVL(SUM(OVERTIME_POINT), 0) AS NUM_OVERTIME
+								FROM
+									TMS_FINALIZE_RESULTS
+								WHERE
+									TRUNC(TO_DATE('${processDateStr}', 'DD-MON-YYYY')) > TRUNC(PERIOD_END) AND
+									PERSON_ID = ${personId}
+							""";
+
+			List<Map<String, Object>> resultOvertime = this.serviceModel.getFromQuery(sqlIsOvertime);
+		
+			if(!resultOvertime.isEmpty()) {
+				Map<String, Object> dataOvertime = resultOvertime.get(0);
+				Integer numOvertime = Integer.valueOf(dataOvertime.get("NUM_OVERTIME").toString());
+				tunjanganLembur = Double.valueOf(Math.round(Double.valueOf(numOvertime.toString()).doubleValue() / Double.valueOf("173.0").doubleValue
+() * (Double.valueOf("0.75").doubleValue() * (basicSalary.doubleValue() + tunjanganMakan.doubleValue() + tunjanganTransport.doubleValue()))).toString());
+			}
+
+		} else {
+			String paymentCycleCode = null;
+			Integer processMonth = null;
+			if(additionalParam.containsKey("paymentCycleCode")) {
+				paymentCycleCode = (String) additionalParam.get("paymentCycleCode");
+			}
+			
+			if(additionalParam.containsKey("processMonth")) {
+				processMonth = (Integer) additionalParam.get("processMonth");
+			}
+			String paycodeName = null;
+			if(additionalParam.containsKey("paycode")) {
+				paycodeName = (String)additionalParam.get('paycode');
+			}
+			
+			String sqlTunjanganLembur = """
+										SELECT
+										  COMPONENT_TUNJANGAN_LEMBUR.PERSON_ID,
+										  COMPONENT_TUNJANGAN_LEMBUR.PERIOD_END,
+										  COMPONENT_TUNJANGAN_LEMBUR.OVERTIME_POINT,
+										  TO_NUMBER(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(COMPONENT_TUNJANGAN_LEMBUR.AMOUNT, 0)), 0)) AS BASIC_SALARY,
+										  COMPONENT_TUNJANGAN_LEMBUR.TOTAL_WORKING_DAYS,
+										  PEPD.RECCUR_EVERY,
+										  PEPD.DATE_FROM,
+										  PEPD.DATE_TO,
+										  PEPD.LOCKED,
+										  TO_NUMBER(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(PEPD.AMOUNT, 0)), 0)) AS AMOUNT_TUNJANGAN_LEMBUR,
+										  SUM(COMPONENT_TUNJANGAN_LEMBUR.AMOUNT_TUNJANGAN_MAKAN) AS TUNJANGAN_MAKAN,
+										  SUM(COMPONENT_TUNJANGAN_LEMBUR.AMOUNT_TUNJANGAN_TRANSPORT) AS TUNJANGAN_TRANSPORT
+										FROM
+										  (
+										    SELECT
+										      TFR.PERSON_ID,
+										      TFR.PERIOD_END,
+										      TFR.OVERTIME_POINT,
+										      TFR.COMPANY_ID,
+										      PS.AMOUNT,
+										      TFR_1.TOTAL_WORKING_DAYS,
+										      TO_NUMBER(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(PEPD.AMOUNT, 0)), 0)) AS AMOUNT_TUNJANGAN_MAKAN,
+										      TO_NUMBER(0) AS AMOUNT_TUNJANGAN_TRANSPORT
+										    FROM
+										      (
+										        SELECT
+										          NVL(SUM(TFR.OVERTIME_POINT), 0) AS OVERTIME_POINT,
+										          TRUNC((TRUNC(ADD_MONTHS(TFR.PERIOD_END, 1), 'MON') - 1)) AS PERIOD_END,
+										          PPA.COMPANY_ID,
+										          TFR.PERSON_ID
+										        FROM
+										          TMS_FINALIZE_RESULTS TFR
+										          JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON(PPA.PERSON_ID = TFR.PERSON_ID AND TRUNC (TFR.PERIOD_START) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE)
+										        WHERE
+										          PPA.COMPANY_ID = ${companyId}
+										          AND TFR.PERSON_ID = ${personId}
+										          AND TO_DATE('${processDateStr}', 'DD-MON-YYYY') > TFR.PERIOD_END
+										          AND TFR.IS_PROCESSED_TO_PAYROLL = 0
+										        GROUP BY TRUNC((TRUNC(ADD_MONTHS(PERIOD_END, 1), 'MON') - 1)), PPA.COMPANY_ID, TFR.PERSON_ID
+										      ) TFR
+										      JOIN PAY_EMP_PAYROLL_HDR PEPH ON(PEPH.PERSON_ID   = TFR.PERSON_ID AND PEPH.COMPANY_ID = TFR.COMPANY_ID)
+										      JOIN PAY_PAYCODES PP ON(PP.COMPANY_ID = TFR.COMPANY_ID AND TFR.PERIOD_END BETWEEN PP.DATE_FROM AND PP.DATE_TO AND PP.PAYCODE = 'GA001')
+										      JOIN PAY_SALARIES PS ON(PS.COMPANY_ID = TFR.COMPANY_ID AND PS.PERSON_ID = TFR.PERSON_ID AND TFR.PERIOD_END BETWEEN PS.EFFECTIVE_START_DATE AND PS.EFFECTIVE_END_DATE)
+										      JOIN TMS_FINALIZE_RESULTS TFR_1 ON(TFR_1.PERSON_ID = TFR.PERSON_ID AND TFR.PERIOD_END BETWEEN TFR_1.PERIOD_START AND TFR_1.PERIOD_END)
+										      LEFT JOIN PAY_EMP_PAYROLL_DTL PEPD ON(PEPD.PAYCODE_ID  = PP.PAYCODE_ID AND PEPD.EMP_PAYROLL_HDR_ID = PEPH.EMP_PAYROLL_HDR_ID AND TFR.PERIOD_END BETWEEN PEPD.DATE_FROM AND PEPD.DATE_TO)
+
+										    UNION ALL
+										    
+										    SELECT
+										      TFR.PERSON_ID,
+										      TFR.PERIOD_END,
+										      TFR.OVERTIME_POINT,
+										      TFR.COMPANY_ID,
+										      PS.AMOUNT,
+										      TFR_1.TOTAL_WORKING_DAYS,
+										      TO_NUMBER(0) AS AMOUNT_TUNJANGAN_MAKAN,
+										      TO_NUMBER(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(PEPD.AMOUNT, 0)), 0)) AS AMOUNT_TUNJANGAN_TRANSPORT
+										    FROM
+										      (
+										        SELECT
+										          NVL(SUM(TFR.OVERTIME_POINT), 0) AS OVERTIME_POINT,
+										          TRUNC((TRUNC(ADD_MONTHS(TFR.PERIOD_END, 1), 'MON') - 1)) AS PERIOD_END,
+										          PPA.COMPANY_ID,
+										          TFR.PERSON_ID
+										        FROM
+										          TMS_FINALIZE_RESULTS TFR
+										          JOIN PEA_PRIMARY_ASSIGNMENTS PPA ON(PPA.PERSON_ID = TFR.PERSON_ID AND TRUNC (TFR.PERIOD_START) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE)
+										        WHERE
+										          PPA.COMPANY_ID = ${companyId}
+										          AND TFR.PERSON_ID = ${personId}
+										          AND TO_DATE('${processDateStr}', 'DD-MON-YYYY') > TFR.PERIOD_END
+										          AND TFR.IS_PROCESSED_TO_PAYROLL = 0
+										        GROUP BY TRUNC((TRUNC(ADD_MONTHS(PERIOD_END, 1), 'MON') - 1)), PPA.COMPANY_ID, TFR.PERSON_ID
+										      ) TFR
+										      JOIN PAY_EMP_PAYROLL_HDR PEPH ON(PEPH.PERSON_ID   = TFR.PERSON_ID AND PEPH.COMPANY_ID = TFR.COMPANY_ID)
+										      JOIN PAY_PAYCODES PP ON(PP.COMPANY_ID = TFR.COMPANY_ID AND TFR.PERIOD_END BETWEEN PP.DATE_FROM AND PP.DATE_TO AND PP.PAYCODE = 'GA003')
+										      JOIN PAY_SALARIES PS ON(PS.COMPANY_ID = TFR.COMPANY_ID AND PS.PERSON_ID = TFR.PERSON_ID AND TFR.PERIOD_END BETWEEN PS.EFFECTIVE_START_DATE AND PS.EFFECTIVE_END_DATE)
+										      JOIN TMS_FINALIZE_RESULTS TFR_1 ON(TFR_1.PERSON_ID = TFR.PERSON_ID AND TFR.PERIOD_END BETWEEN TFR_1.PERIOD_START AND TFR_1.PERIOD_END)
+										      LEFT JOIN PAY_EMP_PAYROLL_DTL PEPD ON(PP.PAYCODE_ID  = PEPD.PAYCODE_ID AND PEPD.EMP_PAYROLL_HDR_ID = PEPH.EMP_PAYROLL_HDR_ID AND TFR.PERIOD_END BETWEEN PEPD.DATE_FROM AND PEPD.DATE_TO)
+										  ) COMPONENT_TUNJANGAN_LEMBUR
+										  JOIN PAY_EMP_PAYROLL_HDR PEPH ON(PEPH.PERSON_ID   = COMPONENT_TUNJANGAN_LEMBUR.PERSON_ID AND PEPH.COMPANY_ID = COMPONENT_TUNJANGAN_LEMBUR.COMPANY_ID)
+										  JOIN PAY_PAYCODES PP ON(PP.COMPANY_ID = COMPONENT_TUNJANGAN_LEMBUR.COMPANY_ID AND COMPONENT_TUNJANGAN_LEMBUR.PERIOD_END BETWEEN PP.DATE_FROM AND PP.DATE_TO AND PP.PAYCODE = '${paycodeName}')
+										  LEFT JOIN PAY_EMP_PAYROLL_DTL PEPD ON(PEPD.PAYCODE_ID  = PP.PAYCODE_ID AND PEPD.EMP_PAYROLL_HDR_ID = PEPH.EMP_PAYROLL_HDR_ID AND COMPONENT_TUNJANGAN_LEMBUR.PERIOD_END BETWEEN PEPD.DATE_FROM AND PEPD.DATE_TO)
+										  WHERE
+												  EXISTS(
+												  	SELECT
+														COUNT(*)
+													FROM
+														TMS_FINALIZE_RESULTS TFR_2
+													WHERE
+														TFR_2.PERSON_ID = COMPONENT_TUNJANGAN_LEMBUR.PERSON_ID
+														AND NVL(TFR_2.OVERTIME_POINT, 0) > 0
+														AND NVL(TFR_2.IS_PROCESSED_TO_PAYROLL, 0) = 0
+														AND TO_CHAR(COMPONENT_TUNJANGAN_LEMBUR.PERIOD_END, 'MMYYYY') = TO_CHAR(TFR_2.PERIOD_END, 'MMYYYY')
+												  )
+										GROUP BY COMPONENT_TUNJANGAN_LEMBUR.PERSON_ID, COMPONENT_TUNJANGAN_LEMBUR.PERIOD_END, COMPONENT_TUNJANGAN_LEMBUR.OVERTIME_POINT, COMPONENT_TUNJANGAN_LEMBUR.AMOUNT, COMPONENT_TUNJANGAN_LEMBUR.TOTAL_WORKING_DAYS, PEPD.RECCUR_EVERY, PEPD.DATE_FROM, PEPD.DATE_TO, PEPD.LOCKED, TO_NUMBER(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(PEPD.AMOUNT, 0)), 0))
+										""";
+			List<Map<String, Object>> resultTunjanganLembur = this.serviceModel.getFromQuery(sqlTunjanganLembur);
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			for(Map<String, Object> epmd : resultTunjanganLembur) {
+				
+				boolean isValid = true;
+				Integer recureEvery = null;
+				if(epmd.get("RECCUR_EVERY") != null) {
+					recureEvery = Integer.valueOf(epmd.get("RECCUR_EVERY").toString());
+				}
+				if(recureEvery != null) {
+					if(paymentCycleCode != null && paymentCycleCode.equals(PaymentCycleType.MONTHLY.toString()) && epmd.get("DATE_FROM") != null) {
+						isValid = false;
+						Long result = Math.round(((double)12 / (double)recureEvery));
+						for(int i = 0; i < result.intValue(); i++) {
+							Calendar cal = Calendar.getInstance();
+							cal.setTime((Date) epmd.get("DATE_FROM"));
+							cal.add(Calendar.MONTH, recureEvery * i);
+							Date nextProcessMonth = cal.getTime();
+							
+							DateTime dt = new DateTime(nextProcessMonth);
+							if(processMonth.equals(dt.getMonthOfYear())) {
+								isValid = false;
+								break;
+							}
+						}
+					}
+				}
+				
+				if(isValid) {
+					BigDecimal amount = BigDecimal.ZERO;
+					boolean locked = false;
+					Integer epmdLocked = epmd.get("LOCKED") != null ? Integer.valueOf(epmd.get("LOCKED").toString()) : null;
+					if(epmdLocked != null && epmdLocked.equals(1)) {
+						locked = true;
+					}
+					
+					if(locked) {
+						amount = epmd.get("AMOUNT_TUNJANGAN_LEMBUR") != null ? new BigDecimal(epmd.get("AMOUNT_TUNJANGAN_LEMBUR").toString()) : BigDecimal.ZERO;
+					} else {
+						Integer totalWorkingDays = Integer.valueOf(epmd.get("TOTAL_WORKING_DAYS").toString());
+						BigDecimal overtimePoint = new BigDecimal(epmd.get("OVERTIME_POINT").toString());
+						BigDecimal basicSalary = new BigDecimal(epmd.get("BASIC_SALARY").toString());
+						BigDecimal tunjanganMakan = new BigDecimal(epmd.get("TUNJANGAN_MAKAN").toString()).multiply(totalWorkingDays.toBigDecimal());
+						BigDecimal tunjanganTransport = new BigDecimal(epmd.get("TUNJANGAN_TRANSPORT").toString()).multiply(totalWorkingDays.toBigDecimal());
+						
+						amount = new BigDecimal(Double.valueOf(Math.round(Double.valueOf(overtimePoint.toString()).doubleValue() / Double.valueOf("173.0").doubleValue() * (Double.valueOf("0.75").doubleValue() * (basicSalary.doubleValue() + tunjanganMakan.doubleValue() + tunjanganTransport.doubleValue()))).toString()).toString());
+					}
+					
+					totalAmount = totalAmount.add(amount);
+				}
+				
+			}
+			
+			tunjanganLembur = totalAmount.doubleValue();
+		}
+		
+		return tunjanganLembur;
+		
+	}
+	
+	private Double getEpmdAmount(String paycode) {
+		String processDateEpmd = processDateStr;
+		if(isRapel) {
+			processDateEpmd = dfDate.format(new Date());
+		}
+		Double epmdAmount = Double.valueOf("0");
+		String sqlEpmdAmount = """
+								SELECT
+									TO_NUMBER(NVL(NVL(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(NVL(PEPD.AMOUNT, '0')), '0'), '0')) AS 
+AMOUNT
+								FROM
+									PAY_EMP_PAYROLL_HDR PEPH
+									JOIN PAY_EMP_PAYROLL_DTL PEPD ON(PEPD.EMP_PAYROLL_HDR_ID = PEPH.EMP_PAYROLL_HDR_ID AND TRUNC
+(TO_DATE('${processDateStr}', 'DD-MON-YYYY')) BETWEEN TRUNC(PEPD.DATE_FROM) AND TRUNC(PEPD.DATE_TO))
+									JOIN PAY_PAYCODES PP ON(PP.PAYCODE_ID = PEPD.PAYCODE_ID AND TRUNC(TO_DATE('${processDateEpmd}', 
+'DD-MON-YYYY')) BETWEEN TRUNC(PP.DATE_FROM) AND TRUNC(PP.DATE_TO) AND PP.COMPANY_ID = ${companyId} AND PP.PAYCODE = '${paycode}')
+								WHERE
+									PEPH.PERSON_ID = ${personId} AND
+									PEPH.COMPANY_ID = ${companyId}
+								""";
+		List<Map<String, Object>> resultEpmdAmount = this.serviceModel.getFromQuery(sqlEpmdAmount);
+		if(!resultEpmdAmount.isEmpty()) {
+			Map<String, Object> dataEpmdAmount = resultEpmdAmount.get(0);
+			epmdAmount = Double.valueOf(dataEpmdAmount.get("AMOUNT").toString());
+		}
+		return epmdAmount;
+	}
+	
+}
+
+TunjanganLembur tunjanganLembur = new TunjanganLembur();
+tunjanganLembur.setPersonId(person_id);
+tunjanganLembur.setProcessDate(process_date);
+tunjanganLembur.setCompanyId(company_id);
+tunjanganLembur.setBasicSalary(PAY_BASIC_SALARY);
+tunjanganLembur.setServiceModel(serviceModel);
+tunjanganLembur.setAdditionalParam(additionalParam);
+return tunjanganLembur.getTunjanganLembur();

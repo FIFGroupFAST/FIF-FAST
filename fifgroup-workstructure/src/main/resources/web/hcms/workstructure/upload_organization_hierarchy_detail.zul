@@ -1,0 +1,51 @@
+<window id="windowUploadOrganizationHierarchyDetail"
+	apply="co.id.fifgroup.workstructure.controller.UploadOrganizationHierarchyDetailComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="Upload Organization Hierarchy - Detail" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Organization Hierarchy" />
+					<label id="labelOrganizationHierarchy" />
+				</row>
+				<row>
+					<label value="Batch Number" />
+					<label id="lblBatchNumber" />
+				</row>
+				<row>
+					<label value="Effective Date From" />
+					<hbox>
+						<datebox id="dateboxFrom" disabled="true"></datebox>
+						<label value="To"></label>
+						<datebox id="dateboxTo" disabled="true"></datebox>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator />
+		<listbox id="lstUploadOrganizationHierarchyDetail" mold="paging"
+			pageSize="10">
+			<listhead>
+				<listheader label="Process Date" align="center" />
+				<listheader label="Uploaded By" align="center" />
+				<listheader label="Total Record" align="center" />
+				<listheader label="Total Succeed Record" align="center" />
+				<listheader label="Total Failed Record" align="center" />
+			</listhead>
+		</listbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnDownloadCloseBatchError"
+				label="download close batch error" mold="trendy" />
+		</hbox>
+		<separator />
+		<hbox pack="end" align="center" style="width:100%;">
+			<button id="btnBack" label="Back" mold="trendy"
+				image="${labels.image.link.back}" />
+		</hbox>
+	</groupbox>
+</window>

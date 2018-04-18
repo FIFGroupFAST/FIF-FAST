@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.core.dao.FlagBoardingAutomaticMapper">
+<!-- add by PMW, ticket 15111616041796, 15-Feb-2016  -->
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.core.domain.FlagBoardingAutomatic">
+		<id column="VERSION_ID" jdbcType="DECIMAL" property="boardingVersionId" />
+		<result column="BOARDING_PARAMETER_ID" jdbcType="NUMERIC"
+			property="boardingParameterId" />
+		<result column="VERSION_NUMBER" jdbcType="DECIMAL" property="versionNumber" />
+		<result column="DATE_FROM" jdbcType="TIMESTAMP" property="dateFrom" />
+		<result column="DATE_TO" jdbcType="TIMESTAMP" property="dateTo" />
+		<result column="ASSIGNMENT_STATUS" jdbcType="VARCHAR" property="assignmentStatus" />
+		<result column="EMPLOYMENT_CATEGORY" jdbcType="VARCHAR"
+			property="employeeCategory" />
+		<result column="TRANSFER_BY" jdbcType="VARCHAR" property="transferBy" />
+		<result column="IS_KEY_JOB" jdbcType="DECIMAL" property="isKeyJob" />
+		<result column="FLAG_HOUSING" jdbcType="VARCHAR" property="flagHousing" />
+		<result column="UPDATE_FLAG_HOUSING" jdbcType="VARCHAR"
+			property="updateFlagHousing" />
+		<result column="IS_PLACMENT_STATUS" jdbcType="DECIMAL"
+			property="isPlacmentStatus" />
+		<result column="MATRIX_LOCATION_ID" jdbcType="NUMERIC"
+			property="matrixLocationId" />
+		<result column="COMPANY_ID" jdbcType="NUMERIC" property="companyId" />
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATED_DATE" jdbcType="TIMESTAMP" property="createdDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdateBy" />
+		<result column="LAST_UPDATED_DATE" jdbcType="TIMESTAMP"
+			property="lastUpdateDate" />
+		<result column="ORIGIN_LOCATION" jdbcType="NUMERIC" property="originLocation" ></result>
+		<result column="DESTINATION_LOCATION" jdbcType="NUMERIC" property="destinationLocation"></result>
+		<result column="LOCATION_NAME" jdbcType="VARCHAR" property="locationName"></result>
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId"></result>
+	</resultMap>
+<!-- end add -->
+	
+<!-- add by PMW, ticket 15111616041796, 15-Feb-2016  -->	
+	<select id="getUpdateFlagBoarding" resultType="string">
+		SELECT update_flag_housing
+		FROM trn.hou_boarding_parameter_version
+		WHERE (SELECT mat.matrix_location_id
+		             FROM ben_matrix_location mat JOIN ben_matrix_location_version ver
+		                  ON mat.matrix_location_id = ver.matrix_location_id
+		                  JOIN ben_matrix_location_dtl dtl
+		                  ON ver.version_id = dtl.version_id
+		            WHERE mat.matrix_location_id = 66
+		              AND dtl.origin_location_id = #{originLocation,jdbcType=NUMERIC}
+		              AND dtl.destination_location_id =#{destinationLocation,jdbcType=NUMERIC} 
+		              AND TRUNC (SYSDATE) BETWEEN TRUNC (ver.date_from) AND TRUNC (ver.date_to)) is null
+		AND TRUNC (SYSDATE) BETWEEN TRUNC(date_from) and TRUNC(date_to)
+		<if test="assignmentStatus != null and assignmentStatus.length() >0">
+			  AND UPPER (assignment_status) = UPPER (#{assignmentStatus,jdbcType=VARCHAR})
+		</if>
+		<if test="assignmentStatus.length() == 0">
+			  AND UPPER (assignment_status) is null
+		</if>
+		<if test="employeeCategory != null and employeeCategory.length() >0">
+			 AND UPPER (employment_category) = UPPER (#{employeeCategory,jdbcType=VARCHAR})
+		</if>
+		<if test="employeeCategory.length() == 0">
+			AND UPPER (employment_category) is null
+		</if>
+		<if test="transferBy != null and transferBy.length() >0">
+			 AND UPPER (transfer_by) LIKE UPPER (#{transferBy,jdbcType=VARCHAR})
+		</if>
+		<if test="transferBy.length() == 0">
+			  AND UPPER (transfer_by) is null
+		</if>
+		AND is_key_job = #{isKeyJob,jdbcType=NUMERIC}
+		<if test="flagHousing != null and flagHousing.length() >0">
+		AND UPPER (flag_housing) = UPPER (#{flagHousing,jdbcType=VARCHAR})
+		</if>
+		<if test="flagHousing.length() == 0">
+			  AND UPPER (flag_housing) is null
+		</if>
+		AND is_placement_status = #{isPlacmentStatus,jdbcType=NUMERIC}
+		AND ROWNUM &lt;= 1
+	</select>
+	
+<select id="getPlacementStatus" resultType="string">
+		 select PLACEMENT_STATUS from (
+     	 	SELECT * FROM TRN.HOU_PLACEMENT_REQUEST 
+			WHERE PERSON_ID = #{personId,jdbcType=NUMERIC} AND company_id = #{companyId,jdbcType=NUMERIC} and APPROVAL_STATUS = 'APPROVED'
+        	order by  PLACEMENT_DATE desc
+        ) where ROWNUM &lt;= 1 
+	
+	</select>
+	
+	<select id="getFlagBoarding" resultType="string">
+	SELECT HOUSE_ALLOWANCE FROM (
+		select HOUSE_ALLOWANCE from PEA_HOUSING_ALLOWANCE where 
+		PERSON_ID = #{personId,jdbcType=NUMERIC} 
+		AND COMPANY_ID = #{companyId,jdbcType=NUMERIC}  
+		order by EFFECTIVE_END_DATE desc
+	) WHERE ROWNUM &lt;= 1
+	</select>
+	
+<!-- end add -->
+	<select id="getIdLocation" resultType="string">
+		SELECT location_id
+		FROM wos_locations
+		WHERE location_name = #{locationName,jdbcType=VARCHAR} AND company_id = #{companyId,jdbcType=NUMERIC} 
+	</select>
+	
+	<select id="getEmployementCategory" resultType="string">
+		select EMPLOYMENT_CATEGORY from pea_people_types where 
+		PERSON_id = #{personId,jdbcType=NUMERIC}  
+		AND COMPANY_ID = #{companyId,jdbcType=NUMERIC}  
+		AND TRUNC (SYSDATE) BETWEEN TRUNC(EFFECTIVE_START_DATE) and TRUNC(EFFECTIVE_END_DATE)
+	</select>
+
+</mapper>

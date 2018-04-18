@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.ssoa.dao.SOPeriodDetailMapper">
+	<resultMap id="BaseResultMap" type="co.id.fifgroup.ssoa.domain.SOPeriodDetail">
+		<id column="SO_PERIOD_DTL_ID" jdbcType="DECIMAL" property="soPeriodDtlId"/>
+		<result column="SO_PERIOD_ID" jdbcType="DECIMAL" property="soPeriodId"/>
+		<result column="BRANCH_ID" jdbcType="DECIMAL" property="branchId"/>
+		<result column="BRANCH_CODE" jdbcType="VARCHAR" property="branchCode"/>
+		<result column="BRANCH_NAME" jdbcType="VARCHAR" property="branchName"/>
+		<result column="STATUS_ID" jdbcType="DECIMAL" property="statusId"/>
+		<result column="STATUS_CODE" jdbcType="VARCHAR" property="statusCode"/>
+		<result column="NOTIFICATION_STATUS_ID" jdbcType="DECIMAL" property="notificationStatusId"/>
+		<result column="NOTIFICATION_STATUS_CODE" jdbcType="VARCHAR" property="notificationStatusCode"/>
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy"/>
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate"/>
+		<result column="LAST_UPDATE_BY" jdbcType="DECIMAL" property="lastUpdateBy"/>
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate"/>
+		<result column="STATUS_NAME" property="statusName" jdbcType="VARCHAR"/>
+		<result column="STATUS_NOTIFICATION_NAME" property="notificationStatusName" jdbcType="VARCHAR"/>
+		<result column="REPORT_STATUS_NAME" property="reportStatusName" jdbcType="VARCHAR"/>
+		<result column="REPORT_STATUS_CODE" property="reportStatusCode" jdbcType="VARCHAR"/>
+		<result column="AVM_TRX_ID" property="avmTrxIdSOString" jdbcType="DECIMAL"/>
+	</resultMap>
+
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<sql id="Base_Column_List">
+		DT.SO_PERIOD_DTL_ID, 
+		DT.SO_PERIOD_ID, 
+		DT.BRANCH_ID,
+		(case when DT.BRANCH_ID = -1 then 'HEADOFFICE' else (SELECT SUBSTR (ORGANIZATION_CODE, -5) as branch_code from WOS_ORGANIZATIONS where ORGANIZATION_ID = DT.BRANCH_ID and rownum = 1) end )BRANCH_CODE,
+    	(case when DT.BRANCH_ID = -1 then 'Head Office' else (SELECT ORGANIZATION_NAME from WOS_ORGANIZATIONS where ORGANIZATION_ID = DT.BRANCH_ID and rownum = 1) end )BRANCH_NAME,
+		DT.STATUS_ID,
+		DT.STATUS_CODE, 
+		DT.NOTIFICATION_STATUS_ID,
+		DT.NOTIFICATION_STATUS_CODE,
+		DT.CREATED_BY, 
+		DT.CREATION_DATE, 
+		DT.LAST_UPDATE_BY, 
+		DT.LAST_UPDATE_DATE,
+		L.DESCRIPTION as STATUS_NAME,
+		L1.DESCRIPTION as STATUS_NOTIFICATION_NAME
+	</sql>
+
+	<select id="selectByExample" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetailExample" resultMap="BaseResultMap">
+		SELECT DISTINCT
+			DT.SO_PERIOD_DTL_ID,
+	        DT.SO_PERIOD_ID,
+	        DT.BRANCH_ID,
+       		(SELECT DESCRIPTION
+          		FROM BSE_LOOKUP_DEPENDENTS
+         			WHERE DETAIL_CODE = DT.STATUS_CODE) AS STATUS_NAME,
+       		(SELECT DESCRIPTION
+          		FROM BSE_LOOKUP_DEPENDENTS
+         			WHERE DETAIL_CODE = DT.NOTIFICATION_STATUS_CODE) AS STATUS_NOTIFICATION_NAME,
+       	(case when DT.BRANCH_ID = -1 then 'HEADOFFICE' else (SELECT SUBSTR (ORGANIZATION_CODE, -5) as branch_code from WOS_ORGANIZATIONS where ORGANIZATION_ID = DT.BRANCH_ID and rownum = 1) end )BRANCH_CODE,
+    		(case when DT.BRANCH_ID = -1 then 'Head Office' else (SELECT ORGANIZATION_NAME from WOS_ORGANIZATIONS where ORGANIZATION_ID = DT.BRANCH_ID and rownum = 1) end )BRANCH_NAME,
+       		(select STATUS_CODE from (SELECT SOH.SO_PERIOD_DTL_ID,SOH.STOCK_OPNAME_ID,SOR.STATUS_CODE
+          FROM SOC_STOCK_OPNAME_REPORTING SOR
+               JOIN SOC_STOCK_OPNAME_HDR soh
+                  ON SOH.STOCK_OPNAME_ID = SOR.STOCK_OPNAME_ID
+         ORDER BY stock_opname_reporting_id DESC) where SO_PERIOD_DTL_ID = DT.SO_PERIOD_DTL_ID and rownum = 1)
+          AS REPORT_STATUS_CODE,
+          (select AVM_TRX_ID from (SELECT SOH.SO_PERIOD_DTL_ID,SOH.STOCK_OPNAME_ID,SOR.AVM_TRX_ID
+          FROM SOC_STOCK_OPNAME_REPORTING SOR
+               JOIN SOC_STOCK_OPNAME_HDR soh
+                  ON SOH.STOCK_OPNAME_ID = SOR.STOCK_OPNAME_ID
+         ORDER BY stock_opname_reporting_id DESC) where SO_PERIOD_DTL_ID = DT.SO_PERIOD_DTL_ID and rownum = 1)
+          AS AVM_TRX_ID,
+          (select description from (SELECT SOH.SO_PERIOD_DTL_ID,SOH.STOCK_OPNAME_ID,bld.description
+          FROM bse_lookup_dependents bld
+               JOIN SOC_STOCK_OPNAME_REPORTING SOR ON SOR.STATUS_CODE = BLD.DETAIL_CODE
+               JOIN SOC_STOCK_OPNAME_HDR soh
+                  ON SOH.STOCK_OPNAME_ID = SOR.STOCK_OPNAME_ID
+         ORDER BY stock_opname_reporting_id DESC) where SO_PERIOD_DTL_ID = DT.SO_PERIOD_DTL_ID and rownum = 1)
+          AS REPORT_STATUS_NAME
+		from SOC_SO_PERIOD_DTL DT
+		INNER JOIN BSE_LOOKUP_DEPENDENTS L on L.DETAIL_CODE = DT.STATUS_CODE
+		INNER JOIN BSE_LOOKUP_DEPENDENTS L1 on L1.DETAIL_CODE = DT.NOTIFICATION_STATUS_CODE
+		LEFT JOIN
+			SAM_USERS U ON U.USER_ID = DT.LAST_UPDATE_BY
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause"/>
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select 'false' as QUERYID,
+		<include refid="Base_Column_List"/>
+		from SOC_SO_PERIOD_DTL DT
+		WHERE DT.SO_PERIOD_ID= #{soPeriodId,jdbcType=DECIMAL}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from SOC_SO_PERIOD_DTL
+		where SO_PERIOD_DTL_ID = #{soPeriodDtlId,jdbcType=DECIMAL}
+	</delete>
+
+	<delete id="deleteByHeaderKey" parameterType="java.lang.Long">
+		delete from SOC_SO_PERIOD_DTL
+		where SO_PERIOD_ID = #{soPeriodId,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetail">
+	<selectKey keyProperty="soPeriodDtlId" order="BEFORE" resultType="java.lang.Long">
+		select SOC_SO_PERIOD_DTL_S.nextVal from dual
+	</selectKey>
+		insert into SOC_SO_PERIOD_DTL
+				(SO_PERIOD_DTL_ID,
+				 SO_PERIOD_ID,
+				 BRANCH_ID,
+				 STATUS_ID,
+				 STATUS_CODE,
+				 NOTIFICATION_STATUS_ID,
+				 NOTIFICATION_STATUS_CODE,
+				 CREATED_BY,
+				 CREATION_DATE,
+				 LAST_UPDATE_BY,
+				 LAST_UPDATE_DATE)
+		values(
+			 	#{soPeriodDtlId,jdbcType=DECIMAL},
+				#{soPeriodId,jdbcType=DECIMAL},
+				#{branchId,jdbcType=DECIMAL},
+				(SELECT DISTINCT LOOKUP_ID FROM BSE_LOOKUP_DEPENDENTS
+					WHERE DETAIL_CODE = #{statusCode,jdbcType=VARCHAR}),	
+				#{statusCode,jdbcType=VARCHAR},
+				(SELECT DISTINCT LOOKUP_ID FROM BSE_LOOKUP_DEPENDENTS
+					WHERE DETAIL_CODE = #{notificationStatusCode,jdbcType=VARCHAR}),
+				#{notificationStatusCode,jdbcType=VARCHAR},
+				#{createdBy,jdbcType=DECIMAL},
+				#{creationDate,jdbcType=TIMESTAMP},
+				#{lastUpdateBy,jdbcType=DECIMAL},
+				#{lastUpdateDate,jdbcType=TIMESTAMP}
+				)
+	</insert>
+
+	<insert id="insertSelective" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetail">
+	<selectKey keyProperty="soPeriodDtlId" order="BEFORE" resultType="java.lang.Long">
+		select SOC_SO_PERIOD_DTL_S.nextVal from dual
+	</selectKey>
+		insert into SOC_SO_PERIOD_DTL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			SO_PERIOD_DTL_ID,
+			<if test="soPeriodId != null">
+				SO_PERIOD_ID,
+			</if>			
+			<if test="createdBy != null">
+				CREATED_BY,
+			</if>
+			<if test="creationDate != null">
+				CREATION_DATE,
+			</if>
+			<if test="lastUpdateBy != null">
+				LAST_UPDATE_BY,
+			</if>
+			<if test="lastUpdateDate != null">
+				LAST_UPDATE_DATE
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{soPeriodDtlId,jdbcType=DECIMAL},
+		
+			<if test="createdBy != null">
+				#{createdBy,jdbcType=DECIMAL},
+			</if>
+			<if test="creationDate != null">
+				#{creationDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateBy != null">
+				#{lastUpdateBy,jdbcType=DECIMAL},
+			</if>
+			<if test="lastUpdateDate != null">
+				#{lastUpdateDate,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+		
+	</insert>
+
+	<select id="countByExample" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetailExample" resultType="java.lang.Integer">
+		select count(*) from SOC_SO_PERIOD_DTL
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause"/>
+		</if>
+	</select>
+
+	<resultMap id="DetailMap" type="co.id.fifgroup.ssoa.dto.SOPeriodDetailDTO">
+		<id column="SO_PERIOD_DTL_ID" property="soPeriodDtlId" jdbcType="DECIMAL"/>
+		<result column="SO_PERIOD_ID" property="soPeriodId" jdbcType="DECIMAL"/>
+		<result column="BRANCH_ID" property="branchId" jdbcType="DECIMAL"/>
+		<result column="STATUS_ID" property="statusId" jdbcType="DECIMAL"/>
+		<result column="STATUS_CODE" property="statusCode" jdbcType="VARCHAR"/>
+		<result column="NOTIFICATION_STATUS_ID" property="notificationStatusId" jdbcType="DECIMAL"/>
+		<result column="NOTIFICATION_STATUS_CODE" property="notificationStatusCode" jdbcType="VARCHAR"/>
+		<result column="STATUS_NAME" property="statusName" jdbcType="VARCHAR"/>
+		<result column="STATUS_NOTIFICATION_NAME" property="notificationStatusName" jdbcType="VARCHAR"/>
+		<result column="BRANCH_NAME" property="branchName" jdbcType="VARCHAR"/>
+		<result column="BRANCH_CODE" property="branchCode" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="selectDetailBranch" resultMap="DetailMap" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetail">
+		SELECT DISTINCT
+			DT.SO_PERIOD_DTL_ID,
+			DT.SO_PERIOD_ID,
+			DT.BRANCH_ID,
+			DT.STATUS_CODE,
+			DT.NOTIFICATION_STATUS_ID,
+			DT.NOTIFICATION_STATUS_CODE,
+			L.DESCRIPTION, 
+			L1.DESCRIPTION,
+			(case when DT.BRANCH_ID = -1 then 'HEADOFFICE' else (SELECT SUBSTR (ORGANIZATION_CODE, -5) as branch_code from WOS_ORGANIZATIONS where ORGANIZATION_ID = DT.BRANCH_ID and rownum = 1) end )BRANCH_CODE,
+    		(case when DT.BRANCH_ID = -1 then 'Head Office' else (SELECT ORGANIZATION_NAME from WOS_ORGANIZATIONS where ORGANIZATION_ID = DT.BRANCH_ID and rownum = 1) end )BRANCH_NAME			
+		FROM SOC_SO_PERIOD_DTL DT 
+        	INNER JOIN BSE_LOOKUP_DEPENDENTS L on L.DETAIL_CODE = DT.STATUS_CODE
+        	INNER JOIN BSE_LOOKUP_DEPENDENTS L1 on L1.DETAIL_CODE = DT.NOTIFICATION_STATUS_CODE
+		LEFT JOIN
+			SAM_USERS U ON U.USER_ID = DT.LAST_UPDATE_BY
+		<where>
+			<if test="soPeriodId != null">
+				DT.SO_PERIOD_ID =#{soPeriodId,jdbcType=DECIMAL}
+			</if>
+			
+			<if test="statusCode != null">
+				AND UPPER(DT.STATUS_CODE) = (UPPER(#{statusCode,jdbcType=VARCHAR}))
+			</if>
+		</where>
+		
+	</select>
+	
+	<select id="countDetailBranch" resultType="int" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetail">
+		SELECT COUNT(*)
+		FROM
+			SOC_SO_PERIOD_DTL DT
+		LEFT JOIN
+			SAM_USERS U ON U.USER_ID = DT.LAST_UPDATE_BY
+	
+		<where>
+			<if test="soPeriodId != null">
+				DT.SO_PERIOD_ID =#{soPeriodId,jdbcType=DECIMAL}
+			</if>
+			<if test="statusCode != null">
+				AND UPPER(DT.STATUS_CODE) = (UPPER(#{statusCode,jdbcType=VARCHAR}))
+			</if>
+		</where>
+	
+	</select>
+
+
+	<select id="selectByExampleWithRowbounds" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetailExample" resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List"/>
+		from SOC_SO_PERIOD_DTL
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause"/>
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	
+	<resultMap id="statusStockOpname" type="co.id.fifgroup.ssoa.dto.SOPeriodDetailDTO">
+		<id column="LOOKUP_ID" property="lookUpId" jdbcType="DECIMAL"/>
+		<result column="STATUS_CODE" property="statusCode" jdbcType="VARCHAR"/>
+		<result column="STATUS_NAME" property="statusName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="selectStatusStockOpname" resultMap="statusStockOpname" parameterType="co.id.fifgroup.ssoa.domain.SOPeriodDetail">
+		SELECT DISTINCT
+			L.LOOKUP_ID,
+			L.NAME,
+			LD.DESCRIPTION  as STATUS_NAME,
+			LD.DETAIL_CODE  as STATUS_CODE
+		FROM BSE_LOOKUP_HDR L
+			INNER JOIN BSE_LOOKUP_DEPENDENTS LD on LD.LOOKUP_ID = L.LOOKUP_ID 
+		WHERE
+			UPPER(L.NAME) = (UPPER(#{statusCode,jdbcType=VARCHAR}))
+		
+	</select>
+	
+	
+	
+</mapper>

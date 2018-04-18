@@ -1,0 +1,73 @@
+<window id="winWorkflowMonitoringTransaction" border="none"
+	apply="co.id.fifgroup.systemworkflow.controller.WorkflowMonitoringTransactionComposer">
+	<panel>
+		<panelchildren>
+			<groupbox mold="3d" open="true">
+				<caption
+					label="${labels.swf.monitoringTransaction}">
+					<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+				</caption>
+				<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right"/>
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.swf.company}" />
+							<listbox id="cmbCompany" /> 
+						</row>
+						<row>
+							<label value="${labels.swf.subject}" />
+							<textbox id="txtSubject" width="300px"/>
+						</row>
+						<row>
+							<label value="${labels.swf.transactionType}" />
+							<listbox id="cmbTrxType" /> 
+						</row>
+						<row>
+							<label value="${labels.common.transactionStatus}" />
+							<listbox id="cmbTrxStatus" /> 
+						</row>
+						<row>
+							<label value="${labels.swf.submittedDate}" />
+							<hbox>
+								<datebox id="dtbStartDate" width="100px"/>
+								<label value="${labels.common.to}" />
+								<datebox id="dtbEndDate" width="100px"/>
+							</hbox>							 
+						</row>
+						<row>
+							<hbox />
+							<hbox>
+								<button label="${labels.common.find}" id="btnFind" mold="trendy" 
+									image="${labels.image.link.search}"/>
+							</hbox>
+						</row>
+					</rows>
+				</grid>
+				<separator />
+				<listbox id="lbxTransaction" checkmark="true" emptyMessage="${labels.common.noDataFound}" pagingPosition="both">
+					<listhead menupopup="auto">
+						<listheader width="60px" align="left" />
+						<listheader label="${labels.swf.flag}" width="80px" align="center" sort="auto(flagSuccess)"/>
+						<listheader label="${labels.swf.company}" width="150px" align="center" sort="auto(companyId)"/>
+						<listheader label="${labels.swf.subject}" width="300px" align="center" sort="auto(subject)"/>
+						<listheader label="${labels.swf.transactionType}" width="150px" align="center" sort="auto(transactionName)"/>
+						<listheader label="${labels.common.transactionStatus}" width="150px" align="center" sort="auto(trxStatus)"/>
+						<listheader label="${labels.swf.submitter}" hflex="min" align="center" />
+						<listheader label="${labels.swf.submittedTime}" hflex="min" align="center" sort="auto(submittedTime)"/>
+						<listheader label="${labels.swf.completedTime}" hflex="min" align="center" />
+						<listheader label="${labels.common.action}" width="150px" align="center" />
+					</listhead>
+				</listbox>
+				<exporter referenceId="lbxTransaction" />
+				<separator />
+				<button label="${labels.swf.cancelTask}" id="btnCancelTask" mold="trendy" 
+					image="${labels.image.link.cancel}"/>
+			</groupbox>
+		</panelchildren>
+	</panel>
+</window>

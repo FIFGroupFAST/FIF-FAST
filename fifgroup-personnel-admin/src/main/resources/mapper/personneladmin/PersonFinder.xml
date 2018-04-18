@@ -1,0 +1,4179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.personneladmin.finder.PersonFinder">
+	
+	<resultMap id="selectActivePersonByExampleResult" type="co.id.fifgroup.personneladmin.dto.PersonDTO">	
+		<id column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="PERSON_UUID" jdbcType="VARBINARY" property="personUUID" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="GROUP_ID" jdbcType="DECIMAL" property="groupId" />
+		
+		<result column="PEOPLE_TYPE" jdbcType="VARCHAR" property="peopleType" />
+		<result column="EMPLOYMENT_CATEGORY" jdbcType="VARCHAR" property="employmentCategory" />
+		<result column="SOURCE" jdbcType="VARCHAR" property="source" />
+		<result column="REF_ID" jdbcType="DECIMAL" property="refId" />
+		<result column="IS_AFFCO" jdbcType="DECIMAL" property="affco" />
+		<result column="IS_CANCELED" jdbcType="DECIMAL" property="canceled" />
+		
+		<result column="INFORMATION_ID" property="informationId" jdbcType="DECIMAL" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber" jdbcType="VARCHAR" />		
+		<result column="GENDER_CODE" property="genderCode" jdbcType="VARCHAR" />
+		<result column="BIRTH_PLACE" property="birthPlace" jdbcType="VARCHAR" />
+		<result column="BIRTH_DATE" property="birthDate" jdbcType="DATE" />
+		<result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+	    <result column="PHOTO_FILE_PATH" property="photoFilePath" jdbcType="VARCHAR" />
+	    <result column="NATIONALITY_CODE" property="nationalityCode" jdbcType="VARCHAR" />
+	    <result column="RELIGION_CODE" property="religionCode" jdbcType="VARCHAR" />
+	    <result column="BLOOD_TYPE" property="bloodType" jdbcType="VARCHAR" />
+	    <result column="BLOOD_TYPE_RHESUS" property="bloodTypeRhesus" jdbcType="VARCHAR" />
+	    <result column="MOTHER_NAME" property="motherName" jdbcType="VARCHAR" />
+	    <result column="DISABILITY_CODE" property="disabilityCode" jdbcType="VARCHAR" />
+	    <result column="DISABILITY_REMARK" property="disabilityRemark" jdbcType="VARCHAR" />
+	    <result column="HOBBY" property="hobby" jdbcType="VARCHAR" />
+	    <result column="IS_PILGRIMAGE" property="pilgrimage" jdbcType="DECIMAL" />
+	    <result column="IS_SMOKER" property="smoker" jdbcType="DECIMAL" />
+	    <result column="ASTRA_JOIN_DATE" property="astraJoinDate" jdbcType="DATE" />
+	    <result column="HIRE_DATE" property="hireDate" jdbcType="DATE" />
+	    <result column="HOME_BASE_CODE" property="homeBaseCode" jdbcType="VARCHAR" />
+	    <result column="PROBATION_END_DATE" property="probationEndDate" jdbcType="DATE" />
+	    <result column="TRAINING_END_DATE" property="trainingEndDate" jdbcType="DATE" />
+	    <result column="MARITAL_STATUS" property="maritalStatus" jdbcType="VARCHAR" />
+	    <result column="MARITAL_DATE" property="maritalDate" jdbcType="DATE" />
+	    <result column="INTERNAL_MARRIED_WITH" property="internalMarriedWith" jdbcType="DECIMAL" />
+	    <result column="SPOUSE_COMPANY_ID" property="spouseCompanyId" jdbcType="DECIMAL" />
+	    <result column="PTKP_STATUS" property="ptkpStatus" jdbcType="VARCHAR" />
+	    <result column="WORKING_SCHEDULE_ID" property="workingScheduleId" jdbcType="DECIMAL" />	    
+		<result column="HOME_BASE_NAME" jdbcType="VARCHAR" property="homeBaseName"/>
+		<result column="PI_START_DATE" jdbcType="DATE" property="effectiveStartDate" />
+	    <result column="PI_END_DATE" jdbcType="DATE" property="effectiveEndDate" />
+	    <result column="CAST_EMPLOYEE_NUMBER" jdbcType="DECIMAL" property="castEmployeeNumber"/>
+	    <result column="PEOPLE_CATEGORY_CODE" jdbcType="VARCHAR" property="peopleCategory" />
+		
+		<result column="ORGANIZATION_ID" property="primaryAssignmentDTO.organizationId" jdbcType="DECIMAL" />
+		<result column="ORGANIZATION_NAME" property="primaryAssignmentDTO.organizationName" jdbcType="VARCHAR" />
+		<result column="BRANCH_ID" property="primaryAssignmentDTO.branchId" jdbcType="NUMERIC" />
+		<result column="BRANCH_NAME" property="primaryAssignmentDTO.branchName" jdbcType="VARCHAR" />
+		<result column="BRANCH_CODE" property="primaryAssignmentDTO.branchCode" jdbcType="VARCHAR" />
+		<result column="JOB_ID" property="primaryAssignmentDTO.jobId" jdbcType="DECIMAL" />
+		<result column="JOB_NAME" property="primaryAssignmentDTO.jobName" jdbcType="VARCHAR" />
+		<result column="GRADE_ID" property="primaryAssignmentDTO.gradeId" jdbcType="DECIMAL" />
+		<result column="GRADE_NAME" property="primaryAssignmentDTO.gradeName" jdbcType="VARCHAR" />
+		<result column="GRADE" property="primaryAssignmentDTO.grade" jdbcType="VARCHAR" />
+		<result column="SUB_GRADE" property="primaryAssignmentDTO.subGrade" jdbcType="VARCHAR" />
+		<result column="ACTION_TYPE" property="primaryAssignmentDTO.actionType" jdbcType="VARCHAR" />
+		<result column="LOCATION_ID" property="primaryAssignmentDTO.locationId" jdbcType="NUMERIC" />
+		<result column="LOCATION_NAME" property="primaryAssignmentDTO.locationName" jdbcType="VARCHAR" />
+		<result column="JOB_GROUP_CODE" property="primaryAssignmentDTO.jobGroupCode" jdbcType="VARCHAR" />
+		<result column="PERSONAL_GRADE_CODE" property="primaryAssignmentDTO.personalGradeCode" jdbcType="VARCHAR" />
+		<result column="ASSIGNMENT_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.assignmentId" />
+	    <result column="TRANSFERED_BY" jdbcType="VARCHAR" property="primaryAssignmentDTO.transferedBy" />
+	    <result column="ASSIGNMENT_STATUS" jdbcType="VARCHAR" property="primaryAssignmentDTO.assignmentStatus" />
+	    <result column="HOUSING_ALLOWANCE" jdbcType="VARCHAR" property="primaryAssignmentDTO.housingAllowance" />
+	    <result column="MENTOR_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.mentorId" />
+	    <result column="IS_INTERNSHIP" jdbcType="DECIMAL" property="primaryAssignmentDTO.internship" />
+	    <result column="EFFECTIVE_START_DATE" jdbcType="DATE" property="primaryAssignmentDTO.effectiveStartDate" />
+	    <result column="EFFECTIVE_END_DATE" jdbcType="DATE" property="primaryAssignmentDTO.effectiveEndDate" />
+	    <result column="PERSON_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.personId" />
+	    <result column="COMPANY_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.companyId" />
+	    <!-- start added by WLY for phase 2 -->
+		<result column="COMPANY_NAME" jdbcType="VARCHAR" property="primaryAssignmentDTO.companyName" />
+		<!-- end added by WLY for phase 2 -->
+		
+		<result column="CREATED_BY" jdbcType="DECIMAL" property="createdBy" />
+		<result column="CREATION_DATE" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>
+		
+		<result column="TERMINATION_REASON" jdbcType="VARCHAR" property="terminationReason"/>
+	    
+	    <collection property="primaryAssignmentDTO.assignmentOtherInfos" javaType="ArrayList" ofType="co.id.fifgroup.personneladmin.domain.AssignmentOtherInfo">
+			<id column="OTHER_INFO_DTL_ID" property="otherInfoDtlId" jdbcType="DECIMAL"/>
+			<result column="VALUE" property="value" jdbcType="VARCHAR"/>
+			<result column="CREATED_BY_OTHER_INFO" property="createdBy" jdbcType="DECIMAL"/>
+			<result column="CREATION_DATE_OTHER_INFO" property="creationDate" jdbcType="TIMESTAMP"/>
+			<result column="LAST_UPDATED_BY_OTHER_INFO" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+			<result column="LAST_UPDATE_DATE_OTHER_INFO" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+		</collection>
+		
+		<collection property="contacts" javaType="ArrayList" ofType="co.id.fifgroup.personneladmin.dto.ContactDTO">
+			 <id column="CONTACT_ID" jdbcType="NUMERIC" property="contactId" />
+			 <result column="BENEFICIARY_PRIORITY_CODE" jdbcType="VARCHAR" property="beneficiaryPriorityCode" />
+			 <result column="BIRTH_DATE" jdbcType="DATE" property="birthDate" />
+			 <result column="CONTACT_MARITAL_STATUS" jdbcType="VARCHAR" property="maritalStatus" />
+			 <result column="START_DATE" jdbcType="DATE" property="startDate" />
+			 <result column="END_DATE" jdbcType="DATE" property="endDate" />
+		</collection>
+	    
+	</resultMap>
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="selectActivePersonKeyValue">
+		<id column="PERSON_ID" jdbcType="DECIMAL" property="key" javaType="java.lang.Long"/>
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="value" />
+		<result column="FULL_NAME" property="description" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="selectByAssignmentResult" type="co.id.fifgroup.personneladmin.dto.PersonAssignmentDTO">
+		<id column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="PERSON_UUID" jdbcType="VARBINARY" property="personUUID" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+		<result column="PEOPLE_TYPE" jdbcType="VARCHAR" property="peopleType" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber" jdbcType="VARCHAR" />
+		<result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="ORGANIZATION_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.organizationId" />
+		<result column="ORGANIZATION_NAME" property="primaryAssignmentDTO.organizationName" jdbcType="VARCHAR" />
+		<result column="BRANCH_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.branchId" />
+		<result column="BRANCH_NAME" property="primaryAssignmentDTO.branchName" jdbcType="VARCHAR" />
+		<result column="BRANCH_CODE" property="primaryAssignmentDTO.branchCode" jdbcType="VARCHAR" />
+		<result column="LOCATION_ID" property="primaryAssignmentDTO.locationId" jdbcType="NUMERIC" />
+		<result column="LOCATION_NAME" property="primaryAssignmentDTO.locationName" jdbcType="VARCHAR" />
+		<result column="JOB_ID" jdbcType="DECIMAL" property="primaryAssignmentDTO.jobId" />
+		<result column="JOB_NAME" property="primaryAssignmentDTO.jobName" jdbcType="VARCHAR" />
+		<result column="JOB_GROUP_CODE" property="primaryAssignmentDTO.jobGroupCode" jdbcType="VARCHAR" />
+		<result column="PERSONAL_GRADE_CODE" property="primaryAssignmentDTO.personalGradeCode" jdbcType="VARCHAR" />
+		<collection property="roles" ofType="String" javaType="java.util.List">
+			<result column="ROLE_CODE" />
+		</collection>
+	</resultMap>
+	
+	<resultMap id="peopleAffcoResult" type="co.id.fifgroup.personneladmin.dto.PeopleAffcoDTO">
+		<result column="PERSON_ID" jdbcType="DECIMAL" property="personId" />
+		<result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
+		<result column="PEOPLE_TYPE" jdbcType="VARCHAR" property="peopleType" />
+		<result column="EMPLOYEE_NUMBER" property="employeeNumber" jdbcType="VARCHAR" />
+		<result column="FULL_NAME" jdbcType="VARCHAR" property="fullName" />
+		<result column="HIRE_DATE" jdbcType="TIMESTAMP" property="hireDate" />
+		<result column="LAST_UPDATED_BY" jdbcType="DECIMAL" property="lastUpdatedBy" />
+		<result column="LAST_UPDATE_DATE" jdbcType="TIMESTAMP" property="lastUpdateDate" />			
+		<result column="USER_NAME" jdbcType="VARCHAR" property="userName"/>	
+	</resultMap>
+
+	<sql id="findPerson">
+		select
+			p.person_id,
+			p.person_uuid,
+			t.company_id,
+			c.group_id,
+			
+			t.people_type,
+			t.employment_category,
+			t.source,
+			t.ref_id,
+			t.is_affco,
+			t.is_canceled,
+			
+			i.information_id,
+			i.employee_number,
+			i.gender_code,
+			i.birth_place,
+			i.birth_date,
+	    	i.full_name,
+			i.photo_file_path,
+			i.nationality_code,
+			i.religion_code,
+			i.blood_type,
+			i.blood_type_rhesus,
+			i.mother_name,
+			i.disability_code,
+			i.disability_remark,
+			i.hobby,
+			i.is_pilgrimage,
+			i.is_smoker,
+			i.astra_join_date,
+			i.hire_date,
+			i.home_base_code,
+			l.location_name HOME_BASE_NAME,
+			i.probation_end_date,
+			i.training_end_date,
+			i.marital_status,
+			i.marital_date,
+			i.internal_married_with,
+			i.ptkp_status,
+			i.working_schedule_id,
+			i.effective_start_date pi_start_date,
+			i.effective_end_date pi_end_date,	
+			
+			a.organization_id,
+			org.organization_name,
+			bh.branch_id,
+			bh.branch_name,
+			bh.branch_code,
+			a.job_id,
+			jb.job_name,
+			jobv.job_group_code,
+      		loc.location_id,
+			loc.location_name,
+			a.grade_id,
+			grade.grade grade,
+			grade.sub_grade,
+     		grade.grade || ' - ' || grade.sub_grade grade_name,
+     		gradev.personal_grade_code,
+			a.action_type,
+			a.assignment_id,
+			a.transfered_by,
+			a.assignment_status,
+			a.housing_allowance,
+			a.mentor_id,
+			a.is_internship,
+			a.effective_start_date,
+			a.effective_end_date,
+			
+			paoi.OTHER_INFO_DTL_ID,
+			paoi.VALUE,
+			paoi.CREATED_BY AS CREATED_BY_OTHER_INFO,
+			paoi.CREATION_DATE AS CREATION_DATE_OTHER_INFO,
+			paoi.LAST_UPDATED_BY AS LAST_UPDATED_BY_OTHER_INFO,
+			paoi.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_OTHER_INFO,
+			
+			p.CREATED_BY,
+			p.CREATION_DATE,
+			p.LAST_UPDATED_BY,
+			p.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		from pea_people p 
+		join pea_people_types t on p.person_id = t.person_id
+		join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+		join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+		left join bse_companies c on c.company_id = t.company_id
+		left join wos_jobs jb on jb.job_id = a.job_id
+		left join wos_job_versions jobv on jobv.job_id = jb.job_id
+		left join wos_organizations org on org.organization_id = a.organization_id
+        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+        left join wos_locations loc on loc.location_id = orgv.location_id
+        left join wos_grades grade on grade.grade_id = a.grade_id
+        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+		left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+		left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+		left join sam_users su on(su.user_id = p.last_updated_by)
+	</sql>
+
+	<sql id="selectCriteria">
+		<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= orgv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= orgv.date_to
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to			
+		</if>
+		<if test="criteria.branchId != null">
+			and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.organizationId != null">
+			and a.organization_id = #{criteria.organizationId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.jobId != null">
+			and a.job_id = #{criteria.jobId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.peopleType != null">
+			and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.employeeNumber != null">
+			and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.employmentCategory != null">
+			and t.employment_category = #{criteria.employmentCategory, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.fullName != null">
+			and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.birthDate != null">
+			and i.birth_date = #{criteria.birthDate, jdbcType=TIMESTAMP}
+		</if>
+		<if test="criteria.gender != null">
+			and i.gender_code = (#{criteria.gender, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.isAffco != null">
+			and t.is_affco = #{criteria.isAffco, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.gradeInclusions != null">
+			<if test="criteria.gradeInclusions.size() > 0">
+				and
+				<foreach collection="criteria.gradeInclusions" open="(" close=")" separator=" OR " item="grade">
+					grade.grade = #{grade, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.isKeyJob != null">
+			and jobv.is_key_job = (#{criteria.isKeyJob, jdbcType=DECIMAL})
+		</if>
+		<if test="criteria.selectedPeopleType != null">
+				AND (t.people_type in ('INTERNSHIP', 'EX_INTERNSHIP') or t.employment_category = 'TRAINEE')  
+			</if>
+		<if test="criteria.gradeExclusions != null">
+			<if test="criteria.gradeExclusions.size() > 0">
+				and
+				<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+					a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.inOrganizationId != null">
+			<if test="criteria.inOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="criteria.inOrganizationId">
+					a.organization_id = #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.notInOrganizationId != null">
+			<if test="criteria.notInOrganizationId.size() > 0">
+				and
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="criteria.notInOrganizationId">
+					 a.organization_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.companyId != null">
+			and t.company_id = #{criteria.companyId}
+		</if>
+		<if test="criteria.personId != null">
+			and p.person_id = #{criteria.personId}
+		</if>
+		<if test="criteria.isEmployee != null">
+			and (select people_type from pea_people_types where person_id = t.person_id and company_id = t.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+			and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+		</if>
+		<if test="criteria.employmentCategories != null">
+				<if test="criteria.employmentCategories.size() != 0">
+					and t.Employment_Category in 
+					<foreach item="item" open="(" close=")" separator="," collection="criteria.employmentCategories">
+						#{item}
+					</foreach>
+				</if>
+		</if>		
+		<if test="criteria.supervisorId != null">
+			and p.person_id &lt;&gt; #{criteria.supervisorId}
+		</if>
+		
+		<if test="criteria.inEmployeeNumber != null and criteria.inEmployeeNumber.size() > 0">
+			and
+			<foreach item="item" open="(" close=")" separator=" or " collection="criteria.inEmployeeNumber">
+				i.employee_number = #{item}
+			</foreach>
+		</if>
+		
+		<if test="criteria.employeeNumberFrom != null">
+			and to_number(i.employee_number) &gt;= #{criteria.employeeNumberFrom, jdbcType=DECIMAL}
+		</if>
+		<if test="criteria.employeeNumberTo != null">
+			and to_number(i.employee_number) &lt;= #{criteria.employeeNumberTo, jdbcType=DECIMAL}
+		</if>
+		
+		<if test="criteria.inPeopleTypes != null and criteria.inPeopleTypes.size() > 0">
+			and t.people_type in 
+			<foreach item="item" open="(" close=")" separator="," collection="criteria.inPeopleTypes">
+				#{item}
+			</foreach>
+		</if>
+		<if test="criteria.isEmployeeInThisMonth != null and criteria.effectiveOnDate != null">
+			OR
+				(
+					upper(t.people_type) = 'EX_EMPLOYEE'
+					and to_number(to_char(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}, 'MM')) = to_number(to_char(t.effective_start_date - 1, 'MM'))
+					and to_number(to_char(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}, 'YYYY')) = to_number(to_char(t.effective_start_date - 1, 'YYYY'))
+					<if test="criteria.effectiveOnDate != null">
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date 
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date 
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date 
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date 
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date 
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= orgv.date_from
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= orgv.date_to
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+						and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to			
+					</if>
+					
+					<if test="criteria.branchId != null">
+						and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+					</if>
+					
+					<if test="criteria.organizationId != null">
+						and a.organization_id = #{criteria.organizationId, jdbcType=NUMERIC}
+					</if>
+					
+					<if test="criteria.jobId != null">
+						and a.job_id = #{criteria.jobId, jdbcType=NUMERIC}
+					</if>
+					
+					<if test="criteria.employeeNumber != null">
+						and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+					</if>
+					
+					<if test="criteria.employmentCategory != null">
+						and t.employment_category = #{criteria.employmentCategory, jdbcType=VARCHAR}
+					</if>
+					
+					<if test="criteria.fullName != null">
+						and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+					</if>
+					
+					<if test="criteria.birthDate != null">
+						and i.birth_date = #{criteria.birthDate, jdbcType=TIMESTAMP}
+					</if>
+					
+					<if test="criteria.gender != null">
+						and i.gender_code = (#{criteria.gender, jdbcType=VARCHAR})
+					</if>
+					
+					<if test="criteria.isAffco != null">
+						and t.is_affco = #{criteria.isAffco, jdbcType=NUMERIC}
+					</if>
+					
+					<if test="criteria.gradeInclusions != null">
+						<if test="criteria.gradeInclusions.size() > 0">
+							and 
+							<foreach collection="criteria.gradeInclusions" open="(" close=")" separator=" OR " item="grade">
+								grade.grade = #{grade, jdbcType=VARCHAR}
+							</foreach>
+						</if>
+					</if>
+					
+					<if test="criteria.isKeyJob != null">
+						and jobv.is_key_job = (#{criteria.isKeyJob, jdbcType=DECIMAL})
+					</if>
+					
+					<if test="criteria.selectedPeopleType != null">
+						AND (t.people_type in ('INTERNSHIP', 'EX_INTERNSHIP') or t.employment_category = 'TRAINEE')  
+					</if>
+						
+					<if test="criteria.gradeExclusions != null">
+						<if test="criteria.gradeExclusions.size() > 0">
+							and 
+							<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+								a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+							</foreach>
+						</if>
+					</if>
+					
+					<if test="criteria.inOrganizationId != null">
+						<if test="criteria.inOrganizationId.size() > 0">
+							and 
+							<foreach item="item" open="(" close=")" separator=" OR "
+								collection="criteria.inOrganizationId">
+								a.organization_id = #{item}
+							</foreach>			
+						</if>
+					</if>
+					
+					<if test="criteria.notInOrganizationId != null">
+						<if test="criteria.notInOrganizationId.size() > 0">
+							and 
+							<foreach item="item" open="(" close=")" separator=" AND "
+								collection="criteria.notInOrganizationId">
+								a.organization_id &lt;&gt; #{item}
+							</foreach>
+						</if>
+					</if>
+					
+					<if test="criteria.companyId != null">
+						and t.company_id = #{criteria.companyId}
+					</if>
+					
+					<if test="criteria.personId != null">
+						and p.person_id = #{criteria.personId}
+					</if>
+					
+					<if test="criteria.isEmployee != null">
+						and (select people_type from pea_people_types where person_id = t.person_id and company_id = t.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+						and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+					</if>
+					
+					<if test="criteria.employmentCategories != null">
+							<if test="criteria.employmentCategories.size() != 0">
+								and t.Employment_Category in 
+								<foreach item="item" open="(" close=")" separator="," collection="criteria.employmentCategories">
+									#{item}
+								</foreach>
+							</if>
+					</if>
+					
+					<if test="criteria.supervisorId != null">
+						and p.person_id &lt;&gt; #{criteria.supervisorId}
+					</if>
+					
+					<if test="criteria.inEmployeeNumber != null and criteria.inEmployeeNumber.size() > 0">
+						and
+						<foreach item="item" open="(" close=")" separator=" or " collection="criteria.inEmployeeNumber">
+							i.employee_number = #{item}
+						</foreach>
+					</if>
+					
+					<if test="criteria.employeeNumberFrom != null">
+						and to_number(i.employee_number) &gt;= #{criteria.employeeNumberFrom, jdbcType=DECIMAL}
+					</if>
+					<if test="criteria.employeeNumberTo != null">
+						and to_number(i.employee_number) &lt;= #{criteria.employeeNumberTo, jdbcType=DECIMAL}
+					</if>
+					
+				)
+		</if>
+	</sql>
+	
+	<sql id="findPersonTemp">
+		select
+			p.person_id,
+			p.person_uuid,
+			t.company_id,
+			
+			t.people_type,
+			t.employment_category,
+			t.source,
+			t.ref_id,
+			t.is_affco,
+			t.is_canceled,
+			
+			bh.branch_id,
+			bh.branch_name,
+			bh.branch_code,
+			
+			i.information_id,
+			i.employee_number,
+			i.gender_code,
+			i.birth_place,
+			i.birth_date,
+	    	i.full_name,
+			i.photo_file_path,
+			i.nationality_code,
+			i.religion_code,
+			i.blood_type,
+			i.blood_type_rhesus,
+			i.mother_name,
+			i.disability_code,
+			i.disability_remark,
+			i.hobby,
+			i.is_pilgrimage,
+			i.is_smoker,
+			i.astra_join_date,
+			i.hire_date,
+			i.home_base_code,
+			i.probation_end_date,
+			i.training_end_date,
+			i.marital_status,
+			i.marital_date,
+			i.internal_married_with,
+			i.ptkp_status,
+			i.working_schedule_id,
+			i.effective_start_date pi_start_date,
+			i.effective_end_date pi_end_date,	
+			
+			a.organization_id,
+			a.grade_id,
+			a.action_type,
+			a.assignment_id,
+			a.transfered_by,
+			a.assignment_status,
+			a.housing_allowance,
+			a.mentor_id,
+			a.is_internship,
+			a.effective_start_date,
+			a.effective_end_date,
+			
+			p.CREATED_BY,
+			p.CREATION_DATE,
+			p.LAST_UPDATED_BY,
+			p.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		from pea_people p 
+		join pea_people_types t on p.person_id = t.person_id
+		join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+		join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+		left join sam_users su on(su.user_id = p.last_updated_by)
+	</sql>
+	
+	<sql id="selectCriteriaTemp">
+		<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date	
+		</if>
+		<if test="criteria.branchId != null">
+			and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.organizationId != null">
+			and a.organization_id = #{criteria.organizationId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.jobId != null">
+			and a.job_id = #{criteria.jobId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.peopleType != null">
+			and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.employeeNumber != null">
+			and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.employmentCategory != null">
+			and t.employment_category = #{criteria.employmentCategory, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.fullName != null">
+			and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.inOrganizationId != null">
+			<if test="criteria.inOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="criteria.inOrganizationId">
+					a.organization_id = #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.notInOrganizationId != null">
+			<if test="criteria.notInOrganizationId.size() > 0">
+				and
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="criteria.notInOrganizationId">
+					 a.organization_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.companyId != null">
+			and t.company_id = #{criteria.companyId}
+		</if>
+		<if test="criteria.personId != null">
+			and p.person_id = #{criteria.personId}
+		</if>
+		<if test="criteria.isEmployee != null">
+			and (select people_type from pea_people_types where person_id = t.person_id and company_id = t.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+			and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+		</if>
+		<if test="criteria.supervisorId != null">
+			and p.person_id &lt;&gt; #{criteria.supervisorId}
+		</if>
+	</sql>
+	
+	<sql id="selectCriteriaForPayroll">
+		<if test="criteria.effectiveOnDate != null">
+			and (
+				 ((LAST_DAY(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) between t.effective_start_date and t.effective_end_date)
+				  and 
+				  (LAST_DAY(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) between a.effective_start_date and a.effective_end_date)	
+				)OR
+				  (TRUNC(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP},'MM') between t.effective_start_date and t.effective_end_date)
+				  and 
+				  (TRUNC(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP},'MM') between a.effective_start_date and a.effective_end_date)
+				  and exists
+				  (select 1
+			        from    PEA_PEOPLE_TYPES PPT
+			        where   PPT.PERSON_ID = i.PERSON_ID
+			        and     PPT.COMPANY_ID = i.COMPANY_ID
+			        and     LAST_DAY(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) between PPT.EFFECTIVE_START_DATE and PPT.EFFECTIVE_END_DATE
+			        and     ppt.employment_category='EX_EMPLOYEE')	
+				)			
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= orgv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= orgv.date_to
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to
+<!-- 			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= gradev.date_from -->
+<!-- 			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= gradev.date_to -->
+		</if>
+		<if test="criteria.branchId != null">
+			and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.organizationId != null">
+			and a.organization_id = #{criteria.organizationId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.jobId != null">
+			and a.job_id = #{criteria.jobId, jdbcType=NUMERIC}
+		</if>
+		<if test="criteria.peopleType != null">
+			and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.employeeNumber != null">
+			and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.employmentCategory != null">
+			and t.employment_category = #{criteria.employmentCategory, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.fullName != null">
+			and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.birthDate != null">
+			and i.birth_date = #{criteria.birthDate, jdbcType=TIMESTAMP}
+		</if>
+		<if test="criteria.gender != null">
+			and i.gender_code = (#{criteria.gender, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.gradeExclusions != null and criteria.gradeExclusions.size() > 0">
+			and 
+			<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+				a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+			</foreach>
+		</if>
+	</sql>
+
+	<select id="selectPersonByBusinessGroup" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			c.group_id = #{groupId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="countPersonByBusinessGroup" parameterType="map" resultType="Integer">
+		select count(*)
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+				and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id
+				and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			c.group_id = #{groupId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+	</select>
+
+	<select id="selectPersonIdsByBusinessGroup" parameterType="map" resultType="Long">
+		select
+			p.person_id
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+				and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id
+				and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			c.group_id = #{groupId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+	</select>
+
+	<select id="selectPersonByCompany" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>				
+			<include refid="selectCriteria" />
+		</where>
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="selectPersonByCompanyTemp" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPersonTemp" />
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>				
+			<include refid="selectCriteriaTemp" />
+		</where>
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<!-- add By AAA 15031814272238 [HCMS - Tidak Bisa Definitive Status Atas Organisasi NonAktif] -->
+	<select id="selectPersonByCompanyInvalidDate" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			 t.company_id = #{companyId,jdbcType=NUMERIC}
+		<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to 	
+		</if>
+		<if test="criteria.employeeNumber != null">
+			and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.fullName != null">
+			and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+		</if>
+		<!-- Add by HBP 15080709503731 - Perbaikan LOV Employee Saat Promotion Request -->
+		<if test="criteria.inOrganizationId != null">
+			<if test="criteria.inOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="criteria.inOrganizationId">
+					a.organization_id = #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.notInOrganizationId != null">
+			<if test="criteria.notInOrganizationId.size() > 0">
+				and
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="criteria.notInOrganizationId">
+					 a.organization_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.gradeExclusions != null">
+			<if test="criteria.gradeExclusions.size() > 0">
+				and
+				<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+					a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.peopleType != null">
+			and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.supervisorId != null">
+			and p.person_id &lt;&gt; #{criteria.supervisorId}
+		</if>
+		<if test="criteria.personId != null">
+			and p.person_id = #{criteria.personId}
+		</if>
+		<!-- Add by HBP 15080709503731 - Perbaikan LOV Employee Saat Promotion Request -->
+			 ORDER BY TO_NUMBER (i.employee_number) ASC
+	</select>
+	
+	<select id="selectPersonByCompanyForPayrollProcess" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			t.company_id = #{companyId,jdbcType=NUMERIC}
+		<include refid="selectCriteriaForPayroll" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+
+	<select id="selectPersonByCompanyKeyValue" parameterType="map" resultMap="selectActivePersonKeyValue">
+		<include refid="findPerson" />
+		where
+			t.company_id = #{companyId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+
+	<select id="countPersonByCompany" parameterType="map" resultType="int">
+		SELECT 
+			COUNT(*) 
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+				and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id
+				and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+			
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>			
+			<include refid="selectCriteria" />
+		</where>			
+	</select>
+	
+	<select id="countPersonByCompanyTemp" parameterType="map" resultType="int">
+		SELECT 
+			COUNT(*) 
+		from pea_people p 
+		join pea_people_types t on p.person_id = t.person_id
+		join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+		join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+		left join sam_users su on(su.user_id = p.last_updated_by)
+			
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>			
+			<include refid="selectCriteriaTemp" />
+		</where>			
+	</select>
+	
+	<!-- add By AAA 15031814272238 [HCMS - Tidak Bisa Definitive Status Atas Organisasi NonAktif] -->
+	<select id="countPersonByCompanyInvalidDate" parameterType="map" resultType="int">
+		SELECT 
+			COUNT(*) 
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+				and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id
+				and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)		
+			where
+			t.company_id = #{companyId,jdbcType=NUMERIC}
+		<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to 	
+		</if>
+		<!-- Add by HBP 15080709503731 - Perbaikan LOV Employee Saat Promotion Request -->
+		<if test="criteria.employeeNumber != null">
+			and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.fullName != null">
+			and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+		</if>
+		<if test="criteria.inOrganizationId != null">
+			<if test="criteria.inOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="criteria.inOrganizationId">
+					a.organization_id = #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.notInOrganizationId != null">
+			<if test="criteria.notInOrganizationId.size() > 0">
+				and
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="criteria.notInOrganizationId">
+					 a.organization_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.gradeExclusions != null">
+			<if test="criteria.gradeExclusions.size() > 0">
+				and
+				<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+					a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+				</foreach>
+			</if>
+		</if>
+		<if test="criteria.peopleType != null">
+			and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+		</if>
+		<if test="criteria.supervisorId != null">
+			and p.person_id &lt;&gt; #{criteria.supervisorId}
+		</if>
+		<if test="criteria.personId != null">
+			and p.person_id = #{criteria.personId}
+		</if>
+		<!-- Add by HBP 15080709503731 - Perbaikan LOV Employee Saat Promotion Request -->
+	</select>
+
+	<select id="selectPersonById" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			p.person_id = #{personId, jdbcType=NUMERIC}
+			<include refid="selectCriteria" />
+	</select>
+	
+	<!-- add By AAA 15031814272238 [HCMS - Tidak Bisa Definitive Status Atas Organisasi NonAktif] -->
+	<select id="selectPersonByIdInvalidDate" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			p.person_id = #{personId, jdbcType=NUMERIC}
+			<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to
+			<!-- add By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+			and orgv.date_to = (select max(date_to) from wos_organization_versions orgv where org.organization_id = orgv.organization_id)
+			<!-- end add By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+		</if>
+	</select>
+
+	<select id="selectPersonByPersonUUID" parameterType="map"
+		resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			p.person_uuid = #{personUUID, jdbcType=VARBINARY,typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+			<include refid="selectCriteria" />
+	</select>
+
+	<!-- add By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+	<select id="selectPersonByIdOrganizationActiveandInactive" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			p.person_id = #{personId, jdbcType=NUMERIC}
+		<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to 	
+		</if>
+		<if test="criteria.companyId != null">
+			and t.company_id = #{criteria.companyId}
+		</if>
+	</select>
+	
+	<select id="selectPersonByPersonUUIDInactive" parameterType="map"
+		resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			p.person_uuid = #{personUUID, jdbcType=VARBINARY,typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+			<!-- add By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+			and orgv.date_to = (select max(date_to) from wos_organization_versions orgv where org.organization_id = orgv.organization_id)
+			<!-- end add By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+		<if test="criteria.effectiveOnDate != null">
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= t.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= t.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= i.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= i.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= a.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= a.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= c.effective_start_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= c.effective_end_date
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &gt;= jobv.date_from
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} &lt;= jobv.date_to 	
+		</if>
+		<if test="criteria.companyId != null">
+			and t.company_id = #{criteria.companyId}
+		</if>
+	</select>
+	<!-- end add By HBP 15021210450311 [HCMS-DAILY Perbaikan acting review(extend /failed)] Tidak bisa melakukan submit Acting Review -->
+
+	<sql id="findAssignment">
+		SELECT people.person_id,
+		  people.person_uuid,
+		  pi.full_name,
+		  pi.employee_number,
+		  pt.people_type,
+		  assign.job_id,
+		  jo.job_name,
+		  jov.job_group_code,
+		  assign.grade_id,
+		  gr.personal_grade_code,
+		  assign.company_id,
+		  assign.organization_id,
+		  wo.organization_name,
+		  wov.location_id,
+		  lo.location_name,
+		  bh.branch_id,
+		  bh.branch_name,
+		  bh.branch_code,
+		  bb.role_code
+		FROM pea_people people
+		JOIN pea_primary_assignments assign
+		ON assign.person_id = people.person_id
+		AND TRUNC(sysdate) BETWEEN assign.effective_start_date AND assign.effective_end_date
+		JOIN pea_personal_informations pi
+		ON people.person_id   = pi.person_id
+		AND assign.company_id = pi.company_id
+		AND TRUNC(sysdate) BETWEEN pi.effective_start_date AND pi.effective_end_date
+		JOIN pea_people_types pt
+		ON people.person_id   = pt.person_id
+		AND assign.company_id = pt.company_id
+		AND TRUNC(sysdate) BETWEEN pt.effective_start_date AND pt.effective_end_date
+		AND pt.people_type = 'EMPLOYEE'
+		JOIN bse_companies bc
+		ON bc.company_id = assign.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		JOIN wos_jobs jo
+		ON jo.job_id = assign.job_id
+		LEFT JOIN wos_job_versions jov
+		ON jo.job_id = jov.job_id
+		AND TRUNC(sysdate) BETWEEN jov.date_from AND jov.date_to
+		LEFT JOIN wos_grade_versions gr
+		ON gr.grade_id = assign.grade_id
+		AND TRUNC(sysdate) BETWEEN gr.date_from AND gr.date_to
+		JOIN wos_organizations wo
+		ON wo.organization_id = assign.organization_id
+		LEFT JOIN wos_organization_versions wov
+		ON assign.organization_id = wov.organization_id
+		AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		JOIN wos_locations lo
+		ON wov.location_id = lo.location_id
+		LEFT JOIN
+		  (SELECT wo.organization_id,
+		    br.organization_id branch_id,
+		    br.organization_code branch_code,
+		    br.organization_name branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  AND wov.is_head_office = 0
+		  JOIN wos_locations wl
+		  ON wov.location_id = wl.location_id
+		  JOIN wos_location_versions wlv
+		  ON wlv.location_id = wl.location_id
+		  AND TRUNC(sysdate) BETWEEN wlv.date_from AND wlv.date_to
+		  LEFT JOIN wos_organizations br
+		  ON wlv.branch_owner_id = br.organization_id
+		  UNION
+		  SELECT wo.organization_id,
+		    -1 branch_id,
+		    'HEADOFFICE' branch_code,
+		    'Head Office' branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND wov.is_head_office = 1
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  ) bh ON bh.organization_id = assign.organization_id
+		LEFT JOIN
+		  (SELECT jr.management_type_code role_code,
+		    TO_CHAR(jr.job_id) job_id,
+		    TO_CHAR(NULL) person_id,
+		    TO_CHAR(NULL) company_id
+		  FROM wos_job_roles jr
+		  JOIN wos_job_versions jv
+		  ON jr.job_id = jv.job_id
+		  AND TRUNC(sysdate) BETWEEN jv.date_from AND jv.date_to
+		  UNION
+		  SELECT role_type role_code,
+		    TO_CHAR(NULL) job_id,
+		    TO_CHAR(person_id) person_id,
+		    TO_CHAR(company_id) company_id
+		  FROM pea_roles
+		  WHERE is_active    = 1
+		  ) bb ON (bb.job_id = assign.job_id
+		OR (bb.person_id      = assign.person_id AND bb.company_id = assign.company_id))
+	    where 1=1
+	</sql>
+	
+	<sql id="countAssignment">
+		select
+			count(*)
+		FROM pea_people people
+		JOIN pea_primary_assignments assign
+		ON assign.person_id = people.person_id
+		AND TRUNC(sysdate) BETWEEN assign.effective_start_date AND assign.effective_end_date
+		JOIN pea_personal_informations pi
+		ON people.person_id   = pi.person_id
+		AND assign.company_id = pi.company_id
+		AND TRUNC(sysdate) BETWEEN pi.effective_start_date AND pi.effective_end_date
+		JOIN pea_people_types pt
+		ON people.person_id   = pt.person_id
+		AND assign.company_id = pt.company_id
+		AND TRUNC(sysdate) BETWEEN pt.effective_start_date AND pt.effective_end_date
+		AND pt.people_type = 'EMPLOYEE'
+		JOIN bse_companies bc
+		ON bc.company_id = assign.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		JOIN wos_jobs jo
+		ON jo.job_id = assign.job_id
+		LEFT JOIN wos_job_versions jov
+		ON jo.job_id = jov.job_id
+		AND TRUNC(sysdate) BETWEEN jov.date_from AND jov.date_to
+		LEFT JOIN wos_grade_versions gr
+		ON gr.grade_id = assign.grade_id
+		AND TRUNC(sysdate) BETWEEN gr.date_from AND gr.date_to
+		JOIN wos_organizations wo
+		ON wo.organization_id = assign.organization_id
+		LEFT JOIN wos_organization_versions wov
+		ON assign.organization_id = wov.organization_id
+		AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		JOIN wos_locations lo
+		ON wov.location_id = lo.location_id
+		LEFT JOIN
+		  (SELECT wo.organization_id,
+		    br.organization_id branch_id,
+		    br.organization_code branch_code,
+		    br.organization_name branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  AND wov.is_head_office = 0
+		  JOIN wos_locations wl
+		  ON wov.location_id = wl.location_id
+		  JOIN wos_location_versions wlv
+		  ON wlv.location_id = wl.location_id
+		  AND TRUNC(sysdate) BETWEEN wlv.date_from AND wlv.date_to
+		  LEFT JOIN wos_organizations br
+		  ON wlv.branch_owner_id = br.organization_id
+		  UNION
+		  SELECT wo.organization_id,
+		    -1 branch_id,
+		    'HEADOFFICE' branch_code,
+		    'Head Office' branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND wov.is_head_office = 1
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  ) bh ON bh.organization_id = assign.organization_id
+		LEFT JOIN
+		  (SELECT jr.management_type_code role_code,
+		    TO_CHAR(jr.job_id) job_id,
+		    TO_CHAR(NULL) person_id,
+		    TO_CHAR(NULL) company_id
+		  FROM wos_job_roles jr
+		  JOIN wos_job_versions jv
+		  ON jr.job_id = jv.job_id
+		  AND TRUNC(sysdate) BETWEEN jv.date_from AND jv.date_to
+		  UNION
+		  SELECT role_type role_code,
+		    TO_CHAR(NULL) job_id,
+		    TO_CHAR(person_id) person_id,
+		    TO_CHAR(company_id) company_id
+		  FROM pea_roles
+		  WHERE is_active    = 1
+		  ) bb ON (bb.job_id = assign.job_id
+		OR (bb.person_id      = assign.person_id AND bb.company_id = assign.company_id))
+		where 1 = 1
+	</sql>
+
+	<select id="selectPersonByAssignment" parameterType="map" resultMap="selectByAssignmentResult">
+		<include refid="findAssignment" />
+		and pt.people_type = 'EMPLOYEE'
+		<if test="jobId != null">
+			and assign.job_id = #{jobId}
+		</if>
+		<if test="organizationId != null">
+			and assign.organization_id = #{organizationId}
+		</if>
+		<if test="roleCode != null">
+			and bb.role_code = #{roleCode}
+		</if>
+		<if test="branchId != null">
+			and bh.branch_id = #{branchId}
+		</if>
+		<if test="personId != null">
+			and people.person_id = #{personId}
+		</if>
+		<if test="companyId != null">
+			and bc.group_id = (select group_id from bse_companies where trunc(sysdate) between effective_start_date and effective_end_date and company_id = #{companyId})
+		</if>
+		<if test="jobGroupCode != null">
+			and jov.job_group_code = #{jobGroupCode}
+		</if>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	
+	<select id="selectPersonByAssignmentForLov" parameterType="map" resultMap="selectByAssignmentResult">
+		<include refid="findAssignment" />
+		and pt.people_type = 'EMPLOYEE'
+		<if test="jobId != null">
+			and assign.job_id = #{jobId}
+		</if>
+		<if test="organizationId != null">
+			and assign.organization_id = #{organizationId}
+		</if>
+		<if test="roleCode != null">
+			and bb.role_code = #{roleCode}
+		</if>
+		<if test="branchId != null">
+			and bh.branch_id = #{branchId}
+		</if>
+		<if test="personId != null">
+			and people.person_id = #{personId}
+		</if>
+		<if test="companyId != null">
+			and assign.company_id = #{companyId}
+		</if>
+		<if test="employeeNumber != null">
+			and pi.employee_number like #{employeeNumber}
+		</if>
+		<if test="employeeName != null">
+			and pi.full_name like #{employeeName}
+		</if>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	
+	<select id="countPersonByAssignmentForLov" parameterType="map" resultType="Integer">
+		<include refid="countAssignment" />
+		and pt.people_type = 'EMPLOYEE'
+		<if test="jobId != null">
+			and assign.job_id = #{jobId}
+		</if>
+		<if test="organizationId != null">
+			and assign.organization_id = #{organizationId}
+		</if>
+		<if test="roleCode != null">
+			and bb.role_code = #{roleCode}
+		</if>
+		<if test="branchId != null">
+			and bh.branch_id = #{branchId}
+		</if>
+		<if test="personId != null">
+			and people.person_id = #{personId}
+		</if>
+		<if test="companyId != null">
+			and assign.company_id = #{companyId}
+		</if>
+		<if test="employeeNumber != null">
+			and pi.employee_number like #{employeeNumber}
+		</if>
+		<if test="employeeName != null">
+			and pi.full_name like #{employeeName}
+		</if>
+	</select>
+
+	<select id="selectAssignmentByPersonId" parameterType="map" resultMap="selectByAssignmentResult">
+		<include refid="findAssignment" />
+		<if test="personId != null">
+			and people.person_id = #{personId}
+		</if>
+		<if test="companyId != null">
+			and assign.company_id = #{companyId}
+		</if>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+
+	<select id="selectBySecurityFilter" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			pi.person_id,
+			pi.employee_number,
+			pi.full_name
+		from pea_primary_assignments pa join pea_personal_informations pi on pi.person_id = pa.person_id 
+			and (sysdate between pa.effective_start_date and pa.effective_end_date )
+			and (sysdate between pi.effective_start_date and pi.effective_end_date)
+		<where>
+			pa.company_id = #{companyId}
+			<if test="inOrganizationId != null and inOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="inOrganizationId">
+					pa.organization_id = #{item}
+				</foreach>
+			</if>
+			<if test="notInOrganizationId != null and notInOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="notInOrganizationId">
+					pa.organization_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+			<if test="gradeExclusions != null and gradeExclusions.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="gradeExclusions">
+					pa.grade_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+			<if test="personId != null">
+				and pa.person_id = #{personId}
+			</if>
+		</where>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	
+	<select id="selectBySecurityFilterWitRowBounds" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select distinct
+			pi.person_id,
+			pi.employee_number,
+			pi.full_name
+		from pea_primary_assignments pa 
+			join pea_personal_informations pi on pi.person_id = pa.person_id  and pa.company_id = pi.company_id
+			and (trunc(sysdate) between pa.effective_start_date and pa.effective_end_date )
+		Join Pea_People_Types Ppt On Ppt.Person_Id = Pa.Person_Id And Ppt.Company_Id = Pa.Company_Id
+			and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date		
+		<where>
+			Ppt.People_Type = 'EMPLOYEE' 
+			and	pa.company_id = #{companyId}
+			and (trunc(sysdate) between pi.effective_start_date and pi.effective_end_date)
+			<if test="employeeNumber != null">
+				and upper(pi.employee_number) like upper(#{employeeNumber, jdbcType=VARCHAR})
+			</if>
+			<if test="employeeName != null">
+				and upper(pi.full_name) like upper(#{employeeName, jdbcType=VARCHAR})
+			</if>
+			<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inOrganizationId">
+						pa.organization_id = #{item}
+					</foreach>					
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="notInOrganizationId">
+						pa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="gradeExclusions">
+						pa.grade_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="personId != null">
+				and pa.person_id = #{personId}
+			</if>
+		</where>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	
+	<select id="selectAlltBySecurityFilterWitRowBounds" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select distinct
+			pi.person_id,
+			pi.employee_number,
+			pi.full_name
+		from pea_primary_assignments pa 
+		   join pea_personal_informations pi on pi.person_id = pa.person_id and pi.company_id = pa.company_id
+			and (trunc(sysdate) between pa.effective_start_date and pa.effective_end_date )
+		Join Pea_People_Types Ppt On Ppt.Person_Id = Pa.Person_Id And Ppt.Company_Id = Pa.Company_Id
+			and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date		
+		<where>
+			pa.company_id = #{companyId}
+			and (trunc(sysdate) between pi.effective_start_date and pi.effective_end_date)
+			<if test="employeeNumber != null">
+				and upper(pi.employee_number) like upper(#{employeeNumber, jdbcType=VARCHAR})
+			</if>
+			<if test="employeeName != null">
+				and upper(pi.full_name) like upper(#{employeeName, jdbcType=VARCHAR})
+			</if>
+			<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inOrganizationId">
+						pa.organization_id = #{item}
+					</foreach>					
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="notInOrganizationId">
+						pa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="gradeExclusions">
+						pa.grade_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="personId != null">
+				and pa.person_id = #{personId}
+			</if>
+		</where>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	
+	<select id="countBySecurityFilter" parameterType="map" resultType="int">
+		select
+			count(*)
+		from pea_primary_assignments pa 
+		join pea_personal_informations pi on pi.person_id = pa.person_id 
+			and (sysdate between pi.effective_start_date and pi.effective_end_date)
+			and pi.company_id = pa.company_id
+		Join Pea_People_Types Ppt On Ppt.Person_Id = Pa.Person_Id And Ppt.Company_Id = Pa.Company_Id
+			and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date		
+		<where>
+			Ppt.People_Type = 'EMPLOYEE' and
+			pa.company_id = #{companyId}
+			and (sysdate between pa.effective_start_date and pa.effective_end_date )
+			<if test="employeeNumber != null">
+				and upper(pi.employee_number) like upper(#{employeeNumber, jdbcType=VARCHAR})
+			</if>
+			<if test="employeeName != null">
+				and upper(pi.full_name) like upper(#{employeeName, jdbcType=VARCHAR})
+			</if>
+			<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inOrganizationId">
+						pa.organization_id = #{item}
+					</foreach>					
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="notInOrganizationId">
+						pa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="gradeExclusions">
+						pa.grade_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="personId != null">
+				and pa.person_id = #{personId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="countAllBySecurityFilter" parameterType="map" resultType="int">
+		select
+			count(*)
+		from pea_primary_assignments pa 
+		join pea_personal_informations pi on pi.person_id = pa.person_id 
+			and (sysdate between pi.effective_start_date and pi.effective_end_date)
+			and pi.company_id = pa.company_id
+		Join Pea_People_Types Ppt On Ppt.Person_Id = Pa.Person_Id And Ppt.Company_Id = Pa.Company_Id
+			and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date		
+		<where>
+			Ppt.People_Type = 'EMPLOYEE' and
+			pa.company_id = #{companyId}
+			and (sysdate between pa.effective_start_date and pa.effective_end_date )
+			<if test="employeeNumber != null">
+				and upper(pi.employee_number) like upper(#{employeeNumber, jdbcType=VARCHAR})
+			</if>
+			<if test="employeeName != null">
+				and upper(pi.full_name) like upper(#{employeeName, jdbcType=VARCHAR})
+			</if>
+			<if test="inOrganizationId != null">
+				<if test="inOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inOrganizationId">
+						pa.organization_id = #{item}
+					</foreach>					
+				</if>
+			</if>
+			<if test="notInOrganizationId != null">
+				<if test="notInOrganizationId.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="notInOrganizationId">
+						pa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="gradeExclusions != null">
+				<if test="gradeExclusions.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="gradeExclusions">
+						pa.grade_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="personId != null">
+				and pa.person_id = #{personId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectPeopleAffcoByCompanyId" resultMap="peopleAffcoResult">
+		SELECT pt.person_id,
+		  pt.company_id,
+		  pi.full_name,
+		  pi.employee_number,
+		  pi.hire_date,
+		  p.last_updated_by,
+		  p.last_update_date,
+		  su.user_name
+		FROM pea_people p
+		JOIN pea_people_types pt on pt.person_id = p.person_id
+		JOIN pea_personal_informations pi
+			ON pi.person_id = pt.person_id
+			AND pi.company_id = pt.company_id
+			AND TRUNC(pt.effective_start_date) BETWEEN pi.effective_start_date AND pi.effective_end_date
+		LEFT JOIN sam_users su on(su.user_id = p.last_updated_by)			
+		WHERE pt.is_affco = 1
+		AND pt.effective_start_date = pi.hire_date
+		<if test="companyId != null">
+			AND pt.company_id = #{companyId}
+		</if>
+		<if test="personId != null">
+			AND pt.person_id = #{personId}
+		</if>
+		<if test="effectiveOnDate != null">
+			AND TRUNC(#{effectiveOnDate}) between pt.effective_start_date and pt.effective_end_date 		
+		</if>	
+		<if test="employeeNumber != null">
+			AND UPPER(pi.employee_number) like UPPER(#{employeeNumber})
+		</if>
+		<if test="fullName != null">
+			AND UPPER(pi.full_name) like UPPER(#{fullName}) 		
+		</if>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	
+	<select id="countPeopleAffcoByCompanyId" resultType="int" parameterType="map">
+		SELECT count(*)
+		FROM pea_people_types pt
+		JOIN pea_personal_informations pi
+			ON pi.person_id = pt.person_id
+			AND pt.company_id = pi.company_id
+			AND TRUNC(pt.effective_start_date) BETWEEN pi.effective_start_date AND pi.effective_end_date
+		LEFT JOIN sam_users su on(su.user_id = pt.last_updated_by)			
+		WHERE pt.is_affco = 1
+		<if test="companyId != null">
+			AND pt.company_id = #{companyId}
+		</if>
+		<if test="employeeNumber != null">
+			AND UPPER(pi.employee_number) like UPPER(#{employeeNumber})
+		</if>
+		<if test="fullName != null">
+			AND UPPER(pi.full_name) like UPPER(#{fullName}) 		
+		</if>
+	</select>
+	
+	<select id="getPersonActiveByChildBirthdate" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where
+			t.company_id = #{companyId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+		and p.person_id in (select distinct person_id from pea_contacts where birth_date = and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between start_date and end_date
+			and UPPER(relationship) like UPPER('CHILD_%'))
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="selectAllPersonByCompanyKeyValue" parameterType="map" resultMap="selectActivePersonKeyValue">
+		select distinct pp.person_id, ppi.employee_number, ppi.full_name 
+		from pea_people pp
+  		join pea_personal_informations ppi on ppi.person_id = pp.person_id   			
+  		JOIN (select * from pea_people_types ppt1
+		where ppt1.people_type_id = (COALESCE((select ppt2.people_type_id from pea_people_types ppt2 where trunc(sysdate) between ppt2.effective_start_date and ppt2.effective_end_date and ppt2.person_id = ppt1.person_id and ppt2.company_id = ppt1.company_id),
+		(select max(people_type_id) from pea_people_types ppt3 where ppt3.person_id = ppt1.person_id and ppt3.company_id = ppt1.company_id )))) ppt
+		ON ppi.person_id   = ppt.person_id
+		AND ppt.company_id = ppi.company_id
+		JOIN (select * from pea_primary_assignments ppa1
+		where ppa1.assignment_id = (COALESCE((select ppa2.assignment_id from pea_primary_assignments ppa2 where trunc(sysdate) between ppa2.effective_start_date and ppa2.effective_end_date and ppa2.person_id = ppa1.person_id and ppa2.company_id = ppa1.company_id
+			<!--
+			Added by Alfat, August 7th, 2015.
+			Fixed bug 11367. (LOV Employee produce error when searched without parameter).
+			-There are empployee primary_assignment data that have more than one currently active assignment,
+			 fixed by limit the primary_assignment to return one row only.
+			 -->
+			 AND rownum = 1
+		),
+		(select max(ppa3.assignment_id) from pea_primary_assignments ppa3 where ppa3.person_id = ppa1.person_id and ppa3.company_id = ppa1.company_id )))) ppa
+		ON ppa.person_id   = ppi.person_id
+		AND ppa.company_id = ppi.company_id	
+		LEFT JOIN wos_grades wg on wg.grade_id = ppa.grade_id
+		LEFT JOIN BRANCH_HIERARCHY_V bh
+		ON bh.organization_id = ppa.organization_id
+ 		<where>
+ 			<if test="companyId != null">
+	 			and ppi.company_id = #{companyId}
+			</if>
+ 			and #{criteria.effectiveOnDate} between ppi.effective_start_date and ppi.effective_end_date
+ 			<if test="criteria.employeeNumber != null">
+				AND UPPER(ppi.employee_number) like UPPER(#{criteria.employeeNumber})
+			</if>
+			<if test="criteria.fullName != null">
+				AND UPPER(ppi.full_name) like UPPER(#{criteria.fullName}) 		
+			</if>
+			<if test="criteria.selectedPeopleType != null">
+				AND (ppt.people_type in ('INTERNSHIP', 'EX_INTERNSHIP') or ppt.employment_category = 'TRAINEE')  
+			</if>
+			<if test="criteria.branchId != null">
+				and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>			
+			<if test="criteria.gradeInclusions != null">
+				<if test="criteria.gradeInclusions.size() > 0">
+					and 
+					<foreach collection="criteria.gradeInclusions" open="(" close=")" separator=" OR " item="grade">
+						wg.grade = #{grade, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						ppa.organization_id = #{item}
+					</foreach>	 
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						ppa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.gradeExclusions != null">
+				<if test="criteria.gradeExclusions.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.gradeExclusions">
+						ppa.grade_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.isEmployee != null">
+				and (select people_type from pea_people_types where person_id = ppt.person_id and company_id = ppt.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+				and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+			</if>
+			<if test="criteria.supervisorId != null">
+				and pp.person_id &lt;&gt; #{criteria.supervisorId}
+			</if>
+			<if test="criteria.employmentCategories != null">
+				<if test="criteria.employmentCategories.size() != 0">
+					and Ppt.Employment_Category in 
+					<foreach item="item" open="(" close=")" separator="," collection="criteria.employmentCategories">
+						#{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.inPeopleTypes != null">
+				<if test="criteria.inPeopleTypes.size() != 0">
+					and Ppt.people_type in 
+					<foreach item="item" open="(" close=")" separator="," collection="criteria.inPeopleTypes">
+						#{item}
+					</foreach>
+				</if>
+			</if>
+		</where>		
+		ORDER BY to_number(ppi.employee_number) ASC	
+	</select>
+
+	<select id="countAllPersonByCompany" parameterType="map" resultType="int">
+		select count(*) 
+		from pea_people pp
+  		join pea_personal_informations ppi on ppi.person_id = pp.person_id   			
+  		JOIN (select * from pea_people_types ppt1
+		where ppt1.people_type_id = (COALESCE((select ppt2.people_type_id from pea_people_types ppt2 where trunc(sysdate) between ppt2.effective_start_date and ppt2.effective_end_date and ppt2.person_id = ppt1.person_id and ppt2.company_id = ppt1.company_id),
+		(select max(people_type_id) from pea_people_types ppt3 where ppt3.person_id = ppt1.person_id and ppt3.company_id = ppt1.company_id )))) ppt
+		ON ppi.person_id   = ppt.person_id
+		AND ppt.company_id = ppi.company_id
+		JOIN (select * from pea_primary_assignments ppa1
+		where ppa1.assignment_id = (COALESCE((select ppa2.assignment_id from pea_primary_assignments ppa2 where trunc(sysdate) between ppa2.effective_start_date and ppa2.effective_end_date and ppa2.person_id = ppa1.person_id and ppa2.company_id = ppa1.company_id
+			<!--
+			Added by Alfat, August 7th, 2015.
+			Fixed bug 11367. (LOV Employee produce error when searched without parameter).
+			-There are empployee primary_assignment data that have more than one currently active assignment,
+			 fixed by limit the primary_assignment to return one row only.
+			 -->
+			 AND rownum = 1
+		),
+		(select max(ppa3.assignment_id) from pea_primary_assignments ppa3 where ppa3.person_id = ppa1.person_id and ppa3.company_id = ppa1.company_id )))) ppa
+		ON ppa.person_id   = ppi.person_id
+		AND ppa.company_id = ppi.company_id	
+		LEFT JOIN wos_grades wg on wg.grade_id = ppa.grade_id
+		LEFT JOIN BRANCH_HIERARCHY_V bh
+		ON bh.organization_id = ppa.organization_id
+ 		<where>
+ 			<if test="companyId != null">
+	 			and ppi.company_id = #{companyId}
+			</if>
+ 			and #{criteria.effectiveOnDate} between ppi.effective_start_date and ppi.effective_end_date
+ 			<if test="criteria.employeeNumber != null">
+				AND UPPER(ppi.employee_number) like UPPER(#{criteria.employeeNumber})
+			</if>
+			<if test="criteria.fullName != null">
+				AND UPPER(ppi.full_name) like UPPER(#{criteria.fullName}) 		
+			</if>
+			<if test="criteria.selectedPeopleType != null">
+				AND (ppt.people_type in ('INTERNSHIP', 'EX_INTERNSHIP') or ppt.employment_category = 'TRAINEE')  
+			</if>
+			<if test="criteria.branchId != null">
+				and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>			
+			<if test="criteria.gradeInclusions != null">
+				<if test="criteria.gradeInclusions.size() > 0">
+					and 
+					<foreach collection="criteria.gradeInclusions" open="(" close=")" separator=" OR " item="grade">
+						<!-- 
+						Updated by ALFAT, August 7th 2015.
+						Fixing bug 11367 (BnbEmployee without parameter error)
+						 -->
+					<!-- wg.grade in = #{grade, jdbcType=VARCHAR} -->
+						wg.grade = #{grade, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						ppa.organization_id = #{item}
+					</foreach>		
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						ppa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.gradeExclusions != null">
+				<if test="criteria.gradeExclusions.size() != 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.gradeExclusions">
+						ppa.grade_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.isEmployee != null">
+				and (select people_type from pea_people_types where person_id = ppt.person_id and company_id = ppt.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+				and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+			</if>
+			<if test="criteria.supervisorId != null">
+				and pp.person_id &lt;&gt; #{criteria.supervisorId}
+			</if>
+			<if test="criteria.employmentCategories != null">
+				<if test="criteria.employmentCategories.size() != 0">
+					and Ppt.Employment_Category in 
+					<foreach item="item" open="(" close=")" separator="," collection="criteria.employmentCategories">
+						#{item}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.inPeopleTypes != null">
+				<if test="criteria.inPeopleTypes.size() != 0">
+					and Ppt.people_type in 
+					<foreach item="item" open="(" close=")" separator="," collection="criteria.inPeopleTypes">
+						#{item}
+					</foreach>
+				</if>
+			</if>
+		</where>
+	</select>
+	
+	<select id="getLastEducation" parameterType="map" resultType="String">
+		SELECT education_level
+		FROM pea_educations
+		WHERE start_date =
+		  (SELECT MAX(start_date) FROM pea_educations WHERE person_id = #{personId} and company_id = #{companyId})
+		AND person_id = #{personId} and company_id = #{companyId}
+	</select>
+	
+	<select id="selectPersonByCompanyInquiry" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		SELECT p.person_id,
+		  t.company_id,
+		  t.people_type,
+		  t.employment_category,
+		  i.employee_number,
+		  i.gender_code,
+		  i.birth_place,
+		  i.birth_date,
+		  i.full_name,
+		  a.organization_id,
+		  org.organization_name,
+		  bh.branch_id,
+		  bh.branch_name,
+		  bh.branch_code,
+		  a.job_id,
+		  jb.job_name,
+		  p.CREATED_BY,
+		  p.CREATION_DATE,
+		  p.LAST_UPDATED_BY,
+		  p.LAST_UPDATE_DATE,
+		  SU.USER_NAME,
+		  TO_NUMBER(i.employee_number) CAST_EMPLOYEE_NUMBER
+		FROM pea_people p
+		JOIN pea_people_types t
+		ON p.person_id = t.person_id
+		JOIN pea_personal_informations i
+		ON i.person_id = p.person_id
+		and i.company_id = t.company_id
+		JOIN pea_primary_assignments a
+		ON a.person_id = p.person_id
+		and a.company_id = t.company_id
+		JOIN wos_jobs jb
+		ON jb.job_id = a.job_id
+		LEFT JOIN wos_job_versions jobv
+		ON jobv.job_id = jb.job_id
+		AND TRUNC(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) BETWEEN jobv.date_from AND jobv.date_to
+		JOIN wos_organizations org
+		ON org.organization_id = a.organization_id
+		LEFT JOIN wos_grades grade
+		ON grade.grade_id = a.grade_id
+		LEFT JOIN BRANCH_HIERARCHY_V bh
+		ON bh.organization_id = a.organization_id
+		LEFT JOIN sam_users su
+		ON(su.user_id = p.last_updated_by)
+		<where>
+			<if test="criteria.effectiveOnDate != null">
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between t.effective_start_date AND t.effective_end_date
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between i.effective_start_date AND i.effective_end_date
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between a.effective_start_date AND a.effective_end_date
+			</if>
+			<if test="criteria.companyId != null">
+				and t.company_id = #{criteria.companyId}
+			</if>
+			<if test="criteria.branchId != null">
+				and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.organizationId != null">
+				and a.organization_id = #{criteria.organizationId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.jobId != null">
+				and a.job_id = #{criteria.jobId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.peopleType != null">
+				and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.employeeNumber != null">
+				and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.employmentCategory != null">
+				and t.employment_category = #{criteria.employmentCategory, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.fullName != null">
+				and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.birthDate != null">
+				and i.birth_date = #{criteria.birthDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.gender != null">
+				and i.gender_code = (#{criteria.gender, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.isAffco != null">
+				and t.is_affco = #{criteria.isAffco, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.gradeInclusions != null">
+				<if test="criteria.gradeInclusions.size() > 0">
+					and 
+					<foreach collection="criteria.gradeInclusions" open="(" close=")" separator=" OR " item="grade">
+						grade.grade = #{grade, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.isKeyJob != null">
+				and jobv.is_key_job = (#{criteria.isKeyJob, jdbcType=DECIMAL})
+			</if>
+			<if test="criteria.selectedPeopleType != null">
+					AND (t.people_type in ('INTERNSHIP', 'EX_INTERNSHIP') or t.employment_category = 'TRAINEE')  
+				</if>
+			<if test="criteria.gradeExclusions != null">
+				<if test="criteria.gradeExclusions.size() > 0">
+					and 
+					<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+						a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						a.organization_id = #{item}
+					</foreach>			
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						a.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>			
+			<if test="criteria.personId != null">
+				and p.person_id = #{criteria.personId}
+			</if>
+			<if test="criteria.isEmployee != null">
+				and (select people_type from pea_people_types where person_id = t.person_id and company_id = t.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+				and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+			</if>
+			<if test="criteria.supervisorId != null">
+				and p.person_id &lt;&gt; #{criteria.supervisorId}
+			</if>
+		</where>
+		ORDER BY to_number(i.employee_number) ASC	
+	</select>
+	
+	<select id="countPersonByCompanyInquiry" parameterType="map" resultType="Integer">
+		SELECT count(*)
+		FROM pea_people p
+		JOIN pea_people_types t
+		ON p.person_id = t.person_id
+		JOIN pea_personal_informations i
+		ON i.person_id = p.person_id
+		and i.company_id = t.company_id
+		JOIN pea_primary_assignments a
+		ON a.person_id = p.person_id
+		and a.company_id = t.company_id
+		JOIN wos_jobs jb
+		ON jb.job_id = a.job_id
+		LEFT JOIN wos_job_versions jobv
+		ON jobv.job_id = jb.job_id
+		AND TRUNC(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) BETWEEN jobv.date_from AND jobv.date_to
+		JOIN wos_organizations org
+		ON org.organization_id = a.organization_id
+		LEFT JOIN wos_grades grade
+		ON grade.grade_id = a.grade_id
+		LEFT JOIN BRANCH_HIERARCHY_V bh
+		ON bh.organization_id = a.organization_id
+		LEFT JOIN sam_users su
+		ON(su.user_id = p.last_updated_by)
+		<where>
+			<if test="criteria.effectiveOnDate != null">
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between t.effective_start_date AND t.effective_end_date
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between i.effective_start_date AND i.effective_end_date
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between a.effective_start_date AND a.effective_end_date
+			</if>
+			<if test="criteria.companyId != null">
+				and t.company_id = #{criteria.companyId}
+			</if>
+			<if test="criteria.branchId != null">
+				and bh.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.organizationId != null">
+				and a.organization_id = #{criteria.organizationId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.jobId != null">
+				and a.job_id = #{criteria.jobId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.peopleType != null">
+				and t.people_type = #{criteria.peopleType, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.employeeNumber != null">
+				and upper(i.employee_number) LIKE UPPER (#{criteria.employeeNumber, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.employmentCategory != null">
+				and t.employment_category = #{criteria.employmentCategory, jdbcType=VARCHAR}
+			</if>
+			<if test="criteria.fullName != null">
+				and upper(i.full_name) LIKE UPPER(#{criteria.fullName, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.birthDate != null">
+				and i.birth_date = #{criteria.birthDate, jdbcType=TIMESTAMP}
+			</if>
+			<if test="criteria.gender != null">
+				and i.gender_code = (#{criteria.gender, jdbcType=VARCHAR})
+			</if>
+			<if test="criteria.isAffco != null">
+				and t.is_affco = #{criteria.isAffco, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.gradeInclusions != null">
+				<if test="criteria.gradeInclusions.size() > 0">
+					and 
+					<foreach collection="criteria.gradeInclusions" open="(" close=")" separator=" OR " item="grade">
+						grade.grade = #{grade, jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.isKeyJob != null">
+				and jobv.is_key_job = (#{criteria.isKeyJob, jdbcType=DECIMAL})
+			</if>
+			<if test="criteria.selectedPeopleType != null">
+					AND (t.people_type in ('INTERNSHIP', 'EX_INTERNSHIP') or t.employment_category = 'TRAINEE')  
+				</if>
+			<if test="criteria.gradeExclusions != null">
+				<if test="criteria.gradeExclusions.size() > 0">
+					and 
+					<foreach collection="criteria.gradeExclusions" open="(" close=")" separator=" AND " item="grade">
+						a.grade_id &lt;&gt; #{grade, jdbcType=NUMERIC}
+					</foreach>
+				</if>
+			</if>
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						a.organization_id = #{item}
+					</foreach>			
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						a.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>			
+			<if test="criteria.personId != null">
+				and p.person_id = #{criteria.personId}
+			</if>
+			<if test="criteria.isEmployee != null">
+				and (select people_type from pea_people_types where person_id = t.person_id and company_id = t.company_id and trunc(sysdate) between effective_start_date and effective_end_date
+				and people_type = 'EMPLOYEE') = 'EMPLOYEE'
+			</if>
+			<if test="criteria.supervisorId != null">
+				and p.person_id &lt;&gt; #{criteria.supervisorId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectSimplePersonByUUID" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select 
+			pp.person_uuid,
+			ppi.person_id, 
+			ppi.company_id, 
+			ppi.employee_number, 
+			ppi.full_name 
+		from pea_people pp
+		join pea_personal_informations ppi on ppi.person_id = pp.person_id 
+			and trunc(#{criteria.effectiveOnDate}) between ppi.effective_start_date and ppi.effective_end_date
+		and pp.person_uuid = #{personUUID, jdbcType=VARBINARY,typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+	</select>
+	
+	<select id="selectPersonalData" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			p.person_id,
+			p.person_uuid,
+			t.company_id,
+			c.group_id,
+			
+			t.people_type,
+			t.employment_category,
+			t.source,
+			t.ref_id,
+			t.is_affco,
+			t.is_canceled,
+			
+			i.information_id,
+			i.employee_number,
+			i.gender_code,
+			i.birth_place,
+			i.birth_date,
+	    	i.full_name,
+			i.photo_file_path,
+			i.nationality_code,
+			i.religion_code,
+			i.blood_type,
+			i.blood_type_rhesus,
+			i.mother_name,
+			i.disability_code,
+			i.disability_remark,
+			i.hobby,
+			i.is_pilgrimage,
+			i.is_smoker,
+			i.astra_join_date,
+			i.hire_date,
+			i.home_base_code,
+			l.location_name HOME_BASE_NAME,
+			i.probation_end_date,
+			i.training_end_date,
+			i.marital_status,
+			i.marital_date,
+			i.internal_married_with,
+			i.ptkp_status,
+			i.working_schedule_id,
+			i.effective_start_date pi_start_date,
+			i.effective_end_date pi_end_date,	
+			
+			a.organization_id,
+			org.organization_name,
+			bh.branch_id,
+			bh.branch_name,
+			bh.branch_code,
+			a.job_id,
+			jb.job_name,
+			jobv.job_group_code,
+      		loc.location_id,
+			loc.location_name,
+			a.grade_id,
+			grade.grade,
+			grade.sub_grade,
+     		grade.grade || ' - ' || grade.sub_grade grade_name,
+     		gradev.personal_grade_code,
+			a.action_type,
+			a.assignment_id,
+			a.transfered_by,
+			a.assignment_status,
+			a.housing_allowance,
+			a.mentor_id,
+			a.is_internship,
+			a.effective_start_date,
+			a.effective_end_date,
+			
+			paoi.OTHER_INFO_DTL_ID,
+			paoi.VALUE,
+			paoi.CREATED_BY AS CREATED_BY_OTHER_INFO,
+			paoi.CREATION_DATE AS CREATION_DATE_OTHER_INFO,
+			paoi.LAST_UPDATED_BY AS LAST_UPDATED_BY_OTHER_INFO,
+			paoi.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_OTHER_INFO,
+			
+			p.CREATED_BY,
+			p.CREATION_DATE,
+			p.LAST_UPDATED_BY,
+			p.LAST_UPDATE_DATE
+		
+			FROM pea_people p
+			JOIN pea_people_types t
+			ON p.person_id = t.person_id
+			JOIN pea_personal_informations i
+			ON i.person_id = p.person_id
+			and i.company_id = t.company_id
+			JOIN pea_primary_assignments a
+			ON a.person_id = p.person_id
+			and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id 
+			and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between c.effective_start_date and c.effective_end_date
+			JOIN wos_jobs jb
+			ON jb.job_id = a.job_id
+			LEFT JOIN wos_job_versions jobv
+			ON jobv.job_id = jb.job_id
+			AND TRUNC(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) BETWEEN jobv.date_from AND jobv.date_to
+			JOIN wos_organizations org
+			ON org.organization_id = a.organization_id
+			left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+			AND TRUNC(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) BETWEEN orgv.date_from AND orgv.date_to
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+			left JOIN wos_grades grade ON grade.grade_id = a.grade_id
+			left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			LEFT JOIN BRANCH_HIERARCHY_V bh
+			ON bh.organization_id = a.organization_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			<where>
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between t.effective_start_date AND t.effective_end_date
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between i.effective_start_date AND i.effective_end_date
+				AND #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between a.effective_start_date AND a.effective_end_date
+				and t.company_id = #{criteria.companyId}
+				and t.person_id = #{criteria.personId}
+			</where>
+	</select>
+	
+	<select id="selectEmployeeByNameGenderAndBirthDate" resultMap="selectActivePersonByExampleResult" parameterType="map">
+		SELECT ppt.people_type, ppi.person_id, ppi.full_name, ppi.employee_number, ppi.company_id, ppi.birth_date, ppi.gender_code, bc.group_id FROM pea_personal_informations ppi
+		join pea_people_types ppt on ppt.company_id = ppi.company_id and ppt.person_id = ppi.person_id AND trunc(#{effectiveOnDate}) between ppt.effective_start_date and ppt.effective_end_date
+		left join bse_companies bc on bc.company_id = ppi.company_id and ppi.effective_start_date between bc.effective_start_date and bc.effective_end_date
+		WHERE upper(full_name) = upper(#{fullName, jdbcType=VARCHAR}) 
+		and birth_date = trunc(#{birthDate, jdbcType=TIMESTAMP})
+		and gender_code = #{gender, jdbcType=VARCHAR}
+		and ppi.effective_end_date = trunc(to_date('4712-DEC-31', 'YYYY-MON-DD'))
+		<if test="companyId != null">
+			and ppi.company_id = #{companyId}			
+		</if>
+		<if test="groupId != null">
+			and bc.group_id = #{groupId,jdbcType=NUMERIC}
+		</if>
+		ORDER BY to_number(ppi.employee_number) ASC
+	</select>
+	
+	<select id="selectCompanyPerson" resultType="Long" parameterType="map">
+		select ppt.company_id 
+		from pea_people pp
+		join pea_people_types ppt on pp.person_id = ppt.person_id
+		where trunc(#{effectiveDate}) between ppt.effective_start_date and ppt.effective_end_date
+		and ppt.people_type = 'EMPLOYEE'
+		and pp.person_id = #{personId, jdbcType=NUMERIC}
+	</select>	
+	
+	<select id="selectEmployeeDeptOwnerAndManager" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			i.person_id,
+		    i.employee_number,
+		    i.full_name
+		from pea_people p 
+		join pea_people_types t on p.person_id = t.person_id
+		join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+		join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+		left join bse_companies c on c.company_id = t.company_id
+		left join wos_jobs jb on jb.job_id = a.job_id
+		left join wos_job_versions jobv on jobv.job_id = jb.job_id
+    	left join wos_job_roles wjr on jobv.version_id = wjr.version_id
+		left join wos_organizations org on org.organization_id = a.organization_id
+	    left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	    left join wos_locations loc on loc.location_id = orgv.location_id
+	    left join wos_grades grade on grade.grade_id = a.grade_id
+	    left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and trunc(sysdate) between gradev.date_from and gradev.date_to
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+		left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+      	left join pea_roles pr on pr.person_id = t.person_id
+		left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			(pr.role_type = 'PICDO'
+            or (jobv.is_manager = 1 and orgv.head_of_organization = a.job_id)
+            or wjr.management_type_code = 'PICDO')
+			and t.company_id = #{companyId,jdbcType=NUMERIC}
+      	<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="countEmployeeDeptOwnerAndManager" parameterType="map" resultType="Integer">
+		select
+			count(*)
+		from pea_people p 
+		join pea_people_types t on p.person_id = t.person_id
+		join pea_personal_informations i on i.person_id = p.person_id
+		and i.company_id = t.company_id
+		join pea_primary_assignments a on a.person_id = p.person_id
+		and a.company_id = t.company_id
+		left join bse_companies c on c.company_id = t.company_id
+		left join wos_jobs jb on jb.job_id = a.job_id
+		left join wos_job_versions jobv on jobv.job_id = jb.job_id
+    	left join wos_job_roles wjr on jobv.version_id = wjr.version_id
+		left join wos_organizations org on org.organization_id = a.organization_id
+	    left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	    left join wos_locations loc on loc.location_id = orgv.location_id
+	    left join wos_grades grade on grade.grade_id = a.grade_id
+	    left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and trunc(sysdate) between gradev.date_from and gradev.date_to
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+		left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+      	left join pea_roles pr on pr.person_id = t.person_id
+		left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			(pr.role_type = 'PICDO'
+            or (jobv.is_manager = 1 and orgv.head_of_organization = a.job_id)
+            or wjr.management_type_code = 'PICDO')
+			and t.company_id = #{companyId,jdbcType=NUMERIC}
+      	<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="selectPersonByCompanyForEpmd" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			p.person_id,
+			t.company_id,
+			c.group_id,
+			
+			t.people_type,
+			t.employment_category,
+			
+			i.employee_number,
+			i.home_base_code,
+			i.ptkp_status,
+			i.marital_status,
+			
+			a.organization_id,
+			a.job_id,
+			jobv.job_group_code,
+      		loc.location_id,
+			a.grade_id,
+			a.assignment_id,
+			a.transfered_by,
+			a.assignment_status,
+			NVL(allo.house_allowance, 'NONE') housing_allowance
+			
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+			left join pea_housing_allowance allo on i.person_id = allo.person_id 
+				and trunc(#{criteria.effectiveOnDate, jdbcType=TIMESTAMP}) between allo.effective_start_date and allo.effective_end_date
+			join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			t.company_id = #{companyId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="countPersonByCompanyForEpmd" parameterType="map" resultType="int">
+		select
+			count(*)
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			t.company_id = #{companyId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+	</select>
+	
+	<select id="selectExEmployeeForPayroll" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select 
+			ppt.person_id,
+      		ppt.company_id,
+      		ppt.people_type,
+			ppi.full_name,
+			ppi.employee_number,
+			ppi.hire_date,
+			ppi.effective_end_date PI_END_DATE,
+      		ppi.ptkp_status
+		from pea_people_types ppt
+		join pea_personal_informations ppi
+		  on (trunc(ppt.effective_start_date) - 1) between ppi.effective_start_date and ppi.effective_end_date
+		  and ppt.company_id = ppi.company_id
+		  and ppt.person_id = ppi.person_id
+		where ppt.people_type = 'EX_EMPLOYEE'
+		and ppt.company_id = #{companyId, jdbcType=NUMERIC}
+		and ppi.effective_end_date between #{dateFrom, jdbcType=DATE} and #{dateTo, jdbcType=DATE}
+		and ppt.effective_start_date between #{dateFrom, jdbcType=DATE} and #{dateTo, jdbcType=DATE}
+	</select>
+	
+	<select id="getPersonForEpdtNotification" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			people.person_id,
+			people.person_uuid,
+			ppi.employee_number,
+			ppi.full_name
+		from
+			pea_people people
+			join pea_people_types ppt on(ppt.person_id = people.person_id and ppt.company_id = #{companyId, jdbcType=DECIMAL} and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date and upper(ppt.people_type) = 'EMPLOYEE')
+			join pea_personal_informations ppi on(ppi.person_id = ppt.person_id and ppi.company_id = #{companyId, jdbcType=DECIMAL} and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date)
+			join sam_users su on(su.person_id = ppt.person_id)
+  			join sam_user_responsibilities sur on(sur.user_id = su.user_id)
+			join sam_responsibilities sr on(sr.responsibility_id = sur.responsibility_id and upper(responsibility_name) = upper(#{responsibilityName, jdbcType=VARCHAR}))
+	</select>
+	
+	<select id="getPayrollPerson" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		Select 
+		  PPI.PERSON_ID, 
+		  to_number(Ppi.Employee_Number) employee_number, 
+		  Ppi.Full_Name, 
+		  Ppt.Effective_Start_Date, 
+		  Ppi.Company_Id, 
+		  Ppt.People_Type, 
+		  Ppi.Hire_Date, 
+		  Ppi.Ptkp_Status, 
+		  PPA.ACTION_TYPE,
+      	  WJV.PEOPLE_CATEGORY_CODE,
+      	  null TERMINATION_REASON
+		FROM PEA_PEOPLE_TYPES PPT 
+		JOIN PEA_PERSONAL_INFORMATIONS PPI ON PPT.PERSON_ID = PPI.PERSON_ID AND PPT.COMPANY_ID = PPI.COMPANY_ID AND (TRUNC(#{processDate}) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE) AND (TRUNC(#{processDate}) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE)
+		Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Ppi.Person_Id and Ppt.Company_Id = Ppa.Company_Id AND (TRUNC(#{processDate}) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE)
+		JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+    	join wos_job_versions wjv on WJV.JOB_ID = PPA.JOB_ID AND (TRUNC(#{processDate}) BETWEEN WJV.DATE_FROM AND WJV.DATE_TO)
+		Where Ppt.People_Type = 'EMPLOYEE' 
+    	and not exists (select 1 from PEA_PEOPLE_TYPES pt where pt.person_id = ppt.person_id and PT.PEOPLE_TYPE = 'EX_EMPLOYEE' and PT.EFFECTIVE_START_DATE = TO_DATE('1-'||TO_CHAR(ADD_MONTHS(#{processDate}, 1),'MON-YYYY')))
+		AND PPT.COMPANY_ID = #{companyId}
+		<if test="listOrganizationId != null">
+			<if test="listOrganizationId.size() > 0">
+				And
+				<foreach item="orgId" open="(" close=")" separator=" or " collection="listOrganizationId">
+					Ppa.Organization_Id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="listJobId != null">
+			<if test="listJobId.size() > 0">
+				And
+				<foreach item="jobId" open="(" close=")" separator=" or " collection="listJobId">
+					Ppa.Job_Id = #{jobId}
+				</foreach>
+			</if>
+		</if>
+		<if test="listPersonId != null">
+			<if test="listPersonId.size() > 0">
+				And
+				<foreach item="persId" open="(" close=")" separator=" or " collection="listPersonId">
+					Ppt.Person_Id = #{persId}
+				</foreach>
+			</if>
+		</if>
+		<if test="listBranchId != null">
+			<if test="listBranchId.size() > 0">
+				And
+				<foreach item="branchId" open="(" close=")" separator=" or " collection="listBranchId">
+					bhv.branch_id = #{branchId}
+				</foreach>
+			</if>
+		</if>
+		<if test="employeeNumbers != null">
+			<if test="employeeNumbers.size() > 0">
+				And
+				<foreach item="npk" open="(" close=")" separator=" or " collection="employeeNumbers">
+					ppi.employee_number = #{npk}
+				</foreach>
+			</if>
+		</if>
+    	union
+		Select 
+		  PPI.PERSON_ID, 
+		  to_number(Ppi.Employee_Number) employee_number, 
+		  Ppi.Full_Name, 
+		  Ppt.Effective_Start_Date, 
+		  Ppi.Company_Id, 
+		  Ppt.People_Type, 
+		  Ppi.Hire_Date, 
+		  Ppi.Ptkp_Status, 
+		  PPA.ACTION_TYPE,
+      	  WJV.PEOPLE_CATEGORY_CODE,
+      	  TT.TERMINATION_REASON
+		FROM PEA_PEOPLE_TYPES PPT
+		JOIN PEA_PERSONAL_INFORMATIONS PPI ON PPT.PERSON_ID = PPI.PERSON_ID AND PPT.COMPANY_ID = PPI.COMPANY_ID AND (TRUNC(#{processDate}) BETWEEN PPI.EFFECTIVE_START_DATE AND PPI.EFFECTIVE_END_DATE) AND ((TO_CHAR(PPT.EFFECTIVE_START_DATE,'MON-YYYY') = TO_CHAR(#{processDate}, 'MON-YYYY') AND TO_DATE('1-'||TO_CHAR(#{processDate},'MON-YYYY')) &lt;&gt; TRUNC(PPT.EFFECTIVE_START_DATE)) OR TO_DATE('1-'||TO_CHAR(ADD_MONTHS(#{processDate}, 1),'MON-YYYY')) = TRUNC(PPT.EFFECTIVE_START_DATE)) 
+		Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Ppi.Person_Id and Ppt.Company_Id = Ppa.Company_Id AND TRUNC(#{processDate}) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+		JOIN BRANCH_HIERARCHY_V BHV ON BHV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+		join wos_job_versions wjv on WJV.JOB_ID = PPA.JOB_ID AND (TRUNC(#{processDate}) BETWEEN WJV.DATE_FROM AND WJV.DATE_TO)
+		JOIN TER_REQUESTS TR ON TR.PERSON_ID = PPT.PERSON_ID AND TR.COMPANY_ID = PPT.COMPANY_ID
+    	join TER_TYPES tt on TT.TYPE_ID = TR.TERMINATION_TYPE_ID
+    	WHERE PPT.PEOPLE_TYPE = 'EX_EMPLOYEE' 
+		AND PPT.COMPANY_ID = #{companyId}
+		<if test="listOrganizationId != null">
+			<if test="listOrganizationId.size() > 0">
+				And
+				<foreach item="orgId" open="(" close=")" separator=" or " collection="listOrganizationId">
+					Ppa.Organization_Id = #{orgId}
+				</foreach>
+			</if>
+		</if>
+		<if test="listJobId != null">
+			<if test="listJobId.size() > 0">
+				And
+				<foreach item="jobId" open="(" close=")" separator=" or " collection="listJobId">
+					Ppa.Job_Id = #{jobId}
+				</foreach>
+			</if>
+		</if>
+		<if test="listPersonId != null">
+			<if test="listPersonId.size() > 0">
+				And
+				<foreach item="persId" open="(" close=")" separator=" or " collection="listPersonId">
+					Ppt.Person_Id = #{persId}
+				</foreach>
+			</if>
+		</if>
+		<if test="listBranchId != null">
+			<if test="listBranchId.size() > 0">
+				And
+				<foreach item="branchId" open="(" close=")" separator=" or " collection="listBranchId">
+					bhv.branch_id = #{branchId}
+				</foreach>
+			</if>
+		</if>
+		<if test="employeeNumbers != null">
+			<if test="employeeNumbers.size() > 0">
+				And
+				<foreach item="npk" open="(" close=")" separator=" or " collection="employeeNumbers">
+					ppi.employee_number = #{npk}
+				</foreach>
+			</if>
+		</if>
+    	order by 2
+	</select>
+	
+	<select id="selectPersonIdsByCompany" parameterType="map" resultType="Long">
+		select
+			p.person_id
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+				i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id
+				a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		where
+			c.company_id = #{companyId,jdbcType=NUMERIC}
+		<include refid="selectCriteria" />
+	</select>
+	
+	<select id="getPayrollPersonByCriteria" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		Select 
+		  Ppi.Person_Id, 
+		  Ppi.Employee_Number, 
+		  Ppi.Full_Name, 
+		  Ppt.Effective_Start_Date, 
+		  Ppi.Company_Id, 
+		  Ppt.People_Type, 
+		  Ppi.Hire_Date, 
+		  Ppi.Ptkp_Status, 
+		  Ppa.Action_Type 
+		From Pea_People_Types Ppt
+		Join Pea_Personal_Informations Ppi On Ppt.Person_Id = Ppi.Person_Id And Ppt.Company_Id = Ppi.Company_Id
+		Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Ppi.Person_Id and Ppt.Company_Id = Ppa.Company_Id
+		join Branch_Hierarchy_V bhv on Bhv.Organization_Id = Ppa.Organization_Id
+		<where>
+			Ppt.People_Type = 'EMPLOYEE' 
+			And Trunc(sysdate) Between Ppt.Effective_Start_Date And Ppt.Effective_End_Date
+			And Trunc(sysdate) Between Ppi.Effective_Start_Date And Ppi.Effective_End_Date
+			And Trunc(sysdate) Between Ppa.Effective_Start_Date And Ppa.Effective_End_Date
+ 			and ppt.company_id = #{companyId}
+ 			<if test="criteria.employeeNumber != null">
+				AND UPPER(ppi.employee_number) like UPPER(#{criteria.employeeNumber})
+			</if>
+			<if test="criteria.fullName != null">
+				AND UPPER(ppi.full_name) like UPPER(#{criteria.fullName}) 		
+			</if>
+			<if test="criteria.branchId != null">
+				and bhv.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						Ppa.organization_id = #{item}
+					</foreach>			
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						Ppa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>		
+		</where>
+		union
+		Select 
+		  Ppi.Person_Id, 
+		  Ppi.Employee_Number, 
+		  Ppi.Full_Name, 
+		  Ppt.Effective_Start_Date, 
+		  Ppi.Company_Id, 
+		  Ppt.People_Type, 
+		  Ppi.Hire_Date, 
+		  Ppi.Ptkp_Status, 
+		  Ppa.Action_Type 
+		From Pea_People_Types Ppt
+		Join Pea_Personal_Informations Ppi On Ppt.Person_Id = Ppi.Person_Id And Ppt.Company_Id = Ppi.Company_Id
+		Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Ppi.Person_Id and Ppt.Company_Id = Ppa.Company_Id
+		join Branch_Hierarchy_V bhv on Bhv.Organization_Id = Ppa.Organization_Id
+		<where>
+			Ppt.People_Type = 'EX_EMPLOYEE' 
+			And to_char(Ppt.Effective_Start_Date,'MON-YYYY') = to_char(sysdate, 'MON-YYYY')
+			And Trunc(sysdate) Between Ppi.Effective_Start_Date And Ppi.Effective_End_Date
+			And Trunc(sysdate) Between Ppa.Effective_Start_Date And Ppa.Effective_End_Date
+ 			and ppt.company_id = #{companyId}
+ 			<if test="criteria.employeeNumber != null">
+				AND UPPER(ppi.employee_number) like UPPER(#{criteria.employeeNumber})
+			</if>
+			<if test="criteria.fullName != null">
+				AND UPPER(ppi.full_name) like UPPER(#{criteria.fullName}) 		
+			</if>
+			<if test="criteria.branchId != null">
+				and bhv.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>	
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						Ppa.organization_id = #{item}
+					</foreach>			
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						Ppa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>		
+		</where>
+		order by person_id asc
+	</select>
+	
+	<select id="countPayrollPersonByCriteria" parameterType="map" resultType="int">
+	select count(*) from (
+		Select 
+		  Ppi.Person_Id, 
+		  Ppi.Employee_Number, 
+		  Ppi.Full_Name, 
+		  Ppt.Effective_Start_Date, 
+		  Ppi.Company_Id, 
+		  Ppt.People_Type, 
+		  Ppi.Hire_Date, 
+		  Ppi.Ptkp_Status, 
+		  Ppa.Action_Type 
+		From Pea_People_Types Ppt
+		Join Pea_Personal_Informations Ppi On Ppt.Person_Id = Ppi.Person_Id And Ppt.Company_Id = Ppi.Company_Id
+		Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Ppi.Person_Id and Ppt.Company_Id = Ppa.Company_Id
+		join Branch_Hierarchy_V bhv on Bhv.Organization_Id = Ppa.Organization_Id
+		<where>
+			Ppt.People_Type = 'EMPLOYEE' 
+			And Trunc(sysdate) Between Ppt.Effective_Start_Date And Ppt.Effective_End_Date
+			And Trunc(sysdate) Between Ppi.Effective_Start_Date And Ppi.Effective_End_Date
+			And Trunc(sysdate) Between Ppa.Effective_Start_Date And Ppa.Effective_End_Date
+ 			and ppt.company_id = #{companyId}
+ 			<if test="criteria.employeeNumber != null">
+				AND UPPER(ppi.employee_number) like UPPER(#{criteria.employeeNumber})
+			</if>
+			<if test="criteria.fullName != null">
+				AND UPPER(ppi.full_name) like UPPER(#{criteria.fullName}) 		
+			</if>
+			<if test="criteria.branchId != null">
+				and bhv.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						Ppa.organization_id = #{item}
+					</foreach>			
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						Ppa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>		
+		</where>
+		union
+		Select 
+		  Ppi.Person_Id, 
+		  Ppi.Employee_Number, 
+		  Ppi.Full_Name, 
+		  Ppt.Effective_Start_Date, 
+		  Ppi.Company_Id, 
+		  Ppt.People_Type, 
+		  Ppi.Hire_Date, 
+		  Ppi.Ptkp_Status, 
+		  Ppa.Action_Type 
+		From Pea_People_Types Ppt
+		Join Pea_Personal_Informations Ppi On Ppt.Person_Id = Ppi.Person_Id And Ppt.Company_Id = Ppi.Company_Id
+		Join Pea_Primary_Assignments Ppa On Ppa.Person_Id = Ppi.Person_Id and Ppt.Company_Id = Ppa.Company_Id
+		join Branch_Hierarchy_V bhv on Bhv.Organization_Id = Ppa.Organization_Id
+		<where>
+			Ppt.People_Type = 'EX_EMPLOYEE' 
+			And to_char(Ppt.Effective_Start_Date,'MON-YYYY') = to_char(sysdate, 'MON-YYYY')
+			And Trunc(sysdate) Between Ppi.Effective_Start_Date And Ppi.Effective_End_Date
+			And Trunc(sysdate) Between Ppa.Effective_Start_Date And Ppa.Effective_End_Date
+ 			and ppt.company_id = #{companyId}
+ 			<if test="criteria.employeeNumber != null">
+				AND UPPER(ppi.employee_number) like UPPER(#{criteria.employeeNumber})
+			</if>
+			<if test="criteria.fullName != null">
+				AND UPPER(ppi.full_name) like UPPER(#{criteria.fullName}) 		
+			</if>
+			<if test="criteria.branchId != null">
+				and bhv.branch_id = #{criteria.branchId, jdbcType=NUMERIC}
+			</if>	
+			<if test="criteria.inOrganizationId != null">
+				<if test="criteria.inOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="criteria.inOrganizationId">
+						Ppa.organization_id = #{item}
+					</foreach>			
+				</if>
+			</if>
+			<if test="criteria.notInOrganizationId != null">
+				<if test="criteria.notInOrganizationId.size() > 0">
+					and 
+					<foreach item="item" open="(" close=")" separator=" AND "
+						collection="criteria.notInOrganizationId">
+						Ppa.organization_id &lt;&gt; #{item}
+					</foreach>
+				</if>
+			</if>		
+		</where>
+		order by person_id asc)
+	</select>
+	
+	<select id="getLastPersonInfo" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select pp.person_uuid, ppt.person_id, ppt.company_id, ppt.people_type, ppt.employment_category, 
+			ppi.employee_number, ppi.full_name,
+			ppa.organization_id, wo.organization_name,
+			ppa.job_id, wj.job_name
+			from pea_people_types ppt
+			join pea_people pp 
+				on pp.person_id = ppt.person_id
+			join pea_personal_informations ppi
+				on ppi.person_id = ppt.person_id and ppi.company_id = ppt.company_id
+			join pea_primary_assignments ppa
+				on ppa.person_id = ppt.person_id and ppa.company_id = ppt.company_id
+			join wos_organizations wo
+				on wo.organization_id = ppa.organization_id
+			join wos_jobs wj
+				on wj.job_id = ppa.job_id
+		where
+			trunc(#{effectiveOnDate}) between ppt.effective_start_date and ppt.effective_end_date
+			and trunc(#{effectiveOnDate}) between ppi.effective_start_date and ppi.effective_end_date
+			and trunc(#{effectiveOnDate}) between ppa.effective_start_date and ppa.effective_end_date
+			and ppt.person_id = #{personId}
+		order by ppt.effective_start_date desc, ppt.creation_date desc
+	</select>
+	
+	<select id="getActiveEmployee" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		Select pt.person_id, pt.company_id, pt.people_type, pi.full_name, pi.employee_number, pa.organization_id, pa.job_id, pa.effective_start_date, pa.effective_end_date, pa.grade_id,
+			wg.grade, wg.sub_grade, wj.job_name
+		From Pea_People_Types Pt
+		Join Pea_Personal_Informations Pi On Pi.Person_Id = Pt.Person_Id 
+		And Pi.Company_Id = Pi.Company_Id And Trunc(#{effectiveOnDate}) Between Pi.Effective_Start_Date And Pi.Effective_End_Date
+		Join Pea_Primary_Assignments Pa On Pa.Person_Id = Pt.Person_Id
+		and pa.company_id = pt.company_id and Trunc(#{effectiveOnDate}) Between Pa.Effective_Start_Date And Pa.Effective_End_Date
+		Join wos_grades wg
+		on pa.grade_id = wg.grade_id
+		join wos_jobs wj on wj.job_Id = pa.job_id
+		Where Trunc(#{effectiveOnDate}) Between Pt.Effective_Start_Date And Pt.Effective_End_Date
+		and Pi.Employee_Number = #{employeeNumber}
+		and Pt.People_Type = 'EMPLOYEE'
+	</select>
+	
+	<select id="getLastMajor" parameterType="map" resultType="String">
+		SELECT major
+		FROM pea_educations
+		WHERE start_date =
+		  (SELECT MAX(start_date) FROM pea_educations WHERE person_id = #{personId} and company_id = #{companyId})
+		AND person_id = #{personId} and company_id = #{companyId}
+	</select>
+	
+    <!-- 14040715241425_CR HCMS – Recruitment_RAH 20141105 -->
+	<select id="selectPersonAllCompany" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where 1 = 1
+		<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+
+    <!-- 14040715241425_CR HCMS – Recruitment_RAH 20141105 -->
+	<select id="selectPersonAllCompanyRowBounds" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where 1 = 1
+		<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="getCwkPersonByPersonUUID" parameterType="map"
+		resultMap="selectActivePersonByExampleResult">
+		select
+			cp.cwk_person_id person_id,
+			cp.person_uuid,
+			ca.company_id,
+			bc.group_id,
+			
+			ca.people_type,
+				
+			cpi.information_id,
+			cpi.cwk_number employee_number,
+			cpi.gender_code,
+			cpi.birth_place,
+			cpi.birth_date,
+      		cpi.full_name,
+			cpi.photo_file_path,
+			cpi.nationality_code,
+			cpi.religion_code,
+			cpi.blood_type,
+			cpi.blood_type_rhesus,
+			cpi.mother_name,
+			cpi.disability_code,
+			cpi.disability_remark,
+			cpi.hobby,
+			cpi.is_pilgrimage,
+			cpi.is_smoker,
+			cpi.hire_date,
+			cpi.marital_status,
+			cpi.marital_date,
+			cpi.ptkp_status,
+			cpi.effective_start_date pi_start_date,
+			cpi.effective_end_date pi_end_date,	
+			
+			ca.organization_id,
+			org.organization_name,
+			bh.branch_id,
+			bh.branch_name,
+			bh.branch_code,
+			ca.job_id,
+			jb.job_name,
+			jobv.job_group_code,
+      		loc.location_id,
+			loc.location_name,
+			ca.action_type,
+			ca.assignment_id,
+			ca.effective_start_date,
+			ca.effective_end_date,
+			
+			cp.CREATED_BY,
+			cp.CREATION_DATE,
+			cp.LAST_UPDATED_BY,
+			cp.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		from cwk_people cp 
+		join cwk_personal_informations cpi on cpi.cwk_person_id = cp.cwk_person_id
+	      and trunc(#{effectiveDateOn}) between cpi.effective_start_date and cpi.effective_end_date
+			join cwk_assignments ca on ca.cwk_person_id = cpi.cwk_person_id
+	      and trunc(#{effectiveDateOn}) between ca.effective_start_date and ca.effective_end_date
+			left join bse_companies bc on bc.company_id = ca.company_id
+	      and trunc(#{effectiveDateOn}) between bc.effective_start_date and bc.effective_end_date
+			left join wos_jobs jb on jb.job_id = ca.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+	      and trunc(#{effectiveDateOn}) between jobv.date_from and jobv.date_to
+			left join wos_organizations org on org.organization_id = ca.organization_id
+	    left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	      and trunc(#{effectiveDateOn}) between orgv.date_from and orgv.date_to
+	    left join wos_locations loc on loc.location_id = orgv.location_id
+	    left join BRANCH_HIERARCHY_V bh on bh.organization_id = ca.organization_id
+			left join sam_users su on(su.user_id = cp.last_updated_by)
+		<where>
+			cp.person_uuid = #{personUUID, jdbcType=VARBINARY,typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+			and ca.company_id = #{companyId}
+		</where>
+			
+	</select>
+	
+	<!-- 14071714192817_CR HCMS – Recruitment_LUK 20141209 -->
+	<select id="selectPersonFilterCompany" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		<include refid="findPerson" />
+		where 1 = 1
+		<include refid="selectCriteria" />
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<!-- created to handle approval resolver with people type = 'INTERSHIP' -->
+	<sql id="findAssignmentInternship">
+		SELECT people.person_id,
+		  people.person_uuid,
+		  pi.full_name,
+		  pi.employee_number,
+		  pt.people_type,
+		  assign.job_id,
+		  jo.job_name,
+		  jov.job_group_code,
+		  assign.grade_id,
+		  gr.personal_grade_code,
+		  assign.company_id,
+		  assign.organization_id,
+		  wo.organization_name,
+		  wov.location_id,
+		  lo.location_name,
+		  bh.branch_id,
+		  bh.branch_name,
+		  bh.branch_code,
+		  bb.role_code
+		FROM pea_people people
+		JOIN pea_primary_assignments assign
+		ON assign.person_id = people.person_id
+		AND TRUNC(sysdate) BETWEEN assign.effective_start_date AND assign.effective_end_date
+		JOIN pea_personal_informations pi
+		ON people.person_id   = pi.person_id
+		AND assign.company_id = pi.company_id
+		AND TRUNC(sysdate) BETWEEN pi.effective_start_date AND pi.effective_end_date
+		JOIN pea_people_types pt
+		ON people.person_id   = pt.person_id
+		AND assign.company_id = pt.company_id
+		AND TRUNC(sysdate) BETWEEN pt.effective_start_date AND pt.effective_end_date
+		AND pt.people_type = 'INTERNSHIP'
+		JOIN bse_companies bc
+		ON bc.company_id = assign.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		JOIN wos_jobs jo
+		ON jo.job_id = assign.job_id
+		LEFT JOIN wos_job_versions jov
+		ON jo.job_id = jov.job_id
+		AND TRUNC(sysdate) BETWEEN jov.date_from AND jov.date_to
+		LEFT JOIN wos_grade_versions gr
+		ON gr.grade_id = assign.grade_id
+		AND TRUNC(sysdate) BETWEEN gr.date_from AND gr.date_to
+		JOIN wos_organizations wo
+		ON wo.organization_id = assign.organization_id
+		LEFT JOIN wos_organization_versions wov
+		ON assign.organization_id = wov.organization_id
+		AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		JOIN wos_locations lo
+		ON wov.location_id = lo.location_id
+		LEFT JOIN
+		  (SELECT wo.organization_id,
+		    br.organization_id branch_id,
+		    br.organization_code branch_code,
+		    br.organization_name branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  AND wov.is_head_office = 0
+		  JOIN wos_locations wl
+		  ON wov.location_id = wl.location_id
+		  JOIN wos_location_versions wlv
+		  ON wlv.location_id = wl.location_id
+		  AND TRUNC(sysdate) BETWEEN wlv.date_from AND wlv.date_to
+		  LEFT JOIN wos_organizations br
+		  ON wlv.branch_owner_id = br.organization_id
+		  UNION
+		  SELECT wo.organization_id,
+		    -1 branch_id,
+		    'HEADOFFICE' branch_code,
+		    'Head Office' branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND wov.is_head_office = 1
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  ) bh ON bh.organization_id = assign.organization_id
+		LEFT JOIN
+		  (SELECT jr.management_type_code role_code,
+		    TO_CHAR(jr.job_id) job_id,
+		    TO_CHAR(NULL) person_id,
+		    TO_CHAR(NULL) company_id
+		  FROM wos_job_roles jr
+		  JOIN wos_job_versions jv
+		  ON jr.job_id = jv.job_id
+		  AND TRUNC(sysdate) BETWEEN jv.date_from AND jv.date_to
+		  UNION
+		  SELECT role_type role_code,
+		    TO_CHAR(NULL) job_id,
+		    TO_CHAR(person_id) person_id,
+		    TO_CHAR(company_id) company_id
+		  FROM pea_roles
+		  WHERE is_active    = 1
+		  ) bb ON (bb.job_id = assign.job_id
+		OR (bb.person_id      = assign.person_id AND bb.company_id = assign.company_id))
+	    where 1=1
+	</sql>
+	
+	<sql id="countAssignmentInternship">
+		select
+			count(*)
+		FROM pea_people people
+		JOIN pea_primary_assignments assign
+		ON assign.person_id = people.person_id
+		AND TRUNC(sysdate) BETWEEN assign.effective_start_date AND assign.effective_end_date
+		JOIN pea_personal_informations pi
+		ON people.person_id   = pi.person_id
+		AND assign.company_id = pi.company_id
+		AND TRUNC(sysdate) BETWEEN pi.effective_start_date AND pi.effective_end_date
+		JOIN pea_people_types pt
+		ON people.person_id   = pt.person_id
+		AND assign.company_id = pt.company_id
+		AND TRUNC(sysdate) BETWEEN pt.effective_start_date AND pt.effective_end_date
+		AND pt.people_type = 'INTERNSHIP'
+		JOIN bse_companies bc
+		ON bc.company_id = assign.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		JOIN wos_jobs jo
+		ON jo.job_id = assign.job_id
+		LEFT JOIN wos_job_versions jov
+		ON jo.job_id = jov.job_id
+		AND TRUNC(sysdate) BETWEEN jov.date_from AND jov.date_to
+		LEFT JOIN wos_grade_versions gr
+		ON gr.grade_id = assign.grade_id
+		AND TRUNC(sysdate) BETWEEN gr.date_from AND gr.date_to
+		JOIN wos_organizations wo
+		ON wo.organization_id = assign.organization_id
+		LEFT JOIN wos_organization_versions wov
+		ON assign.organization_id = wov.organization_id
+		AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		JOIN wos_locations lo
+		ON wov.location_id = lo.location_id
+		LEFT JOIN
+		  (SELECT wo.organization_id,
+		    br.organization_id branch_id,
+		    br.organization_code branch_code,
+		    br.organization_name branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  AND wov.is_head_office = 0
+		  JOIN wos_locations wl
+		  ON wov.location_id = wl.location_id
+		  JOIN wos_location_versions wlv
+		  ON wlv.location_id = wl.location_id
+		  AND TRUNC(sysdate) BETWEEN wlv.date_from AND wlv.date_to
+		  LEFT JOIN wos_organizations br
+		  ON wlv.branch_owner_id = br.organization_id
+		  UNION
+		  SELECT wo.organization_id,
+		    -1 branch_id,
+		    'HEADOFFICE' branch_code,
+		    'Head Office' branch_name
+		  FROM wos_organizations wo
+		  JOIN wos_organization_versions wov
+		  ON wov.organization_id = wo.organization_id
+		  AND wov.is_head_office = 1
+		  AND TRUNC(sysdate) BETWEEN wov.date_from AND wov.date_to
+		  ) bh ON bh.organization_id = assign.organization_id
+		LEFT JOIN
+		  (SELECT jr.management_type_code role_code,
+		    TO_CHAR(jr.job_id) job_id,
+		    TO_CHAR(NULL) person_id,
+		    TO_CHAR(NULL) company_id
+		  FROM wos_job_roles jr
+		  JOIN wos_job_versions jv
+		  ON jr.job_id = jv.job_id
+		  AND TRUNC(sysdate) BETWEEN jv.date_from AND jv.date_to
+		  UNION
+		  SELECT role_type role_code,
+		    TO_CHAR(NULL) job_id,
+		    TO_CHAR(person_id) person_id,
+		    TO_CHAR(company_id) company_id
+		  FROM pea_roles
+		  WHERE is_active    = 1
+		  ) bb ON (bb.job_id = assign.job_id
+		OR (bb.person_id      = assign.person_id AND bb.company_id = assign.company_id))
+		where 1 = 1
+	</sql>
+	
+	<!-- Added by Jatis for CWK
+		- created to handle approval resolver with people type = 'INTERSHIP' -->
+	<select id="selectPersonByAssignmentInternship" parameterType="map" resultMap="selectByAssignmentResult">
+		<include refid="findAssignmentInternship" />
+		and pt.people_type = 'INTERNSHIP'
+		<if test="jobId != null">
+			and assign.job_id = #{jobId}
+		</if>
+		<if test="organizationId != null">
+			and assign.organization_id = #{organizationId}
+		</if>
+		<if test="roleCode != null">
+			and bb.role_code = #{roleCode}
+		</if>
+		<if test="branchId != null">
+			and bh.branch_id = #{branchId}
+		</if>
+		<if test="personId != null">
+			and people.person_id = #{personId}
+		</if>
+		<if test="companyId != null">
+			and bc.group_id = (select group_id from bse_companies where trunc(sysdate) between effective_start_date and effective_end_date and company_id = #{companyId})
+		</if>
+		<if test="jobGroupCode != null">
+			and jov.job_group_code = #{jobGroupCode}
+		</if>
+		ORDER BY to_number(pi.employee_number) ASC
+	</select>
+	<!-- End Added by Jatis for CWK -->
+	
+	<select id="getManagerRootBranch" parameterType="Long" resultType="Long" >
+		select distinct wov.organization_id
+		From WOS_ORGANIZATION_VERSIONS WOV
+		where TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO 
+		  and ( organization_spv_id = #{orgId} or organization_id = #{orgId} )
+	</select>
+	
+	<select id="getManagerBranchWithHead" parameterType="map" resultType="Long" >
+		SELECT WOV2.ORGANIZATION_ID
+   		FROM PEA_PRIMARY_ASSIGNMENTS PPA 
+   		JOIN PEA_PEOPLE_TYPES PPT 
+     		ON PPA.PERSON_ID= PPT.PERSON_ID AND PPT.COMPANY_ID = PPA.COMPANY_ID
+     		AND PPT.PEOPLE_TYPE IN ('EMPLOYEE','INTERNSHIP') 
+     		AND TRUNC(SYSDATE) BETWEEN TRUNC(PPT.EFFECTIVE_START_DATE) AND TRUNC(PPT.EFFECTIVE_END_DATE)
+   		JOIN WOS_JOB_VERSIONS WJV
+     		ON PPA.JOB_ID = WJV.JOB_ID
+     		AND TRUNC(SYSDATE) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO)
+     		AND IS_MANAGER = '1'
+   		JOIN WOS_ORGANIZATION_VERSIONS WOV
+    			ON WOV.HEAD_OF_ORGANIZATION = PPA.JOB_ID 
+     		AND WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+     		AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO 
+		JOIN WOS_ORGANIZATION_VERSIONS WOV2 
+		  ON (WOV2.ORGANIZATION_ID = WOV.ORGANIZATION_ID
+		      OR WOV2.ORGANIZATION_SPV_ID = WOV.ORGANIZATION_ID)
+		  AND TRUNC(SYSDATE) BETWEEN WOV2.DATE_FROM AND WOV2.DATE_TO 
+   		<where> 
+   			TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+			<if test="inOrganizationId != null and inOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="inOrganizationId">
+					wov2.organization_id = #{item}
+				</foreach>
+			</if>
+			<if test="inOrganizationId == null or inOrganizationId.size() == 0">
+				and	wov2.organization_id is null
+			</if>
+			<if test="notInOrganizationId != null and notInOrganizationId.size() > 0">
+				and 
+				<foreach item="item" open="(" close=")" separator=" AND "
+					collection="notInOrganizationId">
+					wov2.organization_id &lt;&gt; #{item}
+				</foreach>
+			</if>
+			<!-- ITSM 15112313524094, by MYK -->
+			<!-- Change filter to exclude manager organization -->
+			
+			<!-- start 15112313524094 -->
+			AND WOV2.ORGANIZATION_ID &lt;&gt; (SELECT PPA.ORGANIZATION_ID FROM PEA_PRIMARY_ASSIGNMENTS PPA 
+                                 			  WHERE PERSON_ID = #{managerId}
+                                 			  	AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+                                 			  	AND PPA.ACTION_TYPE &lt;&gt; 'TERMINATION')
+			<!-- end 15112313524094 -->
+			
+<!--    			AND PPA.ORGANIZATION_ID &lt;&gt; (SELECT PPA.ORGANIZATION_ID FROM PEA_PRIMARY_ASSIGNMENTS PPA  -->
+<!--                                  			  WHERE PERSON_ID = #{managerId} -->
+<!--                                  			  	AND TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE -->
+<!--                                  			  	AND PPA.ACTION_TYPE &lt;&gt; 'TERMINATION') -->
+		</where>
+    </select>
+ 	<select id="findEmployeeByManagerId" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		SELECT DISTINCT PPAS.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME
+		FROM PEA_PRIMARY_ASSIGNMENTS PPAS 
+		JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+			ON PPIS.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE
+        	AND PPAS.COMPANY_ID = PPIS.COMPANY_ID
+		JOIN PEA_PEOPLE_TYPES PPT
+			ON PPT.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+			and ppas.company_id = ppt.company_id
+		WHERE
+      		PPAS.ORGANIZATION_ID IN (
+                SELECT HS.ORGANIZATION_ID
+                FROM hierarchy_structural HS
+                LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+                      		FROM WOS_ORGANIZATIONS WO
+                      		WHERE
+								<foreach item="item" open="(" close=")" separator=" OR "
+									collection="inManagerBranchWithHead">
+									wo.organization_id = #{item}
+								</foreach>
+                      ) MGR
+                  ON (HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID) 
+                WHERE
+                	MGR.ORGANIZATION_ID IS NULL
+                	AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inManagerRootBranch">
+						hs.branch_id = #{item}
+					</foreach>
+                )
+        	AND TRUNC(SYSDATE) BETWEEN TRUNC(PPAS.EFFECTIVE_START_DATE) AND TRUNC(PPAS.EFFECTIVE_END_DATE)
+        	AND PPAS.PERSON_ID &lt;&gt; #{managerId}
+        	AND PPT.PEOPLE_TYPE = 'EMPLOYEE'
+        	<if test="criteria.employeeNumber != null">
+	  			AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+	  		</if>
+	  		<if test="criteria.fullName != null">
+	  			AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+	  		</if>
+ 		UNION		
+        SELECT DISTINCT MGR.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME
+        FROM (	SELECT PPA.ORGANIZATION_ID, PPA.JOB_ID, PPA.COMPANY_ID, PPA.PERSON_ID
+        		FROM PEA_PRIMARY_ASSIGNMENTS PPA 
+        		JOIN PEA_PEOPLE_TYPES PPT 
+                	ON PPA.PERSON_ID= PPT.PERSON_ID 
+                	and ppa.company_id = ppt.company_id
+                	AND PPT.PEOPLE_TYPE IN ('EMPLOYEE','INTERNSHIP') 
+					AND TRUNC(SYSDATE) BETWEEN TRUNC(PPT.EFFECTIVE_START_DATE) AND TRUNC(PPT.EFFECTIVE_END_DATE)
+				JOIN WOS_JOB_VERSIONS WJV
+					ON PPA.JOB_ID = WJV.JOB_ID
+					AND TRUNC(SYSDATE) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO)
+					AND IS_MANAGER = '1'
+                JOIN WOS_ORGANIZATION_VERSIONS WOV
+					ON WOV.HEAD_OF_ORGANIZATION = PPA.JOB_ID 
+					AND WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+					AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO 
+				JOIN WOS_ORGANIZATION_VERSIONS WOV2 
+				  ON (WOV2.ORGANIZATION_ID = WOV.ORGANIZATION_ID
+				      OR WOV2.ORGANIZATION_SPV_ID = WOV.ORGANIZATION_ID)
+				  AND TRUNC(SYSDATE) BETWEEN WOV2.DATE_FROM AND WOV2.DATE_TO 
+                WHERE
+                	TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inManagerBranchWithHead">
+						wov2.organization_id = #{item}
+					</foreach>
+             ) MGR
+		JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+			ON PPIS.PERSON_ID = MGR.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE
+			AND MGR.COMPANY_ID = PPIS.COMPANY_ID
+		JOIN hierarchy_structural HS
+			ON HS.ORGANIZATION_ID = MGR.ORGANIZATION_ID
+		LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+					FROM WOS_ORGANIZATIONS WO
+					WHERE
+						<foreach item="item" open="(" close=")" separator=" OR "
+							collection="inManagerBranchWithHead">
+							wo.organization_id = #{item}
+						</foreach>
+				) MGR2
+			ON (HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID) 
+			AND MGR.ORGANIZATION_ID &lt;&gt; MGR2.ORGANIZATION_ID
+		WHERE
+			MGR2.ORGANIZATION_ID IS NULL AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+        	AND PPIS.PERSON_ID &lt;&gt; #{managerId}
+			and 
+			<foreach item="item" open="(" close=")" separator=" OR "
+				collection="inManagerRootBranch">
+				HS.BRANCH_ID = #{item}
+			</foreach>
+			<if test="criteria.employeeNumber != null">
+				AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+			</if>
+			<if test="criteria.fullName != null">
+				AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+			</if>
+		ORDER BY FULL_NAME
+	</select>
+	
+	<!-- modify By JTS [15123108364420] [HCMS-CAM]BUGFIX-SubDep tdk bisa entry People Revi -->
+	
+	<select id="findEmployeeByManagerIdSortByEmployeeNumber" parameterType="map" resultMap="selectActivePersonByExampleResult">
+	SELECT
+		*
+	FROM
+	(
+		SELECT DISTINCT PPAS.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME
+		FROM PEA_PRIMARY_ASSIGNMENTS PPAS 
+		JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+			ON PPIS.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE			
+        	AND PPAS.COMPANY_ID = PPIS.COMPANY_ID
+		JOIN PEA_PEOPLE_TYPES PPT
+			ON PPT.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+			and ppas.company_id = ppt.company_id
+		WHERE
+      		PPAS.ORGANIZATION_ID IN (
+                SELECT HS.ORGANIZATION_ID
+                FROM hierarchy_structural HS
+                LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+                      		FROM WOS_ORGANIZATIONS WO
+                      		WHERE
+								<foreach item="item" open="(" close=")" separator=" OR "
+									collection="inManagerBranchWithHead">
+									wo.organization_id = #{item}
+								</foreach>
+                      ) MGR
+                  ON (HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID) 
+                WHERE
+                	MGR.ORGANIZATION_ID IS NULL
+                	AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inManagerRootBranch">
+						hs.branch_id = #{item}
+					</foreach>
+                )
+        	AND TRUNC(SYSDATE) BETWEEN TRUNC(PPAS.EFFECTIVE_START_DATE) AND TRUNC(PPAS.EFFECTIVE_END_DATE)
+        	AND PPAS.PERSON_ID &lt;&gt; #{managerId}
+        	AND PPT.PEOPLE_TYPE = 'EMPLOYEE'
+        	<if test="criteria.employeeNumber != null">
+	  			AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+	  		</if>
+	  		<if test="criteria.fullName != null">
+	  			AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+	  		</if>
+	  		<if test="criteria.jobId != null">
+				and PPAS.JOB_ID = #{criteria.jobId, jdbcType=NUMERIC}
+			</if>
+ 		UNION		
+        SELECT DISTINCT MGR.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME
+        FROM (	SELECT PPA.ORGANIZATION_ID, PPA.JOB_ID, PPA.COMPANY_ID, PPA.PERSON_ID
+        		FROM PEA_PRIMARY_ASSIGNMENTS PPA 
+        		JOIN PEA_PEOPLE_TYPES PPT 
+                	ON PPA.PERSON_ID= PPT.PERSON_ID 
+                	and ppa.company_id = ppt.company_id
+                	AND PPT.PEOPLE_TYPE IN ('EMPLOYEE','INTERNSHIP') 
+					AND TRUNC(SYSDATE) BETWEEN TRUNC(PPT.EFFECTIVE_START_DATE) AND TRUNC(PPT.EFFECTIVE_END_DATE)
+				JOIN WOS_JOB_VERSIONS WJV
+					ON PPA.JOB_ID = WJV.JOB_ID
+					AND TRUNC(SYSDATE) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO)
+					AND IS_MANAGER = '1'
+                JOIN WOS_ORGANIZATION_VERSIONS WOV
+					ON WOV.HEAD_OF_ORGANIZATION = PPA.JOB_ID 
+					AND WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+					AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO 
+				JOIN WOS_ORGANIZATION_VERSIONS WOV2 
+				  ON (WOV2.ORGANIZATION_ID = WOV.ORGANIZATION_ID
+				      OR WOV2.ORGANIZATION_SPV_ID = WOV.ORGANIZATION_ID)
+				  AND TRUNC(SYSDATE) BETWEEN WOV2.DATE_FROM AND WOV2.DATE_TO 
+                WHERE
+                	TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+                	<if test="criteria.jobId != null">
+						and PPA.JOB_ID = #{criteria.jobId, jdbcType=NUMERIC}
+					</if>
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inManagerBranchWithHead">
+						wov2.organization_id = #{item}
+					</foreach>
+             ) MGR
+		JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+			ON PPIS.PERSON_ID = MGR.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE
+			AND MGR.COMPANY_ID = PPIS.COMPANY_ID
+		JOIN hierarchy_structural HS
+			ON HS.ORGANIZATION_ID = MGR.ORGANIZATION_ID
+		LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+					FROM WOS_ORGANIZATIONS WO
+					WHERE
+						<foreach item="item" open="(" close=")" separator=" OR "
+							collection="inManagerBranchWithHead">
+							wo.organization_id = #{item}
+						</foreach>
+				) MGR2
+			ON (HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID) 
+			AND MGR.ORGANIZATION_ID &lt;&gt; MGR2.ORGANIZATION_ID
+		WHERE
+			MGR2.ORGANIZATION_ID IS NULL AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+        	AND PPIS.PERSON_ID &lt;&gt; #{managerId}
+			and 
+			<foreach item="item" open="(" close=")" separator=" OR "
+				collection="inManagerRootBranch">
+				HS.BRANCH_ID = #{item}
+			</foreach>
+			<if test="criteria.employeeNumber != null">
+				AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+			</if>
+			<if test="criteria.fullName != null">
+				AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+			</if>
+	)
+	ORDER BY TO_NUMBER(EMPLOYEE_NUMBER)
+	</select>
+	
+	<!-- end By JTS [15123108364420] [HCMS-CAM]BUGFIX-SubDep tdk bisa entry People Revi -->
+	
+	<!-- add By JTS [15123108364420] [HCMS-CAM]BUGFIX-SubDep tdk bisa entry People Revi -->
+	
+	<select id="getSubordinatesForPeopleReview" parameterType="map" resultMap="selectActivePersonByExampleResult">
+	SELECT
+		*
+	FROM
+	(
+		SELECT DISTINCT PPAS.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME, PPAS.COMPANY_ID, PPAS.JOB_ID, grade.grade grade,
+			grade.sub_grade
+		FROM PEA_PRIMARY_ASSIGNMENTS PPAS 
+		JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+			ON PPIS.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE			
+        	AND PPAS.COMPANY_ID = PPIS.COMPANY_ID
+		JOIN PEA_PEOPLE_TYPES PPT
+			ON PPT.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+			and ppas.company_id = ppt.company_id
+		left join wos_grades grade on grade.grade_id = PPAS.grade_id
+        left join wos_grade_versions gradev on gradev.grade_id = PPAS.grade_id and trunc(sysdate) between gradev.date_from and gradev.date_to
+		WHERE
+      		PPAS.ORGANIZATION_ID IN (
+                SELECT HS.ORGANIZATION_ID
+                FROM hierarchy_structural HS
+                LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+                      		FROM WOS_ORGANIZATIONS WO
+                      		WHERE
+								<foreach item="item" open="(" close=")" separator=" OR "
+									collection="inManagerBranchWithHead">
+									wo.organization_id = #{item}
+								</foreach>
+                      ) MGR
+                  ON (HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID) 
+                WHERE
+                	MGR.ORGANIZATION_ID IS NULL
+                	AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+					and 
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inManagerRootBranch">
+						hs.branch_id = #{item}
+					</foreach>
+                )
+        	AND TRUNC(SYSDATE) BETWEEN TRUNC(PPAS.EFFECTIVE_START_DATE) AND TRUNC(PPAS.EFFECTIVE_END_DATE)
+        	AND PPAS.PERSON_ID &lt;&gt; #{managerId}
+        	AND PPT.PEOPLE_TYPE = 'EMPLOYEE'
+        	<if test="criteria.employeeNumber != null">
+	  			AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+	  		</if>
+	  		<if test="criteria.fullName != null">
+	  			AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+	  		</if>
+	  		<if test="criteria.jobId != null">
+				and PPAS.JOB_ID = #{criteria.jobId, jdbcType=NUMERIC}
+			</if>
+ 		UNION		
+        SELECT DISTINCT MGR.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME, MGR.COMPANY_ID, MGR.JOB_ID, MGR.grade grade,
+			MGR.sub_grade
+        FROM (	SELECT PPA.ORGANIZATION_ID, PPA.JOB_ID, PPA.COMPANY_ID, PPA.PERSON_ID, grade.grade grade, grade.sub_grade
+        		FROM PEA_PRIMARY_ASSIGNMENTS PPA 
+        		JOIN PEA_PEOPLE_TYPES PPT 
+                	ON PPA.PERSON_ID= PPT.PERSON_ID 
+                	and ppa.company_id = ppt.company_id
+                	AND PPT.PEOPLE_TYPE IN ('EMPLOYEE','INTERNSHIP') 
+					AND TRUNC(SYSDATE) BETWEEN TRUNC(PPT.EFFECTIVE_START_DATE) AND TRUNC(PPT.EFFECTIVE_END_DATE)
+				JOIN WOS_JOB_VERSIONS WJV
+					ON PPA.JOB_ID = WJV.JOB_ID
+					AND TRUNC(SYSDATE) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO)
+					AND IS_MANAGER = '1'
+                JOIN WOS_ORGANIZATION_VERSIONS WOV
+					ON WOV.HEAD_OF_ORGANIZATION = PPA.JOB_ID 
+					AND WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+					AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO 
+				JOIN WOS_ORGANIZATION_VERSIONS WOV2 
+				  ON (WOV2.ORGANIZATION_ID = WOV.ORGANIZATION_ID
+				      OR WOV2.ORGANIZATION_SPV_ID = WOV.ORGANIZATION_ID)
+				  AND TRUNC(SYSDATE) BETWEEN WOV2.DATE_FROM AND WOV2.DATE_TO 
+				left join wos_grades grade on grade.grade_id = PPA.grade_id
+        		left join wos_grade_versions gradev on gradev.grade_id = PPA.grade_id and trunc(sysdate) between gradev.date_from and gradev.date_to
+                WHERE
+                	TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+                	<if test="criteria.jobId != null">
+						and PPA.JOB_ID = #{criteria.jobId, jdbcType=NUMERIC}
+					</if>
+					and
+					<foreach item="item" open="(" close=")" separator=" OR "
+						collection="inManagerBranchWithHead">
+						wov2.organization_id = #{item}
+					</foreach>
+             ) MGR
+		JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+			ON PPIS.PERSON_ID = MGR.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE
+			AND MGR.COMPANY_ID = PPIS.COMPANY_ID
+		JOIN hierarchy_structural HS
+			ON HS.ORGANIZATION_ID = MGR.ORGANIZATION_ID
+		LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+					FROM WOS_ORGANIZATIONS WO
+					WHERE
+						<foreach item="item" open="(" close=")" separator=" OR "
+							collection="inManagerBranchWithHead">
+							wo.organization_id = #{item}
+						</foreach>
+				) MGR2
+			ON (HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID) 
+			AND MGR.ORGANIZATION_ID &lt;&gt; MGR2.ORGANIZATION_ID
+		WHERE
+			MGR2.ORGANIZATION_ID IS NULL AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+        	AND PPIS.PERSON_ID &lt;&gt; #{managerId}
+			and 
+			<foreach item="item" open="(" close=")" separator=" OR "
+				collection="inManagerRootBranch">
+				HS.BRANCH_ID = #{item}
+			</foreach>
+			<if test="criteria.employeeNumber != null">
+				AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+			</if>
+			<if test="criteria.fullName != null">
+				AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+			</if>
+	)emp join CaM_APPRAISAL_DATA cad on emp.job_id = cad.JOB_ID and (cad.GRADE = emp.grade or cad.GRADE is null) and (cad.SUB_GRADE = emp.SUB_GRADE or cad.SUB_GRADE is null)
+	ORDER BY TO_NUMBER(EMPLOYEE_NUMBER)
+	</select>
+	
+	<!-- end By JTS [15123108364420] [HCMS-CAM]BUGFIX-SubDep tdk bisa entry People Revi -->
+	
+	<select id="countEmployeeByManagerId" parameterType="map" resultType="Integer">
+		SELECT COUNT(1) FROM (
+			SELECT DISTINCT PPAS.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME
+			FROM PEA_PRIMARY_ASSIGNMENTS PPAS 
+			JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+				ON PPIS.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE
+	        	AND PPAS.COMPANY_ID = PPIS.COMPANY_ID
+			JOIN PEA_PEOPLE_TYPES PPT
+				ON PPT.PERSON_ID = PPAS.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+			WHERE
+	      		PPAS.ORGANIZATION_ID IN (
+	                SELECT HS.ORGANIZATION_ID
+	                FROM hierarchy_structural HS
+	                LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+	                      		FROM WOS_ORGANIZATIONS WO
+	                      		WHERE
+									<foreach item="item" open="(" close=")" separator=" OR "
+										collection="inManagerBranchWithHead">
+										wo.organization_id = #{item}
+									</foreach>
+	                      ) MGR
+	                  ON (HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR.ORGANIZATION_ID) 
+	                WHERE
+	                	MGR.ORGANIZATION_ID IS NULL
+	                	AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+						and 
+						<foreach item="item" open="(" close=")" separator=" OR "
+							collection="inManagerRootBranch">
+							hs.branch_id = #{item}
+						</foreach>
+	                )
+	        	AND TRUNC(SYSDATE) BETWEEN TRUNC(PPAS.EFFECTIVE_START_DATE) AND TRUNC(PPAS.EFFECTIVE_END_DATE)
+	        	AND PPAS.PERSON_ID &lt;&gt; #{managerId}
+	        	AND PPT.PEOPLE_TYPE = 'EMPLOYEE'
+	        	<if test="criteria.employeeNumber != null">
+		  			AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+		  		</if>
+		  		<if test="criteria.fullName != null">
+		  			AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+		  		</if>
+		  		<if test="criteria.jobId != null">
+				and PPAS.JOB_ID = #{criteria.jobId, jdbcType=NUMERIC}
+			</if>
+	 		UNION		
+	        SELECT DISTINCT MGR.ORGANIZATION_ID, PPIS.PERSON_ID, PPIS.EMPLOYEE_NUMBER, PPIS.FULL_NAME
+	        FROM (	SELECT PPA.ORGANIZATION_ID, PPA.JOB_ID, PPA.COMPANY_ID, PPA.PERSON_ID
+	        		FROM PEA_PRIMARY_ASSIGNMENTS PPA 
+	        		JOIN PEA_PEOPLE_TYPES PPT 
+	                	ON PPA.PERSON_ID= PPT.PERSON_ID 
+	                	AND PPT.PEOPLE_TYPE IN ('EMPLOYEE','INTERNSHIP') 
+						AND TRUNC(SYSDATE) BETWEEN TRUNC(PPT.EFFECTIVE_START_DATE) AND TRUNC(PPT.EFFECTIVE_END_DATE)
+					JOIN WOS_JOB_VERSIONS WJV
+						ON PPA.JOB_ID = WJV.JOB_ID
+						AND TRUNC(SYSDATE) BETWEEN TRUNC(WJV.DATE_FROM) AND TRUNC(WJV.DATE_TO)
+						AND IS_MANAGER = '1'
+	                JOIN WOS_ORGANIZATION_VERSIONS WOV
+						ON WOV.HEAD_OF_ORGANIZATION = PPA.JOB_ID 
+						AND WOV.ORGANIZATION_ID = PPA.ORGANIZATION_ID
+						AND TRUNC(SYSDATE) BETWEEN WOV.DATE_FROM AND WOV.DATE_TO 
+	                WHERE
+	                	TRUNC(SYSDATE) BETWEEN PPA.EFFECTIVE_START_DATE AND PPA.EFFECTIVE_END_DATE
+	                	<if test="criteria.jobId != null">
+							and PPA.JOB_ID = #{criteria.jobId, jdbcType=NUMERIC}
+						</if>
+						and
+						<foreach item="item" open="(" close=")" separator=" OR "
+							collection="inManagerBranchWithHead">
+							ppa.organization_id = #{item}
+						</foreach>
+	             ) MGR
+			JOIN PEA_PERSONAL_INFORMATIONS PPIS 
+				ON PPIS.PERSON_ID = MGR.PERSON_ID AND TRUNC(SYSDATE) BETWEEN PPIS.EFFECTIVE_START_DATE AND PPIS.EFFECTIVE_END_DATE
+				AND MGR.COMPANY_ID = PPIS.COMPANY_ID
+			JOIN hierarchy_structural HS
+				ON HS.ORGANIZATION_ID = MGR.ORGANIZATION_ID
+			LEFT JOIN ( SELECT WO.ORGANIZATION_ID
+						FROM WOS_ORGANIZATIONS WO
+						WHERE
+							<foreach item="item" open="(" close=")" separator=" OR "
+								collection="inManagerBranchWithHead">
+								wo.organization_id = #{item}
+							</foreach>
+					) MGR2
+				ON (HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID||'/%' OR HS.PATH LIKE '%/'||MGR2.ORGANIZATION_ID) 
+				AND MGR.ORGANIZATION_ID &lt;&gt; MGR2.ORGANIZATION_ID
+			WHERE
+				MGR2.ORGANIZATION_ID IS NULL AND HS.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+	        	AND PPIS.PERSON_ID &lt;&gt; #{managerId}
+				and 
+				<foreach item="item" open="(" close=")" separator=" OR "
+					collection="inManagerRootBranch">
+					HS.BRANCH_ID = #{item}
+				</foreach>
+				<if test="criteria.employeeNumber != null">
+					AND PPIS.EMPLOYEE_NUMBER LIKE #{criteria.employeeNumber}
+				</if>
+				<if test="criteria.fullName != null">
+					AND PPIS.FULL_NAME LIKE #{criteria.fullName}
+				</if>
+		)
+	</select>
+	
+	<!-- start added by WLY for phase 2 -->
+	<select id="selectPersonByCompanyName" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			p.person_id,
+			p.person_uuid,
+			t.company_id,
+			c.company_name,
+			c.group_id,
+			
+			t.people_type,
+			t.employment_category,
+			t.source,
+			t.ref_id,
+			t.is_affco,
+			t.is_canceled,
+			
+			i.information_id,
+			i.employee_number,
+			i.gender_code,
+			i.birth_place,
+			i.birth_date,
+	    	i.full_name,
+			i.photo_file_path,
+			i.nationality_code,
+			i.religion_code,
+			i.blood_type,
+			i.blood_type_rhesus,
+			i.mother_name,
+			i.disability_code,
+			i.disability_remark,
+			i.hobby,
+			i.is_pilgrimage,
+			i.is_smoker,
+			i.astra_join_date,
+			i.hire_date,
+			i.home_base_code,
+			l.location_name HOME_BASE_NAME,
+			i.probation_end_date,
+			i.training_end_date,
+			i.marital_status,
+			i.marital_date,
+			i.internal_married_with,
+			i.ptkp_status,
+			i.working_schedule_id,
+			i.effective_start_date pi_start_date,
+			i.effective_end_date pi_end_date,	
+			
+			a.organization_id,
+			org.organization_name,
+			bh.branch_id,
+			bh.branch_name,
+			bh.branch_code,
+			a.job_id,
+			jb.job_name,
+			jobv.job_group_code,
+      		loc.location_id,
+			loc.location_name,
+			a.grade_id,
+			grade.grade grade,
+			grade.sub_grade,
+     		grade.grade || ' - ' || grade.sub_grade grade_name,
+     		gradev.personal_grade_code,
+			a.action_type,
+			a.assignment_id,
+			a.transfered_by,
+			a.assignment_status,
+			a.housing_allowance,
+			a.mentor_id,
+			a.is_internship,
+			a.effective_start_date,
+			a.effective_end_date,
+			
+			paoi.OTHER_INFO_DTL_ID,
+			paoi.VALUE,
+			paoi.CREATED_BY AS CREATED_BY_OTHER_INFO,
+			paoi.CREATION_DATE AS CREATION_DATE_OTHER_INFO,
+			paoi.LAST_UPDATED_BY AS LAST_UPDATED_BY_OTHER_INFO,
+			paoi.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_OTHER_INFO,
+			
+			p.CREATED_BY,
+			p.CREATION_DATE,
+			p.LAST_UPDATED_BY,
+			p.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		<where>
+			<if test="businessGroupId != null">
+				and c.group_id = #{businessGroupId,jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.companyName != null">
+				and upper(c.company_name) like upper(#{criteria.companyName})
+			</if>
+			<include refid="selectCriteria" />
+		</where>
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	
+	<select id="countPersonByCompanyName" parameterType="map" resultType="Integer">
+		select
+			count(1)
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id and i.company_id = t.company_id
+			join pea_primary_assignments a on a.person_id = p.person_id and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+		<where>
+			<if test="businessGroupId != null">
+				and c.group_id = #{businessGroupId,jdbcType=NUMERIC}
+			</if>
+			<if test="criteria.companyName != null">
+				and upper(c.company_name) like upper(#{criteria.companyName})
+			</if>
+			<include refid="selectCriteria" />
+		</where>
+	</select>
+	<!-- end added by WLY for phase 2 -->
+	
+	<select id="getPersonByJob" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select pp.person_uuid, ppt.person_id, ppt.company_id, ppt.people_type, ppt.employment_category, 
+			ppi.employee_number, ppi.full_name,
+			ppa.organization_id, wo.organization_name,
+			ppa.job_id, wj.job_name
+			from pea_people_types ppt
+			join pea_people pp 
+				on pp.person_id = ppt.person_id
+			join pea_personal_informations ppi
+				on ppi.person_id = ppt.person_id and ppi.company_id = ppt.company_id
+			join pea_primary_assignments ppa
+				on ppa.person_id = ppt.person_id and ppa.company_id = ppt.company_id
+			join wos_organizations wo
+				on wo.organization_id = ppa.organization_id
+			join wos_jobs wj
+				on wj.job_id = ppa.job_id
+		where
+			trunc(#{effectiveOnDate}) between ppt.effective_start_date and ppt.effective_end_date
+			and trunc(#{effectiveOnDate}) between ppi.effective_start_date and ppi.effective_end_date
+			and trunc(#{effectiveOnDate}) between ppa.effective_start_date and ppa.effective_end_date
+			and ppa.job_id = #{jobId}
+		order by ppt.effective_start_date desc, ppt.creation_date desc
+	</select>
+	
+	<!-- added by jatis for cam -->
+	<select id="selectPersonForPeopleRevBound" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select distinct emp.* from (
+		<include refid="findPerson" />
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>				
+			<!-- and a.job_id in (select distinct job_id from CaM_APPRAISAL_DATA)  -->
+			<if test="orgParent != null">
+				and i.employee_number in (SELECT ppi.employee_number
+        FROM wos_organization_versions wov, pea_primary_assignments ppa, pea_personal_informations ppi, pea_people_types ppt
+       WHERE wov.organization_id in (SELECT wohe.organization_id
+        FROM wos_organization_hier woh, wos_org_hier_versions wohv, wos_org_hier_elements wohe, wos_organization_versions wov
+       WHERE woh.org_hier_type = 'STRUCTURAL'
+         AND woh.company_id = #{companyId,jdbcType=NUMERIC}
+         AND wohv.org_hier_id = woh.org_hier_id
+         AND TRUNC (SYSDATE) BETWEEN wohv.date_from AND wohv.date_to
+         AND wohe.version_id = wohv.version_id
+         and TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+         and wohe.organization_id = wov.organization_id
+         and wov.organization_spv_id is null
+         AND wohe.parent_id = #{orgParent})
+         AND TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+         AND ppa.organization_id = wov.organization_id
+         AND TRUNC (SYSDATE) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+         AND ppi.person_id = ppa.person_id
+         AND ppi.company_id = ppa.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+         AND ppt.person_id = ppi.person_id
+         AND ppt.company_id = ppi.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppt.effective_start_date AND ppt.effective_end_date
+         AND ppt.people_type = 'EMPLOYEE'
+    
+    union
+    
+    SELECT ppi.employee_number
+        FROM wos_organization_versions wov, pea_primary_assignments ppa, pea_personal_informations ppi, pea_people_types ppt
+       WHERE wov.organization_id in (SELECT organization_id
+              FROM wos_organization_versions
+             WHERE TRUNC (SYSDATE) BETWEEN date_from AND date_to AND  organization_spv_id = #{orgParent})
+         AND TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+         AND ppa.organization_id = wov.organization_id
+         AND TRUNC (SYSDATE) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+         AND ppi.person_id = ppa.person_id
+         AND ppi.company_id = ppa.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+         AND ppt.person_id = ppi.person_id
+         AND ppt.company_id = ppi.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppt.effective_start_date AND ppt.effective_end_date
+         AND ppt.people_type = 'EMPLOYEE')
+			</if>
+			<include refid="selectCriteria" />
+			
+		</where>
+		ORDER BY to_number(i.employee_number) ASC ) emp
+		join CaM_APPRAISAL_DATA cad on emp.job_id = cad.JOB_ID and (cad.GRADE = emp.grade or cad.GRADE is null) and (cad.SUB_GRADE = emp.SUB_GRADE or cad.SUB_GRADE is null)
+		order by to_number(emp.EMPLOYEE_NUMBER) asc
+	</select>
+	
+	<select id="selectPersonForPeopleRev" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select distinct emp.* from (
+		<include refid="findPerson" />
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>				
+			<!-- and a.job_id in (select distinct job_id from CaM_APPRAISAL_DATA)  -->
+			<if test="orgParent != null">
+				and i.employee_number in (SELECT ppi.employee_number
+        FROM wos_organization_versions wov, pea_primary_assignments ppa, pea_personal_informations ppi, pea_people_types ppt
+       WHERE wov.organization_id in (SELECT wohe.organization_id
+        FROM wos_organization_hier woh, wos_org_hier_versions wohv, wos_org_hier_elements wohe, wos_organization_versions wov
+       WHERE woh.org_hier_type = 'STRUCTURAL'
+         AND woh.company_id = #{companyId,jdbcType=NUMERIC}
+         AND wohv.org_hier_id = woh.org_hier_id
+         AND TRUNC (SYSDATE) BETWEEN wohv.date_from AND wohv.date_to
+         AND wohe.version_id = wohv.version_id
+         and TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+         and wohe.organization_id = wov.organization_id
+         and wov.organization_spv_id is null
+         AND wohe.parent_id = #{orgParent})
+         AND TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+         AND ppa.organization_id = wov.organization_id
+         AND TRUNC (SYSDATE) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+         AND ppi.person_id = ppa.person_id
+         AND ppi.company_id = ppa.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+         AND ppt.person_id = ppi.person_id
+         AND ppt.company_id = ppi.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppt.effective_start_date AND ppt.effective_end_date
+         AND ppt.people_type = 'EMPLOYEE'
+    
+    union
+    
+    SELECT ppi.employee_number
+        FROM wos_organization_versions wov, pea_primary_assignments ppa, pea_personal_informations ppi, pea_people_types ppt
+       WHERE wov.organization_id in (SELECT organization_id
+              FROM wos_organization_versions
+             WHERE TRUNC (SYSDATE) BETWEEN date_from AND date_to AND  organization_spv_id = #{orgParent})
+         AND TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+         AND ppa.organization_id = wov.organization_id
+         AND TRUNC (SYSDATE) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+         AND ppi.person_id = ppa.person_id
+         AND ppi.company_id = ppa.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+         AND ppt.person_id = ppi.person_id
+         AND ppt.company_id = ppi.company_id
+         AND TRUNC (SYSDATE) BETWEEN ppt.effective_start_date AND ppt.effective_end_date
+         AND ppt.people_type = 'EMPLOYEE'
+         
+    UNION
+	    SELECT ppi.employee_number
+	    FROM wos_organization_versions wov,
+	      pea_primary_assignments ppa,
+	      pea_personal_informations ppi,
+	      PEA_PEOPLE_TYPES PPT
+	    WHERE wov.organization_id = #{orgParent}
+	    AND TRUNC (SYSDATE) BETWEEN wov.date_from AND wov.date_to
+	    AND ppa.organization_id = wov.organization_id
+	    AND TRUNC (SYSDATE) BETWEEN ppa.effective_start_date AND ppa.effective_end_date
+	    AND ppi.person_id  = ppa.person_id
+	    AND ppi.company_id = ppa.company_id
+	    AND TRUNC (SYSDATE) BETWEEN ppi.effective_start_date AND ppi.effective_end_date
+	    AND ppt.person_id  = ppi.person_id
+	    AND ppt.company_id = ppi.company_id
+	    AND TRUNC (SYSDATE) BETWEEN PPT.EFFECTIVE_START_DATE AND PPT.EFFECTIVE_END_DATE
+	    AND PPT.PEOPLE_TYPE = 'EMPLOYEE'
+	    and ppi.person_id &lt;&gt; #{criteria.supervisorId} 
+         
+         )
+			</if>
+			<include refid="selectCriteria" />
+			
+		</where>
+		ORDER BY to_number(i.employee_number) ASC ) emp
+		join CaM_APPRAISAL_DATA cad on emp.job_id = cad.JOB_ID and (cad.GRADE = emp.grade or cad.GRADE is null) and (cad.SUB_GRADE = emp.SUB_GRADE or cad.SUB_GRADE is null)
+	</select>
+	<!-- end added by jatis for cam -->
+	
+	<!-- 16022214360832 :PErformance system pada irrprom. By HS
+		 Untuk data yang banyak, penggunaan join lebih bagus dari pada 
+		 penggunakan or statement yang banyak -->
+	<select id="countPersonReadyForActing" parameterType="map" resultType="int">
+		SELECT 
+			COUNT(*) 
+		from pea_people p 
+			join pea_people_types t on p.person_id = t.person_id
+			join pea_personal_informations i on i.person_id = p.person_id
+				and i.company_id = t.company_id
+			join CAM_ICP_SUBMISSIONS ICP
+  				ON ICP.PERSON_ID = I.PERSON_ID AND ICP.STATUS = 'RFC'
+			join pea_primary_assignments a on a.person_id = p.person_id
+				and a.company_id = t.company_id
+			left join bse_companies c on c.company_id = t.company_id
+			left join wos_jobs jb on jb.job_id = a.job_id
+			left join wos_job_versions jobv on jobv.job_id = jb.job_id
+			left join wos_organizations org on org.organization_id = a.organization_id
+	        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+	        left join wos_locations loc on loc.location_id = orgv.location_id
+	        left join wos_grades grade on grade.grade_id = a.grade_id
+	        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+			left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+			left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+			left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+			left join sam_users su on(su.user_id = p.last_updated_by)
+			
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>			
+			<include refid="selectCriteria" />
+		</where>			
+	</select>
+	
+	<select id="selectPersonReadyForActing" parameterType="map" resultMap="selectActivePersonByExampleResult">
+		select
+			p.person_id,
+			p.person_uuid,
+			t.company_id,
+			c.group_id,
+			
+			t.people_type,
+			t.employment_category,
+			t.source,
+			t.ref_id,
+			t.is_affco,
+			t.is_canceled,
+			
+			i.information_id,
+			i.employee_number,
+			i.gender_code,
+			i.birth_place,
+			i.birth_date,
+	    	i.full_name,
+			i.photo_file_path,
+			i.nationality_code,
+			i.religion_code,
+			i.blood_type,
+			i.blood_type_rhesus,
+			i.mother_name,
+			i.disability_code,
+			i.disability_remark,
+			i.hobby,
+			i.is_pilgrimage,
+			i.is_smoker,
+			i.astra_join_date,
+			i.hire_date,
+			i.home_base_code,
+			l.location_name HOME_BASE_NAME,
+			i.probation_end_date,
+			i.training_end_date,
+			i.marital_status,
+			i.marital_date,
+			i.internal_married_with,
+			i.ptkp_status,
+			i.working_schedule_id,
+			i.effective_start_date pi_start_date,
+			i.effective_end_date pi_end_date,	
+			
+			a.organization_id,
+			org.organization_name,
+			bh.branch_id,
+			bh.branch_name,
+			bh.branch_code,
+			a.job_id,
+			jb.job_name,
+			jobv.job_group_code,
+      		loc.location_id,
+			loc.location_name,
+			a.grade_id,
+			grade.grade grade,
+			grade.sub_grade,
+     		grade.grade || ' - ' || grade.sub_grade grade_name,
+     		gradev.personal_grade_code,
+			a.action_type,
+			a.assignment_id,
+			a.transfered_by,
+			a.assignment_status,
+			a.housing_allowance,
+			a.mentor_id,
+			a.is_internship,
+			a.effective_start_date,
+			a.effective_end_date,
+			
+			paoi.OTHER_INFO_DTL_ID,
+			paoi.VALUE,
+			paoi.CREATED_BY AS CREATED_BY_OTHER_INFO,
+			paoi.CREATION_DATE AS CREATION_DATE_OTHER_INFO,
+			paoi.LAST_UPDATED_BY AS LAST_UPDATED_BY_OTHER_INFO,
+			paoi.LAST_UPDATE_DATE AS LAST_UPDATE_DATE_OTHER_INFO,
+			
+			p.CREATED_BY,
+			p.CREATION_DATE,
+			p.LAST_UPDATED_BY,
+			p.LAST_UPDATE_DATE,
+			SU.USER_NAME
+		from pea_people p 
+		join pea_people_types t on p.person_id = t.person_id
+		join pea_personal_informations i on i.person_id = p.person_id
+			and i.company_id = t.company_id
+		join CAM_ICP_SUBMISSIONS ICP
+  				ON ICP.PERSON_ID = I.PERSON_ID AND ICP.STATUS = 'RFC'
+		join pea_primary_assignments a on a.person_id = p.person_id
+			and a.company_id = t.company_id
+		left join bse_companies c on c.company_id = t.company_id
+		left join wos_jobs jb on jb.job_id = a.job_id
+		left join wos_job_versions jobv on jobv.job_id = jb.job_id
+		left join wos_organizations org on org.organization_id = a.organization_id
+        left join wos_organization_versions orgv on orgv.organization_id = org.organization_id
+        left join wos_locations loc on loc.location_id = orgv.location_id
+        left join wos_grades grade on grade.grade_id = a.grade_id
+        left join wos_grade_versions gradev on gradev.grade_id = a.grade_id and #{criteria.effectiveOnDate, jdbcType=TIMESTAMP} between gradev.date_from and gradev.date_to
+		left join BRANCH_HIERARCHY_V bh on bh.organization_id = a.organization_id
+		left join wos_locations l on l.location_code = i.home_base_code and l.company_id = t.company_id
+		left join pea_assignment_other_info paoi on paoi.assignment_id = a.assignment_id
+		left join sam_users su on(su.user_id = p.last_updated_by)
+		<where>
+			<if test="companyId != null">
+				and t.company_id = #{companyId,jdbcType=NUMERIC}
+			</if>				
+			<include refid="selectCriteria" />
+		</where>
+		ORDER BY to_number(i.employee_number) ASC
+	</select>
+	<!--END 16022214360832 -->
+</mapper>

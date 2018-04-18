@@ -1,0 +1,72 @@
+<?xel-method prefix="date" name="formatDateTime" class="co.id.fifgroup.core.util.FormatDateUI" signature="java.lang.String formatDateTime(java.util.Date)" ?>
+<window id="winLookupInquiry"
+	apply="co.id.fifgroup.basicsetup.controller.LookupInquiryComposer">
+	<groupbox closable="false" mold="3d">
+		<caption label="${labels.bse.lookup}" >
+			<div style="float:right">
+				<a image="${labels.image.link.help}" forward="onDownloadUserManual()" tooltiptext="${labels.common.downloadUserManual}" />
+			</div>
+		</caption>
+		<grid sclass="form-entry">
+			<columns>
+				<column width="180px" align="right" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="${labels.bse.lookupName}" />
+					<textbox id="txtLookupName" use="co.id.fifgroup.core.ui.Searchtextbox" width="150px" maxlength="30"/>
+				</row>
+				<row>
+					<label value="${labels.common.description}" />
+					<textbox id="txtDesc" use="co.id.fifgroup.core.ui.Searchtextbox" width="300px" maxlength="255"/>
+				</row>
+				<row>
+					<label value="${labels.common.type}" />
+					<listbox id="lstType" mold="select">
+						<listhead menupopup="auto">
+							<listheader></listheader>
+						</listhead>
+						<template name="model">
+							<listitem value="${each}">
+								<listcell label="${each.desc}"></listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					<label />
+					<hbox pack="center" align="center">
+						<button id="btnFind"
+							label="${labels.common.find}" mold="trendy"
+							image="${labels.image.link.search}" />
+						<space width="20px" />
+						<button id="btnNew"
+							label="${labels.common.create}" mold="trendy"
+							image="${labels.image.link.add}" />
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<separator/>
+		<listbox id="lstLookupHeader" emptyMessage="${labels.common.noDataFound}" mold="paging" pagingPosition="both">
+			<listhead menupopup="auto">
+				<listheader label="${labels.bse.lookupName}" align="center" sort="auto(lower(name))"/>
+				<listheader label="${labels.common.type}" align="center" sort="auto(lookupType)"/>
+				<listheader label="${labels.common.lastUpdateDate}" align="center" sort="auto(lastUpdateDate)"/>
+				<listheader label="${labels.common.lastUpdatedBy}" align="center" sort="auto(lower(userName))"/>
+				<listheader label="${labels.common.action}" align="center" />
+			</listhead>
+			<template name="model">
+				<listitem value="${each}">
+					<listcell label="${each.name}"></listcell>
+					<listcell label="${each.lookupType}"></listcell>
+					<listcell label="${date:formatDateTime(each.lastUpdateDate)}"></listcell>
+					<listcell label="${each.userName}"></listcell>
+					<listcell><a label="${labels.common.detail}" style="text-decoration:underline ;color:blue" forward="lstLookupHeader.onDetail(${each})"></a></listcell>
+				</listitem>
+			</template>
+		</listbox>
+		<exporter referenceId="lstLookupHeader" />	
+	</groupbox>
+</window>

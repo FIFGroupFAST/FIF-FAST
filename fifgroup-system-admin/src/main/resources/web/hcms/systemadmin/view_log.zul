@@ -1,0 +1,17 @@
+<?page title="View Log" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window id="winViewLog" title="View Log" border="normal"
+		closable="true"
+		apply="co.id.fifgroup.systemadmin.controller.ViewLogComposer">
+		<groupbox>
+			<textbox id="txtContent" rows="3" width="500px"
+				height="300px" />
+			<hbox align="center">
+				<cell align="center" style="width:500px;">
+					<button label="${labels.sam.close}" mold="trendy"
+						id="btnClose" />
+				</cell>
+			</hbox>
+		</groupbox>
+	</window>
+</zk>

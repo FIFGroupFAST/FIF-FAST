@@ -1,0 +1,135 @@
+<window id="winExitClearanceDetail" border="none" 
+	apply="co.id.fifgroup.personneladmin.controller.ExitClearanceDetailComposer">
+	<groupbox mold="3d">
+		<caption label="${labels.pea.exitClearanceDetail}" />
+		<groupbox>
+			<caption label="${labels.pea.evaluationInformation}" />
+			<grid sclass="form-entry">
+				<columns>
+					<column width="180px" align="right" valign="top"  />
+					<column />
+					<column width="180px" align="right" valign="top"  />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.pea.employeeNumber}" />
+						<label id="lblEmployeeNumber" />
+						<label value="${labels.pea.terminationDate}" />
+						<label id="lblTerminationDate" />
+					</row>
+					<row>
+						<label value="${labels.pea.branch}" />
+						<label id="lblBranch" />
+						<label value="${labels.pea.terminationType}" />
+						<label id="lblTerminationType" />
+					</row>
+					<row>
+						<label value="${labels.pea.organization}" />
+						<label id="lblOrganization" />
+						<label />
+						<label />
+					</row>
+					<row>
+						<label value="${labels.pea.job}" />
+						<label id="lblJob" />
+						<label />
+						<label />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<tabbox id="tabExitClearance">
+			<tabs>
+				<tab id="tabDocument" label="${labels.pea.document}" selected="true"/>
+				<tab id="tabEquipment" label="${labels.pea.workingEquipment}" disabled="true"/>
+				<tab id="tabExitInterview" label="${labels.pea.exitInterview}" disabled="true"/>
+				<tab id="tabJobHandover" label="${labels.pea.jobHandover}" disabled="true"/>
+			</tabs>
+			<tabpanels>
+				<tabpanel id="tpDocument">
+					<separator />
+					<listbox id="lstDocument" >
+						<listhead>
+							<listheader label="${labels.pea.documentName}" align="center" />
+							<listheader label="${labels.pea.completed}" align="center" />
+						</listhead>
+					</listbox>
+				</tabpanel>
+				<tabpanel id="tpWorkingEquipment">
+					<groupbox id="grbWorkingEquipment">
+						<caption label="${labels.pea.workingEquipmentHistoryList}" />
+						<separator />
+						<listbox id="lstWorkingEquipment" checkmark="false" use="co.id.fifgroup.core.ui.tabularentry.TabularEntry">
+							<listhead>
+								<listheader label="${labels.pea.equipmentType}" />
+								<listheader label="${labels.pea.assignedDate}" />
+								<listheader label="${labels.pea.assetNumber}" />
+								<listheader label="${labels.pea.returnDate}" />
+								<listheader label="${labels.pea.reason}" />						
+							</listhead>
+						</listbox>
+					</groupbox>
+				</tabpanel>			
+				<tabpanel id="tpExitInterview">
+					<groupbox id="grbExitInterview">
+						<caption label="${labels.pea.exitInterview}" />
+						<listbox>
+							<listhead>
+								<listheader label="${labels.pea.documentName}" align="center" />
+								<listheader label="${labels.pea.completed}" align="center" />
+							</listhead>
+							<listitem>
+								<listcell label="${labels.pea.exitInterviewFile}"></listcell>
+								<listcell><checkbox id="chkInterviewCompleted" disabled="true"/></listcell>
+							</listitem>	
+						</listbox>			
+					</groupbox>
+				</tabpanel>
+				<tabpanel id="tpJobHandover">
+					<grid sclass="form-entry">
+					<columns>
+						<column width="180px" align="right" valign="top"  />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<label value="${labels.pea.replacement}" />
+							<bandbox id="bnbEmployee" readonly="true" width="250px" use="co.id.fifgroup.core.ui.lookup.CommonEmployeeNumberBandbox" ></bandbox>
+						</row>
+						<row>
+							<label value="${labels.pea.jobHandover}" />
+							<textbox id="txtJobHandover" maxlength="300" width="500px" rows="3" multiline="true" style="resize:none" />
+						</row>
+						<row>
+							<label value="${labels.pea.jobHandoverFile}" />
+							<hbox>
+								<textbox id="txtJobHandoverFile" maxlength="255" width="250px" readonly="true"/>
+								<button id="btnBrowse" label="${labels.common.browse}"
+									mold="trendy" upload="true" />
+								<a id="linkDownloadFile" style="color:blue" visible="false" />
+							</hbox>
+						</row>					
+					</rows>
+					</grid>
+				</tabpanel>
+			</tabpanels>
+		</tabbox>	
+		<separator/>		
+		<hbox pack="center" align="center">
+			<cell align="left">
+				<hbox>
+					<button id="btnBack" label="${labels.common.back}" mold="trendy" image="${labels.image.link.back}" />
+					<button id="btnNext" label="${labels.common.next}" mold="trendy" image="${labels.image.link.next}" />
+				</hbox>
+			</cell>
+			<cell align="center" style="width:1250px;">
+				<button id="btnSave" label="${labels.common.save}" mold="trendy" image="${labels.image.link.save}" visible="false"/>
+			</cell>
+			<cell align="right">
+				<button id="btnCancel" label="${labels.common.cancel}" mold="trendy" image="${labels.image.link.cancel}" />
+			</cell>
+		</hbox>
+	</groupbox>	
+</window>

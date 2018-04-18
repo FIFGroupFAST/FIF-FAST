@@ -1,0 +1,117 @@
+<?xel-method prefix="date" name="format" class="co.id.fifgroup.core.util.DateUtil" signature="java.lang.String format(java.util.Date, java.lang.String)" ?>
+<?page title="Asset Transfer"?>
+<window id="winAssetTransferApproval"
+	apply="co.id.fifgroup.ssoa.controller.AssetTransferApprovalComposer">
+	<groupbox id="gbAdd" closable="false" mold="3d" visible="true">
+		<caption label="Asset Transfer" />
+		<grid sclass="form-entry">
+			<columns>
+				<column width="200px" align="right" />
+				<column width="" />
+				<column width="200px" align="right" />
+				<column width="" />
+			</columns>
+			<rows>
+				<row>
+					<div>
+						<label value="Document No" />
+						<label value="*" style="color:red;" />
+					</div>
+						<textbox id="txtDocumentNo" width="480px" style="background-color:#fff;"/>
+					<div>
+						<label value="Request Date" />
+						<label value="*" style="color:red;" />
+					</div>
+						<datebox id="dbRequestDate" format="dd-MMM-yyyy" style="background-color:#fff;" readonly="true" />
+				</row>
+				<row>
+					<div>
+						<label value="Branch Origin " />					
+					</div>
+						<textbox id="txtBranch" width="200px" style="background-color:#fff;"/>
+					<div>
+						<label value="Reason" />
+					</div>
+						<textbox id="txtReason" rows="3" cols="20" />
+				</row>
+				<row>
+					<div>
+						<label value="Branch Destination" />
+						<label value="*" style="color:red;" />
+					</div>
+						<textbox id="txtBranchDestination" width="200px" style="background-color:#fff;"/>
+				    <div>
+						<label/>
+					</div>
+						<textbox width="200px" id="" style="display:none;"/>
+				</row>
+			</rows>
+		</grid>
+		<separator/>
+		
+		<!-- Assets Transfer Detail -->
+		<groupbox id="gbDetail" mold="3d" >
+			<groupbox id="gbBASTDetail" closable="false" mold="3d">
+				<caption label="BAST" />
+				<listbox id="lbxBASTDetail" style="margin-bottom:5px;" width="auto" emptyMessage="${labels.common.noDataFound}">
+					<listhead>
+						<listheader label="Document Image" sort="auto(bastDocName)" ></listheader>
+						<listheader label="Document Image Path" sort="auto(bastDocPath)" ></listheader>
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell><a forward="onDetailBast(${each})" label="${each.bastDocName}"></a></listcell>
+							<listcell label="${each.bastDocPath}" />
+						</listitem>
+					</template>
+				</listbox>
+			</groupbox>
+			<separator/>
+			
+			<groupbox id="gbListAssetDetail" closable="false" mold="3d" >
+				<caption label="Asset" />
+				<listbox id="lbxDetailAsset" style="margin-bottom:5px;" width="auto" emptyMessage="${labels.common.noDataFound}">
+					<listhead>
+						<listheader label="Asset Number" sort="auto(assetNumber)" width="120px"> </listheader>
+						<listheader label="Asset Type" sort="auto(assetTypeName)" width="90px" ></listheader>
+						<listheader label="Branch Code" sort="auto(branchCode)" width="150px"> </listheader>
+						<listheader label="Branch Name" sort="auto(branchName)" width="200px" ></listheader>
+						<listheader label="Kode Outlet" sort="auto(locationCode)" width="100px" ></listheader>
+						<listheader label="Nama Outlet" sort="auto(locationName)" width="100px" ></listheader>
+						<listheader label="Asset Category" sort="auto(categoryName)" width="120px" ></listheader>
+						<listheader label="Tanggal Perolehan" sort="auto(datePlacedInService)" width="150px" ></listheader>
+						<listheader label="Description" sort="auto(description)" width="200px" ></listheader>
+						<listheader label="Serial Number" sort="auto(serialNumber)" width="130px"></listheader>
+						<listheader label="Stock Opname Result" sort="auto(stockOpnameResult)" width="170px"></listheader>
+						<listheader label="Recomendation" sort="auto(stockOpnameSugest)" width="150px" ></listheader>
+						<listheader label="HO Recomendation" sort="auto(stockOpnameHoSugest)" width="170px" ></listheader>
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell label="${each.assetNumber}" />
+							<listcell label="${each.assetTypeName}" />
+							<listcell label="${each.branchCode}" />
+							<listcell label="${each.branchName}" />
+							<listcell label="${each.locationCode}" />
+							<listcell label="${each.locationName}" />
+							<listcell label="${each.categoryName}" />	
+							<listcell label="${each.datePlacedInService}" />
+							<listcell label="${each.description}" />
+							<listcell label="${each.serialNumber}" />
+							<listcell label="${each.stockOpnameResult}" />	
+							<listcell label="${each.stockOpnameSugest}" />
+							<listcell label="${each.stockOpnameHoSugest}" />	
+						</listitem>
+					</template>
+				</listbox>
+			
+			</groupbox>
+			<separator/>
+				
+		</groupbox>
+		<!-- End Assets Transfer Detail -->
+		
+		<separator/>
+		<button id="btnClose" style="float:right;" label="Close" image="${labels.image.link.cancel}"></button>
+	</groupbox>
+</window>

@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.WorkflowLookupFinder">
+
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="BaseResult">
+		<id column="KEY" property="key" />
+		<result column="DESCRIPTION" property="description" />
+		<result column="VALUE" property="value" />
+	</resultMap>
+
+	<select id="getAllJobs" resultMap="BaseUUIDResult" parameterType="map">
+		select 
+			job_uuid key, 
+			job_code value, 
+			job_name description 
+		from wos_jobs
+		<where>
+			<if test="code != null">
+				and job_code like #{code}
+			</if>
+			<if test="name != null">
+				and job_name like #{name}
+			</if>
+		</where>
+		<if test="code != null">
+			ORDER BY upper(job_code) ASC
+		</if>
+		<if test="code == null">
+			ORDER BY upper(job_name) ASC
+		</if>
+	</select>
+	
+	<select id="countAllJobs" resultType="Integer" parameterType="map">
+		select 
+			count(*)
+		from wos_jobs
+		<where>
+			<if test="code">
+				and job_code like #{code}
+			</if>
+			<if test="name">
+				and job_name like #{name}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getJobByUUID" resultMap="BaseUUIDResult" parameterType="map">
+		select 
+			job_uuid key, 
+			job_code value, 
+			job_name description 
+		from wos_jobs
+		where job_uuid = #{jobUUID, jdbcType=VARBINARY, typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+	</select>
+	
+	<select id="getLookupJob" parameterType="map" resultMap="BaseResult">
+		select 
+			job_id key, 
+			job_code value, 
+			job_name description 
+		from wos_jobs
+		where upper(job_name) like upper(#{name})
+		ORDER BY upper(job_name) asc
+	</select>
+	<select id="countLookupJob" parameterType="map" resultType="INTEGER">
+		select count(*)
+		from wos_jobs
+		where upper(job_name) like upper(#{name})
+	</select>
+	<select id="getLookupValueJob" parameterType="map" resultMap="BaseResult">
+		select 
+			job_id key, 
+			job_code value, 
+			job_name description 
+		from wos_jobs
+		where job_id = #{id}
+	</select>
+	
+	<select id="getLookupGrade" parameterType="map" resultMap="BaseResult">
+		select 
+			wg.grade_id key, 
+			wg.grade_code value, 
+			wg.grade || ' - ' || wg.sub_grade || ' - ' || bc.company_name || ' ( ' || wg.grade_code || ' ) ' description 
+		from wos_grades wg
+		JOIN bse_companies bc
+		ON wg.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where (wg.grade || ' - ' || wg.sub_grade) like #{name}
+		ORDER BY  wg.grade asc, wg.sub_grade asc, bc.company_name asc
+	</select>
+	<select id="countLookupGrade" parameterType="map" resultType="INTEGER">
+		select count(*)
+		from wos_grades wg
+		JOIN bse_companies bc
+		ON wg.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where (wg.grade || ' - ' || wg.sub_grade) like #{name}
+	</select>
+	<select id="getLookupValueGrade" parameterType="map" resultMap="BaseResult">
+		select 
+			grade_id key, 
+			grade_code value, 
+			grade || ' - ' || sub_grade || ' - ' || bc.company_name description 
+		from wos_grades
+		JOIN bse_companies bc
+		ON wg.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where grade_id = #{id}
+	</select>	
+	
+	<select id="getLookupOrganization" parameterType="map" resultMap="BaseResult">
+		select 
+			organization_id key, 
+			organization_code value, 
+			organization_name description 
+		from wos_organizations
+		where organization_name like #{name}
+		ORDER BY organization_name
+	</select>
+	<select id="countLookupOrganization" parameterType="map" resultType="INTEGER">
+		select count(*)
+		from wos_organizations
+		where organization_name like #{name}
+	</select>
+	<select id="getLookupValueOrganization" parameterType="map" resultMap="BaseResult">
+		select 
+			organization_id key, 
+			organization_code value, 
+			organization_name description 
+		from wos_organizations
+		where organization_id = #{id}
+	</select>
+	
+	<select id="getLookupLocation" parameterType="map" resultMap="BaseResult">
+		select 
+			location_id key, 
+			location_code value, 
+			location_name description 
+		from wos_locations
+		where location_name like #{name}
+		ORDER BY location_name ASC
+	</select>
+	<select id="countLookupLocation" parameterType="map" resultType="INTEGER">
+		select count(*)
+		from wos_locations
+		where location_name like #{name}
+	</select>
+	<select id="getLookupValueLocation" parameterType="map" resultMap="BaseResult">
+		select 
+			location_id key, 
+			location_code value, 
+			location_name description 
+		from wos_locations
+		where location_id = #{id}
+	</select>
+	
+	<select id="getLookupLeaveType" parameterType="map" resultMap="BaseResult">
+		SELECT leave_type_id KEY,
+		  leave_type
+		  || '-'
+		  || bc.company_name value,
+		  leave_type
+		  || '-'
+		  || bc.company_name description
+		FROM lea_leave_types llt
+		JOIN bse_companies bc
+		ON llt.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where leave_type like #{name}
+	</select>
+	<select id="countLookupLeaveType" parameterType="map" resultType="INTEGER">
+		select count(*)
+		FROM lea_leave_types llt
+		JOIN bse_companies bc
+		ON llt.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where leave_type like #{name}
+	</select>
+	<select id="getLookupValueLeaveType" parameterType="map" resultMap="BaseResult">
+		SELECT leave_type_id KEY,
+		  leave_type
+		  || '-'
+		  || bc.company_name value,
+		  leave_type
+		  || '-'
+		  || bc.company_name description
+		FROM lea_leave_types llt
+		JOIN bse_companies bc
+		ON llt.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where leave_type_id = #{id}
+	</select>
+	
+	<select id="getLookupKeyValue" parameterType="map" resultMap="BaseResult">
+		SELECT 
+			bld.DETAIL_CODE key,
+			bld.MEANING value,
+			bld.DESCRIPTION description
+		FROM bse_lookup_hdr blh
+    	join BSE_LOOKUP_DEPENDENTS bld on bld.lookup_id = blh.lookup_id
+		WHERE
+      		blh.name = #{lookupName}
+			AND	UPPER(bld.DESCRIPTION) like UPPER(#{name})
+		ORDER BY bld.DESCRIPTION ASC	
+	</select>
+	<select id="countLookupKeyValue" parameterType="map" resultType="INTEGER">
+		SELECT count(*)
+		FROM bse_lookup_hdr blh
+    	join BSE_LOOKUP_DEPENDENTS bld on bld.lookup_id = blh.lookup_id
+		WHERE
+      		blh.name = #{lookupName}
+			AND	UPPER(bld.DESCRIPTION) like UPPER(#{name})	
+	</select>
+	<select id="getKeyValue" parameterType="map" resultMap="BaseResult">
+		SELECT 
+			bld.DETAIL_CODE key,
+			bld.MEANING value,
+			bld.DESCRIPTION description
+		FROM bse_lookup_hdr blh
+    	join BSE_LOOKUP_DEPENDENTS bld on bld.lookup_id = blh.lookup_id
+		WHERE
+      		blh.name = #{lookupName}
+			AND	UPPER(bld.DETAIL_CODE) = UPPER(#{id})
+	</select>
+	
+	<select id="getLookupTerminationReason" parameterType="map" resultMap="BaseResult">
+		select 
+			type_id key, 
+			termination_reason || '-' || bc.company_name value, 
+			termination_reason || '-' || bc.company_name description 
+		from ter_types tt
+		JOIN bse_companies bc
+		ON tt.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where termination_reason like #{name}
+	</select>
+	<select id="countLookupTerminationReason" parameterType="map" resultType="INTEGER">
+		select count(*)
+		from ter_types tt
+		JOIN bse_companies bc
+		ON tt.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where termination_reason like #{name}
+	</select>
+	<select id="getLookupValueTerminationReason" parameterType="map" resultMap="BaseResult">
+		select 
+			type_id key, 
+			termination_reason || '-' || bc.company_name value, 
+			termination_reason || '-' || bc.company_name description 
+		from ter_types tt
+		JOIN bse_companies bc
+		ON tt.company_id = bc.company_id
+		AND TRUNC(sysdate) BETWEEN bc.effective_start_date AND bc.effective_end_date
+		where type_id = #{id}
+	</select>
+	
+	<select id="getLookupLoanType" parameterType="map" resultMap="BaseResult">
+		SELECT llt.loan_id key,
+		  llt.loan_type_name || ' ' || c.company_name description,
+		  llt.loan_category value
+		FROM loa_loan_types llt
+		join bse_companies c
+		  on c.company_id = llt.company_id
+		  and trunc(sysdate) between c.effective_start_date and c.effective_end_date
+		WHERE loan_type_name LIKE  #{name}
+		order by loan_type_name
+	</select>
+	<select id="countLookupLoanType" parameterType="map" resultType="INTEGER">
+		select count(*)
+		from loa_loan_types llt
+		join bse_companies c
+		  on c.company_id = llt.company_id
+		  and trunc(sysdate) between c.effective_start_date and c.effective_end_date
+		where loan_type_name like #{name}
+	</select>
+	<select id="getLookupValueLoanType" parameterType="map" resultMap="BaseResult">
+		SELECT loan_id key,
+		  llt.loan_type_name || ' ' || c.company_name description,
+		  loan_category value
+		FROM loa_loan_types llt
+		join bse_companies c
+		  on c.company_id = llt.company_id
+		  and trunc(sysdate) between c.effective_start_date and c.effective_end_date
+		where loan_id = #{id}
+	</select>
+	
+	<resultMap type="co.id.fifgroup.core.ui.lookup.KeyValue" id="BaseUUIDResult">
+		<id column="KEY" jdbcType="VARBINARY" property="key" typeHandler="co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler" />
+		<result column="FULL_NAME" property="description" />
+		<result column="EMPLOYEE_NUMBER" property="value" />
+	</resultMap>
+	
+	<select id="getAllEmployee" parameterType="map" resultMap="BaseUUIDResult">
+		select pp.person_uuid key,
+	       ppi.employee_number,
+	       ppi.full_name
+	  from PEA_PEOPLE pp
+	  join PEA_PEOPLE_TYPES ppt on ppt.person_id = pp.person_id and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date and ppt.people_type = 'EMPLOYEE'
+	  join pea_personal_informations ppi on ppi.person_id = pp.person_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+	</select>
+	
+	<select id="getAllEmployeeCriteria" parameterType="map" resultMap="BaseUUIDResult">
+		select pp.person_uuid key,
+	       ppi.employee_number,
+	       ppi.full_name
+	  from PEA_PEOPLE pp
+	  join PEA_PEOPLE_TYPES ppt on ppt.person_id = pp.person_id and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date and ppt.people_type = 'EMPLOYEE'
+	  join pea_personal_informations ppi on ppi.person_id = ppt.person_id and ppi.company_id = ppt.company_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+	  join pea_primary_assignments ppa on ppa.person_id = ppt.person_id and ppa.company_id = ppt.company_id and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+	  <where>
+	  	<if test="employeeNumber != null">
+	  		and ppi.employee_number like #{employeeNumber}
+	  	</if>
+	  	<if test="fullName != null">
+	  		and ppi.full_name like #{fullName}
+	  	</if>
+	  </where>
+	  ORDER BY to_number(ppi.employee_number) ASC, ppi.full_name ASC
+	</select>
+	
+	<select id="countAllEmployeeCriteria" parameterType="map" resultType="Integer">
+		select count(*)
+	  from PEA_PEOPLE pp
+	  join PEA_PEOPLE_TYPES ppt on ppt.person_id = pp.person_id and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date and ppt.people_type = 'EMPLOYEE'
+	  join pea_personal_informations ppi on ppi.person_id = ppt.person_id and ppi.company_id = ppt.company_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+	  join pea_primary_assignments ppa on ppa.person_id = ppt.person_id and ppa.company_id = ppt.company_id and trunc(sysdate) between ppa.effective_start_date and ppa.effective_end_date
+	  <where>
+	  	<if test="employeeNumber != null">
+	  		and ppi.employee_number like #{employeeNumber}
+	  	</if>
+	  	<if test="fullName != null">
+	  		and ppi.full_name like #{fullName}
+	  	</if>
+	  </where>
+	</select>
+	
+	<select id="getValueEmployee" parameterType="map" resultMap="BaseUUIDResult">
+		select distinct pp.person_uuid key,
+	       ppi.employee_number,
+	       ppi.full_name
+	  from PEA_PEOPLE pp
+	  join PEA_PEOPLE_TYPES ppt on ppt.person_id = pp.person_id and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date 
+	  join pea_personal_informations ppi on ppi.person_id = pp.person_id and ppi.company_id = ppt.company_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+	  where pp.person_uuid = #{personUUID, jdbcType=VARBINARY,typeHandler=co.id.fifgroup.core.dao.mybatis.type.UUIDTypeHandler}
+	</select>
+	
+	<select id="getApproverByName" parameterType="map" resultMap="BaseUUIDResult">
+		select distinct pp.person_uuid key,
+	       ppi.employee_number,
+	       ppi.full_name
+	  from PEA_PEOPLE pp
+	  join PEA_PEOPLE_TYPES ppt on ppt.person_id = pp.person_id and trunc(sysdate) between ppt.effective_start_date and ppt.effective_end_date
+	  join pea_personal_informations ppi on ppi.person_id = pp.person_id and trunc(sysdate) between ppi.effective_start_date and ppi.effective_end_date
+	  <where>
+	  	upper(full_name) like upper(#{approverName})
+	  </where>
+	</select>
+	
+	<select id="getPendingTransactionBenefit" parameterType="map" resultMap="BaseUUIDResult">
+		select avm_trx_id key
+		from ben_request_trn 
+		where person_id = #{personId} 
+		and company_id = #{companyId} 
+		and approval_status = 'IN_PROGRESS'
+	</select>
+	
+	<select id="getPendingTransactionBusinessTrip" parameterType="map" resultMap="BaseUUIDResult">
+		SELECT avm_trx_id key
+		FROM btr_request_trn brt
+		JOIN btr_request_groups brg on brt.request_group_id = brg.request_group_id
+		WHERE brt.person_id     = #{personId}
+		AND brg.company_id      = #{companyId}
+		AND brt.approval_status = 'IN_PROGRESS'
+	</select>
+	
+	<select id="getPendingTransactionLeave" parameterType="map" resultMap="BaseUUIDResult">
+		SELECT avm_trx_id key
+		FROM lea_leave_trn
+		WHERE person_id     = #{personId}
+		AND company_id      = #{companyId}
+		AND approval_status = 'IN_PROGRESS'
+	</select>
+	
+	<select id="getPendingTransactionLoan" parameterType="map" resultMap="BaseUUIDResult">
+		SELECT avm_trx_id key
+		FROM loa_loan_trn
+		WHERE person_id     = #{personId}
+		AND company_id      = #{companyId}
+		AND approval_status = 'IN_PROGRESS'
+	</select>
+	
+	<select id="getPendingTransactionOvertime" parameterType="map" resultMap="BaseUUIDResult">
+		SELECT avm_trx_id key
+		FROM tms_overtime_request_trn
+		WHERE person_id     = #{personId}
+		AND company_id      = #{companyId}
+		AND approval_status = 0
+	</select>
+</mapper>

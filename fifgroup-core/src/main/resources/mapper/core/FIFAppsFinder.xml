@@ -1,0 +1,1200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.FIFAppsFinder">
+
+	<resultMap id="supplierOpexInfoResult" type="co.id.fifgroup.core.domain.interfacing.SupplierOpexInfo">
+		<result property="opexCode" column="employee_number" jdbcType="VARCHAR" />
+		<result property="opexBankCode" column="bank_code" jdbcType="VARCHAR" />
+		<result property="opexAccountNumber" column="account_number" jdbcType="VARCHAR" />
+		<result property="opexAccountName" column="account_name" jdbcType="VARCHAR" />
+		<result property="opexBankName" column="bank_name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="bankOdInfoResult" type="co.id.fifgroup.core.domain.interfacing.BankOdInfo">
+		<result property="cpCode" column="employee_number" jdbcType="VARCHAR" />
+		<result property="accountNumber" column="bank_code" jdbcType="VARCHAR" />
+		<result property="accountName" column="account_number" jdbcType="VARCHAR" />
+		<result property="bankId" column="account_name" jdbcType="VARCHAR" />
+		<result property="branch" column="bank_name" jdbcType="VARCHAR" />
+		<result property="currencyCode" column="bank_name" jdbcType="VARCHAR" />
+		<result property="segment1" column="bank_name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="prepaymentResult" type="co.id.fifgroup.core.domain.interfacing.Prepayment">
+		<result property="invoiceNumber" column="ap_invoice_no" jdbcType="VARCHAR" />
+		<result property="invoiceSequenceNumber" column="ap_invoice_seqn_no" jdbcType="DECIMAL" />
+		<result property="supplierCode" column="ap_suppl_code" jdbcType="VARCHAR" />
+		<result property="supplierType" column="ap_suppl_type" jdbcType="VARCHAR" />
+		<result property="supplierSubType" column="ap_suppl_subtype" jdbcType="VARCHAR" />
+		<result property="prepaymentDate" column="ap_prepayment_date" jdbcType="VARCHAR" />
+		<result property="referenceNumber" column="ap_reff_no" jdbcType="VARCHAR" />
+		<result property="prepyamentDescription" column="ap_prepay_desc" jdbcType="VARCHAR" />
+		<result property="currency" column="ap_currency" jdbcType="VARCHAR" />
+		<result property="segment1" column="ap_segment1" jdbcType="VARCHAR" />
+		<result property="segment2" column="ap_segment2" jdbcType="VARCHAR" />
+		<result property="segment3" column="ap_segment3" jdbcType="VARCHAR" />
+		<result property="segment4" column="ap_segment4" jdbcType="VARCHAR" />
+		<result property="segment5" column="ap_segment5" jdbcType="VARCHAR" />
+		<result property="segment6" column="ap_segment6" jdbcType="VARCHAR" />
+		<result property="segment7" column="ap_segment7" jdbcType="VARCHAR" />
+		<result property="segment8" column="ap_segment8" jdbcType="VARCHAR" />
+		<result property="amountDebet" column="ap_amt_debet" jdbcType="VARCHAR" />
+		<result property="amountCredit" column="ap_amt_kredit" jdbcType="VARCHAR" />
+		<result property="createdBy" column="ap_created_by" jdbcType="VARCHAR" />
+		<result property="createdDate" column="ap_created_date" jdbcType="VARCHAR" />
+		<result property="companyCode" column="coy_id" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.interfacing.IuranKoperasi" id="iuranKoperasi">
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId"/>
+		<result column="PAYCODE_ID" jdbcType="NUMERIC" property="paycodeId"/>
+		<result column="PAYCODE" jdbcType="VARCHAR" property="paycode"/>
+		<result column="EMPLOYEE_NUMBER" jdbcType="VARCHAR" property="employeeNumber"/>
+		<result column="AMOUNT" jdbcType="NUMERIC" property="amount"/>
+		<result column="SAV_PROD_TYPE_ID" jdbcType="VARCHAR" property="savProdTypeId"/>		
+		<result column="MODULE_ID" jdbcType="NUMERIC" property="moduleId"/>
+		<result column="SAV_SEQ" jdbcType="NUMERIC" property="savSequence"/>
+	</resultMap>
+	
+	<resultMap type="co.id.fifgroup.core.domain.interfacing.HutangKoperasi" id="hutangKoperasi">
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId"/>
+		<result column="NPK" jdbcType="VARCHAR" property="npk"/>
+		<result column="CONTRACT_NO" jdbcType="VARCHAR" property="contractNumber"/>
+		<result column="INV_NO" jdbcType="VARCHAR" property="invNo"/>
+		<result column="INV_AMOUNT" jdbcType="NUMERIC" property="invAmount"/>
+		<result column="RSP_AMOUNT" jdbcType="NUMERIC" property="rspAmount"/>
+		<result column="RSP_STS" jdbcType="VARCHAR" property="rspSts"/>
+		<result column="RSP_REMARKS" jdbcType="VARCHAR" property="rspRemark"/>
+		<result column="PROCESS_DATE" jdbcType="DATE" property="processDate"/>
+		<result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy"/>
+		<result column="CREATION_DATE" jdbcType="DATE" property="creationDate"/>
+		<result column="MODIFIED_BY" jdbcType="VARCHAR" property="modifiedBy"/>
+		<result column="MODIFIED_DATE" jdbcType="DATE" property="modifiedDate"/>
+		<result column="PAYCODE_ID" jdbcType="NUMERIC" property="paycodeId"/>
+		<result column="PAYCODE" jdbcType="VARCHAR" property="paycode"/>			
+		<result column="MODULE_ID" jdbcType="NUMERIC" property="moduleId"/>
+		<result column="INSTL_NO" jdbcType="VARCHAR" property="instlNo"/>
+	</resultMap>
+	
+	
+<!-- 	add by lisa,1-sep-2015,tiket - 14102810453648 -->
+	<resultMap type="co.id.fifgroup.core.domain.interfacing.TabunganKoperasi" id="tabunganKoperasi">
+		<result column="PERSON_ID" jdbcType="NUMERIC" property="personId"/>
+		<result column="TAB_NPK" jdbcType="VARCHAR" property="npk"/>
+		<result column="MODULE_ID" jdbcType="NUMERIC" property="moduleId"/>
+		<result column="PAYCODE_ID" jdbcType="NUMERIC" property="paycodeId"/>
+		<result column="AMOUNT" jdbcType="NUMERIC" property="amount"/>
+		<result column="TAB_STATUS" jdbcType="VARCHAR" property="tabStatus"/>
+		<result column="TAB_CONTRACT_NO" jdbcType="NUMERIC" property="tabContractNo"/>
+		<result column="TAB_INST_NO" jdbcType="NUMERIC" property="tabInstNo"/>
+		<result column="TAB_PROCESS_DATE" jdbcType="DATE" property="processDate"/>
+		<result column="TAB_REMARKS" jdbcType="VARCHAR" property="tabRemark"/>
+		<result column="TAB_PAID_BY" jdbcType="VARCHAR" property="tabPaidBy"/>
+		<result column="TAB_PAID_DATE" jdbcType="DATE" property="tabPaidDate"/>
+		<result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy"/>
+		<result column="CREATED_DATE" jdbcType="DATE" property="creationDate"/>
+		<result column="MODIFIED_BY" jdbcType="VARCHAR" property="modifiedBy"/>
+		<result column="MODIFIED_DATE" jdbcType="DATE" property="modifiedDate"/>
+	</resultMap>
+<!-- 	// -->
+
+	<!-- add by RIM - 15100808164486 - Inv PPH pesangon tdk terbentuk jika pesangon = 0 -->
+	<resultMap type="co.id.fifgroup.core.domain.interfacing.InvoiceInterface" id="invoiceInterface">
+		<result column="AP_TOTAL_AMOUNT" jdbcType="NUMERIC" property="amount"/>
+		<result column="AP_INVOICE_DATE" jdbcType="VARCHAR" property="invoiceDate"/>
+		<result column="BANK_NAME" jdbcType="NUMERIC" property="paymentBankCode"/>
+		<result column="AP_INVOICE_NO" jdbcType="NUMERIC" property="invoiceNumber"/>
+	</resultMap>
+	<!-- end add by RIM - 15100808164486 - Inv PPH pesangon tdk terbentuk jika pesangon = 0 -->
+	
+
+	<select id="getSupplierOpexByOpexCodeAndOpexType" parameterType="map" resultMap="supplierOpexInfoResult">
+		select 
+			pi.employee_number, 
+			bi.bank_name bank_code, 
+			bi.account_number, 
+			bi.account_name, 
+			bi.bank_name 
+		from pea_bank_informations bi join pea_personal_informations pi on bi.person_id = pi.person_id and pi.company_id = bi.company_id
+		where trunc(sysdate) between pi.effective_start_date and pi.effective_end_date and
+			trunc(sysdate) between bi.effective_start_date AND bi.effective_end_date
+			and pi.employee_number = #{opexCode}
+			and pi.company_id = #{companyCode} 
+	</select>
+	
+	<select id="countApMstEmployeeByEmployeeCode" parameterType="map" resultType="Integer">
+		select count(*) from ap.ap_mst_employee@fifapps.fif.co.id where empl_code = #{employeeCode}
+	</select>
+	
+	<update id="updateApMstEmployeeByEmployeeCode" parameterType="co.id.fifgroup.core.domain.interfacing.EmployeeBankInfo">
+		update ap.ap_mst_employee@fifapps.fif.co.id 
+		set
+			empl_bank_id = #{bankId},
+			empl_account_no = #{accountNumber},
+			empl_account_name = #{accountName},
+			empl_bank_name = #{bankName}
+		where empl_code = #{employeeCode}
+	</update>
+	
+	<insert id="insertApMstEmployee" parameterType="co.id.fifgroup.core.domain.interfacing.EmployeeBankInfo">
+		insert into ap.ap_mst_employee@fifapps.fif.co.id (
+			empl_code,
+			empl_bank_id,
+			empl_account_desc,
+			empl_acc_status,
+			empl_acc_type,
+			empl_account_no,
+			empl_account_name,
+			empl_cost_centre,
+			empl_area_code,
+			empl_bank_name
+		) values(
+			#{employeeCode, jdbcType=VARCHAR},
+			#{bankId, jdbcType=VARCHAR},
+			#{accountDescription, jdbcType=VARCHAR},
+			#{accountStatus, jdbcType=VARCHAR},
+			#{accountType, jdbcType=VARCHAR},
+			#{accountNumber, jdbcType=VARCHAR},
+			#{accountName, jdbcType=VARCHAR},
+			#{costCenter, jdbcType=VARCHAR},
+			#{areaCode, jdbcType=VARCHAR},
+			#{bankName, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="getBankOdInfoByBranchAndDivision" parameterType="map" resultMap="bankOdInfoResult">
+		select 
+			cp_code,
+			account_no,
+			account_name,
+			bank_id,
+			fif_branch,
+			currency_code,
+			segment1
+		from ap.ap_bank_od_branch_v@fifapps.fif.co.id
+		where fif_branch = #{branchCode} and segment1 = #{division}
+	</select>
+	
+	<select id="countSupplierAccount" parameterType="map" resultType="Integer">
+		select count(*) from fifapps.fs_mst_supplier_acct@fifapps.fif.co.id 
+		where 
+			supl_code = #{opexCode} and
+			supl_bank_id = #{bankId} and
+			supl_account_no = #{accountNumber}
+	</select>
+	
+	<select id="checkCvrGlNotNull" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=NUMERIC, mode=OUT} = call fifapps.fs_fif_process_pkg.check_cvr_gl_notnull@fifapps.fif.co.id 
+			(
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{message, javaType=String, jdbcType=VARCHAR, mode=OUT}
+			)
+		}
+	</select>
+	
+	<select id="getInvoiceNumber" statementType="CALLABLE">
+		{ #{invoiceNumber, jdbcType=VARCHAR, mode=OUT} = call ap.get_invoice_no@fifapps.fif.co.id 
+			(
+				#{branchCode, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="insertInvoiceInterface" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.INTERFACE.invoice_interface@fifapps.fif.co.id
+			(
+				#{invoiceNumber, mode=IN, jdbcType=VARCHAR},
+				#{branchCode, mode=IN, jdbcType=VARCHAR},
+				#{invoiceType, mode=IN, jdbcType=VARCHAR},
+				#{paidByHo, mode=IN, jdbcType=VARCHAR},
+				#{referenceNumber, mode=IN, jdbcType=VARCHAR},
+				#{transactionType, mode=IN, jdbcType=VARCHAR},
+				#{invoiceDate, mode=IN, jdbcType=DATE},
+				#{dueDate, mode=IN, jdbcType=DATE},
+				#{supplierCode, mode=IN, jdbcType=VARCHAR},
+				#{description, mode=IN, jdbcType=VARCHAR},
+				#{supplierBankCode, mode=IN, jdbcType=VARCHAR},
+				#{supplierAccountNumber, mode=IN, jdbcType=VARCHAR},
+				#{supplierAccountName, mode=IN, jdbcType=VARCHAR},
+				#{fakturPajakDate, mode=IN, jdbcType=DATE},
+				#{fakturPajakNumber, mode=IN, jdbcType=VARCHAR},
+				#{ppnTaxCode, mode=IN, jdbcType=VARCHAR},
+				#{ppnType, mode=IN, jdbcType=VARCHAR},
+				#{currencyCode, mode=IN, jdbcType=VARCHAR},
+				#{exchangeRate, mode=IN, jdbcType=NUMERIC},
+				#{createdBy, mode=IN, jdbcType=VARCHAR},
+				#{companyGlCode, mode=IN, jdbcType=VARCHAR},
+				#{branchDestination, mode=IN, jdbcType=VARCHAR},
+				#{scheduleDate, jdbcType=DATE, mode=IN},
+				#{classCode, mode=IN, jdbcType=VARCHAR},
+				#{costCenter, mode=IN, jdbcType=VARCHAR},
+				#{productCode, mode=IN, jdbcType=VARCHAR},
+				#{debetCredit, mode=IN, jdbcType=VARCHAR},
+				#{descriptionDetail, mode=IN, jdbcType=VARCHAR},
+				#{amount, mode=IN, jdbcType=NUMERIC},
+				#{usedPpn, mode=IN, jdbcType=VARCHAR},
+				#{includePpn, mode=IN, jdbcType=VARCHAR},
+				#{taxCode, mode=IN, jdbcType=VARCHAR},
+				#{taxAmount, mode=IN, jdbcType=NUMERIC},
+				#{journalType, mode=IN, jdbcType=VARCHAR},
+				#{moduleId, mode=IN, jdbcType=NUMERIC},
+				#{sequenceNumber, mode=IN, jdbcType=NUMERIC},
+				#{priority, mode=IN, jdbcType=NUMERIC},
+				#{paymentBankAccount, mode=IN, jdbcType=VARCHAR},
+				#{paymentBankCode, mode=IN, jdbcType=VARCHAR},
+				#{autoPayment, mode=IN, jdbcType=VARCHAR},
+				#{segmentBank, mode=IN, jdbcType=VARCHAR},
+				#{paymentViaBank, mode=IN, jdbcType=VARCHAR},
+				#{segmentIb, mode=IN, jdbcType=VARCHAR},
+				#{companyCode, mode=IN, jdbcType=VARCHAR},
+				#{procName, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="insertPreInvoiceInterface" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.INTERFACE.insert_perinvoice_interface@fifapps.fif.co.id
+			(
+				#{invoiceNumber, jdbcType=VARCHAR, mode=IN}
+				<if test="spsPrepayment != null">
+				, #{spsPrepayment, jdbcType=VARCHAR, mode=IN}
+				</if>
+				<if test="forceApprover != null">
+				, #{forceApprover, jdbcType=VARCHAR, mode=IN}
+				</if>
+			)
+		}
+	</select>
+	
+	<select id="insertApprover" statementType="CALLABLE">
+		{ call ap.ap_insert_approver@fifapps.fif.co.id
+			(
+				#{branchCode, mode=IN, jdbcType=VARCHAR},
+				#{invoiceNumber, mode=IN, jdbcType=VARCHAR},
+				#{sequenceApproverNumber, mode=IN, jdbcType=NUMERIC},
+				#{approver, mode=IN, jdbcType=VARCHAR},
+				#{approveDate, mode=IN, jdbcType=DATE}
+			)
+		}
+	</select>
+	
+	<select id="getPrepaymentTransaction" parameterType="map" resultMap="prepaymentResult">
+		select * from ap.ap_trn_spc_prepay@fifapps.fif.co.id where ap_invoice_no = #{invoiceNumber, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getPrepaymentTransactionByReferenceNumber" parameterType="map" resultMap="prepaymentResult">
+		select * from ap.ap_trn_spc_prepay@fifapps.fif.co.id where ap_reff_no = #{referenceNumber} and ap_suppl_code = #{employeeNumber}
+	</select>
+	
+	<select id="bookRvNumber" statementType="CALLABLE">
+		{ #{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.booking_rv_no@fifapps.fif.co.id
+			(
+				#{branchCode, mode=IN},
+				#{createdBy, mode=IN}
+			)
+		}
+	</select>
+	
+	<select id="createRv" statementType="CALLABLE">
+		{ call ap.ap_spc_prepay.create_rv@fifapps.fif.co.id
+			(
+				#{prepayment, mode=IN},
+				#{createdBy, mode=IN},
+				#{rvNumber, mode=OUT}
+			)
+		}
+	</select>
+
+	<select id="getGLBookId" resultType="java.lang.Long">
+		select value from fs_mst_param@fifapps.fif.co.id where key = 'GL_BOOK_ID'
+	</select>
+	
+	<insert id="insertGlInterface" parameterType="co.id.fifgroup.core.domain.interfacing.GlInterface">
+		insert into fifapps.gl_interface@fifapps.fif.co.id (
+			status,
+			set_of_books_id,
+			accounting_date,
+			transaction_date,
+			period_name,
+			currency_code,
+			date_created,
+			created_by,
+			actual_flag,
+			user_je_category_name,
+			user_je_source_name,
+			segment1,
+			segment2,
+			segment3,
+			segment4,
+			segment5,
+			segment6,
+			segment7,
+			segment8,
+			entered_dr,
+			entered_cr,
+			accounted_dr,
+			accounted_cr,
+			reference1,
+			reference4,
+			reference10,
+			attribute4,
+			attribute5
+		) values (
+			#{status, jdbcType=VARCHAR},
+			#{setOfBookId, jdbcType=DECIMAL},
+			#{accountingDate, jdbcType=DATE},
+			#{transactionDate, jdbcType=DATE},
+			#{periodName, jdbcType=VARCHAR},
+			#{currencyCode, jdbcType=VARCHAR},
+			#{dateCreated, jdbcType=TIMESTAMP},
+			#{createdBy, jdbcType=VARCHAR},
+			#{actualFlag, jdbcType=VARCHAR},
+			#{userJeCategoryName, jdbcType=VARCHAR},
+			#{userJeSourceName, jdbcType=VARCHAR},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{enteredDr, jdbcType=DECIMAL},
+			#{enteredCr, jdbcType=DECIMAL},
+			#{accountedDr, jdbcType=DECIMAL},
+			#{accountedCr, jdbcType=DECIMAL},
+			#{reference1, jdbcType=VARCHAR},
+			#{reference4, jdbcType=VARCHAR},
+			#{reference10, jdbcType=VARCHAR},
+			#{attribute4, jdbcType=VARCHAR},
+			#{attribute5, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="checkBalanceJurnal" statementType="CALLABLE">
+		{ 
+			#{resultValue, jdbcType=NUMERIC, mode=OUT} = call fifapps.fs_cek_bal_jurnal@fifapps.fif.co.id
+			(
+				#{invoiceNumber, mode=IN}
+			)
+		}
+	
+	</select>
+	
+	<update id="updateApTrnSpcPrepayment" parameterType="map">
+		update ap.ap_trn_spc_prepay@fifapps.fif.co.id
+		set
+			ap_segment2 = #{branchCodeNew, jdbcType=VARCHAR},
+			coy_id = #{companyId, jdbcType=VARCHAR}
+		where ap_invoice_no = #{invoiceNumber, jdbcType=VARCHAR}
+			
+	</update>
+	
+	<insert id="insertPrepayment" parameterType="co.id.fifgroup.core.domain.interfacing.Prepayment">
+		
+		Insert into ap.ap_trn_spc_prepay@fifapps.fif.co.id (
+			ap_invoice_no,
+			ap_invoice_seqn_no,
+			ap_suppl_code,
+			ap_suppl_type,
+			ap_suppl_subtype,
+			ap_prepayment_date,
+			ap_reff_no,
+			ap_prepay_desc,
+			ap_currency,
+			ap_segment1,
+			ap_segment2,
+			ap_segment3,
+			ap_segment4,
+			ap_segment5,
+			ap_segment6,
+			ap_segment7,
+			ap_segment8,
+			ap_amt_debet,
+			ap_amt_kredit,
+			ap_created_by,
+			ap_created_date,
+			coy_id
+		) values (
+			#{invoiceNumber, jdbcType=VARCHAR},
+			#{invoiceSequenceNumber, jdbcType=NUMERIC},
+			#{supplierCode, jdbcType=VARCHAR},
+			#{supplierType, jdbcType=VARCHAR},
+			#{supplierSubType, jdbcType=VARCHAR},
+			#{prepaymentDate, jdbcType=DATE},
+			#{referenceNumber, jdbcType=VARCHAR},
+			#{prepyamentDescription, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{amountDebet, jdbcType=DECIMAL},
+			#{amountCredit, jdbcType=DECIMAL},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdDate, jdbcType=DATE},
+			#{companyCode, jdbcType=VARCHAR}
+		)
+	
+	</insert>
+	
+	<update id="creditApTrnSpcPrepayByInvoiceNumber" parameterType="map">
+		Update ap.ap_trn_spc_prepay 
+		set 
+			ap_amt_credit = #{prepaymentAmount}, 
+			ap_updated_by = #{createdBy}, 
+			ap_created_date = #{createdDate} 
+		where ap_invoice_no = #{invoiceNumber}
+	</update>
+	
+	<select id="genRvInterface" statementType="CALLABLE">
+		{ 
+			#{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.rv_interface_pkg.gen_rv_interface@fifapps.fif.co.id
+			(
+				#{referenceNumber, mode=IN, jdbcType=NUMERIC},
+				#{SequenceNumber, mode=IN, jdbcType=NUMERIC},
+				#{transType, mode=IN, jdbcType=VARCHAR},
+				#{fromId, mode=IN, jdbcType=VARCHAR},
+				#{branchId, mode=IN, jdbcType=VARCHAR},
+				#{transDate, mode=IN, jdbcType=DATE},
+				#{documentNumber, mode=IN, jdbcType=VARCHAR},
+				#{description, mode=IN, jdbcType=VARCHAR},
+				#{receivedMethod, mode=IN, jdbcType=VARCHAR},
+				#{receivedBankId, mode=IN, jdbcType=VARCHAR},
+				#{receivedBankAccount, mode=IN, jdbcType=VARCHAR},
+				#{currency, mode=IN, jdbcType=VARCHAR},
+				#{exchangeRate, mode=IN, jdbcType=NUMERIC},
+				#{receivedAmount, mode=IN, jdbcType=DECIMAL},
+				#{fee, mode=IN, jdbcType=DECIMAL},
+				#{segment1, mode=IN, jdbcType=VARCHAR},
+				#{segment2, mode=IN, jdbcType=VARCHAR},
+				#{segment3, mode=IN, jdbcType=VARCHAR},
+				#{segment4, mode=IN, jdbcType=VARCHAR},
+				#{segment5, mode=IN, jdbcType=VARCHAR},
+				#{procedureName, mode=IN, jdbcType=VARCHAR},
+				#{createdBy, mode=IN, jdbcType=VARCHAR},
+				#{createDate, mode=IN, jdbcType=DATE},
+				#{segment6, mode=IN, jdbcType=VARCHAR},
+				#{segment7, mode=IN, jdbcType=VARCHAR},
+				#{segment8, mode=IN, jdbcType=VARCHAR},
+				#{segment9, mode=IN, jdbcType=VARCHAR},
+				#{segment10, mode=IN, jdbcType=VARCHAR},
+				#{bankId, mode=IN, jdbcType=VARCHAR},
+				#{companyId, mode=IN, jdbcType=VARCHAR},
+				#{contractNumber, mode=IN, jdbcType=VARCHAR},
+				#{rvNumber, mode=IN, jdbcType=VARCHAR},
+				#{roundRcv, mode=IN, jdbcType=VARCHAR},
+				#{source, mode=IN, jdbcType=VARCHAR},
+				#{referenceDetail, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="getSupplierTypeBySupplierCode" parameterType="map" resultType="String">
+		select supl_opex_type from mst_suppliers_v where supl_opex_code = #{supplierCode, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertApTrnPPH" parameterType="co.id.fifgroup.core.domain.interfacing.TaxInterface">
+		INSERT INTO ap.ap_trn_pph@fifapps.fif.co.id(
+			ap_branch_id, 
+			ap_refference_no, 
+			ap_invoice_no, 
+			ap_invoice_type,
+            ap_trans_type, 
+            ap_invoice_date,
+            ap_supplier_code, 
+            ap_supplier_type,
+            ap_supplier_name, 
+            ap_currency,
+            ap_exchange_rate, 
+            ap_sequence_no,
+            ap_branch_destination,
+            ap_sched_due_date, 
+            ap_classcode,
+            ap_debet_kredit,
+            ap_description,
+            ap_amount, 
+            ap_tax_code,
+            ap_tax_classcode, 
+            ap_tax_amount,
+            ap_tax_amount_in_rup, 
+            ap_status,
+            coy_id
+    	)  VALUES (
+    		#{branchCode, jdbcType=VARCHAR},
+    		#{refferenceNo, jdbcType=VARCHAR},
+    		#{invoiceNumber, jdbcType=VARCHAR},
+    		#{invoiceType, jdbcType=VARCHAR},
+    		#{transactionType, jdbcType=VARCHAR},
+			#{invoiceDate, jdbcType=DATE},
+			#{supplierCode, jdbcType=VARCHAR},
+			#{supplierType, jdbcType=NUMERIC},
+			#{supplierName, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{exchangeRate, jdbcType=NUMERIC},
+			#{sequence, jdbcType=NUMERIC},
+			#{branchDestination, jdbcType=VARCHAR},
+			#{scheduleDueDate, jdbcType=DATE},
+			#{classCode, jdbcType=VARCHAR},
+			#{debitCredit, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{amount, jdbcType=DECIMAL},
+			#{taxCode, jdbcType=VARCHAR},
+			#{taxClassCode, jdbcType=VARCHAR},
+			#{taxAmount, jdbcType=DECIMAL},
+			#{taxAmountInRup, jdbcType=DECIMAL},
+			#{status, jdbcType=VARCHAR},
+			#{companyCode, jdbcType=VARCHAR}
+    	)
+	</insert>
+	
+	<update id="updateTrnInvoiceDtl" parameterType="co.id.fifgroup.core.domain.interfacing.InvoiceDetail">
+		
+		UPDATE 
+			ap_trn_invoice_dtl@fifapps.fif.co.id aptd
+        SET 
+        	aptd.ap_tax_code = #{taxCode},
+        	aptd.ap_tax_amount = #{taxAmount}
+		WHERE 
+			aptd.ap_invoice_no = #{invoiceNumber} 			
+        <!--  change TPS untuk 14112616483918 (Pos Profitability) - 1 dec 2014 -->
+        <!-- AND aptd.ap_branch_destination = #{branchCode} -->
+        <!--  end change TPS untuk 14112616483918 (Pos Profitability) - 1 dec 2014 -->
+			AND aptd.ap_branch_destination = #{branchDestination}
+			AND aptd.ap_refference_no =#{refferenceNumber}
+	
+	</update>
+	
+	<select id="getDepositNumber" parameterType="map" resultType="String">
+		
+		select ap.get_deposit_no@fifapps.fif.co.id (#{branchCode}, #{moduleId}) from dual
+		
+	</select>
+	
+	<select id="getDepositNumberFunction" statementType="CALLABLE">
+		{ #{depositNumber, jdbcType=VARCHAR, mode=OUT} = call ap.get_deposit_no@fifapps.fif.co.id
+			(
+				#{branchCode, mode=IN, jdbcType=VARCHAR},
+				#{moduleId, mode=IN, jdbcType=NUMERIC}
+			)
+		}
+	</select>
+	
+	<update id="updateCifnEmplLoan" parameterType="map">
+		 UPDATE 
+		 	cifn_empl_loan@fifapps.fif.co.id
+         SET 
+         	emploan_paid_status = 'P',
+            emploan_process_date = TRUNC (SYSDATE),
+            emploan_last_upd_date = SYSDATE,
+            emploan_last_upd_by = #{username}		
+         WHERE 
+            emploan_empl_code = #{employeeNumber}                                 	
+            AND EMPLOAN_APPL_ID = #{contractNumber}
+            AND emploan_paid_status = 'U'
+	</update>
+	
+	<update id="updateIntensifByEmployeeNumber" parameterType="map">
+		UPDATE 
+			FIFAPPS.arec_insentif_temp@fifapps.fif.co.id
+		SET 
+			payroll_process_date = #{processDate,jdbcType=DATE},
+			<if test="instfFlag != null">
+				INSTF_FLAG = #{instfFlag},
+			</if>
+			instf_last_update_date = sysdate
+		WHERE 
+			instf_npk = #{employeeNumber} 
+			AND instf_flag = 'U'
+	</update>
+	
+	<select id="getInsentifByEmployeeNumber" parameterType="map" resultType="java.math.BigDecimal">
+		select SUM (NVL (INSTF_AMOUNT, 0))
+		from FIFAPPS.AREC_INSENTIF_TEMP@fifapps.fif.co.id
+		WHERE instf_npk = #{employeeNumber,jdbcType=VARCHAR} 
+		AND instf_flag = 'U'
+	</select>
+	
+	<select id="selectIuranKoperasiByCompanyId" parameterType="map" resultMap="iuranKoperasi" >
+		select PAPF.PERSON_ID,papf.employee_number,tsr.sav_prod_type_id,pmd.module_id,
+				pp.paycode_id,pp.paycode,TSR.SAV_AMOUNT amount, TSR.SAV_SEQ
+		from 
+				TRN_SAVINGS_RSP@SYSKOP.US.ORACLE.COM TSR, 
+				PEA_PERSONAL_INFORMATIONS PAPF,
+				PEA_PEOPLE_TYPES PPT,
+				PAY_PAYCODES PP,
+	            PAY_MAD_VERSION PMV,
+	            pay_mad_dtl pmd
+	    WHERE tsr.sav_status = 'Y'  
+		AND tsr.sav_flagfif = 'N'
+		AND tsr.sav_prod_id = 'PD02'
+		and TSR.SAV_PROD_TYPE_ID in ('03', '04')
+		and PAPF.EMPLOYEE_NUMBER = TSR.SAV_MEMBER_ID
+		and #{processDate} between PAPF.EFFECTIVE_START_DATE and PAPF.EFFECTIVE_END_DATE
+		and PAPF.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+		and PPT.PERSON_ID = PAPF.PERSON_ID
+		and PPT.COMPANY_ID = PAPF.COMPANY_ID
+		and #{processDate} between PPT.EFFECTIVE_START_DATE and PPT.EFFECTIVE_END_DATE
+		and PPT.PEOPLE_TYPE = 'EMPLOYEE'
+		and pp.paycode=DECODE (tsr.sav_prod_type_id,
+				'03', 'SD016',
+				'04', 'SD017'      
+				)
+		and  pp.company_id = papf.company_id
+	    and  PMV.COMPANY_ID = PAPF.COMPANY_ID
+	    and  #{processDate} between pmv.DATE_FROM and pmv.DATE_TO
+	    and  PMD.VERSION_ID = PMV.VERSION_ID
+	    and  pmd.paycode_id = pp.paycode_id	
+	</select>
+	
+	<select id="selectPotonganKoperasiByCompanyId" parameterType="map" resultMap="hutangKoperasi">
+		select PAPF.PERSON_ID,PAPF.EMPLOYEE_NUMBER NPK,FIR.INSTL_NO,FIR.CONTRACT_NO,fir.inv_no,FIR.INV_AMOUNT,FIR.RSP_AMOUNT,
+       FIR.RSP_STS,FIR.RSP_REMARKS,FIR.PROCESS_DATE,FIR.MODIFIED_BY,FIR.MODIFIED_DATE,PMD.MODULE_ID,
+				pp.paycode_id,pp.paycode
+		from 
+				FIF_INVOICE_RSP@SYSKOP.US.ORACLE.COM FIR, 
+				PEA_PERSONAL_INFORMATIONS PAPF,
+				PEA_PEOPLE_TYPES PPT,
+				PAY_PAYCODES PP,
+	            PAY_MAD_VERSION PMV,
+	            pay_mad_dtl pmd
+	    where FIR.RSP_STS = 'U'
+		and PAPF.EMPLOYEE_NUMBER = fir.npk
+		and #{processDate} between PAPF.EFFECTIVE_START_DATE and PAPF.EFFECTIVE_END_DATE
+		and PAPF.COMPANY_ID = #{companyId,jdbcType=NUMERIC}
+		and PPT.PERSON_ID = PAPF.PERSON_ID
+		and PPT.COMPANY_ID = PAPF.COMPANY_ID
+		and #{processDate} between PPT.EFFECTIVE_START_DATE and PPT.EFFECTIVE_END_DATE
+		and PPT.PEOPLE_TYPE = 'EMPLOYEE'
+		and pp.paycode='SD007'
+		and  pp.company_id = papf.company_id
+	    and  PMV.COMPANY_ID = PAPF.COMPANY_ID
+	    and  TRUNC(sysdate) between pmv.DATE_FROM and pmv.DATE_TO
+	    and  PMD.VERSION_ID = PMV.VERSION_ID
+	    and  pmd.paycode_id = pp.paycode_id
+	</select>
+	
+	<update id="updateIuranKoperasi" parameterType="map"> 
+		UPDATE trn_savings_rsp@syskop.us.oracle.com
+		SET sav_flagfif = #{flagFif, jdbcType=VARCHAR},
+ 			modified_by = #{updatedBy,jdbcType=VARCHAR},
+ 			modified_date = TRUNC (SYSDATE)
+		WHERE sav_member_id = #{employeeNumber,jdbcType=VARCHAR}
+ 		AND sav_prod_type_id = #{savProdTypeId,jdbcType=VARCHAR}	
+ 		AND sav_seq = #{savSequence, jdbcType=NUMERIC}	
+	</update>
+	
+	<select id="settlePrepayment" statementType="CALLABLE">
+		{ 
+			#{returnValue, jdbcType=VARCHAR, mode=OUT} = call ap.ap_spc_prepay.settle_prepayment@fifapps.fif.co.id
+			(
+				#{invoicePrepaymentNumber, mode=IN, jdbcType=VARCHAR},
+				#{prepaymentSequenceNumber, mode=IN, jdbcType=VARCHAR},
+				#{invoiceNumber, mode=IN, jdbcType=VARCHAR},
+				#{createdBy, mode=IN, jdbcType=VARCHAR},
+				#{createRv, mode=IN, jdbcType=VARCHAR},
+				#{rvNumber, mode=OUT, jdbcType=VARCHAR},
+				#{outMessage, mode=OUT, jdbcType=VARCHAR}
+			)
+		}
+	
+	</select>
+	
+	<insert id="insertRvTrnDeposit" parameterType="co.id.fifgroup.core.domain.interfacing.DepositInterface">
+		insert into ap.rv_trn_depositt@fifapps.fif.co.id (
+			DEPOSIT_NO,
+			SEQ_NO,
+			COY_ID,
+			CONTRACT_NO,
+			CUST_ID,
+			REFF_NO,
+			CURRENCY,
+			AMOUNT_CREDIT,
+			AMOUNT_DEBET,
+			SEGMENT1,
+			SEGMENT2,
+			SEGMRNT3,
+			SEGMENT4,
+			SEGMENT5,
+			SEGMENT6,
+			SEGMENT7,
+			SEGMENT8,
+			SEGMENT9,
+			SEGMENT10,
+			DESCRIPTION,
+			STATUS,
+			CREATED_BY,
+			CREATED_TIMESTAMP,
+			LASTUPDATE_BY,
+			LASTUPDATE_TIMESTAMP,
+			SOURCE_CODE,
+			LAST_HIST_SEQ
+		) VALUES (
+			#{depositNumber, jdbcType=VARCHAR},
+			#{sequence, jdbcType=NUMERIC},
+			#{companyCode, jdbcType=VARCHAR},
+			#{contractNumber, jdbcType=VARCHAR},
+			#{customerId, jdbcType=VARCHAR},
+			#{refferenceNumber, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{amountCredit, jdbcType=VARCHAR},
+			#{amountDebet, jdbcType=VARCHAR},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{segment9, jdbcType=VARCHAR},
+			#{segment10, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdTimestamp, jdbcType=DATE},
+			#{lastUpdateBy, jdbcType=VARCHAR},
+			#{lastUpdateTimestamp, jdbcType=DATE},
+			#{sourceCode, jdbcType=VARCHAR},
+			#{lastHistSeq, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="insertTrnDepositHistory" parameterType="co.id.fifgroup.core.domain.interfacing.DepositHistoryInterface">
+		insert into ap.rv_trn_deposit_hist@fifapps.fif.co.id(
+			DEPOSIT_NO,
+			SEQ_NO,
+			SEQ_HIST,
+			REFFERENCE_NO,
+			AMOUNT_CREDIT,
+			AMOUNT_DEBET,
+			OPENING_BAL,
+			CLOSING_BAL,
+			DESCRIPTION,
+			CREATED_BY,
+			CREATED_TIMESTAMP,
+			LASTUPDATE_BY,
+			LASTUPDATE_TIMESTAMP
+		) VALUES (
+			#{depositNumber, jdbcType=VARCHAR},
+			#{sequence, jdbcType=NUMERIC},
+			#{sequenceHistory, jdbcType=NUMERIC},
+			#{refferenceNumber, jdbcType=VARCHAR},
+			#{amountCredit, jdbcType=DECIMAL},
+			#{amountDebet, jdbcType=DECIMAL},
+			#{openingBalance, jdbcType=DECIMAL},
+			#{closingBalance, jdbcType=DECIMAL},
+			#{description, jdbcType=VARCHAR},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdTimestamp, jdbcType=TIMESTAMP},
+			#{lastUpdateBy, jdbcType=VARCHAR},
+			#{lastUpdateDate, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<insert id="insertTrnDeposit" parameterType="co.id.fifgroup.core.domain.interfacing.DepositInterface">
+		insert into ap.rv_trn_deposit@fifapps.fif.co.id(
+			DEPOSIT_NO,
+			SEQ_NO,
+			COY_ID,
+			CONTRACT_NO,
+			CUST_ID,
+			REFF_NO,
+			CURRENCY,
+			AMOUNT_CREDIT,
+			AMOUNT_DEBET,
+			SEGMENT1,
+			SEGMENT2,
+			SEGMENT3,
+			SEGMENT4,
+			SEGMENT5,
+			SEGMENT6,
+			SEGMENT7,
+			SEGMENT8,
+			SEGMENT9,
+			SEGMENT10,
+			DESCRIPTION,
+			STATUS,
+			CREATED_BY,
+			CREATED_TIMESTAMP,
+			LASTUPDATE_BY,
+			LASTUPDATE_TIMESTAMP,
+			SOURCE_CODE,
+			LAST_HIST_SEQ
+		) VALUES (
+			#{depositNumber, jdbcType=VARCHAR},
+			#{sequence, jdbcType=NUMERIC},
+			#{companyCode, jdbcType=VARCHAR},
+			#{contractNumber, jdbcType=VARCHAR},
+			#{customerId, jdbcType=VARCHAR},
+			#{refferenceNumber, jdbcType=VARCHAR},
+			#{currency, jdbcType=VARCHAR},
+			#{amountCredit, jdbcType=DECIMAL},
+			#{amountDebet, jdbcType=DECIMAL},
+			#{segment1, jdbcType=VARCHAR},
+			#{segment2, jdbcType=VARCHAR},
+			#{segment3, jdbcType=VARCHAR},
+			#{segment4, jdbcType=VARCHAR},
+			#{segment5, jdbcType=VARCHAR},
+			#{segment6, jdbcType=VARCHAR},
+			#{segment7, jdbcType=VARCHAR},
+			#{segment8, jdbcType=VARCHAR},
+			#{segment9, jdbcType=VARCHAR},
+			#{segment10, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			#{status, jdbcType=VARCHAR},
+			#{createdBy, jdbcType=VARCHAR},
+			#{createdTimestamp, jdbcType=TIMESTAMP},
+			#{lastUpdateBy, jdbcType=VARCHAR},
+			#{lastUpdateTimestamp, jdbcType=TIMESTAMP},
+			#{sourceCode, jdbcType=VARCHAR},
+			#{lastHistSeq, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateHutangKoperasiByNpkAndContractNumber" parameterType="co.id.fifgroup.core.domain.interfacing.HutangKoperasi">
+		UPDATE 
+			fif_invoice_rsp@syskop.us.oracle.com
+		<set>
+			<if test="rspAmount != null">
+				rsp_amount = #{rspAmount, jdbcType=DECIMAL},
+			</if>
+			<if test="rspRemark != null">
+				rsp_remarks = #{rspRemark, jdbcType=VARCHAR},
+			</if>
+			<if test="processDate != null">
+				process_date = #{processDate, jdbcType=DATE},
+			</if>
+			<if test="modifiedBy != null">
+				modified_by = #{modifiedBy, jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedDate != null">
+				modified_date = #{modifiedDate, jdbcType=DATE},
+			</if>
+			<if test="rspSts != null">
+				rsp_sts = #{rspSts, jdbcType=VARCHAR},
+			</if>
+		</set>	
+		WHERE 
+			npk = #{npk, jdbcType=VARCHAR}
+			<if test="contractNumber != null">
+				AND contract_no = #{contractNumber, jdbcType=VARCHAR}
+			</if>
+			<if test="instlNo != null">
+				AND instl_no = #{instlNo, jdbcType=VARCHAR}
+			</if>
+			<if test="closing">
+				AND rsp_sts = 'P'
+			</if>
+			
+	</update>
+	
+	<update id="updateActivityCode" parameterType="map">
+		UPDATE ap.ap_trn_invoice_dtl@fifapps.fif.co.id
+		   SET activity_code = #{activityCode, jdbcType=VARCHAR}
+		WHERE ap_invoice_no = #{invoiceNo, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateGlInterfaceAttribute1ByReference4" parameterType="map">
+		UPDATE fifapps.gl_interface@fifapps.fif.co.id
+		   SET ATTRIBUTE1 = #{attribute1, jdbcType=VARCHAR}
+		WHERE REFERENCE4 = #{reference4, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateActivityCodeDetail" parameterType="map">
+		UPDATE ap.ap_trn_invoice_dtl@fifapps.fif.co.id
+		   SET activity_code = #{activityCode, jdbcType=VARCHAR}
+		WHERE ap_invoice_no = #{invoiceNo, jdbcType=VARCHAR}
+		and ap_sequence_no = #{seq, jdbcType=NUMERIC}
+		and ap_amount = #{amount, jdbcType=DECIMAL}
+	</update>
+	
+	<select id="insertBudgetActivityLog" statementType="CALLABLE">
+		{ call FIFAPPS.FS_P_BudgetActivityLog@fifapps.fif.co.id
+			(
+				#{pReferenceNo, mode=IN, jdbcType=VARCHAR},
+				#{pGuidNo, mode=IN, jdbcType=VARCHAR},
+				#{pMessage, mode=IN, jdbcType=VARCHAR},
+				#{pMenuId, mode=IN, jdbcType=VARCHAR},
+				#{pUserId, mode=IN, jdbcType=VARCHAR},
+				#{pSeqNo, mode=IN, jdbcType=NUMERIC}
+			)
+		}
+	</select>
+	
+	<select id="getInvoiceSequenceByInvoiceNoAndBranch" parameterType="map" resultType="int">
+		select nvl(ap_sequence_no,0) from ap_trn_invoice_dtl@fifapps.fif.co.id where ap_invoice_no = #{invoiceNumber, jdbcType=VARCHAR} and ap_branch_destination = #{branchDestination, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getTaxPercentageByTaxCode" parameterType="map" resultType="double">
+		SELECT PCT_RATE 
+		FROM FIFAPPS.FS_MST_TAX_CODES@fifapps.fif.co.id
+		WHERE TAX_CODE = #{taxCode}
+	</select>
+	
+	<select id="getTaxRemarksByTaxCode" parameterType="map" resultType="String">
+		SELECT REMARKS 
+		FROM FIFAPPS.FS_MST_TAX_CODES@fifapps.fif.co.id
+		WHERE TAX_CODE = #{taxCode}
+	</select>
+
+<!-- //add by lisa,1-sep-2015,tiket - 14102810453648// -->
+	<select id="selectTabunganKoperasiByCompanyId" parameterType="map" resultMap="tabunganKoperasi">
+		SELECT ppi.person_id, ppi.employee_number npk, pmd.module_id, pp.paycode_id,
+	       pp.paycode, fit.tab_amount amount, tab_contract_no, tab_inst_no
+	  FROM fif_invoice_tab@syskop.us.oracle.com fit,
+	       pea_personal_informations ppi,
+	       pea_people_types ppt,
+	       pay_paycodes pp,
+	       pay_mad_version pmv,
+	       pay_mad_dtl pmd
+	 WHERE fit.tab_status = 'U'
+	   AND ppi.employee_number = fit.tab_npk
+	   AND TRUNC (#{processDate}) BETWEEN TRUNC (ppi.effective_start_date)
+	                           AND TRUNC (ppi.effective_end_date)
+	   AND ppi.company_id = #{companyId,jdbcType=NUMERIC}
+	   AND ppt.person_id = ppi.person_id
+	   AND ppt.company_id = ppi.company_id
+	   AND TRUNC (#{processDate}) BETWEEN TRUNC (ppt.effective_start_date)
+	                           AND TRUNC (ppt.effective_end_date)
+	   AND ppt.people_type = 'EMPLOYEE'
+	   AND pp.paycode = 'SD015'
+	   AND pp.company_id = ppi.company_id
+	   AND pmv.company_id = ppi.company_id
+	   AND TRUNC (#{processDate}) BETWEEN TRUNC (pmv.date_from) AND TRUNC (pmv.date_to)
+	   AND pmd.version_id = pmv.version_id
+	   AND pmd.paycode_id = pp.paycode_id
+	</select>
+	
+	<update id="updateTabunganKoperasiByNpkAndContractNumber" parameterType="co.id.fifgroup.core.domain.interfacing.TabunganKoperasi">
+		UPDATE 
+			fif_invoice_tab@syskop.us.oracle.com
+		<set>
+			<if test="amount != null">
+				tab_amount = #{amount, jdbcType=DECIMAL},
+			</if>
+			<if test="tabRemark != null">
+				tab_remarks = #{tabRemark, jdbcType=VARCHAR},
+			</if>
+			<if test="processDate != null">
+				tab_process_date = #{processDate, jdbcType=DATE},
+			</if>
+			<if test="modifiedBy != null">
+				modified_by = #{modifiedBy, jdbcType=VARCHAR},
+			</if>
+			<if test="modifiedDate != null">
+				modified_date = #{modifiedDate, jdbcType=DATE},
+			</if>
+			<if test="tabPaidBy != null">
+				tab_paid_by = #{tabPaidBy, jdbcType=VARCHAR},
+			</if>
+			<if test="tabPaidDate != null">
+				tab_paid_date = #{tabPaidDate, jdbcType=DATE},
+			</if>
+			<if test="tabStatus != null">
+				tab_status = #{tabStatus, jdbcType=VARCHAR},
+			</if>
+		</set>	
+		WHERE 
+			tab_npk = #{npk, jdbcType=VARCHAR}
+			<if test="tabContractNo != null">
+				AND tab_contract_no = #{tabContractNo, jdbcType=VARCHAR}
+			</if>
+			<if test="tabInstNo != null">
+				AND tab_inst_no = #{tabInstNo, jdbcType=VARCHAR}
+			</if>
+			<if test="closing">
+				AND tab_status = 'P'
+			</if>
+	</update>
+	<!-- start added by Jatis, 5 Jan 2016
+		update gl berdasarkan invoice number dan branch code -->
+	<update id="updateGlInterfaceAttribute1ByReference4AndSegment2" parameterType="map">
+		UPDATE fifapps.gl_interface@fifapps.fif.co.id
+		   SET ATTRIBUTE1 = #{attribute1, jdbcType=VARCHAR}
+		WHERE REFERENCE4 = #{reference4, jdbcType=VARCHAR}
+			AND SEGMENT2 = #{segment2, jdbcType=VARCHAR}
+			AND SEGMENT3 &lt;&gt; '000'
+	</update>
+	<!-- end added by Jatis, 5 Jan 2016 -->
+	<!-- add by RIM - 15100808164486 - Inv PPH pesangon tdk terbentuk jika pesangon = 0 -->
+	<update id="updateInvoiceTotalTerminationToBeNol" >
+		update ap.ap_trn_invoice_hdr@fifapps.fif.co.id
+		   set ap_total_amount= ap_total_amount - 
+		   	   ( 
+		   	     select sum(ap_amount) 
+		   	       from ap.ap_trn_invoice_dtl@fifapps.fif.co.id 
+		   	      where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   	        and ap_amount=1
+		   	   ), 
+		   	   ap_total_invoice_amount=ap_total_invoice_amount-( 
+		   	     select sum(ap_amount) 
+		   	       from ap.ap_trn_invoice_dtl@fifapps.fif.co.id 
+		   	      where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   	        and ap_amount=1
+		   	   ), 
+		   	   ap_tot_inv_amt_plus_ppn = ap_tot_inv_amt_plus_ppn - ( 
+		   	     select sum(ap_amount) 
+		   	       from ap.ap_trn_invoice_dtl@fifapps.fif.co.id 
+		   	      where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   	        and ap_amount=1
+		   	   ), 
+		   	   ap_net_invoice_amount=ap_net_invoice_amount-( 
+		   	     select sum(ap_amount) 
+		   	       from ap.ap_trn_invoice_dtl@fifapps.fif.co.id 
+		   	      where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   	        and ap_amount=1
+		   	   )
+		 where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   
+	</update>
+	
+	<update id="updateInvoiceDtlTotalTerminationToBeNol" >
+		update ap.ap_trn_invoice_dtl@fifapps.fif.co.id
+		   set ap_amount=0, ap_invoice_amount=0
+		 where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   and ap_amount=1 and ap_invoice_amount=1
+	</update>
+	
+	<update id="updateInvoicePaidFlagWhereIfTotalAmountIsNol" >
+		update ap.ap_trn_invoice_hdr@fifapps.fif.co.id
+		   set AP_INV_PAID_DATE=sysdate, 
+		       AP_INV_PAID_STATUS = 'Y', 
+		       AP_PAID_BY_HO = 'Y'
+		 where ap_invoice_no= #{invoiceNumber, jdbcType=VARCHAR}
+		   and ap_total_amount=0
+		   and ap_total_invoice_amount=0
+	</update>
+	
+	<select id="getDataTerminationForPesangonMailReminder" resultMap="invoiceInterface" >
+		SELECT distinct trunc(ap_invoice_date) as ap_invoice_date, bank_name, ap_total_amount, AP_INVOICE_NO
+		  FROM ter_requests tr, 
+		       ap_trn_invoice_hdr@fifapps.fif.co.id inv,
+		       fs_mst_bank@fifapps.fif.co.id bank 
+		 WHERE tr.invoice_number IS NOT NULL
+		   AND tr.invoice_number = ap_invoice_no
+		   and bank.bank_id=inv.ap_supplier_code
+		   AND TRUNC (ap_invoice_date) = trunc(SYSDATE - #{sequenceDay,jdbcType=NUMERIC})
+	</select>
+	
+	<select id="getDataSelisihTerminationForPesangonMailReminder" resultType="Integer" >
+		select sum(ap_amount) selisih
+		  from ap_trn_invoice_dtl@fifapps.fif.co.id
+		  where ap_invoice_no in (SELECT DISTINCT ap_invoice_no
+		           FROM ter_requests tr,
+		                ap_trn_invoice_hdr@fifapps.fif.co.id inv,
+		                fs_mst_bank@fifapps.fif.co.id bank
+		          WHERE tr.invoice_number IS NOT NULL
+		            AND tr.invoice_number = ap_invoice_no
+		            AND bank.bank_id = inv.ap_supplier_code
+		            AND TRUNC (ap_invoice_date) = trunc(SYSDATE - #{sequenceDay,jdbcType=NUMERIC})
+		            and ap_amount = 1)
+	</select>
+	
+	<select id="getPersonIdByInvoiceNumberTermination" resultType="Long">
+		SELECT c.person_id
+		  FROM PAY_EMP_PAYMENT_BANK a,  
+		       pay_emp_payments b, 
+		       pea_bank_informations c, 
+		       PAY_PAYROLL_TRN_EMP d
+		  where invoice_number=#{invoiceNumber, jdbcType=VARCHAR}
+		    and a.emp_payment_id = b.emp_payment_id
+		    and c.person_id = d.person_id
+		    and c.bank_name = a.bank_code 
+		    and sysdate between c.effective_start_date and c.effective_end_date
+		    and d.person_id = c.person_Id
+		    and b.trn_id = d.trn_id
+		    and b.company_id = c.company_id
+		    and b.company_id = #{companyId,jdbcType=NUMERIC}
+	
+		<!-- select person_id 
+		  from ter_requests	
+		 where invoice_number=#{invoiceNumber, jdbcType=VARCHAR}
+		   and company_id=#{companyId,jdbcType=NUMERIC} -->
+	</select>
+	
+	<select id="getTakeHomePayByPersonIdAndTrnId" resultType="Double">
+	select key-value as take_home_pay from( 
+	SELECT 
+	      SUM(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(PPTE.TOTAL_ALLOWANCES)) KEY,
+	      SUM(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(PPTE.TOTAL_DEDUCTION_EMP)) VALUE,
+	      SUM(PAY_ENCRYPTION_UTIL_PKG.DECRYPT_DATA(PPTE.TOTAL_DEDUCTION_COMP)) DESCRIPTION, 
+	      ppte.person_id
+	       FROM PAY_PAYROLL_TRN PPT
+		JOIN PAY_PAYROLL_TRN_EMP PPTE ON PPT.TRN_ID = PPTE.TRN_ID
+		where ppt.trn_id = #{trnId,jdbcType=NUMERIC}
+		  and ppte.person_id=#{personId,jdbcType=NUMERIC}
+	    group by ppte.person_id )
+	</select>
+	
+	<update id="updateEmpPayDtlWhereThpIsNol">
+		UPDATE pay_payroll_trn_emp_dtl
+		   SET debit =
+		          pay_encryption_util_pkg.encrypt_data
+		                                 (  pay_encryption_util_pkg.decrypt_data(debit)+ 1)
+		 WHERE trn_emp_id IN (SELECT trn_emp_id
+		                        FROM pay_payroll_trn_emp
+		                       WHERE person_id = #{personId,jdbcType=NUMERIC} AND trn_id = #{trnId,jdbcType=NUMERIC})
+		   AND paycode_id IN (SELECT paycode_id
+		                        FROM pay_paycodes
+		                       WHERE UPPER (description) LIKE 'PESANGON DISETUJUI')
+	</update>
+	
+	<insert id="insertEmpPayDtlWhereThpIsNol">
+		insert into pay_payroll_trn_emp_dtl
+		   (TRN_EMP_DTL_ID       ,
+			TRN_EMP_ID           ,
+			PAYCODE_ID           ,
+			DEBIT                ,
+			CREDIT_EMP           ,
+			CREDIT_COMP          ,
+			CREATED_BY           ,
+			CREATION_DATE        ,
+			LAST_UPDATED_BY      ,
+			LAST_UPDATE_DATE     ,
+			IS_REGULAR_TAX       )
+		values 
+			 (pay_payroll_trn_emp_dtl_s.nextval,
+			 (SELECT distinct trn_emp_id
+		                        FROM pay_payroll_trn_emp
+		                       WHERE person_id = #{personId,jdbcType=NUMERIC} AND trn_id = #{trnId,jdbcType=NUMERIC}),
+			 (SELECT paycode_id
+  					  FROM pay_paycodes
+                     WHERE UPPER (description) LIKE 'PESANGON DISETUJUI' AND company_id = #{companyId,jdbcType=NUMERIC}), 
+			 0,
+			 0, 
+			 1, 
+			 #{createdBy, jdbcType=NUMERIC},
+			 sysdate,
+			 #{createdBy, jdbcType=NUMERIC},
+			 sysdate, 
+			 0
+			)
+	</insert>
+	
+	<!-- end add by RIM - 15100808164486 - Inv PPH pesangon tdk terbentuk jika pesangon = 0 -->
+	
+	<!--  add by PMW, ticket 16062418073379 - Perbaikan interface invoice untuk gl inactive, 01-July-2016 -->
+	<select id="checkNullSegment2" resultType="String" >
+		SELECT 
+			flex_value gl_code
+  		FROM apps.fnd_flex_values@fifgl.fif.co.id ffv
+  			,apps.fnd_flex_values_tl@fifgl.fif.co.id fft
+ 		WHERE flex_value_set_id = 1009326 AND ffv.flex_value_id = fft.flex_value_id 
+          AND TRUNC (SYSDATE) BETWEEN TRUNC (NVL (start_date_active, SYSDATE)) 
+          AND TRUNC (NVL (end_date_active, SYSDATE)) AND enabled_flag &lt;&gt; 'N' 
+          and length(flex_value) = 5 and flex_value = #{segment2, jdbcType=VARCHAR}
+	</select>
+	<!-- end add by PMW -->
+</mapper>

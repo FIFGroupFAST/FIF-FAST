@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.id.fifgroup.notification.dao.mybatis.mapper.NotificationMessageMapper">
+	<resultMap type="co.id.fifgroup.notification.domain.NotificationMessage" id="messageMap">
+		<result column="MESSAGE_ID" property="messageId" jdbcType="NUMERIC" />
+   		<result column="RECEIVED_TIME" property="receivedTime" jdbcType="TIMESTAMP" />
+		<result column="FROM_ID" property="fromId" jdbcType="VARBINARY"
+		 	typeHandler="co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler"/>	
+   		<result column="TO_ID" property="toId" jdbcType="VARBINARY"
+			typeHandler="co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler"/>
+		<result column="SUBJECT" property="subject" jdbcType="VARCHAR" />
+		<result column="CONTENT_MESSAGE" property="contentMessage" jdbcType="CLOB" />
+   		<result column="MESSAGE_STATUS" property="status" jdbcType="NUMERIC" />
+   		<result column="URL_DETAIL" property="urlDetail" jdbcType="VARCHAR" />
+   		<result column="MESSAGE_TYPE" property="messageType" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<!-- Select -->
+	<select id="getMessageByToId" resultMap="messageMap"
+		parameterType="map">
+		select * from NTF_MESSAGE
+		where MESSAGE_STATUS IN (0, 1)
+		and MESSAGE_TYPE = 1
+		<if test="toId != null">
+			and TO_ID = #{toId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}						
+		</if>
+<!-- 			<if test="jobId != null"> -->
+<!-- 				,#{jobId, javaType=java.util.UUID, jdbcType=VARBINARY, -->
+<!-- 				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler} -->
+			
+<!-- 			</if> -->
+<!-- 			<if test="roleId != null"> -->
+<!-- 				,#{roleId, javaType=java.util.UUID, jdbcType=VARBINARY, -->
+<!-- 				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler} -->
+<!-- 			</if>   -->
+		 
+		 order by RECEIVED_TIME desc
+	</select>
+	
+	<select id="getMessageByToIdPagging" resultMap="messageMap"
+		parameterType="map">
+		select outdata.*
+		  from (select rownum rn, indata.*
+		          from ( select * from NTF_MESSAGE
+							where TO_ID IN (#{toId, javaType=java.util.UUID, jdbcType=VARBINARY,
+									 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+								<if test="jobId != null">
+									,#{jobId, javaType=java.util.UUID, jdbcType=VARBINARY,
+									 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+								
+								</if>
+								<if test="roleId != null">
+									,#{roleId, javaType=java.util.UUID, jdbcType=VARBINARY,
+									 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+								</if>  
+							) 
+		                  order by RECEIVED_TIME desc) indata) outdata
+		where 1 = 1
+		<if test="limit != null">
+			and outdata.rn &gt; #{offset}
+			<if test="offset != null">
+				and outdata.rn &lt;= (#{offset} + #{limit})
+			</if> 
+		</if>		
+	</select>
+	
+	<select id="countAllMessage" resultType="Integer">
+		select count(*) from NTF_MESSAGE
+		where TO_ID IN (#{toId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+			<if test="jobId != null">
+				,#{jobId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+			
+			</if>
+			<if test="roleId != null">
+				,#{roleId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+			</if>  
+		)
+	</select>
+	
+	<select id="countUnreadMessage" resultType="Integer">
+		select count(*) from NTF_MESSAGE
+		where TO_ID IN (#{toId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+			<if test="jobId != null">
+				,#{jobId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+			
+			</if>
+			<if test="roleId != null">
+				,#{roleId, javaType=java.util.UUID, jdbcType=VARBINARY,
+				 	typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}
+			</if>  
+		) AND MESSAGE_STATUS = 0
+	</select>
+	
+	<select id="getAllNotificationMessage" resultMap="messageMap"> 
+		select * from NTF_MESSAGE
+		where MESSAGE_STATUS IN (0, 1)
+		and MESSAGE_TYPE = 1
+	</select>
+	
+	<select id="getNotificationMessageByMessageId" parameterType="map" resultMap="messageMap">
+		select * from NTF_MESSAGE
+		where MESSAGE_ID = #{messageId}
+	</select>
+		
+	<!-- Select -->
+	<!-- Insert -->
+		<insert id="insertNewMessage" parameterType="co.id.fifgroup.notification.domain.NotificationMessage">
+			<selectKey keyProperty="messageId" order="BEFORE" resultType="long">
+				select NTF_MESSAGE_S.nextVal from dual
+			</selectKey>
+			insert into NTF_MESSAGE
+			(
+				MESSAGE_ID,
+				RECEIVED_TIME,
+				FROM_ID,
+				TO_ID,
+				SUBJECT,
+				CONTENT_MESSAGE,
+				MESSAGE_STATUS,
+				URL_DETAIL,
+				MESSAGE_TYPE
+			) 
+			values 
+			(
+				#{messageId},
+				#{receivedTime, jdbcType=TIMESTAMP}, 
+				#{fromId, javaType=java.util.UUID, jdbcType=VARBINARY,
+			 		typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler},
+			 	#{toId, javaType=java.util.UUID, jdbcType=VARBINARY,	
+			 		typeHandler=co.id.fifgroup.notification.dao.mybatis.type.UUIDTypeHandler}, 
+			 	#{subject}, 
+			 	#{contentMessage, jdbcType=CLOB},
+			 	0,
+			 	#{urlDetail, jdbcType=VARCHAR},
+			 	#{messageType})
+		</insert>
+	<!-- Insert -->
+	<!-- Update -->
+		<update id="updateMessageStatus" parameterType="map">
+			UPDATE NTF_MESSAGE
+			SET MESSAGE_STATUS = #{messageStatus}
+			WHERE MESSAGE_ID = #{messageId}
+		</update>
+	<!-- Update -->
+
+		<delete id="deleteNotificationMessageByMessageId" parameterType="map">
+			Delete from ntf_message where message_id = #{messageId}
+		</delete>
+
+</mapper>

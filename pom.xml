@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>co.id.fifgroup</groupId>
+	<artifactId>fifgroup-project</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<name>FIFGroup Project</name>
+
+	<properties>
+		<!-- General Properties -->
+		<project.version>1.0.0</project.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+
+		<!-- Test Properties -->
+		<junit.disableXmlReport>true</junit.disableXmlReport>
+		<junit.skipTests>true</junit.skipTests>
+		<junit.version>4.11</junit.version>
+		<mockito.version>1.10.19</mockito.version>
+		
+		<!-- Spring Properties -->
+		<springframework.version>4.2.6.RELEASE</springframework.version>
+		<spring.security.version>4.1.0.RELEASE</spring.security.version>
+		<spring.integration.version>4.2.6.RELEASE</spring.integration.version>
+		<cglib.version>3.2.2</cglib.version>
+
+		<!-- Data Access Properties -->
+		<mybatis.version>3.1.1</mybatis.version>
+		<mybatis.generator.version>1.3.2</mybatis.generator.version>
+		<mybatis.spring.version>1.1.1</mybatis.spring.version>
+		<mybatis.generator.overwrite>true</mybatis.generator.overwrite>
+		<dbcp.version>1.4</dbcp.version>
+		<h2.version>1.4.181</h2.version>
+		<ojdbc.version>11.2.0.1.0</ojdbc.version>
+
+		<!-- ZKoss Properties -->
+		<zkoss.version>8.0.1.1</zkoss.version>
+		<zkoss.zkmax.version>8.0.0</zkoss.zkmax.version>
+		<zkoss.ckez.version>3.6.0.1</zkoss.ckez.version>
+		<zkoss.calendar.version>2.1.2</zkoss.calendar.version>
+		<zkoss.timelinez.version>2.3.1_50</zkoss.timelinez.version>
+		<zkoss.timeplotz.version>1.1_50</zkoss.timeplotz.version>
+		<zkoss.zkcharts.version>2.0.0.1</zkoss.zkcharts.version>
+		<zkoss.bootstrap.version>1.0.0</zkoss.bootstrap.version>
+
+		<!-- Utilities -->
+		<jfreechart.version>1.0.13</jfreechart.version>
+		<jcommon.version>1.0.16</jcommon.version>
+		<jaxb.version>2.2.11</jaxb.version>
+		<poi.version>3.14</poi.version>
+		<dynamic.jasper.version>5.0.7</dynamic.jasper.version>
+		<drools.version>5.5.0.Final</drools.version>
+		<commons.io.version>2.5</commons.io.version>
+		<commons.compress.version>1.11</commons.compress.version>
+		<modelmapper.version>0.7.6</modelmapper.version>
+		<guava.version>13.0.1</guava.version>
+		<groovy.version>2.4.6</groovy.version>
+		<quartz.version>2.1.5</quartz.version>
+		<quartz.oracle.version>2.1.7</quartz.oracle.version>
+		<aspectj.version>1.8.9</aspectj.version>
+		<freemarker.version>2.3.23</freemarker.version>
+		<jcl.version>2.5</jcl.version>
+		<jodatime.version>2.9.3</jodatime.version>
+		<akka.version>2.1.2</akka.version>
+		<javax.mail.version>1.4.7</javax.mail.version>
+		<supercsv.version>2.4.0</supercsv.version>
+		<supercsv-dozer.version>2.4.0</supercsv-dozer.version>
+		<jodreports.version>2.4.0</jodreports.version>
+		<xom.version>1.2.5</xom.version>
+		<jodconverter.version>2.2.1</jodconverter.version>
+
+		<!-- Logger Properties -->
+		<slf4j.version>1.7.21</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+		<logback.version>1.1.7</logback.version>
+
+		<!-- Jetty Properties -->
+		<!--<jetty.maven.version>9.3.10.M0</jetty.maven.version>
+		<jetty.port>9085</jetty.port>
+		<jetty.stop.port>9998</jetty.stop.port>-->
+		 <jetty.maven.version>8.1.11.v20130520</jetty.maven.version>
+		<jetty.port>9085</jetty.port>
+		<jetty.stop.port>9999</jetty.stop.port> 
+
+		<!-- Maven Properties -->
+		<maven.war.version>2.6</maven.war.version>
+		
+		<jsoup.version>1.8.3</jsoup.version>
+		
+		<barbecue.version>1.0.0</barbecue.version>
+		<barcode4j.version>2.0</barcode4j.version>
+		
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Project Dependencies -->
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-basic-setup</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-personnel-admin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-system-admin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-avm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-notification</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-workstructure</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-audit</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-system-workflow</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-eligibility-rule</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<!-- New Project -->
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-sandbox</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- New Project -->
+			
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-ssoa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-fast</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>co.id.fifgroup</groupId>
+				<artifactId>fifgroup-biro-jasa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<!-- Database Driver Dependencies -->
+			<!-- Local Development -->
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>${h2.version}</version>
+			</dependency>
+			<!-- Development Server -->
+			<dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc6</artifactId>
+				<version>${ojdbc.version}</version>
+			</dependency>
+
+			<!-- Spring Dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${springframework.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aspects</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-instrument</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-asm</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${springframework.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-oxm</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+
+			<!-- Spring Security Dependencies -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-ldap</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+
+			<!-- Spring Integration -->
+			<dependency>
+				<groupId>org.springframework.integration</groupId>
+				<artifactId>spring-integration-core</artifactId>
+				<version>${spring.integration.version}</version>
+			</dependency>
+
+			<!-- MyBatis Dependencies -->
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>${dbcp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>${mybatis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>${mybatis.spring.version}</version>
+			</dependency>
+
+			<!-- Zkoss Dependencies -->
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zk</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zul</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zkplus</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zkbind</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.addons</groupId>
+				<artifactId>zk-bootstrap</artifactId>
+				<version>${zkoss.bootstrap.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zuti</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<!-- <dependency>
+				<groupId>org.zkoss.theme</groupId>
+				<artifactId>sapphire</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency> -->
+			<dependency>
+				<groupId>org.zkoss.theme</groupId>
+				<artifactId>atlantic</artifactId>
+				<version>1.1.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zhtml</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zkmax</artifactId>
+				<version>${zkoss.zkmax.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.zk</groupId>
+				<artifactId>zkex</artifactId>
+				<version>${zkoss.zkmax.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.common</groupId>
+				<artifactId>zweb</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.common</groupId>
+				<artifactId>zcommon</artifactId>
+				<version>${zkoss.version}</version>
+			</dependency>
+
+			<!-- ZKoss ckeditor -->
+			<dependency>
+				<groupId>org.zkoss.zkforge</groupId>
+				<artifactId>ckez</artifactId>
+				<version>${zkoss.ckez.version}</version>
+			</dependency>
+			
+			<!-- ZKoss Calendar -->
+			<dependency>
+				<groupId>org.zkoss.calendar</groupId>
+				<artifactId>calendar</artifactId>
+				<version>${zkoss.calendar.version}</version>
+			</dependency>
+			
+			<!-- ZKoss Timeline -->
+			<dependency>
+				<groupId>org.zkoss.zkforge</groupId>
+				<artifactId>timelinez</artifactId>
+				<version>${zkoss.timelinez.version}</version>
+			</dependency>
+			
+			<!-- ZKoss Timeplot -->
+			<dependency>
+				<groupId>org.zkoss.zkforge</groupId>
+				<artifactId>timeplotz</artifactId>
+				<version>${zkoss.timeplotz.version}</version>
+			</dependency>
+			
+			<!-- ZKoss Chart -->
+			<dependency>
+				<groupId>org.zkoss.chart</groupId>
+				<artifactId>zkcharts</artifactId>
+				<version>${zkoss.zkcharts.version}</version>
+			</dependency>
+
+			<!-- Utility -->
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+				<version>${jaxb.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jfree</groupId>
+				<artifactId>jfreechart</artifactId>
+				<version>${jfreechart.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jfree</groupId>
+				<artifactId>jcommon</artifactId>
+				<version>${jcommon.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-schemas</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ar.com.fdvs</groupId>
+				<artifactId>DynamicJasper</artifactId>
+				<version>${dynamic.jasper.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.zkoss.exporter</groupId>
+				<artifactId>exporter</artifactId>
+				<version>0.0.1-RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>${commons.compress.version}</version>
+			</dependency>
+
+			<!-- Rule Engine -->
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-core</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-compiler</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-spring</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+
+			<!-- Logging Dependencies -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jul-to-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-nop</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			
+
+			<!-- Junit Dependency -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+
+			<!-- Utilities -->
+			<dependency>
+				<groupId>org.modelmapper</groupId>
+				<artifactId>modelmapper</artifactId>
+				<version>${modelmapper.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			
+			<!-- http://mvnrepository.com/artifact/com.google.code.google-collections/google-collect -->
+			<dependency>
+				<groupId>com.google.code.google-collections</groupId>
+				<artifactId>google-collect</artifactId>
+				<version>snapshot-20080530</version>
+			</dependency>
+
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>${cglib.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib-nodep</artifactId>
+				<version>${cglib.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.supercsv</groupId>
+				<artifactId>super-csv</artifactId>
+				<version>${supercsv.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>net.sf.supercsv</groupId>
+				<artifactId>super-csv-dozer</artifactId>
+				<version>${supercsv-dozer.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			
+			  <dependency>
+				<groupId>com.artofsolving</groupId>
+				<artifactId>jodconverter</artifactId>
+				<version>${jodconverter.version}</version>
+			</dependency>
+						
+			<!-- Groovy -->
+			<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy-all</artifactId>
+				<version>${groovy.version}</version>
+			</dependency>
+			
+			<!-- Quartz -->
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>${quartz.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz-oracle</artifactId>
+				<version>${quartz.version}</version>
+			</dependency>
+			
+			<!-- String Template -->
+			<dependency>
+			  <groupId>org.freemarker</groupId>
+			  <artifactId>freemarker</artifactId>
+			  <version>${freemarker.version}</version>
+			</dependency>
+
+			<!-- Joda Time -->
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${jodatime.version}</version>
+			</dependency>
+			
+			<!-- Akka -->
+			<dependency>
+				<groupId>com.typesafe.akka</groupId>
+				<artifactId>akka-actor_2.10</artifactId>
+				<version>${akka.version}</version>
+			</dependency>
+			
+			<!-- Java Class Loader -->
+			<dependency>
+				<groupId>org.xeustechnologies</groupId>
+				<artifactId>jcl-core</artifactId>
+				<version>${jcl.version}</version>
+			</dependency>
+			
+			<!-- Java Mail -->
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${javax.mail.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>net.sf.jodreports</groupId>
+				<artifactId>jodreports</artifactId>
+				<version>${jodreports.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>xom</groupId>
+				<artifactId>xom</artifactId>
+				<version>${xom.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.fif.hcms</groupId>
+				<artifactId>hcms-training</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>${jsoup.version}</version>
+			</dependency>
+			
+			<dependency>
+            <groupId>net.sourceforge.barbecue</groupId>
+                <artifactId>barbecue</artifactId>
+                <version>${barbecue.version}</version>
+			</dependency>
+			
+			<dependency>
+            <groupId>net.sf.barcode4j</groupId>
+                <artifactId>barcode4j</artifactId>
+                <version>${barcode4j.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12</version>
+					<configuration>
+						<disableXmlReport>${junit.disableXmlReport}</disableXmlReport>
+						<skipTests>${junit.skipTests}</skipTests>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>${maven.war.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty.maven.version}</version>
+					<configuration>
+						<connectors>
+							<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+								<port>${jetty.port}</port>
+							</connector>
+						</connectors>
+						<stopPort>${jetty.stop.port}</stopPort>
+						<stopKey>foo</stopKey>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.mybatis.generator</groupId>
+					<artifactId>mybatis-generator-maven-plugin</artifactId>
+					<version>${mybatis.generator.version}</version>
+					<dependencies>
+						<!-- Local Development -->
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+							<version>${h2.version}</version>
+						</dependency>
+						<!-- Development Server -->
+						<dependency>
+							<groupId>com.oracle</groupId>
+							<artifactId>ojdbc6</artifactId>
+							<version>${ojdbc.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<disableXmlReport>${junit.disableXmlReport}</disableXmlReport>
+					<skipTests>${junit.skipTests}</skipTests>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>fif-nexus-third-party</id>
+			<layout>default</layout>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/thirdparty/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<repositories>
+		<repository>
+			<id>fif-release</id>
+			<layout>default</layout>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>maven-central</id>
+			<layout>default</layout>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/central/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>fif-nexus-third-party</id>
+			<layout>default</layout>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/thirdparty/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>jboss</id>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/jboss/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>jasperreports</id>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/jasperreports/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>zkoss-repository</id>
+			<layout>default</layout>
+			<url>http://svn.fif.co.id:8888/nexus-2.0.6/content/repositories/zkoss/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<modules>
+		<module>fifgroup-core</module>
+		<module>fifgroup-main</module>
+		<module>fifgroup-eligibility-rule</module>
+		<module>fifgroup-avm</module>
+		<module>fifgroup-audit</module>
+		<module>fifgroup-basic-setup</module>
+		<module>fifgroup-system-admin</module>
+		<module>fifgroup-workstructure</module>
+		<module>fifgroup-notification</module>
+		<module>fifgroup-personnel-admin</module>
+		<module>fifgroup-system-workflow</module>
+    <module>fifgroup-sandbox</module>
+	<module>fifgroup-ssoa</module>
+  </modules>
+</project>

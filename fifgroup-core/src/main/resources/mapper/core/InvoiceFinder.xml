@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.id.fifgroup.core.finder.InvoiceFinder">
+
+	<resultMap id="baseResultMap" type="co.id.fifgroup.core.dto.InvoiceInterfaceDTO">
+		<result column="AP_INVOICE_DATE_MMYYYY" property="invoiceDateMmYyyy" jdbcType="VARCHAR" />
+		<result column="AP_INVOICE_DATE" property="invoiceDate" jdbcType="DATE" />
+		<result column="AP_SUPPLIER_CODE" property="supplierCode" jdbcType="VARCHAR" />
+		<result column="SUPL_NAME" property="supplierName" jdbcType="VARCHAR" />
+		<result column="AP_SUPPLIER_BANK_ACCT" property="supplierAccountNumber" jdbcType="VARCHAR" />
+		<result column="SUPL_ACCOUNT_NAME" property="supplierAccountName" jdbcType="VARCHAR" />
+		<result column="AP_INVOICE_NO" property="invoiceNumber" jdbcType="VARCHAR" />
+		<result column="AP_SEQUENCE_NO" property="sequenceNumber" jdbcType="NUMERIC" />
+		<result column="AP_DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="AP_AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="AP_TAX_CODE" property="taxCode" jdbcType="VARCHAR" />
+		<result column="FEE_CODE" property="feeCode" jdbcType="VARCHAR" />
+		<result column="AP_REFFERENCE_NO" property="referenceNumber" jdbcType="VARCHAR" />
+		<result column="AP_BRANCH_ID" property="branchId" jdbcType="NUMERIC" />
+		<result column="COY_ID" property="companyId" jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<insert id="insertInvoiceIndividualDetail" parameterType="co.id.fifgroup.core.domain.interfacing.InvoiceIndividualDetail">
+		insert into (
+			ap_invoice_hdr_no, 
+			ap_invoice_no,
+            ap_supplier_code, 
+            ap_sequence_no,
+            ap_invoice_date, 
+            ap_description, 
+            ap_amount,
+            ap_tax_code, 
+            ap_created_date, 
+            ap_created_by
+		) values(
+			#{invoiceHeaderNumber},
+			#{invoiceNumber},
+			#{supplierCode},
+			#{sequenceNumber},
+			#{invoiceDate},
+			#{description},
+			#{amount},
+			#{taxCode},
+			#{createdDate},
+			#{createdBy}
+		)
+	</insert>
+	
+	<insert id="insertInvoiceIndividualHeader" parameterType="co.id.fifgroup.core.domain.interfacing.InvoiceIndividualHeader">
+		insert into (
+			ap_invoice_no, 
+			ap_invoice_date,
+            ap_split_sequence, 
+            ap_trans_type,
+            ap_supplier_code, 
+            ap_supplier_name, 
+            ap_supplier_bank_acct,
+            ap_bank_acct_name, 
+            ap_total_amount, 
+            ap_amount_dpp,
+            ap_amount_kumulatif,
+            ap_split_amount,
+            ap_pct_rate,
+            ap_pph_amt
+		) values(
+			#{invoiceNumber},
+			#{invoiceDate},
+			#{splitSequence},
+			#{transType},
+			#{supplierCode},
+			#{supplierName},
+			#{supplierBankAcc},
+			#{supplierBankAccName},
+			#{totalAmount},
+			#{amountDpp},
+			#{amountKumulatif},
+			#{splitAmount},
+			#{pctRate},
+			#{pphAmt}
+		)
+	</insert>
+	
+	<insert id="insertSupplierIndividualAmt" parameterType="map">
+		<!-- Remark by WLY - kebutuhan untuk insert ke supplier individual amount -->
+		<!-- insert into ( -->
+		<!-- end remark by WLY -->
+		<!-- Start replace by WLY -->
+		insert into ap.ap_trn_supl_indv_amt@fifapps.us.oracle.com (
+		<!-- End replace by WLY -->
+			ap_supplier_code, 
+			ap_supplier_name,
+            ap_supplier_inv_amount, 
+            ap_supplier_office,
+            ap_coy_id
+		) values(
+			#{supplierCode},
+			#{supplierName},
+			#{amount},
+			#{branchId},
+			#{companyId}
+		)
+	</insert>
+	
+	<update id="updateIndividualAmount" parameterType="co.id.fifgroup.core.domain.interfacing.EmployeeBankInfo">
+		update ap.ap_trn_supl_indv_amt@fifapps.us.oracle.com
+		set
+		<!-- Remark by WLY - kebutuhan untuk update ke supplier individual amount -->
+			<!-- ap_supplier_inv_amount = sum(NVL (ap_supplier_inv_amount, 0) + #{amount}) -->
+		<!-- End Remark by WLY  -->
+		<!-- Start replace by WLY -->
+		ap_supplier_inv_amount = NVL (ap_supplier_inv_amount, 0) + #{amount}
+		<!-- End replace by WLY -->
+		where ap_supplier_code = #{supplierCode}
+		and ap_supplier_office = #{branchId}
+		and ap_coy_id = #{companyId}
+	</update>
+	
+	<select id="findInvoice" parameterType="map" resultMap="baseResultMap">
+		select
+		  TO_CHAR (e.ap_invoice_date, 'mm-yyyy') ap_invoice_date_mmyyyy,
+		  e.ap_invoice_date,
+		  e.ap_supplier_code,
+		  c.supl_name,
+		  e.ap_supplier_bank_acct, 
+		  d.supl_account_name,
+		  f.ap_invoice_no, 
+		  f.ap_sequence_no,
+		  f.ap_description,
+		  f.ap_amount, 
+		  f.ap_tax_code,
+		  e.ap_po_refference_no fee_code,
+		  f.ap_refference_no, 
+		  e.ap_branch_id, 
+		  e.coy_id
+		from fifapps.fs_mst_supplier@fifapps.us.oracle.com c
+		join fifapps.fs_mst_supplier_acct@fifapps.us.oracle.com d on c.supl_code = d.supl_code
+		join ap.ap_trn_invoice_hdr@fifapps.us.oracle.com e on d.supl_code = e.ap_supplier_code
+		join ap.ap_trn_invoice_dtl@fifapps.us.oracle.com f on e.ap_invoice_no = f.ap_invoice_no
+		<where>
+			and e.ap_trans_type = 'OPEX'
+			and e.ap_invoice_status is null
+			and e.ap_supplier_bank_acct = d.supl_account_no
+			and d.supl_acc_status = 'AC'
+			and e.ap_supplier_code &lt;&gt; 'TNR01'
+			and NVL (d.supl_account_no, '0') &lt;&gt; '0'
+			and f.ap_tax_code in ('Y21HN', 'N21HN')
+			<if test="invoiceNo != null">
+				and e.ap_invoice_no = #{invoiceNo, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getInvoiceIndividualAmount" parameterType="co.id.fifgroup.core.dto.InvoiceInterfaceDTO" resultType="java.math.BigDecimal">
+		SELECT 
+			NVL (ap_supplier_inv_amount, 0)               
+        FROM ap.ap_trn_supl_indv_amt@fifapps.us.oracle.com
+        WHERE ap_supplier_code = #{supplierCode}
+        AND ap_supplier_office = #{branchId}
+        AND ap_coy_id = #{companyId}
+	</select>
+	
+</mapper>
